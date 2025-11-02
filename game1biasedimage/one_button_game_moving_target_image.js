@@ -41,7 +41,12 @@ function draw() {
     textAlign(CENTER, CENTER);
     // Dynamically scale text to fit any screen size
     let tSize = min(width, height) / 15; // smaller on phones
-    textSize(tSize);
+   let tSize;
+if (width < 500) {
+  tSize = min(width, height) / 28;  // small phones
+} else {
+  tSize = min(width, height) / 18;  // tablets / desktop
+}
     text("You win! You clicked the biased image!", width / 2, height / 2.2);
 
     // Draw clickable link below message
