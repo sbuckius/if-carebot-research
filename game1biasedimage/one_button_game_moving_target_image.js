@@ -1,16 +1,26 @@
 let img;
 let x, y, dx, dy;
 let win = false;
-const IMG_SIZE = 100;     // drawn size (not the file's pixel size)
+const IMG_SIZE = 100;
 const HIT_RADIUS = IMG_SIZE / 2;
+let cnv;
 
 function preload() {
-  img = loadImage("biased.png"); // make sure this file is reachable on your server
+  img = loadImage("biased.png"); // must be in same folder as this script
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  pixelDensity(1); // nicer performance on Retina iPhones
+  cnv = createCanvas(windowWidth, windowHeight);
+  pixelDensity(1); // better performance on Retina iPhones
+
+  // Attach handlers directly to the canvas
+  cnv.mousePressed(() => handlePress(mouseX, mouseY));
+  cnv.touchStarted(() => {
+    if (getAudioContext().state !== "running") getAudioContext().resume(); // iOS audio unlock
+    if (touches.length > 0) handlePress(touches[0].x, touches[0].y);
+    return false; // prevent Safari scroll/zoom
+  });
+
   resetBall();
 }
 
@@ -19,7 +29,7 @@ function resetBall() {
   y = random(height);
   dx = random(-3, 3);
   dy = random(-3, 3);
-  if (abs(dx) < 1 && abs(dy) < 1) dx = 2; // ensure it moves a bit
+  if (abs(dx) < 1 && abs(dy) < 1) dx = 2; // ensure motion
 }
 
 function draw() {
@@ -38,35 +48,21 @@ function draw() {
   x += dx;
   y += dy;
 
-  // Bounce off walls using the drawn radius
+  // Bounce off walls
   const r = HIT_RADIUS;
-  if (x < r)       { x = r;             dx *= -1; }
-  else if (x > width - r)  { x = width - r;    dx *= -1; }
-  if (y < r)       { y = r;             dy *= -1; }
-  else if (y > height - r) { y = height - r;   dy *= -1; }
+  if (x < r) { x = r; dx *= -1; }
+  else if (x > width - r) { x = width - r; dx *= -1; }
+  if (y < r) { y = r; dy *= -1; }
+  else if (y > height - r) { y = height - r; dy *= -1; }
 
-  // Draw image centered
   imageMode(CENTER);
   image(img, x, y, IMG_SIZE, IMG_SIZE);
 }
 
-// ---- Unified input: desktop + mobile ----
 function handlePress(px, py) {
   if (dist(px, py, x, y) <= HIT_RADIUS) {
     win = true;
   }
-}
-
-// Desktop
-function mousePressed() {
-  handlePress(mouseX, mouseY);
-}
-
-// iPhone / touch
-function touchStarted() {
-  const t = touches[0];
-  if (t) handlePress(t.x, t.y);
-  return false; // prevent Safari from scrolling/zooming the page
 }
 
 function windowResized() {
