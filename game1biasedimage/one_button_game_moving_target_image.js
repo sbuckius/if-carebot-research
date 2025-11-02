@@ -64,7 +64,7 @@ function draw() {
   else if (y > height - r) { y = height - r; dy *= -1; }
 
   imageMode(CENTER);
-  image(img, x, y, IMG_SIZE, IMG_SIZE);
+  image(img, x, y, IMG_SIZE, IMG_SIZE*2);
 }
 
 function handlePress(px, py) {
