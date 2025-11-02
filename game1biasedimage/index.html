@@ -1,20 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
-  <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
-  <script language="javascript" type="text/javascript" src="one_button_game_moving_target_image.js"></script>
-  <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
-
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Biased Image Game</title>
   <style>
-    body {
-      padding: 0;
+    html, body {
       margin: 0;
+      padding: 0;
+      overflow: hidden;              /* prevent iPhone from scrolling */
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      -webkit-user-select: none;     /* prevent accidental text highlight */
+      -webkit-touch-callout: none;   /* prevent long-press menu */
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+      touch-action: none;            /* critical: stop Safari gestures */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
     }
   </style>
+
+  <!-- Load p5.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <!-- Optional: p5.sound (keeps audio unlock line safe) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+  <!-- Your sketch -->
+  <script src="one_button_game_moving_target_image.js"></script>
 </head>
 
 <body>
