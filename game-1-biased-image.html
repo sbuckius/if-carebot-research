@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href='https://fonts.googleapis.com/css?family=Akatab' rel='stylesheet'>
-<style>
-body {
-    font-family: 'Akatab';font-size: 22px;
-}
-</style>
+  <link href='https://fonts.googleapis.com/css?family=Akatab' rel='stylesheet'>
+  <style>
+    body {
+      font-family: 'Akatab';
+      font-size: 22px;
+    }
+  </style>
 </head>
 
 <body>
 
+  <!-- Link that opens a temporary tab -->
+  <a href="#" onclick="openTemp()">Kitchen Computer</a>
 
- <! <a href="https://www.computerhistory.org/revolution/minicomputers/11/362">Kitchen Computer</a> >
-    <!-- destination.html -->
-<meta http-equiv="refresh" content="1; url=https://www.computerhistory.org/revolution/minicomputers/11/362">
+  <br>
+  <iframe src="game1biasedimage/index.html" style="height:800px;width:400px;" title="KitchenComputer"></iframe>
 
+  <script>
+    function openTemp() {
+      // open the target site in a new tab
+      const win = window.open("https://www.computerhistory.org/revolution/minicomputers/11/362", "_blank");
 
-<br>
- <iframe src="game1biasedimage/index.html" style="height:800px;width:400px;" title="KitchenComputer"></iframe>
-
-
+      // wait 2 seconds, then close the tab
+      setTimeout(() => {
+        if (win && !win.closed) {
+          win.close();
+        }
+      }, 2000); // 2000 ms = 2 seconds
+    }
+  </script>
 
 </body>
 </html>
+
