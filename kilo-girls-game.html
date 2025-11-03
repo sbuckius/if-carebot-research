@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Kilo Girls</title>
+  <link href="https://fonts.googleapis.com/css?family=Agdasima" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Agdasima', sans-serif;
+      font-size: 22px;
+      line-height: 1.4;
+      color: #111;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #444;
+    }
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<br>
+<br>
+<h1>Play the Audio & READ ALL of the text about "KILO GIRLS" to get to next level</h1>
+
+ <audio controls autoplay>
+  <source src="harlow_shapley_girl_hours.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio> 
+
+<br>
+
+ 
+<p>Harlow Shapley on his assistants and "girl hours."
+ORAL HISTORY AUDIO EXCERPT
+
+Harlow Shapley on his assistants and "girl hours."
+
+
+
+
+Weiner:
+You talk of the work on globular clusters and the revolutionary implications of it which you pursued and published. And you talked of"we." Now, was this a solo effort or were there others involved with you in a discussion of this? You indicated that there wasn't too much discussion, but this was a big thing.
+
+Shapley:
+The discussion mostly was with Gretchen and maybe one or two assistants. You see, it took a tremendous lot of measures. I introduced the term "girl hours," and it would take a lot of girl hours to solve some of the problems. In fact, one job took several kilo-girl hours to get it through. So I should say that I had help on alot of the details. But I don't think I had much help in the hunching.
+
+Weiner:
+This was at Mount Wilson?
+
+Shapley:
+Both places. But not many girl hours at Mount Wilson. Very few. I had one full time girl assistant as I got along, but there were very few at Mount Wilson whereas Harvard was just swarming with these assistants. That's why wegot somewhere, got it done. And elsewhere people had assistants. But I was at
+the observatory at Mount Wilson for many years when nobody was expected to have assistants.</p>
+
+<br>
+<br>
+ <div class="spacer"></div>
+
+  <!-- Visible Harvard link: opens in new tab, then auto-closes that tab after a delay -->
+  <a id="peekLink"
+     href="https://www.aip.org/history-programs/niels-bohr-library/oral-histories/audio/4888-1">
+    Harlow Shapley on his assistants and "girl hours" (the intereview has been removed and I am unable to locate it anywhere online.)
+  </a>
+
+
+  <div class="spacer"></div>
+<br>
+<br>
+<br>
+  <!-- Next level: normal navigation -->
+  <a href="direct-robot-1.html">You Win! Good reading. Go to Next Level</a>
+
+  <script>
+    // Make the Harvard link "peek" and then return
+    document.getElementById('peekLink').addEventListener('click', function (e) {
+      e.preventDefault(); // don't leave this page
+
+      const url = this.href;
+
+      // Open the external page in a new tab/window as part of this user gesture
+      const win = window.open(url, '_blank');
+
+      // Optional: show a tiny status message while we wait
+      const msg = document.createElement('div');
+      msg.textContent = 'Opening reference… (closing in 3 seconds)';
+      msg.style.marginTop = '12px';
+      document.body.appendChild(msg);
+
+      // After 3 seconds, try to close the new tab; we remain on this page either way
+      setTimeout(() => {
+        if (win && !win.closed) {
+          try { win.close(); } catch (_) { /* some browsers block programmatic close */ }
+        }
+        msg.remove();
+        // We never navigated away, so we're already "back" on this page.
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
