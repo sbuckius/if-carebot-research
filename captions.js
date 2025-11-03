@@ -1,26 +1,25 @@
 // captions.js
-// Put only the captions here (20 entries, index 0..19). You can edit them freely.
-// The main HTML will read this global `captions` array.
+// Each caption instructs the human robot to perform the same extended action and speech.
 
-const captions = [
-  "Robot 0: Make one eye blink and cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
-  "Robot 1: Make one eye blink and cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
-  "Robot 2: Make one eye blink and cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
-  "Robot 3: "Robot 0: Make one eye blink and cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
-  "Robot 4: placeholder — customize me.",
-  "Robot 5: placeholder — customize me.",
-  "Robot 6: placeholder — customize me.",
-  "Robot 7: placeholder — customize me.",
-  "Robot 8: placeholder — customize me.",
-  "Robot 9: placeholder — customize me.",
-  "Robot 10: placeholder — customize me.",
-  "Robot 11: placeholder — customize me.",
-  "Robot 12: placeholder — customize me.",
-  "Robot 13: placeholder — customize me.",
-  "Robot 14: placeholder — customize me.",
-  "Robot 15: placeholder — customize me.",
-  "Robot 16: placeholder — customize me.",
-  "Robot 17: placeholder — customize me.",
-  "Robot 18: placeholder — customize me.",
-  "Robot 19: placeholder — customize me."
+window.captions = [
+  "Robot 0: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 1: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 2: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 3: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 4: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 5: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 6: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 7: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 8: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 9: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 10: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 11: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 12: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 13: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 14: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 15: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 16: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 17: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 18: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming.",
+  "Robot 19: Tell the human robot to: make one eye blink and go cross-eyed and move your mouth open and closed without aligning it to your words. Say these words: I am Ai-da. I'm the world's first ultra realistic artist robot. I draw using cameras in my eyes, my AI algorithms, and my robotic arm. I am named after Ai-Da Lovelace, known for her early programming."
 ];
