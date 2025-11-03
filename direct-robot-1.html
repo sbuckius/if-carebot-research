@@ -12,13 +12,22 @@
     html, body { height: 100%; margin: 0; background: #3b0a0a; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .wrap { min-height: 100%; display: grid; place-items: center; padding: 12px; }
     .frame { width: var(--w); height: var(--h); position: relative; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
-    #defaultCanvas0 { display:block; }
+
+    /* Ensure the canvas sits under the overlay and hint on iOS */
+    #defaultCanvas0 {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .overlay, .hint { z-index: 2; }
 
     .overlay { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:16px; gap:12px; pointer-events:auto; }
     .card { background: rgba(15,17,21,0.72); border: 1px solid rgba(255,255,255,0.08); color:#fff; border-radius:16px; padding:14px 16px; backdrop-filter: blur(10px); }
     .title { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
     .desc { font-size: 16px; color: #ff66cc; margin:0; line-height:1.55; max-height: 320px; overflow:auto; }
-    .row { display:flex; justify-content:center; gap:20px; align-items:center; }
+    .row { display:flex; justify-content:center; gap:20px; align-items:center; flex-wrap: wrap; }
     .btn { display:inline-block; text-decoration:none; background:#ffffff; color:#111827; font-weight:700; padding:10px 14px; border-radius:12px; font-size:14px; transition: background 0.2s, color 0.2s; }
     .btn:active { transform: translateY(1px); }
     #restart { background:#660033; color:#fff; font-size:18px; font-weight:800; border:2px solid #660033; padding:10px 18px; border-radius:14px; }
@@ -73,12 +82,17 @@
     const resultText = document.getElementById('resultText');
     const resultLink = document.getElementById('resultLink');
     const restartBtn = document.getElementById('restart');
+    const hintEl = document.getElementById('hint');
+
+    // Defensive: make sure touches/clicks on the overlay don't bubble to the canvas
+    overlay.addEventListener('click', e => e.stopPropagation(), { passive: true });
+    overlay.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
 
     restartBtn.addEventListener('click', (e) => {
       e.preventDefault();
       lockedIndex = -1;
       overlay.style.display = 'none';
-      document.getElementById('hint').style.display = 'block';
+      hintEl.style.display = 'block';
       loop();
     });
 
@@ -95,7 +109,7 @@
             pg.fill(255);
             pg.textAlign(CENTER, CENTER);
             pg.textSize(12);
-            pg.text(`Missing\\n${name}.*`, IMAGE_SIZE/2, IMAGE_SIZE/2);
+            pg.text(`Missing\n${name}.*`, IMAGE_SIZE/2, IMAGE_SIZE/2);
             imgs[ix] = pg;
             return;
           }
@@ -125,12 +139,12 @@
       const boxLeft  = boxX - boxW / 2;
       const boxRight = boxX + boxW / 2;
 
-      const leftColW = IMAGE_SIZE + 130; // more spacing from image to text
+      const leftColW = IMAGE_SIZE + 130;
       const imgX = boxLeft + leftColW / 2;
       const imgY = boxY;
 
       const textPad = 20;
-      const textX = boxLeft + leftColW + textPad; // moved right further
+      const textX = boxLeft + leftColW + textPad;
       const textY = imgY - IMAGE_SIZE / 2 + 4;
       const textW = Math.max(140, boxRight - textX - textPad);
 
@@ -182,7 +196,20 @@
       }
     }
 
-    function touchStarted() { mousePressed(); return false; }
+    // iPhone fix: only handle touches that actually happen on the canvas;
+    // DO NOT return false (which would block default behavior like links).
+    function touchStarted(e) {
+      const cnv = document.getElementById('defaultCanvas0');
+      if (!cnv) return; // allow default
+      const rect = cnv.getBoundingClientRect();
+      const t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      if (!t) return; // allow default
+      const x = t.clientX, y = t.clientY;
+      const insideCanvas = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+      if (!insideCanvas) return; // allow default for links/buttons
+      mousePressed(); // treat touch as click inside the sketch
+      // no return value
+    }
 
     function showResult(idx) {
       const { text, link } = items[idx];
@@ -190,10 +217,11 @@
       resultText.textContent = text;
       resultLink.href = link;
       overlay.style.display = 'flex';
-      document.getElementById('hint').style.display = 'none';
+      hintEl.style.display = 'none';
       loop();
     }
 
+    // expose to p5
     window.preload = preload;
     window.setup = setup;
     window.draw = draw;
