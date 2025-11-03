@@ -5,34 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>p5.js Robot Image Picker</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <!-- Load captions BEFORE the main script -->
   <script src="captions.js"></script>
   <style>
     :root { --w: 400px; --h: 600px; }
-    html, body { height: 100%; margin: 0; background: #3b0a0a; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    html, body {
+      height: 100%; margin: 0;
+      background: #3b0a0a;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
     .wrap { min-height: 100%; display: grid; place-items: center; padding: 12px; }
-    .frame { width: var(--w); height: var(--h); position: relative; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+    .frame {
+      width: var(--w); height: var(--h);
+      position: relative; border-radius: 24px;
+      overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
 
-    /* Ensure the canvas sits under the overlay and hint on iOS */
     #defaultCanvas0 {
       display: block;
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       z-index: 1;
     }
 
     .overlay, .hint { z-index: 2; }
 
-    .overlay { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:16px; gap:12px; pointer-events:auto; }
-    .card { background: rgba(15,17,21,0.72); border: 1px solid rgba(255,255,255,0.08); color:#fff; border-radius:16px; padding:14px 16px; backdrop-filter: blur(10px); }
-    .title { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
-    .desc { font-size: 16px; color: #ff66cc; margin:0; line-height:1.55; max-height: 320px; overflow:auto; }
-    .row { display:flex; justify-content:center; gap:20px; align-items:center; flex-wrap: wrap; }
-    .btn { display:inline-block; text-decoration:none; background:#ffffff; color:#111827; font-weight:700; padding:10px 14px; border-radius:12px; font-size:14px; transition: background 0.2s, color 0.2s; }
+    .overlay {
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      justify-content:flex-end; align-items:center;
+      padding:16px; gap:10px; pointer-events:auto;
+    }
+
+    .card {
+      background: rgba(15,17,21,0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      color:#fff; border-radius:12px;
+      padding:10px 14px; backdrop-filter: blur(10px);
+      max-width: 90%; text-align:center;
+      font-size:14px;
+    }
+    .title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+    .desc { font-size: 14px; color: #ff99cc; margin:0; line-height:1.4; }
+
+    .row {
+      display:flex; justify-content:center;
+      gap:10px; flex-wrap: wrap;
+      margin-top:6px;
+    }
+
+    .btn {
+      text-decoration:none;
+      background:#fff; color:#111827;
+      font-weight:700; padding:6px 10px;
+      border-radius:10px; font-size:13px;
+      transition: background 0.2s, color 0.2s;
+    }
     .btn:active { transform: translateY(1px); }
-    #restart { background:#660033; color:#fff; font-size:18px; font-weight:800; border:2px solid #660033; padding:10px 18px; border-radius:14px; }
-    #restart:hover { background:#cc0066; border-color:#cc0066; color:#fff; }
-    .hint { position:absolute; top:10px; left:50%; transform:translateX(-50%); color:#fff; font-size:12px; opacity:.75; background:rgba(255,255,255,.08); padding:6px 10px; border-radius:999px; }
+
+    #restart {
+      background:#660033; color:#fff;
+      font-size:14px; font-weight:700;
+      border:2px solid #660033;
+      padding:6px 10px; border-radius:10px;
+    }
+    #restart:hover {
+      background:#cc0066; border-color:#cc0066; color:#fff;
+    }
+
+    .hint {
+      position:absolute; top:10px; left:50%;
+      transform:translateX(-50%);
+      color:#fff; font-size:12px; opacity:.75;
+      background:rgba(255,255,255,.08);
+      padding:6px 10px; border-radius:999px;
+    }
   </style>
 </head>
 <body>
@@ -46,7 +91,7 @@
         </div>
         <div class="row">
           <a id="resultLink" class="btn" href="#" target="_blank" rel="noopener noreferrer">
-            If you were paid, advance to the next level by clicking here!
+            If you were paid, advance!
           </a>
           <a id="restart" class="btn" href="#">Play Again</a>
         </div>
@@ -84,7 +129,6 @@
     const restartBtn = document.getElementById('restart');
     const hintEl = document.getElementById('hint');
 
-    // Defensive: make sure touches/clicks on the overlay don't bubble to the canvas
     overlay.addEventListener('click', e => e.stopPropagation(), { passive: true });
     overlay.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
 
@@ -133,9 +177,9 @@
 
     function getLayout() {
       const boxX = width / 2;
-      const boxY = 120;
+      const boxY = 150;
       const boxW = width - 30;
-      const boxH = 240;
+      const boxH = 220;
       const boxLeft  = boxX - boxW / 2;
       const boxRight = boxX + boxW / 2;
 
@@ -196,19 +240,16 @@
       }
     }
 
-    // iPhone fix: only handle touches that actually happen on the canvas;
-    // DO NOT return false (which would block default behavior like links).
     function touchStarted(e) {
       const cnv = document.getElementById('defaultCanvas0');
-      if (!cnv) return; // allow default
+      if (!cnv) return;
       const rect = cnv.getBoundingClientRect();
       const t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      if (!t) return; // allow default
+      if (!t) return;
       const x = t.clientX, y = t.clientY;
       const insideCanvas = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-      if (!insideCanvas) return; // allow default for links/buttons
-      mousePressed(); // treat touch as click inside the sketch
-      // no return value
+      if (!insideCanvas) return;
+      mousePressed();
     }
 
     function showResult(idx) {
@@ -221,7 +262,6 @@
       loop();
     }
 
-    // expose to p5
     window.preload = preload;
     window.setup = setup;
     window.draw = draw;
