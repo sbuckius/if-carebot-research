@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href='https://fonts.googleapis.com/css?family=Akatab' rel='stylesheet'>
+<style>
+body {
+    font-family: 'Akatab';font-size: 22px;
+}
+</style>
+</head>
+<body>
+
+
+ <a href="https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf">Katharine Johnson's Calculation for NASA</a> 
+<p>NASA TN D-233
+
+
+
+... 
+
+�_
+,_]-N	)=---•- =­
+l���
+.,/	.=--��- j •.•
+
+TECHNICAL	NOTE
+0-	233
+
+
+DETERMINATION OF AZIMUTH ANGLE AT BURNOUT FOR PLAClliG A SATELLITE OVER A SELECTED EARTH-POSITION
+By T. H. Skopinski and Katherine G. Johnson
+Langley Research Center Langley Field, Va.
+
+
+
+
+
+
+
+
+
+
+
+NATIONAL	AERONAUTICS	AND SPACE	ADMINISTRATION
+WASHINGTON
+
+September 1960
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--  -�-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+y
+
+NATIONAL AERONAUTICS AND SPACE ADMINISTRATION TECHNICAL NOTE D-233
+
+DETERMINATION OF AZJMUTH ANGLE AT BURNOUT FOR PLACING A SATELLITE OVER A SELECTED EARTH POSITION
+By T. H. Skopinski and Katherine G. Johnson
+
+SUMMARY
+
+
+Expressions are presented for relating the satellite position in the orbital plane with the projected latitude and longitude on a rotating earth surface. An expression is also presented for determining the azi­ muth angle at a given burnout position on the basis of a selected passage position on the earth's surface.
+Examples are presented of a satellite launched eastward and one launched westward, each passing over a selected position sometime after having completed three orbits. Incremental changes from the desired latitude and longitude due to the earth's oblateness are included in the iteration for obtaining the azimuth angles of the two examples. The results for both cases are then compared with those obtained from a com­ puting program using an oblate rotating earth. Changes from the selected latitude and longitude resulting from incremental c�anges from the burn­ out azimuth angle and latitude are also analyzed.
+
+INTRODUCTION
+
+--In the recovery of an artificial earth satellite it is necessary to bring the satellite over a preselected point above the earth from which the reentry is to be initiated. It is the purpose of the present paper to determine the azimuth angle which must exist at a given burnout point in order to have the satellite vehicle pass over any particular earth position after a selected small number of orbital passes. For this pur­ pose equations are developed which give the latitude and longitude of a point on the surface of a rotating spherical earth directly under the satellite at any time. An expression is developed which, with the orbit characteristics and the selected passage position on the earth's surface, will establish after only a few iterations the required azimuth angle at the burnout point.
+Elliptical orbits about a rotating spherical earth are first assumed. Although this simplification ignores the effects of the earth's oblateness,
+2
+•
+it is convenient to examine the oblateness effects later as incremental changes which �an be accounted for in an iteration procedure. Departures from the desired latitude and longitude passage position resulting from incremental changes in the azimuth angle and latitude at burnout are also analyzed.
+
+SYMBOLS
+
+a	semimajor axis of elliptic orbit	L
+2
+E	eccentric anomaly, defined by equation (9)	8
+9
+e	eccentricity of orbit, defined by equation (6)
+gravitational constant at earth surface
+
+i	inclination angle of orbital plane
+N	nodal point at which satellite crosses equator
+n	number of completed orbital passes, referenced to launch latitude
+0	center of earth
+P	perigee location in orbital plane
+p	semilatus rectum of ellipse, defined by equation (1)
+radius of earth
+r	distance of satellite from earth center
+position of satellite in orbital plane
+satellite period, defined by equation (7)
+t(0)	time from perigee, min
+V	satellite velocity, defined by equation (3)
+Ve	satellite velocity for circular orbit, defined by equation (4)
+r	elevation angle between local horizon and velocity vector,
+positive upwards	•
+
+8	angle in orbital plane measured from perigee point; also, true anomaly
+longitude measured east of prime meridian at Greenwich
+
+
+
+
+L
+2
+3
+n
+
+(.l)
+
+
+
+
+.-
+
+geocentric latitude measured north or south of equator azimuth angle measured clockwise from North
+angle defining rotation of orbital plane about earth's axis
+angle in orbital plane between nodal point and perigee and, also, argument of perigee, deg
+angular velocity of the earth, 0.25068 deg/min (taken as 0.25 deg/min in this report)
+
+Subscripts:
+N	nodal point
+n	orbit number
+S	any satellite position
+initial or burnout position
+selected position
+2e	equivalent selected position in first orbit
+l-2e	increment between initial or burnout position and equivalent position
+
+SATELLITE POSITION RELATIONSHIPS
+
+If drag or accelerating forces acting parallel to the path of the
+�		satellite are neglected, the initial conditions of speed V1, radial distance r1, and elevation angle r1 at final-stage burnout determine the orbit characteristics of a satellite. It is the inclination angle
+of the orbital plane a8 determined by the azimuth angle v1 at the burn­ out latitude ¢1, however, which determines the range of latitude that
+will be covered by the satellite. It should, therefore, be possible for a given value of Vi, r1, and r1 to determine an initial azimuth
+angle t1 which will place a satellite vehicle over a selected position on the rotating earth surface after a selected small number of orbits.
+A method for determining this initial azimuth angle is presented in this report.
+The orbit relations obtained from elementary celestial mechanics	L
+for a body acted upon by a radial force of attraction proportional to	2
+the inverse square of the distance are first reviewed. Reference con­	8
+ditions for relating the position of the satellite in the orbital plane	9
+with the projected position on the earth surface are established. These results are then modified so that the latitude and longitude of the satellite trace on a rotating earth surface may be obtained. An expres­ sion is derived which will establish the azimuth angle at burnout required to place a satellite over a selected earth position. Expressions for the incremental changes from the desired latitude and longitude due to errors in the azimuth angle and to the earth's oblateness are presented in appendix A.
+
+Elliptical Orbit Relations
+From elementary orbital mechanics (ref. 1), the characteristics of an orbit in terms of the initial conditions at burnout r1, v1, and r1
+can be obtained from the following expressions:
+The equations for distance of satellite from earth center (see fig. 1)
+are
+
+
+p
+r	=
+1+ e cos 9
+
+(la)
+
+
+
+
+r =	a(l - e2) 
+1 + e cos 9
+
+(lb)
+
+
+
+r = a(l - e cos E)	(le)
+
+where
+
+
+(2)
+
+Satellite velocity is given by
+
+L
+V2	2	= goR2(2; - ;1):	(3)
+8
+9
+Satellite velocity for a circular orbit at radius r1 is
+
+
+CV 2	(4)
+
+
+Angle in orbit plane between perigee and burnout point is given by
+
+
+Eccentricity is
+
+
+
+
+
+(5)
+
+
+
+
+
+
+
+Satellite period in seconds is
+
+( 6)
+
+
+
+
+(7)
+Time from perigee is expressed as
+
+
+
+t(e) = .!..(E - e sin E)
+21'i
+Eccentric anomaly (fig. l(b)) is given by
+
+(8)
+
+
+
+L
+2
+8
+9
+
+Relations Between Orbit and Earth Systems of Coordinates
+In the present paper spherical-triangle relations are used for relating the satellite position in the orbital plane to its trace on the earth surface. By using the inclination angle i of the orbit plane (which is numerically equal to the maximum latitude reached) and a ref­ erence or nodal point N, it is possible to obtain the desired position relations between the equatorial and orbital planes. The angular motion of a satellite in an elliptic orbit is usually related to a perigee pas­ sage; therefore, in the present paper time is referenced to the perigee point. The orientation of a satellite orbit and the projection of the orbit plane on a spherical earth are illustrated in figure 2.
+
+Latitude position.- The inclination angle i, the angle between the orbit plane and the equatorial plane (fig. 2(a)), is fixed at the instant of burnout by the latitude ¢1 and azimuth t1. If the equations for a
+right spherical triangle are applied to the triangle bounded by the equa­ tor, the projected orbit plane, and the meridian or longitude through the
+position ¢1, the pertinent relation for the situation pictured in fig-
+ure 2(b) is
+
+
+cos i = cos ¢1 sin Y1		(10a)
+
+For a retrograde or westward launching, which occurs when the azimuth angle at burnout exceeds 180°, the relation is
+
+(10b)
+
+The position of the satellite in the plane of the orbit at the instant of burnout is specified by the angle 01 (eq. (5)) measured
+relative to perigee. The perigee point in turn is related to one of the two nodes at the intersection of the projected orbital plane and the equatorial plane by the angle ill. The relationship for the situa­ tion shown in figure 2(b) is
+
+
+sin ¢1 = sin(ill + 01)
+L	sin i
+2
+or
+9
+
+
+(lla)
+
+tan ¢1
+
+= tan(ill + 01)
+
+(llb)
+
+jcos
+
+�11
+
+
+For determination of the argument of perigee ill, with 01, ¢1, and t1 or i given, the inverse angle relations implied by equations (lla) and (llb) are ordinarily most conveniently resolved in favor of placing the angle ill+ 01 in the first or fourth quadrants - that is,
+90° >(ill+ 01) > - 90°; thus, for reference purposes the node which is
+closest to the point of burnout is selected.
+Subsequent to burnout, the latitude of the satellite at any point in the orbit ¢s is given by relations similar to equation (lla), that
+is
+
+sin ¢s = sin i sin(ill + 0s)	(12)
+
+For use of equation (12) it is convenient to regard the•angle i as positive if the reference node is an ascending node, one where the equa­ tor is crossed from south to north. Conversely, if the reference node is a descending node, i should be regarded as a negative angle. The combinations of launch direction and burnout latitude, which lead to positive or negative values of i, together with the range of the
+azimuth v1 are summarized in table I.
+
+Longitude position.- The longitude of a point on the earth's surface is measured by the arc of the equator intercepted between the prime merid­ ian at Greenwich and the meridian through the point. A convenient refer­ ence for determining the longitude of a satellite is the node, the point
+
+
+..of intersection of the equatorial and orbital planes, at the instant of burnout. At a subsequent time, the nodal point will have shifted west­ ward by the product of the earth's angular velocity WE and the orbiting
+time.
+As given in equations (8) and (9), time is regarded as a function of the orbital angle e and is conveniently computed from perigee,
+e = o0. In the present paper, orbiting time is measured from burnout,
+e = 01, Time, therefore, at any instant in the first orbit may be given
+by t(es) - t(e1) or, in general, by t(es) - t(e1) + nT where T is
+the period of the satellite in minutes, and n is the number of com­	L
+8pleted orbits. (An orbit is completed when the latitude at burnout ¢1	2
+is reached again in the same direction as at launch.)	9
+From figure 2(b), the longitude of the reference node (AN)ref and the longitude of burnout Al are related by
+
+(13)
+«:
+where
+
+
+
+
+
+From figure 2(c), at time t(es)
+
+
+tan 6?\NS = cos i tan(m + 0g) and the longitude of the node is given by
+
+
+Hence, the longitude of the satellite at any time is
+
+
+(14)
+
+
+
+
+(15)
+
+
+
+
+(16)
+
+
+
+(17)
+:2Y
+
+9
+
+
+
+
+
+
+'Tf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+L
+2
+8
+9
+
+EXPRESSION FOR PLACING A SATELLITE OVER A SELECTED POSITION
+The requirement that a satellite with burnout position ¢1,A1 pass over a selected position ¢2,A2 after the completion of n orbits is
+equivalent to the requirement that, during the first orbit, the satellite pass over an equivalent position with latitude ¢2 the same as that of
+the selected position but with longitude A2e displaced eastward from A2 by an a.mount sufficient to compensate for the rotation of the earth during the n complete orbits, that is, by the polar hour angle !1l.l)ET.
+(See fig. 3(a).) The longitude of this equivalent position is thus given by the relation
+
+(18)
+
+The azimuth angle •i	which will place the satellite over the position
+¢2,A2e at time t(02e) will, therefore, n orbits later place it over the selected position ¢2,A2-
+The trace of the satellite position from the point ¢1,A1 to the
+point ¢2,A2e is not a great circle, since during the time interval t(02e) - t(01) when the satellite passes through the orbital angle 02e - 01, the earth rotates eastward through the polar hour angle
+� [t(02e) - t(01)]. The difference in polar hour angle ( which is a dif­
+ference in longitude) between the meridian A1 at t(01) and the merid­ ian through the point ¢2,A2e at t(02e) will be
+
+(19)
+
+Since the latitudes ¢1 and ¢2 are known, the orbit angle 02e - 01 (fig. 3(b)), may be obtained from equation (19) and the relation
+
+
+
+
+
+(In the application of 02e - 01 and &1-2e 02e - 01 will be less
+
+equation (20) it may be noted that since the angles are both portions of intersecting great circles,
+than (or greater than) 180° when &1-2e is less
+
+than (or greater than) 180°.)
+In the use of equations (19) and (20) an iterative procedure is required, since the time t(02e) from perigee to the equivalent posi­ tion is not known initially. A satisfactory first approximation is to assume that
+L
+2
+9(21)	8
+
+
+This value, substituted into equation (19), yields a first approximation
+for &1_2e. This approximation substituted into equation (20) yields	.
+a first approximation for 02e from which, by equation (8), a new value
+of t(02e) is obtained. The iteration of these three steps is continued	• until the value of 02e converges. For convenience these equations are
+listed in appendix B.
+The effects of the earth's oblateness, discussed in appendix A, may be included as small modifications of the values of ¢2	and A2e
+obtained in the first iteration. The equations are given in appendix B, and examples are shown in the following section.
+When convergence of the value of 02e has been attained, the
+azimuth angle at burnout t1 may now be calculated from the sine law (fig. 3(b)) by
+
+
+sin Ml-2e cos ¢2
+sin(02e - 01)
+
+
+(22)
+
+
+and the inclination angle by equations (10):
+
+
+
+The argument of perigee ru may be calculated from the following equation which is equation (lla):
+
+
+=	sin ¢1 sin i
+
+The position equations given in the previous section and listed in appendix B may be used to check final values and to compute the complete orbit path.
+In orbit calculations, such as those described in this paper, a number of occasions arise when ambiguities of the antitrigonometric functions must be resolved in order to place angles in the proper quad­ rants. The following conventions have been used in this paper:
+Longitude A: range, o0 to 360°; positive, counterclockwise, east­ ward; negative, clockwise, westward
+Azimuth f1: range, o0 to 360°; clockwise from north; orbits exhibit normal rotation when o0 < t1 < 180°; orbits exhibit retrograde motion
+when 180° < �l < 360°
+Orbit angle 9: range, o0 to 36o0; positive for normal rotation; negative for retrograde motion
+Inclination angle i: range, o0 to 90°; measured from equator; positive at ascending node; negative at descending node
+Nodal point N: sometimes specified as ascending node; reference node utilized herein is selected on basis of proximity to burnout point
+
+EXAMPLE ORBIT CALCULATIONS
+
+..In order to illustrate the application of the developed expressions, a temporary satellite orbit has been selected just outside the earth's atmosphere. Examples are given of a satellite launched eastward and one launched westward, each passing over a selected position after having completed three orbits. The two directions of launch illustrate that the procedure is not limited by the direction of launch. The positions .were considered favorable positions from which to initiate a reentry leading to a selected recovery area. Incremental changes from the desired lati­ tude and longitude due to the earth's oblateness, as discussed in
+
+appendix A, are included in the procedure for obtaining the azimuth angles.
+The results for both cases are then compared with the results obtained by the method of reference 2 of a three-degree-of-freedom calculation for an oblate rotating earth performed on an IBM 704 electronic data
+processing machine. The data from this calculation are referred to here­ inafter as three-degree-of-freedom data. Changes from the selected lati­ tude and longitude, resulting from incremental changes from the burnout condition t1 and ¢1 a.re also analyzed.
+The orbit characteristics of a satellite vehicle launched into an
+orbit 120 nautical miles above the earth's surface with an initial veloc­	L
+ity Vi= l.0l0Vc and an elevation angle r = 0.50° are presented in	2
+table II. The satellite radial distance r and time t calculated by	8
+equations (1), (8), and (9) are plotted as a function of 0 in figure 4.	9
+With the three parameters - speed, radial distance, and elevation angle - given, only the azimuth angle at burnout t1 remains to be calculated
+to establish the orbit completely.
+Eastward Launch, Case A
+The satellite is to be
+¢1=28.50° N.,A1=279.45° E.
+¢2=34.oo0  N.,A2=241.00° E.
+
+launched eastward from a burnout position and is to pass over a position
+after completing three orbits. The steps of
+
+the procedure for determining the azimuth angle at burnout are outlined and illustrated in appendix B.
+
+The azimuth angle fl is determined on the basis of an equivalent position ¢2,A2e which must be passed in the first orbit. After the
+first iteration, rt is desired to incorporate the oblateness effects as corrections to the desired position and to ¢2,A2e· For the orbiting
+time 3T + t(02e} - t(e1) � 281.615 minutes, there results a change in latitude of 0.o86° and a change in longitude of 1.028°. These values are subtracted from the original latitude and longitude to give a cor­ rected position ¢2=33-914° N.,A2=239.972° E. and hence a corrected
+A2e=308.661° E. With these substitutions into equations (19) and (20), the iteration for 02e is continued and final values of the desired quantities are obtained as shown in appendix B.
+By using the given initial conditions and v1 calculated by the method of tbis paper, an orbit was calculated by a three-degree-of­ freedom method for an oblate rotating earth (ref. 2). A trace of the resulting orbit is presented in figure 5(a). The method of the present paper indicated that the selected position would be reached in
+
+281.316 minutes.  The three-degree-of-freedom data indicated that at
+t = 281.316 minutes the satellite is located at ¢=33.98° N.,A=240.62° E., which is 18.6 nautical miles west of the desired position, and would reach the desired position at t = 281.398 minutes. This agreement is con­ sidered good.
+With the calculated azimuth and inclination angles, errors in the desired latitude and longitude due to insertion errors in 1"i and ¢1 are examined. The results for case A are presented in figure 6(a). The
+L	variations of Lu, 6.¢2, and M2	with 6.1"1 and 6.¢1 are considered
+to be small, the slopes being dependent on equations (Al) and (A3),
+8
+Westward Launch, Case B
+The same iteration procedure is used for the westward launch as used for the eastward launch with pertinent sign changes. As shown in appendix B, first approximations are made and resulting values are used to compute oblateness effects. These corrections are applied to ¢2
+..	and A2, and final values are then derived.
+As in case A, an orbit was calculated by a three-degree-of-freedom method by using the given initial conditions and v1 calculated by the
+method shown in appendix B.
+The trace of the resulting orbit is shown in figure 5(b). The method of this paper indicated that the desired position would be reached in 335.608 minutes. The three-degree-of-freedom data indicated that at
+t = 335.608 minutes the satellite is located at ¢=20.63° N.,A=320.67° E.,
+a point 52.2 nautical miles west of the desired position.
+The variations of 6.i, !:£/J2, and M2	with 6.t1 and 6.¢1 for case Bas derived in equations (Al) to (A3) are presented in figure 6(b). The results for both cases indicate that the error in the desired lati­
+tude and longitude is a function of the orbital angle w + 92, the azimuth
+angle at burnout t1, and the burnout latitude ¢1•
+
+CONCLUDING REMARKS
+
+It is possible by the use of a simple iteration procedure to estab­ lish the azimuth angle at burnout on the basis of a selected latitude and longitude and a prescribed number of complete orbits for a given satellite
+..	period and orbit eccentricity for either an eastward or westward launch.
+
+
+Incremental changes from the desired latitude and longitude positions due to the perigee motion and rotation of the orbital plane can conveniently be taken into account in the procedure. The magnitude of the changes for a given orbit is a function of the time in orbit and the inclination angle of the orbital plane. A comparison of the results for both the eastward and westward launches with the results obtained from a three­ degree-of-freedom calculation for an oblate rotating earth shows very good agreement. This indicates that there are no apparent limitations
+as to launch direction or selected passage point. The error in the desired latitude and longitude is a function of the orbital angle, the
+azimuth angle at burnout, and the burnout latitude.	L
+2
+8
+Langley Research Center,	9
+National Aeronautics and Space Administration, Langley Field, Va., November 27, 1959.
+
+
+
+
+•
+
+APPENDIX A
+
+INCREMENTAL CHANGES FROM DESIRED POSITIONS
+
+Incremental changes in the azimuth angle w1 and the resulting influence on the desired satellite passage point ¢2,A2 are presented
+along with incremental. changes due to the effect of the earth's oblate­ ness. Changes in the desired burnout conditions V1, r1, and 11 introduce changes in the orbit elements which are beyond the scope of
+,	this report and will therefore not be considered.
+The error in the inclination angle M	obtained by differentiating equation (1Oa) with respect to 'V1 and ¢1 is
+
+
+L'.:li
+
+cos ¢1 cos ljr	sin t1 sin ¢1 ¢
+
+= -	sin i
+
+1 L'.:l\jll +
+
+sin i
+
+l:::i. l
+
+(Al)
+
+
+The error in the desired satellite latitude obtained by differentiating equation (1Oa), making use of equation (Al), and neglecting L'.:102e is
+
+
+(A2)
+
+
+
+Similarly, the error in the desired longitude obtained by substituting equation (15) into equation (17) and differentiating, making use of equation (Al), and neglecting 602e is	•
+
+
+
+..	+
+
+cos i sec2(m+ e2e)
+2----	l::iJ.)
+1 + cos i tan2(m+ e2e)
+
+
+(A3)
+
+The errors in ¢2 and �2 as presented by equations (A2) and (A3) are thus made up of errors in the insertion conditions ¢1 and w1 and
+errors due to perigee motion /::in.	These errors are as follows:
+
+
+and
+L
+2
+8
+where the subscriEts ie and pm represent insertion errors and	9
+perigee motion (oblateness effects), respectively, and
+
+
+
+
+and
+
+
+
+
+
+
+
+cos i sec2(w+ e2e)
+
+1 + cos2i tan2(w+ 02e)
+
+
+
+
+
+
+
+
+
+/::in
+
+
+(A4)
+..
+
+(A5)
+
+
+
+The rotation of the perigee point /::in	is defined as
+/::in= -dw6.t
+dt
+
+
+
+(A6)
+
+
+where the approximate mean rate of the argument of perigee motion or rotation of the major axis in deg/min (ref. 3) is
+
+
+-a=w
+dt
+
+(A7)
+
+
+The rotation of the major axis is in the same direction as the satellite if i < 63.4°, in the opposite direction if i > 63.4° and is zero when i = 63.4°. The other main effect of the earth's oblateness is the rota­
+tion of the orbital plane H1 defined as
+
+
+H1 = d.O bot
+dt
+
+(A8)
+3Y
+
+17
+
+The orbital plane rotates about the earth's axis in the opposite direc­ tion to the earth's rotation and the approximate mean rate of rotation of the orbital plane in deg/min (ref. 3) is
+
+
+(A9)
+
+
+The rotation of the orbital plane affects only the incremental longitude so that a M'I. term must be included in equation (A3) to give the total oblateness effect on the longitude of the desired passage point. The magnitudes of t:m and NI. are obtained by multiplying equations (A7) and (A9) by the orbiting time nT + t(e)2 - t(e)1 expressed in minutes.
+Changes from the desired satellite passage point due to oblateness effect can be taken into account in the iteration procedure previously discussed. The desired passage point becomes
+
+
+¢2-
+
+(t:1/2J)total'
+
+A2 - (�A2 )total
+
+
+These values are substituted into equation (19) before a second itera­ tion is performed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+
+
+APPENDIX B
+
+EQUATIONS FOR CALCUIATING AZIMUTH ANGLE, OBIATENESS EFFECTS, AND SATELLITE POSITION AND ILLUSTRATIVE EXAMPLES
+Azimuth Angle
+The calculation of the azimuth angle at burnout involves the use	L
+of equations (21), (18), (19), (20), (8), (22), and (10) as follows:	2
+8
+9
+
+
+
+
+
+
+
+
+
+
+
+Oblateness Effects
+The oblateness effects are calculated through the use of the fol­ lowing equations:
+
+
+
+
+
+cos i sec2(m+82e)
+= ---�--"------'-- .CW + 60
+1 + cos21 tan2(m+ e2e)
+
+L	These equations make use of equations (A5) to (A9).
+2
+3
+9	Satellite Position
+The calculation of the satellite position involves the use of equations (12), (17), (lla), (14), (13), and (15). For convenience,
+,.	these equations are repeated as follows:
+
+
+
+sin ¢1 sin i
+
+
+
+
+
+Illustrative Examples of Orbit Calculations
+In the following sections examples of the orbit calculations for cases A (eastward launch) and B (westward launch) are given to demon­ strate the application of the method.
+
+
+..Case A, eastward launch.- For case A, eastward launch, the given launch position is ¢1=28.50° N.,A1=279.45° E.; the selected position is ¢2=34.oo0 N.,A2=241.00° E.; the number of orbital passes n is 3; and the equivalent selected longitude A2e is 309.689° E. The values
+of the first approximations are
+
+L
+2
+8
+9
+
+
+
+'1 = 70.468
+
+i = 34.081
+
+The values found in the calculation of the oblateness effects are
+t:::m = 1.965
+t:.¢2 = 0.086
+Ml,= -1.340
+t:.A2 = 1.028
+Corrected ¢2 = 33.914° N. Corrected A2 = 239.972° E.
+The iteration procedure, as explained in the text of this paper, yields the following values:
+
+
+
+
+,,._
+
+
+
+
+
+
+
+
+
+
+
+
+				
+				
+				
+				
+				
+L
+2
+98	The final values are as follows:
+t1 = 70.541
+i = 34.043
+(AN)	= 225.971
+ref
+m = 34.497
+¢Case B, westward launch.- For case B, westward launch, the given launch position is	1=34.ooo N.,A1=241.00° E.; the selecte� position is ¢2=20.00° N.,A2=320.00° E.; the number of orbital pass'::S n is 3; and the equivalent selected longitude A2e is 28.689° E. The values
+of the first approximations are
+t(82e - 81) = 54.012
+
+6A1_2e = -198.808
+e2e = -260.863
+
+
+'1	= 201.203
+
+i = -72-553
+The values found in the calculation of the oblateness effects are
+
+t::m = -0.531
+b.¢2 = 0 .503
+
+60	= -0.578
+b.A2 = -0.759
+Corrected ¢2 = 19.497° N. Corrected A2 = 320.759° E.
+The iteration procedure yields the following values:	L
+2
+			
+			
+			
+			
+			
+8
+9
+
+
+
+
+
+
+
+
+
+
+The final values are as follows:
+1¥1 = 198.721
+i = -74.569
+(°"N)ref =	230.269
+
+ru = 59.427
+
+
+REFERENCES
+
+Moulton, Forest Ray: An Introduction to Celestial Mechanics. Second rev. ed., The Macmillan Co., c.1914.
+Nielsen, Jack N., Goodwin, Frederick K., and Mersman, William A.: Three-Dimensional Orbits of Earth Satellites, Including Effects of Earth Oblateness and Atmospheric Rotation. NASA MEMO 12-4-58A,
+L	1958.
+2	3. King-Hele, D. G., and Gilmore, D. M. C.: The Effect of the Earth's
+Oblateness on the Orbit of a Near Satellite. Tech. Note
+No. G.W.475, British R.A.E., Oct. 1957.
+
+
+•
+
+
+
+
+
+TABLE I	L
+2
+8
+9
+MAGNITUDE OF AZIMUTH ANGLE Wi AND SIGN OF INCLINATION ANGLE i
+			
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+	
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+FOR A GIVEN BURNOUT IATITUDE AND IAUNCH DIRECTION
+
+
+'l
+4Y
+
+25
+
+
+
+
+
+
+
+
+
+
+
+
+TABLE II
+L
+2
+8	ORBIT CHARACTERISTICS USED FOR SAMPLE CALCUIATIONS
+9
+Satellite velocity at burnout, v1, ft/sec .. Distance of satellite from center of earth at burnout, r1, ft ............ .
+Elevation angle, r1, deg ....... .
+Velocity for circular orbit, Ve, ft/sec
+p/rl	.  . . . .  . . . . . . .  . .  .  . ..  .
+
+
+
+
+
+
+
+
+21,637,933
+0.5
+25506.28
+1.020022269
+
+Semimajor axis, a, ft . . . . . . . . . . Angle between perigee and burnout, e1, deg
+Eccentricity, e .	. ......... .
+Period, T, min	......... . Time from perigee to burnout, t(81), min
+
+22081775,58
+±23.969
+0.0219118
+91.585
+5.842
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+p, semilatus rectum
+
+
+
+1+	a(l+e)
+
+v1, satellite velocity
+at burnout
+elevation angle
+
+
+
+e, orbital angle, measured from perigee
+
+1e , angle between
+perigee and burnout
+
+
+
+
+
+
+
+Initial conditions at burnout.
+
+
+
+
+
+
+
+
+
+Eccentric anomaly True anomaly
+
+
+
+
+
+
+
+
+Eccentric and true anomaly.
+Figure 1.- Geometry of elliptic orbits, Arrows indicate positive direction of angles.
+
+
+
+27
+
+
+
+Satellite
+
+
+Le
+
+
+
+,,
+1 perigee
+
+
+n
+burnout
+
+
+
+
+X
+
+Relationship between orbital plane and �quatorial plane.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+y
+
+trace
+
+
+
+1aly
+
+
+
+
+
+
+
+
+
+
+
+
+
+ve
+
+Geometry of satellite path over earth. Time= t(61),
+
+
+
+°'E [t<e8)-t(e1)J --4	­
+&N-s-�	�
+
+
+
+
+
+
+
+
+(Gceome)try of satellite path over earth. Time= t(es).
+
+Figure 2.- Satellite orientation over spherical earth. Arrows indicate positive direction.
+
+
+
+
+
+
+
+
+
+28
+
+
+
+
+
+
+,-..
+...+ ,
+..c	n
+
+
+!J. ).l-2e
+
+0	�'Al
+912,).2
+
+
+!lO
+
+
++�-'		
+
+□ �,l2e
+
+Q)	0
+'O.. z
+"&.
+(LI	0
+)...	)
+
+.'Os
+�
+j	..c
+,fJ
+;:i
+0
+en
+,,......
+......I...
+
+
+
+
+
+
+
+
+Longitude, A, deg
+Eastward displacement of A2e
+
+
+
+
+
+
+
+
+
+East  (+)
+
+from A2.
+
+"Equator	0
+
+
+
+
+
+
+
+
+
+
+7(
+Equator
+
+Sa tel Ji te trace
+
+Relationship between orbit angles and earth positions at time t(02e).
+Figure 3.- Relation between selected position and equivalent position.
+1-289
+
+
+
+
+
+
+120
+
+22.6 X 106
+
+
+
+
+100
+
+
+-�
+
+
+
+22.4
+
+
+�....
+..
+
+-..-...-...	Bo
+<I>
+
+
+(l)
+Q)
+
+
+,-..
+-C,-.D,-
+...
+Q)
+0
+§
+
+!,.f,	60
+Q)
+e0.
+,.,
+'H
+
+22.0
+
+
+
+:aI)
+Q)
++>
+o,-1
+,-1
+
+.!	4o
+�
+
+21.8	,-1
+Q)+>
+t'1
+
+
+20	21.6
+
+
+
+0
+0	4o	80	120	160	200	240	280	320
+
+21.4
+360
+
+
+8,deg
+
+Figure 4.- Satellite time and distance as a function of e. rapogee = 22565628 ft; rperigee = 21597924 ft; T = 91.585 min.
+�
+60
+\J,j
+0
+
+
+ltO
+
+
+
+
+
+b.O	20
+Q)
+"O
+"\S"l..
+
+Q)"	0
+.'Oa
+�•r-i
+j
+-20
+
+
+
+-lto
+
+
+
+
+
+
+-60
+
+
+0	�o	80	120	160	200	2LO	280	320	360
+Longitude, A, deg
+
+Case A, eastward launch.
+Figure 5.- Satellite position trace on earth surface.
+
+
+
+68c-'I
+31
+
+
+
+
+
+
+
+
+
+80
+
+
+
+
+
+c0o\
+(\J
+Ji
+
+
+
+
+
+
+
+
+
+
+
+
+
+bl)
+Ql
+"d
+"a
+Q)�
+"d
+.E
+-·+r><
+j
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Longitude, i, deg
+
+Case B, westward launch. Figure 5,-	Concluded.
+32
+
+
+
+
+
+
+
+._a
+
+
+
+
+
+
+bD
+..(lJ
+'O
+
+·rl
+<I
+
+
+
+
+
+
+
+
+1
+
+bO
+..(l)
+'O
+0
+-f
+-1
+
+
+
+	
+	
+
+
+
+1
+
+t:-'
+I l'IJ 0:
+\.C
+		
+"-
+
+
+
+
+
+
+	
+	
+
+
+
+bl)
+(I)
+0'O
+"'
+N
+r<
+<I
+
+
+-1
+-1	0	1	-1	0	1
+
+�'	deg
+
+Case A, eastward launch.
+Figure 6.- Errors in 6¢2 and &2	due to errors in M.
+5Y
+
+33
+
+
+
+1
+
+
+b!J
+..(l)
+'O	0
+•r-t
+<:J
+
+
+
+-1
+
+
+
+1
+
+
+bO
+G)
+'t:f
+...	0
+�
+
+-1	I
+
+
+	
+	
+	
+	
+l	-
+
+b!J
+(l)
+'O
+"N	0
+�
+
+
+-1
+-1	0	1
+
+
+I
+-1	0	l
+6,951, deg
+
+Case B, westward launch. Figure 6.- Concluded.
+NASA - Langley Field, Va. L-289
+</p>
+
+
+</body>
+</html>
