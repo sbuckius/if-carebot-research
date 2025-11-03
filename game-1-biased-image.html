@@ -1,45 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link href='https://fonts.googleapis.com/css?family=Akatab' rel='stylesheet'>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link href="https://fonts.googleapis.com/css?family=Akatab" rel="stylesheet">
+  <title>Kitchen Computer</title>
   <style>
     body {
-      font-family: 'Akatab';
+      font-family: 'Akatab', sans-serif;
       font-size: 22px;
+      color: #fff0f6;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(160deg, #d63384 0%, #ff0033 50%, #b30047 100%);
+      background-attachment: fixed;
     }
 
-  html, body { margin: 0; padding: 0; }
-  canvas { touch-action: none; } /* stops touch gestures from scrolling */
-</style>
+    a {
+      color: #ffe6f2;
+      text-decoration: none;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 10px 18px;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
 
+    a:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    iframe {
+      margin-top: 1.5rem;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      box-shadow: 0 6px 30px rgba(255, 80, 120, 0.4);
+    }
+
+    canvas { touch-action: none; } /* prevent scroll during touch */
+  </style>
 </head>
 
 <body>
-<br>
-    <br>
-  <!-- Link that opens a temporary tab -->
   <a href="#" onclick="openTemp()">Kitchen Computer</a>
-<br>
-    <br>
-  <br>
-  <iframe src="game1biasedimage/index.html" style="height:400px;width:400px;" title="KitchenComputer"></iframe>
+
+  <iframe src="game1biasedimage/index.html"
+          style="height:400px;width:400px;"
+          title="KitchenComputer"></iframe>
 
   <script>
     function openTemp() {
-      // open the target site in a new tab
       const win = window.open("https://www.computerhistory.org/revolution/minicomputers/11/362", "_blank");
-
-      // wait 2 seconds, then close the tab
       setTimeout(() => {
         if (win && !win.closed) {
           win.close();
         }
-      }, 2000); // 2000 ms = 2 seconds
+      }, 2000);
     }
   </script>
-
 </body>
 </html>
-
