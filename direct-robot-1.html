@@ -5,19 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>p5.js Robot Image Picker</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <!-- Load captions BEFORE the main script -->
+  <script src="captions.js"></script>
   <style>
     :root { --w: 400px; --h: 600px; }
-    html, body { height: 100%; margin: 0; background: #0f1115; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    html, body { height: 100%; margin: 0; background: #3b0a0a; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .wrap { min-height: 100%; display: grid; place-items: center; padding: 12px; }
     .frame { width: var(--w); height: var(--h); position: relative; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
     #defaultCanvas0 { display:block; }
-    .overlay { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:16px; gap:12px; pointer-events:none; }
-    .card { background: rgba(15,17,21,0.72); border: 1px solid rgba(255,255,255,0.08); color:#fff; border-radius:16px; padding:14px 16px; backdrop-filter: blur(10px); pointer-events:auto; }
+
+    .overlay { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:16px; gap:12px; pointer-events:auto; }
+    .card { background: rgba(15,17,21,0.72); border: 1px solid rgba(255,255,255,0.08); color:#fff; border-radius:16px; padding:14px 16px; backdrop-filter: blur(10px); }
     .title { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
-    .desc { font-size: 14px; opacity:.9; margin:0; }
-    .row { display:flex; gap:10px; align-items:center; }
-    .btn { display:inline-block; text-decoration:none; background:#ffffff; color:#111827; font-weight:700; padding:10px 14px; border-radius:12px; font-size:14px; }
+    .desc { font-size: 16px; color: #ff66cc; margin:0; line-height:1.55; max-height: 320px; overflow:auto; }
+    .row { display:flex; justify-content:center; gap:20px; align-items:center; }
+    .btn { display:inline-block; text-decoration:none; background:#ffffff; color:#111827; font-weight:700; padding:10px 14px; border-radius:12px; font-size:14px; transition: background 0.2s, color 0.2s; }
     .btn:active { transform: translateY(1px); }
+    #restart { background:#660033; color:#fff; font-size:18px; font-weight:800; border:2px solid #660033; padding:10px 18px; border-radius:14px; }
+    #restart:hover { background:#cc0066; border-color:#cc0066; color:#fff; }
     .hint { position:absolute; top:10px; left:50%; transform:translateX(-50%); color:#fff; font-size:12px; opacity:.75; background:rgba(255,255,255,.08); padding:6px 10px; border-radius:999px; }
   </style>
 </head>
@@ -27,11 +32,13 @@
       <div class="hint" id="hint">Tap the image to select</div>
       <div class="overlay" id="overlay" style="display:none">
         <div class="card">
-          <p class="title" id="resultTitle">You picked: </p>
+          <p class="title" id="resultTitle">You picked:</p>
           <p class="desc" id="resultText">—</p>
         </div>
         <div class="row">
-          <a id="resultLink" class="btn" href="#" target="_blank" rel="noopener noreferrer">Open Link</a>
+          <a id="resultLink" class="btn" href="#" target="_blank" rel="noopener noreferrer">
+            If you were paid, advance to the next level by clicking here!
+          </a>
           <a id="restart" class="btn" href="#">Play Again</a>
         </div>
       </div>
@@ -39,39 +46,22 @@
   </div>
 
   <script>
-    const captions = [
-      'Robot 0: The curious explorer.',
-      'Robot 1: The wise old mentor.',
-      'Robot 2: The fast mechanic.',
-      'Robot 3: The artistic painter.',
-      'Robot 4: The musical dreamer.',
-      'Robot 5: The scientist of stars.',
-      'Robot 6: The friendly helper.',
-      'Robot 7: The brave guardian.',
-      'Robot 8: The thinker in motion.',
-      'Robot 9: The joyful dancer.',
-      'Robot 10: The forest wanderer.',
-      'Robot 11: The ocean traveler.',
-      'Robot 12: The desert rover.',
-      'Robot 13: The sky watcher.',
-      'Robot 14: The city builder.',
-      'Robot 15: The time keeper.',
-      'Robot 16: The storyteller.',
-      'Robot 17: The healer.',
-      'Robot 18: The dream architect.',
-      'Robot 19: The final philosopher.'
-    ];
+    const ASSET_BASE = "./images";
+    const CANVAS_W = 400, CANVAS_H = 600;
+    const IMAGE_SIZE = 160;
+    const SWITCH_MS = 250;
+    const INSTRUCTION = "Select an image. Once you have selected your image, go tell the human robot to perform the action described below.";
+
+    const CAPTIONS = (Array.isArray(window.captions) && window.captions.length >= 20)
+      ? window.captions
+      : Array.from({length:20}, (_,i)=>`Robot ${i}: placeholder text`);
 
     const items = Array.from({ length: 20 }, (_, i) => ({
-      src: `images/robot${i}.jpg`,
-      text: captions[i],
-      link: `https://example.com/robot-${i}`
+      idx: i,
+      text: CAPTIONS[i],
+      link: `https://example.com/robot-${i}`,
+      resolvedSrc: null
     }));
-
-    const CANVAS_W = 400;
-    const CANVAS_H = 600;
-    const IMAGE_SIZE = 200;
-    const SWITCH_MS = 250;
 
     let imgs = [];
     let currentIndex = 0;
@@ -93,104 +83,106 @@
     });
 
     function preload() {
-      let loaded = 0;
-      const fails = [];
-      imgs = items.map((it) =>
-        loadImage(
-          it.src,
-          () => {
-            loaded++;
-            console.log("loaded", it.src, `${loaded}/${items.length}`);
-          },
-          (e) => {
-            fails.push(it.src);
-            console.error("FAILED to load", it.src, e);
+      const tryExts = [".jpg", ".jpeg", ".png", ".JPG", ".JPEG", ".PNG"];
+      imgs = new Array(items.length);
+      items.forEach((it, ix) => {
+        const name = `robot${it.idx}`;
+        const candidates = tryExts.map(ext => `${ASSET_BASE}/${name}${ext}`);
+        const attempt = (k) => {
+          if (k >= candidates.length) {
             const pg = createGraphics(IMAGE_SIZE, IMAGE_SIZE);
             pg.background(30);
             pg.fill(255);
             pg.textAlign(CENTER, CENTER);
-            pg.textSize(14);
-            pg.text("Missing:\n" + it.src, IMAGE_SIZE/2, IMAGE_SIZE/2);
-            imgs[items.indexOf(it)] = pg;
+            pg.textSize(12);
+            pg.text(`Missing\\n${name}.*`, IMAGE_SIZE/2, IMAGE_SIZE/2);
+            imgs[ix] = pg;
+            return;
           }
-        )
-      );
+          const url = candidates[k];
+          loadImage(url, (img) => {
+            imgs[ix] = img;
+            items[ix].resolvedSrc = url;
+          }, () => attempt(k + 1));
+        };
+        attempt(0);
+      });
     }
 
     function setup() {
       const c = createCanvas(CANVAS_W, CANVAS_H);
       c.parent('game-frame');
       imageMode(CENTER);
-      textAlign(CENTER, CENTER);
       noStroke();
       lastSwitch = millis();
     }
 
+    function getLayout() {
+      const boxX = width / 2;
+      const boxY = 120;
+      const boxW = width - 30;
+      const boxH = 240;
+      const boxLeft  = boxX - boxW / 2;
+      const boxRight = boxX + boxW / 2;
+
+      const leftColW = IMAGE_SIZE + 130; // more spacing from image to text
+      const imgX = boxLeft + leftColW / 2;
+      const imgY = boxY;
+
+      const textPad = 20;
+      const textX = boxLeft + leftColW + textPad; // moved right further
+      const textY = imgY - IMAGE_SIZE / 2 + 4;
+      const textW = Math.max(140, boxRight - textX - textPad);
+
+      return { boxX, boxY, boxW, boxH, imgX, imgY, textX, textY, textW };
+    }
+
     function draw() {
-      const hud = `${currentIndex+1}/${items.length} → ${items[currentIndex]?.src || "(none)"}`;
-      setGradient();
+      background('#3b0a0a');
 
       if (lockedIndex === -1 && millis() - lastSwitch > SWITCH_MS) {
         currentIndex = (currentIndex + 1) % items.length;
         lastSwitch = millis();
       }
 
-      const cx = width / 2;
-      const cy = height / 2;
+      const L = getLayout();
       const img = imgs[currentIndex];
 
-      if (img && img.width > 0) {
-        image(img, cx, cy, IMAGE_SIZE, IMAGE_SIZE);
-      } else {
-        push();
+      push();
+      fill('#cc338b');
+      rectMode(CENTER);
+      rect(L.boxX, L.boxY, L.boxW, L.boxH, 20);
+
+      if (img && img.width > 0) image(img, L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE);
+      else {
         fill(255, 255, 255, 28);
         rectMode(CENTER);
-        rect(cx, cy, IMAGE_SIZE, IMAGE_SIZE, 18);
-        fill(255);
-        textSize(16);
-        text('Loading…', cx, cy);
-        pop();
+        rect(L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE, 18);
+        fill(255); textAlign(CENTER, CENTER); textSize(14);
+        text('Loading...', L.imgX, L.imgY);
       }
 
-      push();
-      noFill();
-      stroke(255, 255, 255, 60);
-      strokeWeight(2);
-      rectMode(CENTER);
-      rect(cx, cy, IMAGE_SIZE + 8, IMAGE_SIZE + 8, 22);
+      fill('#fff');
+      textSize(15);
+      textWrap(WORD);
+      textAlign(LEFT, TOP);
+      text(INSTRUCTION, L.textX, L.textY, L.textW);
       pop();
 
-      push();
-      fill(255, 255, 255, 120);
-      textSize(12);
-      text('Tap the image to select', width/2, height - 24);
-      text(hud, width/2, 20);
-      pop();
-
-      if (lockedIndex !== -1) {
-        noLoop();
-      }
+      if (lockedIndex !== -1) noLoop();
     }
 
     function mousePressed() {
-      handleSelect(mouseX, mouseY);
-    }
-
-    function touchStarted() {
-      handleSelect(mouseX, mouseY);
-      return false;
-    }
-
-    function handleSelect(x, y) {
       if (lockedIndex !== -1) return;
-      const cx = width / 2, cy = height / 2;
+      const L = getLayout();
       const half = IMAGE_SIZE / 2;
-      const inside = (x >= cx - half && x <= cx + half && y >= cy - half && y <= cy + half);
-      if (inside) {
+      if (mouseX >= L.imgX - half && mouseX <= L.imgX + half && mouseY >= L.imgY - half && mouseY <= L.imgY + half) {
         lockedIndex = currentIndex;
         showResult(lockedIndex);
       }
     }
+
+    function touchStarted() { mousePressed(); return false; }
 
     function showResult(idx) {
       const { text, link } = items[idx];
@@ -199,17 +191,7 @@
       resultLink.href = link;
       overlay.style.display = 'flex';
       document.getElementById('hint').style.display = 'none';
-    }
-
-    function setGradient() {
-      const gTop = color(22, 24, 30);
-      const gBot = color(10, 12, 18);
-      for (let y = 0; y < height; y++) {
-        const t = y / (height - 1);
-        const c = lerpColor(gTop, gBot, t);
-        stroke(c);
-        line(0, y, width, y);
-      }
+      loop();
     }
 
     window.preload = preload;
