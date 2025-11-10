@@ -61,10 +61,10 @@
 
     function updateUI() {
       if (checkbox.checked) {
-        statusEl.textContent = '✅ Verified — you may continue.';
+        statusEl.textContent = '✅ Verified — you may continue even if you are uncertain.';
         btn.disabled = false;
       } else {
-        statusEl.textContent = 'Please check the box to continue.';
+        statusEl.textContent = 'Please check the box to continue even if being human today is an unclear state.';
         btn.disabled = true;
       }
     }
