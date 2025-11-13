@@ -2,109 +2,165 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>HIT Task Launcher</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <style>
+      :root {
+        --bg1: #ffc0cb;
+        --bg2: #ffb6c1;
+        --bg3: #ff69b4;
+        --maroon: #800000;
+      }
+      html, body {
+        height: 100%;
+      }
       body {
         margin: 0;
-        height: 100vh;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, #ffc0cb, #ffb6c1, #ff69b4);
+        font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
         background-size: 400% 400%;
         animation: gradientShift 8s ease infinite;
-        text-align: center;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
-
       @keyframes gradientShift {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
 
-      main {
-        position: relative;
-        z-index: 2;
-        width: 100%;
+      /* Fullscreen layout that respects iPhone safe areas */
+      .screen {
+        position: fixed;
+        inset: 0;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+                 env(safe-area-inset-bottom) env(safe-area-inset-left);
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
-      canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 0;
+      /* Centered column content */
+      .stack {
+        width: min(92vw, 720px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(16px, 4vh, 32px);
+        text-align: center;
+        z-index: 2; /* above the canvas */
       }
 
-      button {
-        transition: all 0.3s ease;
+      h1 {
+        margin: 0;
+        color: var(--maroon);
+        font-weight: 600;
+        /* Fluid type that shrinks on iPhone */
+        font-size: clamp(18px, 6vw, 32px);
+        line-height: 1.2;
+      }
+
+      /* Big comfy button for easy tapping */
+      .cta {
+        appearance: none;
         border: none;
         border-radius: 18px;
-        color: white;
+        color: #fff;
         background: linear-gradient(135deg, #b30059, #cc0066, #993366);
-        box-shadow: 0 8px 20px rgba(128, 0, 64, 0.3);
+        box-shadow: 0 10px 24px rgba(128, 0, 64, 0.28);
+        cursor: pointer;
+        /* Large hit area that scales with screen width */
+        font-size: clamp(16px, 5vw, 22px);
+        padding: clamp(14px, 3.5vh, 18px) clamp(28px, 8vw, 36px);
+        min-width: 56%;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.08s ease, box-shadow 0.2s ease, background 0.3s ease;
+      }
+      .cta:focus-visible {
+        outline: 3px solid #fce4ef;
+        outline-offset: 3px;
+      }
+      .cta:hover {
+        background: linear-gradient(90deg, #b30059, #d147a3);
+      }
+      .cta:active {
+        transform: translateY(1px) scale(0.99);
+        box-shadow: 0 6px 18px rgba(128, 0, 64, 0.25);
       }
 
-      button:hover {
-        transform: scale(1.08);
-        background: linear-gradient(90deg, #b30059, #d147a3);
+      /* Put canvas behind everything and never intercept touches */
+      canvas {
+        position: fixed !important;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
       }
     </style>
   </head>
   <body>
-    <main></main>
+    <div class="screen">
+      <div class="stack" role="main">
+        <h1>Click the button to begin your HIT</h1>
+        <button id="startBtn" class="cta" aria-label="Begin Task">
+          💗 Begin Task 💗
+        </button>
+      </div>
+    </div>
+
     <script>
-      let button;
-      let links = [
+      // Links to choose from
+      const links = [
         "kilo-girls-game.html",
         "katharine-johnson-work.html",
         "woman-as-inventor-work.html",
         "game-1-biased-image.html"
       ];
 
+      // p5 background canvas (kept only for visual flair)
       function setup() {
-        createCanvas(windowWidth, windowHeight);
+        const c = createCanvas(windowWidth, windowHeight);
         noLoop();
-        drawContent();
-      }
-
-      function drawContent() {
-        background(255, 182, 193);
-        clear();
-
-        let textSizeValue = constrain(windowWidth / 18, 18, 36);
-        textAlign(CENTER, CENTER);
-        textSize(textSizeValue);
-        fill("#800000");
-        text("Click the button to begin your HIT", width / 2, height / 3);
-
-        if (!button) {
-          button = createButton("💗 Begin Task 💗");
-          resizeButton();
-          button.mousePressed(goToRandomLink);
-        }
-        button.center();
-      }
-
-      function resizeButton() {
-        let fontSize = constrain(windowWidth / 20, 14, 26);
-        button.style("font-size", fontSize + "px");
-        button.style("padding", "14px 28px");
+        drawBg();
       }
 
       function windowResized() {
         resizeCanvas(windowWidth, windowHeight);
-        drawContent();
+        drawBg();
       }
 
-      function goToRandomLink() {
-        let randomIndex = floor(random(links.length));
-        window.location.href = links[randomIndex];
+      function drawBg() {
+        // Optional: soft vignette so the centered content pops a bit
+        clear(); // canvas is behind; avoid drawing text here
+        const g = drawingContext.createRadialGradient(
+          width/2, height/2, min(width, height)*0.1,
+          width/2, height/2, max(width, height)*0.7
+        );
+        g.addColorStop(0, "rgba(255,255,255,0.08)");
+        g.addColorStop(1, "rgba(0,0,0,0.10)");
+        drawingContext.fillStyle = g;
+        noStroke();
+        rect(0, 0, width, height);
       }
+
+      // Reliable button interactions (click + keyboard)
+      const startBtn = document.getElementById("startBtn");
+      function goToRandomLink() {
+        const idx = Math.floor(Math.random() * links.length);
+        // Use location.assign for iOS reliability
+        window.location.assign(links[idx]);
+      }
+      startBtn.addEventListener("click", goToRandomLink);
+      startBtn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          goToRandomLink();
+        }
+      });
     </script>
   </body>
 </html>
