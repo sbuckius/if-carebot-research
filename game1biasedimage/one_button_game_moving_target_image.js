@@ -4,7 +4,7 @@ let win = false;
 const IMG_SIZE = 100;
 const HIT_RADIUS = IMG_SIZE / 2;
 let cnv;
-let winLink = "../kilo-girls-game.html"; // link to show on win
+let winLink = "../hit.html"; // link to show on win
 
 function preload() {
   img = loadImage("biased.png"); // must be in same folder as this script
