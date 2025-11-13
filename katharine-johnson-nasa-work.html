@@ -109,6 +109,40 @@
     background: linear-gradient(180deg, var(--btn-2), #6a00a6);
   }
 
+  /* NEW: utilities + input styling */
+  .hidden { display: none !important; }
+  .card {
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--card) 70%, #000 0%);
+    box-shadow: var(--shadow);
+    padding: clamp(14px, 2.5vmin, 20px);
+    border-radius: 18px;
+    backdrop-filter: blur(6px);
+    margin-top: 24px;
+  }
+  .input-label {
+    display:block;
+    font-weight:700;
+    margin-bottom:8px;
+    color:var(--muted);
+  }
+  .text-entry {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #2a0020;
+    color: var(--ink);
+    font: inherit;
+  }
+  .helper {
+    margin-top:8px;
+    color:var(--muted);
+    font-size:13px;
+    opacity:.9;
+  }
+
   /* Fullscreen PDF overlay (fallback) */
   .overlay {
     position: fixed;
@@ -198,15 +232,23 @@ NASA TN D-233 ... _ ,_]-N )=---•- =­ l .,/ .=--- j •.• TECHNICAL NOTE 0- 
       <button class="btn" id="openPdfBtn" type="button" aria-controls="pdfOverlay">
         Katharine Johnson’s Calculation for NASA
       </button>
+    </div>
 
+    <!-- NEW: Text entry area to unlock completion button -->
+    <section class="card" aria-label="Your answer">
+      <label class="input-label" for="userText">type your answer here.</label>
+      <textarea id="userText" class="text-entry" placeholder="Type an answer to For each Chunk, identify which Atomic Facts are grounded by the information contained in that Chunk."></textarea>
+     
+    </section>
+
+    <!-- Hidden until user types something -->
+    <div class="btn-row hidden" id="nextHitRow">
       <a class="btn secondary" id="nextHitBtn" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
         You completed this HIT. Go to your next HIT by clicking here
       </a>
     </div>
 
-    <footer>
-      Hint: the first button opens the NASA PDF in a new tab for a few seconds, then attempts to auto-close and return. If the browser blocks that, it will show an on-page viewer with a countdown and a direct link.
-    </footer>
+
   </main>
 
   <!-- Fallback overlay with embedded PDF and direct link -->
@@ -229,7 +271,7 @@ NASA TN D-233 ... _ ,_]-N )=---•- =­ l .,/ .=--- j •.• TECHNICAL NOTE 0- 
 <script>
   (function(){
     const PDF_URL = "https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf";
-    const DISPLAY_SECONDS = 5; // how long to “visit” before returning
+    const DISPLAY_SECONDS = 2; // how long to “visit” before returning
     const btn = document.getElementById('openPdfBtn');
 
     // Overlay elements (fallback)
@@ -255,14 +297,12 @@ NASA TN D-233 ... _ ,_]-N )=---•- =­ l .,/ .=--- j •.• TECHNICAL NOTE 0- 
       iframe.src = "about:blank";
       resetCountdown();
       btn.disabled = false;
-      // return focus to the button
       try { btn.focus({preventScroll:true}); } catch(e){}
     }
 
     function openOverlayFallback(){
       btn.disabled = true;
       overlay.classList.add('open');
-      // set sources + link
       obj.setAttribute('data', PDF_URL);
       iframe.src = PDF_URL;
       pdfDirectLink.href = PDF_URL;
@@ -278,16 +318,13 @@ NASA TN D-233 ... _ ,_]-N )=---•- =­ l .,/ .=--- j •.• TECHNICAL NOTE 0- 
     }
 
     function openInNewTabThenReturn(){
-      // Try to open in a new tab/window
-      const newWin = window.open(PDF_URL, '_blank'); // no 'noopener' so we can close it
+      const newWin = window.open(PDF_URL, '_blank'); // allow close attempt
       if (newWin && !newWin.closed) {
         btn.disabled = true;
-        // Start countdown UI in case user stays on the page
         resetCountdown();
         tick = window.setInterval(() => {
           remaining -= 1;
           if (remaining <= 0) window.clearInterval(tick);
-          // Show a tiny, temporary overlay-free countdown in the tab title
           document.title = `(${Math.max(remaining,0)}s) Chunks & Atomic Facts — Grounding Task`;
         }, 1000);
 
@@ -298,7 +335,6 @@ NASA TN D-233 ... _ ,_]-N )=---•- =­ l .,/ .=--- j •.• TECHNICAL NOTE 0- 
           resetCountdown();
         }, DISPLAY_SECONDS * 1000);
       } else {
-        // Pop-up likely blocked; use the on-page overlay fallback
         openOverlayFallback();
       }
     }
@@ -318,6 +354,16 @@ NASA TN D-233 ... _ ,_]-N )=---•- =­ l .,/ .=--- j •.• TECHNICAL NOTE 0- 
       e.preventDefault();
       closeOverlay();
     });
+
+    // === Text entry unlock logic ===
+    const textArea = document.getElementById('userText');
+    const nextHitRow = document.getElementById('nextHitRow');
+    function toggleNextButton(){
+      const hasText = textArea.value.trim().length > 0;
+      nextHitRow.classList.toggle('hidden', !hasText);
+    }
+    textArea.addEventListener('input', toggleNextButton);
+    window.addEventListener('DOMContentLoaded', toggleNextButton);
   }());
 </script>
 </body>
