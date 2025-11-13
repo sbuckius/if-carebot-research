@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Microtask Reward</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #8b0000; /* deep red */
+      }
+      button {
+        background-color: #800080; /* purple */
+        color: pink;
+        border: none;
+        padding: 15px 30px;
+        font-size: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+      }
+      button:hover {
+        transform: scale(1.1);
+        background-color: #9932cc; /* lighter purple */
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      let button;
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+        textAlign(CENTER, CENTER);
+        textFont('Helvetica');
+        noStroke();
+
+        // Create button
+        button = createButton("Click for more work!");
+        button.position(width / 2 - 120, height / 2 + 60);
+        button.mousePressed(() => {
+          window.location.href = "https://example.com"; // 🔗 Change this link
+        });
+      }
+
+      function draw() {
+        background("#8B0000"); // deep red
+        fill("pink");
+        textSize(48);
+        text("You earned $0.01!", width / 2, height / 2 - 60);
+
+        fill("#800000"); // maroon
+        textSize(32);
+        text("Great work! Click to get more work!", width / 2, height / 2);
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+        button.position(width / 2 - 120, height / 2 + 60);
+      }
+    </script>
+  </body>
+</html>
