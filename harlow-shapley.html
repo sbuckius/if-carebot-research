@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Replacement Cost — Audio Prompt</title>
+<style>
+  :root{
+    --bg1:#2b001a;     /* deep maroon */
+    --bg2:#3d0030;     /* plum */
+    --bg3:#4c0044;     /* purple */
+    --ink:#ffe9f2;     /* blush text */
+    --muted:#ffd2e3;   /* light pink */
+    --accent:#ff4d8d;  /* hot pink */
+    --accent-2:#b00055;/* maroon rose */
+    --btn:#c4007a;     /* magenta */
+    --btn-2:#a0008c;   /* purple-pink */
+    --card:#42002b88;  /* translucent card */
+    --border:#ff99c7;  /* soft pink border */
+    --shadow: 0 8px 28px rgba(255, 64, 128, .25);
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 1200px at 10% -10%, #8b0057 0%, transparent 50%),
+      radial-gradient(1200px 1200px at 110% 10%, #5d007a 0%, transparent 50%),
+      linear-gradient(160deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: clamp(16px, 4vmin, 32px) auto;
+    padding: 0 clamp(12px, 3vmin, 24px) 64px;
+  }
+
+  .title {
+    background: linear-gradient(90deg, #ff80b5, #ff4d8d 40%, #b000e6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    letter-spacing: .2px;
+    line-height: 1.2;
+    font-size: clamp(20px, 3.6vmin + 8px, 40px);
+    margin: 6px 0 16px 0;
+    text-wrap: balance;
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--card) 70%, #000 0%);
+    box-shadow: var(--shadow);
+    padding: clamp(14px, 2.5vmin, 20px);
+    border-radius: 18px;
+    backdrop-filter: blur(6px);
+    margin-bottom: 22px;
+  }
+
+  .media {
+    display: grid;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .media img {
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    background:#2a0020;
+  }
+
+  .media audio {
+    width: 100%;
+  }
+
+  .mono-card {
+    border: 1px dashed var(--border);
+    background: color-mix(in oklab, #6b004a 22%, #000 78%);
+    box-shadow: var(--shadow);
+    padding: clamp(14px, 2.5vmin, 20px);
+    border-radius: 16px;
+    white-space: pre-wrap;
+    line-height: 1.45;
+    font-size: clamp(12.5px, 1.45vmin + 8px, 15px);
+    color: var(--muted);
+  }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .btn {
+    appearance: none;
+    border: none;
+    color: white;
+    background: linear-gradient(180deg, var(--btn), var(--accent-2));
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform .08s ease, filter .08s ease, box-shadow .12s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn:hover { filter: brightness(1.07) saturate(1.05); }
+  .btn:active { transform: translateY(1px) scale(.995); }
+
+  .btn.secondary {
+    background: linear-gradient(180deg, var(--btn-2), #6a00a6);
+  }
+
+  .hidden { display:none !important; }
+
+  /* Fullscreen overlay (fallback viewer) */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(900px 900px at 50% -10%, rgba(255,77,141,.25), transparent 60%),
+      rgba(18, 0, 22, .85);
+    display: none;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+  }
+  .overlay.open { display: grid; place-items: center; }
+
+  .overlay-card {
+    width: min(100vw - 40px, 1000px);
+    height: min(100vh - 40px, 720px);
+    background: #1b0018;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 50px rgba(0,0,0,.45), 0 4px 20px rgba(255,77,141,.25) inset;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  .overlay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, #66003f, #3c0026);
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .countdown { font-variant-numeric: tabular-nums; background:#25001a; padding:6px 10px; border-radius:10px; border:1px solid #8d2a5b; }
+  .overlay iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #0f0011;
+  }
+  .overlay-footer {
+    padding: 10px 14px;
+    background:#230018;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+  }
+  .overlay a.inline-btn{
+    color:#fff; text-decoration:none; font-weight:700;
+    background: linear-gradient(180deg, #b0008b, #68006e);
+    padding:10px 14px; border-radius:10px; border:1px solid #ff99c7;
+  }
+
+  footer {
+    margin-top: 28px;
+    opacity: .85;
+    font-size: 13px;
+  }
+
+  .sparkle {
+    position: fixed; inset:0; pointer-events:none; mix-blend-mode: screen; opacity:.15;
+    background:
+      radial-gradient(3px 3px at 20% 30%, #ff9ac3 0 40%, transparent 45%),
+      radial-gradient(2px 2px at 70% 15%, #ca8bff 0 40%, transparent 45%),
+      radial-gradient(2.5px 2.5px at 85% 70%, #ff6aa7 0 40%, transparent 45%),
+      radial-gradient(2px 2px at 35% 80%, #ffb6dc 0 40%, transparent 45%);
+  }
+
+  /* Text entry styling */
+  .input-label {
+    display:block;
+    font-weight:700;
+    margin-bottom:8px;
+    color:var(--muted);
+  }
+  .text-entry {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #2a0020;
+    color: var(--ink);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    font: inherit;
+  }
+  .helper {
+    margin-top:8px;
+    color:var(--muted);
+    font-size:13px;
+    opacity:.9;
+  }
+</style>
+</head>
+<body>
+  <div class="sparkle" aria-hidden="true"></div>
+  <main class="wrap" role="main">
+    <h1 class="title">How much would it cost to replace this item? <br> Play the audio file to find out more.</h1>
+
+    <section class="card media" aria-label="Image and audio">
+      <figure style="margin:0">
+        <img src="kilo-girls.png" alt="Illustration titled 'kilo-girls'" />
+      </figure>
+
+      <audio controls preload="metadata">
+        <source src="harlow_shapley_girl_hours.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </section>
+
+    <section class="mono-card" aria-label="Transcript">
+Harlow Shapley on his assistants and "girl hours." ORAL HISTORY AUDIO EXCERPT Harlow Shapley on his assistants and "girl hours." Weiner: You talk of the work on globular clusters and the revolutionary implications of it which you pursued and published. And you talked of"we." Now, was this a solo effort or were there others involved with you in a discussion of this? You indicated that there wasn't too much discussion, but this was a big thing. Shapley: The discussion mostly was with Gretchen and maybe one or two assistants. You see, it took a tremendous lot of measures. I introduced the term "girl hours," and it would take a lot of girl hours to solve some of the problems. In fact, one job took several kilo-girl hours to get it through. So I should say that I had help on alot of the details. But I don't think I had much help in the hunching. Weiner: This was at Mount Wilson? Shapley: Both places. But not many girl hours at Mount Wilson. Very few. I had one full time girl assistant as I got along, but there were very few at Mount Wilson whereas Harvard was just swarming with these assistants. That's why wegot somewhere, got it done. And elsewhere people had assistants. But I was at the observatory at Mount Wilson for many years when nobody was expected to have assistants.
+    </section>
+
+    <div class="btn-row">
+      <button class="btn" id="openAipBtn2" type="button">Harlow Shapley on his assistants and "girl hours" (the intereview has been removed and I am unable to locate it anywhere online.)</button>
+    </div>
+
+    <!-- Text entry area (appears near the end); unlocks the HIT completion button -->
+    <section class="card" aria-label="Your answer">
+      <label class="input-label" for="userText">Enter the cost here:</label>
+      <textarea id="userText" class="text-entry" placeholder="Make a guess about how much it costs to replace this item."></textarea>
+     
+    </section>
+
+    <!-- Hidden until user types something -->
+    <div class="btn-row hidden" id="nextHitRow">
+      <a id="nextHitBtn" class="btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
+        You completed this HIT. Go to your next HIT by clicking here
+      </a>
+    </div>
+
+  
+  </main>
+
+  <!-- Fallback overlay with embedded page and direct link -->
+  <div id="aipOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="aipTitle">
+    <div class="overlay-card">
+      <header class="overlay-header">
+        <div id="aipTitle">Opening: AIP Oral Histories — Harlow Shapley</div>
+        <small>Auto-closing in <span class="countdown" id="countdown">2</span>s…</small>
+      </header>
+      <iframe id="aipFrame" title="AIP Oral History page"></iframe>
+      <div class="overlay-footer">
+        <a id="aipDirectLink" class="inline-btn" href="#" target="_blank" rel="noopener">Open in a new tab</a>
+        <a id="closeOverlayBtn" class="inline-btn" href="#" role="button">Close</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  (function(){
+    const AIP_URL = "https://www.aip.org/history-programs/niels-bohr-library/oral-histories/audio/4888-1";
+    const DISPLAY_SECONDS = 2;
+
+    const btns = [document.getElementById('openAipBtn1'), document.getElementById('openAipBtn2')];
+
+    // Overlay elements (fallback)
+    const overlay = document.getElementById('aipOverlay');
+    const iframe = document.getElementById('aipFrame');
+    const countdown = document.getElementById('countdown');
+    const directLink = document.getElementById('aipDirectLink');
+    const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+
+    let timer = null, tick = null, remaining = DISPLAY_SECONDS;
+
+    function resetCountdown(){
+      window.clearTimeout(timer);
+      window.clearInterval(tick);
+      remaining = DISPLAY_SECONDS;
+      countdown.textContent = remaining;
+    }
+
+    function closeOverlay(){
+      overlay.classList.remove('open');
+      iframe.src = "about:blank";
+      resetCountdown();
+      btns.forEach(b => b && (b.disabled = false));
+      document.title = "Replacement Cost — Audio Prompt";
+    }
+
+    function openOverlayFallback(){
+      btns.forEach(b => b && (b.disabled = true));
+      overlay.classList.add('open');
+      iframe.src = AIP_URL;
+      directLink.href = AIP_URL;
+
+      resetCountdown();
+      tick = window.setInterval(() => {
+        remaining -= 1;
+        countdown.textContent = Math.max(remaining, 0);
+        if (remaining <= 0) window.clearInterval(tick);
+      }, 1000);
+
+      timer = window.setTimeout(closeOverlay, DISPLAY_SECONDS * 1000);
+    }
+
+    function openInNewTabThenReturn(){
+      const newWin = window.open(AIP_URL, '_blank');
+      if (newWin && !newWin.closed) {
+        btns.forEach(b => b && (b.disabled = true));
+        resetCountdown();
+        tick = window.setInterval(() => {
+          remaining -= 1;
+          if (remaining <= 0) window.clearInterval(tick);
+          document.title = `(${Math.max(remaining,0)}s) Replacement Cost — Audio Prompt`;
+        }, 1000);
+
+        timer = window.setTimeout(() => {
+          try { newWin.close(); } catch(e) {}
+          document.title = "Replacement Cost — Audio Prompt";
+          btns.forEach(b => b && (b.disabled = false));
+          resetCountdown();
+        }, DISPLAY_SECONDS * 1000);
+      } else {
+        openOverlayFallback();
+      }
+    }
+
+    btns.forEach(b => b && b.addEventListener('click', openInNewTabThenReturn));
+
+    // Overlay controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) {
+        closeOverlay();
+      }
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeOverlay();
+    });
+    closeOverlayBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeOverlay();
+    });
+
+    // === Text entry unlock logic ===
+    const textArea = document.getElementById('userText');
+    const nextHitRow = document.getElementById('nextHitRow');
+
+    function toggleNextButton(){
+      const hasText = textArea.value.trim().length > 0;
+      if (hasText) {
+        nextHitRow.classList.remove('hidden');
+      } else {
+        nextHitRow.classList.add('hidden');
+      }
+    }
+    textArea.addEventListener('input', toggleNextButton);
+    // If the browser restores form state on reload
+    window.addEventListener('DOMContentLoaded', toggleNextButton);
+  }());
+</script>
+</body>
+</html>
