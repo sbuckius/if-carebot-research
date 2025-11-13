@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chunks & Atomic Facts — Grounding Task</title>
+<style>
+  :root{
+    --bg1:#2b001a;     /* deep maroon */
+    --bg2:#3d0030;     /* plum */
+    --bg3:#4c0044;     /* purple */
+    --ink:#ffe9f2;     /* blush text */
+    --muted:#ffd2e3;   /* light pink */
+    --accent:#ff4d8d;  /* hot pink */
+    --accent-2:#b00055;/* maroon rose */
+    --btn:#c4007a;     /* magenta */
+    --btn-2:#a0008c;   /* purple-pink */
+    --card:#42002b88;  /* translucent card */
+    --border:#ff99c7;  /* soft pink border */
+    --shadow: 0 8px 28px rgba(255, 64, 128, .25);
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 1200px at 10% -10%, #8b0057 0%, transparent 50%),
+      radial-gradient(1200px 1200px at 110% 10%, #5d007a 0%, transparent 50%),
+      linear-gradient(160deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: clamp(16px, 4vmin, 32px) auto;
+    padding: 0 clamp(12px, 3vmin, 24px) 64px;
+  }
+
+  .title {
+    background: linear-gradient(90deg, #ff80b5, #ff4d8d 40%, #b000e6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    letter-spacing: .2px;
+    line-height: 1.2;
+    font-size: clamp(20px, 3.6vmin + 8px, 40px);
+    margin: 6px 0 16px 0;
+    text-wrap: balance;
+  }
+
+  .note {
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--card) 70%, #000 0%);
+    box-shadow: var(--shadow);
+    padding: clamp(14px, 2.5vmin, 20px);
+    border-radius: 18px;
+    backdrop-filter: blur(6px);
+    margin-bottom: 22px;
+  }
+
+  .mono-card {
+    border: 1px dashed var(--border);
+    background: color-mix(in oklab, #6b004a 22%, #000 78%);
+    box-shadow: var(--shadow);
+    padding: clamp(14px, 2.5vmin, 20px);
+    border-radius: 16px;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    font-size: clamp(12.5px, 1.45vmin + 8px, 15px);
+    color: var(--muted);
+  }
+
+  blockquote {
+    margin: 0;
+    padding-left: 14px;
+    border-left: 4px solid var(--accent);
+  }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .btn {
+    appearance: none;
+    border: none;
+    color: white;
+    background: linear-gradient(180deg, var(--btn), var(--accent-2));
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform .08s ease, filter .08s ease, box-shadow .12s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn:hover { filter: brightness(1.07) saturate(1.05); }
+  .btn:active { transform: translateY(1px) scale(.995); }
+
+  .btn.secondary {
+    background: linear-gradient(180deg, var(--btn-2), #6a00a6);
+  }
+
+  /* Fullscreen PDF overlay (fallback) */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(900px 900px at 50% -10%, rgba(255,77,141,.25), transparent 60%),
+      rgba(18, 0, 22, .85);
+    display: none;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+  }
+  .overlay.open { display: grid; place-items: center; }
+
+  .overlay-card {
+    width: min(100vw - 40px, 1000px);
+    height: min(100vh - 40px, 720px);
+    background: #1b0018;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 50px rgba(0,0,0,.45), 0 4px 20px rgba(255,77,141,.25) inset;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  .overlay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, #66003f, #3c0026);
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .overlay-header small{ opacity:.9; font-weight:600; }
+  .countdown { font-variant-numeric: tabular-nums; background:#25001a; padding:6px 10px; border-radius:10px; border:1px solid #8d2a5b; }
+  .overlay iframe, .overlay object, .overlay embed {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #0f0011;
+  }
+  .overlay-footer {
+    padding: 10px 14px;
+    background:#230018;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+  }
+  .overlay a.inline-btn{
+    color:#fff; text-decoration:none; font-weight:700;
+    background: linear-gradient(180deg, #b0008b, #68006e);
+    padding:10px 14px; border-radius:10px; border:1px solid #ff99c7;
+  }
+
+  footer {
+    margin-top: 32px;
+    opacity: .85;
+    font-size: 13px;
+  }
+
+  .sparkle {
+    position: fixed; inset:0; pointer-events:none; mix-blend-mode: screen; opacity:.15;
+    background:
+      radial-gradient(3px 3px at 20% 30%, #ff9ac3 0 40%, transparent 45%),
+      radial-gradient(2px 2px at 70% 15%, #ca8bff 0 40%, transparent 45%),
+      radial-gradient(2.5px 2.5px at 85% 70%, #ff6aa7 0 40%, transparent 45%),
+      radial-gradient(2px 2px at 35% 80%, #ffb6dc 0 40%, transparent 45%);
+  }
+</style>
+</head>
+<body>
+  <div class="sparkle" aria-hidden="true"></div>
+  <main class="wrap" role="main">
+    <h1 class="title">Your task is to evaluate the relationship between Chunks and Atomic Facts.</h1>
+    <section class="note" aria-label="Grounding instructions">
+      <blockquote>
+        For each Chunk, identify which Atomic Facts are grounded by the information contained in that Chunk. <strong>Important Notes</strong>: <em>Grounding Criteria</em>: An Atomic Fact is considered grounded by a Chunk if <strong>you can confirm whether the fact is true or false using only the information in that Chunk.</strong> • Atomic Facts don't need to contain exact wording from the Chunk. Synonyms, alternative phrasings, or paraphrased information are acceptable if the meaning is supported by the Chunk. • An Atomic Fact can be supported by multiple different Chunks (Do not exclude a fact from evaluation just because it appeared in a previous chunk). • Each Chunk should be evaluated independently — focus only on what information that specific Chunk provides.
+      </blockquote>
+    </section>
+
+    <section class="mono-card" aria-label="Provided text block">
+NASA TN D-233 ... _ ,_]-N )=---•- =­ l .,/ .=--- j •.• TECHNICAL NOTE 0- 233 DETERMINATION OF AZIMUTH ANGLE AT BURNOUT FOR PLAClliG A SATELLITE OVER A SELECTED EARTH-POSITION By T. H. Skopinski and Katherine G. Johnson Langley Research Center Langley Field, Va. NATIONAL AERONAUTICS AND SPACE ADMINISTRATION WASHINGTON September 1960 -- -- y NATIONAL AERONAUTICS AND SPACE ADMINISTRATION TECHNICAL NOTE D-233 DETERMINATION OF AZJMUTH ANGLE AT BURNOUT FOR PLACING A SATELLITE OVER A SELECTED EARTH POSITION By T. H. Skopinski and Katherine G. Johnson SUMMARY Expressions are presented for relating the satellite position in the orbital plane with the projected latitude and longitude on a rotating earth surface. An expression is also presented for determining the azi­ muth angle at a given burnout position on the basis of a selected passage position on the earth's surface. Examples are presented of a satellite launched eastward and one launched westward, each passing over a selected position sometime after having completed three orbits. Incremental changes from the desired latitude and longitude due to the earth's oblateness are included in the iteration for obtaining the azimuth angles of the two examples. The results for both cases are then compared with those obtained from a com­ puting program using an oblate rotating earth. Changes from the selected latitude and longitude resulting from incremental canges from the burn­ out azimuth angle and latitude are also analyzed. INTRODUCTION --In the recovery of an artificial earth satellite it is necessary to bring the satellite over a preselected point above the earth from which the reentry is to be initiated. It is the purpose of the present paper to determine the azimuth angle which must exist at a given burnout point in order to have the satellite vehicle pass over any particular earth position after a selected small number of orbital passes. For this pur­ pose equations are developed which give the latitude and longitude of a point on the surface of a rotating spherical earth directly under the satellite at any time. An expression is developed which, with the orbit characteristics and the selected passage position on the earth's surface, will establish after only a few iterations the required azimuth angle at the burnout point. Elliptical orbits about a rotating spherical earth are first assumed. Although this simplification ignores the effects of the earth's oblateness, 2 • it is convenient to examine the oblateness effects later as incremental changes which an be accounted for in an iteration procedure. Departures from the desired latitude and longitude passage position resulting from incremental changes in the azimuth angle and latitude at burnout are also analyzed. SYMBOLS a semimajor axis of elliptic orbit L 2 E eccentric anomaly, defined by equation (9) 8 9 e eccentricity of orbit, defined by equation (6) gravitational constant at earth surface i inclination angle of orbital plane N nodal point at which satellite crosses equator n number of completed orbital passes, referenced to launch latitude 0 center of earth P perigee location in orbital plane p semilatus rectum of ellipse, defined by equation (1) radius of earth r distance of satellite from earth center position of satellite in orbital plane satellite period, defined by equation (7) t(0) time from perigee, min V satellite velocity, defined by equation (3) Ve satellite velocity for circular orbit, defined by equation (4) r elevation angle between local horizon and velocity vector, positive upwards • 8 angle in orbital plane measured from perigee point; also, true anomaly longitude measured east of prime meridian at Greenwich L 2 3 n (.l) .- geocentric latitude measured north or south of equator azimuth angle measured clockwise from North angle defining rotation of orbital plane about earth's axis angle in orbital plane between nodal point and perigee and, also, argument of perigee, deg angular velocity of the earth, 0.25068 deg/min (taken as 0.25 deg/min in this report) Subscripts: N nodal point n orbit number S any satellite position initial or burnout position selected position 2e equivalent selected position in first orbit l-2e increment between initial or burnout position and equivalent position SATELLITE POSITION RELATIONSHIPS If drag or accelerating forces acting parallel to the path of the  satellite are neglected, the initial conditions of speed V1, radial distance r1, and elevation angle r1 at final-stage burnout determine the orbit characteristics of a satellite. It is the inclination angle of the orbital plane a8 determined by the azimuth angle v1 at the burn­ out latitude ¢1, however, which determines the range of latitude that will be covered by the satellite. It should, therefore, be possible for a given value of Vi, r1, and r1 to determine an initial azimuth angle t1 which will place a satellite vehicle over a selected position on the rotating earth surface after a selected small number of orbits. A method for determining this initial azimuth angle is presented in this report.
+    </section>
+
+    <div class="btn-row">
+      <button class="btn" id="openPdfBtn" type="button" aria-controls="pdfOverlay">
+        Katharine Johnson’s Calculation for NASA
+      </button>
+
+      <a class="btn secondary" id="nextHitBtn" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
+        You completed this HIT. Go to your next HIT by clicking here
+      </a>
+    </div>
+
+    <footer>
+      Hint: the first button opens the NASA PDF in a new tab for a few seconds, then attempts to auto-close and return. If the browser blocks that, it will show an on-page viewer with a countdown and a direct link.
+    </footer>
+  </main>
+
+  <!-- Fallback overlay with embedded PDF and direct link -->
+  <div id="pdfOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+    <div class="overlay-card">
+      <header class="overlay-header">
+        <div id="pdfTitle">Opening: NASA Technical Note D-233 (1960)</div>
+        <small>Auto-closing in <span class="countdown" id="countdown">5</span>s…</small>
+      </header>
+      <object id="pdfObject" data="" type="application/pdf">
+        <iframe id="pdfFrame" title="NASA TN D-233 PDF (iframe fallback)" src=""></iframe>
+      </object>
+      <div class="overlay-footer">
+        <a id="pdfDirectLink" class="inline-btn" href="#" target="_blank">Open PDF in a new tab</a>
+        <a id="closeOverlayBtn" class="inline-btn" href="#" role="button">Close</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  (function(){
+    const PDF_URL = "https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf";
+    const DISPLAY_SECONDS = 5; // how long to “visit” before returning
+    const btn = document.getElementById('openPdfBtn');
+
+    // Overlay elements (fallback)
+    const overlay = document.getElementById('pdfOverlay');
+    const obj = document.getElementById('pdfObject');
+    const iframe = document.getElementById('pdfFrame');
+    const countdown = document.getElementById('countdown');
+    const pdfDirectLink = document.getElementById('pdfDirectLink');
+    const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+
+    let timer = null, tick = null, remaining = DISPLAY_SECONDS;
+
+    function resetCountdown(){
+      window.clearTimeout(timer);
+      window.clearInterval(tick);
+      remaining = DISPLAY_SECONDS;
+      countdown.textContent = remaining;
+    }
+
+    function closeOverlay(){
+      overlay.classList.remove('open');
+      obj.removeAttribute('data');
+      iframe.src = "about:blank";
+      resetCountdown();
+      btn.disabled = false;
+      // return focus to the button
+      try { btn.focus({preventScroll:true}); } catch(e){}
+    }
+
+    function openOverlayFallback(){
+      btn.disabled = true;
+      overlay.classList.add('open');
+      // set sources + link
+      obj.setAttribute('data', PDF_URL);
+      iframe.src = PDF_URL;
+      pdfDirectLink.href = PDF_URL;
+
+      resetCountdown();
+      tick = window.setInterval(() => {
+        remaining -= 1;
+        countdown.textContent = Math.max(remaining, 0);
+        if (remaining <= 0) window.clearInterval(tick);
+      }, 1000);
+
+      timer = window.setTimeout(closeOverlay, DISPLAY_SECONDS * 1000);
+    }
+
+    function openInNewTabThenReturn(){
+      // Try to open in a new tab/window
+      const newWin = window.open(PDF_URL, '_blank'); // no 'noopener' so we can close it
+      if (newWin && !newWin.closed) {
+        btn.disabled = true;
+        // Start countdown UI in case user stays on the page
+        resetCountdown();
+        tick = window.setInterval(() => {
+          remaining -= 1;
+          if (remaining <= 0) window.clearInterval(tick);
+          // Show a tiny, temporary overlay-free countdown in the tab title
+          document.title = `(${Math.max(remaining,0)}s) Chunks & Atomic Facts — Grounding Task`;
+        }, 1000);
+
+        timer = window.setTimeout(() => {
+          try { newWin.close(); } catch(e) { /* ignore */ }
+          document.title = "Chunks & Atomic Facts — Grounding Task";
+          btn.disabled = false;
+          resetCountdown();
+        }, DISPLAY_SECONDS * 1000);
+      } else {
+        // Pop-up likely blocked; use the on-page overlay fallback
+        openOverlayFallback();
+      }
+    }
+
+    btn.addEventListener('click', openInNewTabThenReturn);
+
+    // Overlay controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) {
+        closeOverlay();
+      }
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeOverlay();
+    });
+    closeOverlayBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeOverlay();
+    });
+  }());
+</script>
+</body>
+</html>
