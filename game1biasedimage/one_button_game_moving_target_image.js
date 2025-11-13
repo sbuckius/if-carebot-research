@@ -37,14 +37,14 @@ function draw() {
   background(30);
 
   if (win) {
-    fill(0, 255, 100);
+    fill('pink');
     textAlign(CENTER, CENTER);
     // Dynamically scale text to fit any screen size
     let tSize = min(width, height) / 25; // smaller on phones
     text("You win! You clicked the biased image!", width / 2, height / 2.2);
 
     // Draw clickable link below message
-    fill(0, 150, 255);
+    fill('red');
     textSize(tSize * .9);
     text("→ Go To Next Level!", width / 2, height / 2 + tSize * 1.5);
     noLoop();
