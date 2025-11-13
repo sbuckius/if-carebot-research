@@ -2,26 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>HIT Task Launcher</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <style>
       body {
         margin: 0;
+        height: 100vh;
         overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
         font-family: "Poppins", sans-serif;
         background: linear-gradient(135deg, #ffc0cb, #ffb6c1, #ff69b4);
         background-size: 400% 400%;
         animation: gradientShift 8s ease infinite;
+        text-align: center;
       }
+
       @keyframes gradientShift {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
+
+      main {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+      }
+
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
+
       button {
         transition: all 0.3s ease;
+        border: none;
+        border-radius: 18px;
+        color: white;
+        background: linear-gradient(135deg, #b30059, #cc0066, #993366);
+        box-shadow: 0 8px 20px rgba(128, 0, 64, 0.3);
       }
+
       button:hover {
         transform: scale(1.08);
         background: linear-gradient(90deg, #b30059, #d147a3);
@@ -37,37 +64,41 @@
         "katharine-johnson-work.html",
         "woman-as-inventor-work.html",
         "game-1-biased-image.html"
-        // 💡 Add more links here
       ];
 
       function setup() {
         createCanvas(windowWidth, windowHeight);
         noLoop();
+        drawContent();
+      }
 
+      function drawContent() {
         background(255, 182, 193);
+        clear();
+
+        let textSizeValue = constrain(windowWidth / 18, 18, 36);
         textAlign(CENTER, CENTER);
-        textSize(32);
+        textSize(textSizeValue);
         fill("#800000");
         text("Click the button to begin your HIT", width / 2, height / 3);
 
-        button = createButton("💗 Begin Task 💗");
-        button.style("font-size", "22px");
-        button.style("padding", "18px 36px");
-        button.style("border", "none");
-        button.style("border-radius", "18px");
-        button.style("color", "white");
-        button.style("background", "linear-gradient(135deg, #b30059, #cc0066, #993366)");
-        button.style("box-shadow", "0 8px 20px rgba(128, 0, 64, 0.3)");
+        if (!button) {
+          button = createButton("💗 Begin Task 💗");
+          resizeButton();
+          button.mousePressed(goToRandomLink);
+        }
         button.center();
-        button.mousePressed(goToRandomLink);
+      }
+
+      function resizeButton() {
+        let fontSize = constrain(windowWidth / 20, 14, 26);
+        button.style("font-size", fontSize + "px");
+        button.style("padding", "14px 28px");
       }
 
       function windowResized() {
         resizeCanvas(windowWidth, windowHeight);
-        background(255, 182, 193);
-        fill("#800000");
-        text("Click the button to begin your HIT", width / 2, height / 3);
-        button.center();
+        drawContent();
       }
 
       function goToRandomLink() {
