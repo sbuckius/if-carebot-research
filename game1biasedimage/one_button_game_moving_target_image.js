@@ -28,8 +28,8 @@ function setup() {
 function resetBall() {
   x = random(width);
   y = random(height);
-  dx = random(-6, 6);
-  dy = random(-6, 6);
+  dx = random(-20, 20);
+  dy = random(-20, 20);
   if (abs(dx) < 1 && abs(dy) < 1) dx = 2;
 }
 
@@ -46,7 +46,7 @@ function draw() {
     // Draw clickable link below message
     fill('red');
     textSize(tSize * .9);
-    text("→ Go To Next Level!", width / 2, height / 2 + tSize * 1.5);
+    text("→ Go To Next HIT!", width / 2, height / 2 + tSize * 1.5);
     noLoop();
     return;
   }
