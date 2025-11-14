@@ -51,6 +51,26 @@
     }
 
     canvas { touch-action: none; } /* prevent scroll during touch */
+
+    /* Smaller text for mobile / iPhone */
+    @media (max-width: 600px) {
+      body {
+        font-size: 16px;
+        padding: 10px;
+      }
+      a {
+        font-size: 18px;
+        padding: 8px 14px;
+      }
+      p {
+        font-size: 14px;
+        max-width: 90%;
+      }
+      iframe {
+        width: 90vw;
+        height: 60vw;
+      }
+    }
   </style>
 </head>
 
