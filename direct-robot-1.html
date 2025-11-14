@@ -103,22 +103,24 @@
     const ASSET_BASE = "./images";
     const CANVAS_W = 400, CANVAS_H = 600;
     const IMAGE_SIZE = 160;
-    const SWITCH_MS = 250;
+    const SWITCH_MS = 30; // ⚡ Fast scrolling speed
     const INSTRUCTION = "Select an image. Once you have selected your image, go tell the human robot to perform the action described below.";
 
-    const CAPTIONS = (Array.isArray(window.captions) && window.captions.length >= 20)
-      ? window.captions
-      : Array.from({length:20}, (_,i)=>`Robot ${i}: placeholder text`);
+    // Make sure there are 33 captions or placeholders
+    const CAPTIONS =
+      (Array.isArray(window.captions) && window.captions.length >= 33)
+        ? window.captions
+        : Array.from({ length: 33 }, (_, i) => `Robot ${i}: placeholder text`);
 
-    // Keep items fixed; we will randomize a separate 'order' of indices.
+    // 33 images
     const items = Array.from({ length: 33 }, (_, i) => ({
       idx: i,
-      text: CAPTIONS[i],
+      text: (CAPTIONS[i] ?? `Robot ${i}: placeholder text`),
       link: `paid.html`,
       resolvedSrc: null
     }));
 
-    // Fisher-Yates shuffle for an array (in place)
+    // Shuffle helper
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -126,18 +128,18 @@
       }
     }
 
-    // Build a shuffled order of indices [0..N-1]
+    // Make random order of indices
     function makeOrder(n) {
-      const a = Array.from({length:n}, (_,i)=>i);
+      const a = Array.from({ length: n }, (_, i) => i);
       shuffle(a);
       return a;
     }
 
     let imgs = [];
-    let currentIndex = 0;   // position inside 'order'
-    let order = [];         // shuffled list of item indices
+    let currentIndex = 0;
+    let order = [];
     let lastSwitch = 0;
-    let lockedIndex = -1;   // the actual chosen item index (0..N-1)
+    let lockedIndex = -1;
 
     const overlay = document.getElementById('overlay');
     const resultTitle = document.getElementById('resultTitle');
@@ -154,9 +156,8 @@
       lockedIndex = -1;
       overlay.style.display = 'none';
       hintEl.style.display = 'block';
-      // reshuffle order and reset position
       order = makeOrder(items.length);
-      currentIndex = 0;
+      currentIndex = Math.floor(Math.random() * items.length); // start randomly
       lastSwitch = millis();
       loop();
     });
@@ -166,10 +167,9 @@
       imgs = new Array(items.length);
 
       items.forEach((it, ix) => {
-        const idxStr = String(it.idx);          // "0", "1", ..., "19"
-        const z2 = idxStr.padStart(2, "0");     // "00", "01", ..., "19"
+        const idxStr = String(it.idx);
+        const z2 = idxStr.padStart(2, "0");
         const nameCandidates = [`robot${idxStr}`, `robot${z2}`];
-
         const candidates = nameCandidates.flatMap(name =>
           tryExts.map(ext => `${ASSET_BASE}/${name}${ext}`)
         );
@@ -200,8 +200,8 @@
       c.parent('game-frame');
       imageMode(CENTER);
       noStroke();
-      order = makeOrder(items.length); // initial shuffle
-      currentIndex = 0;
+      order = makeOrder(items.length);
+      currentIndex = Math.floor(Math.random() * items.length); // random start
       lastSwitch = millis();
     }
 
@@ -229,13 +229,12 @@
       background('#3b0a0a');
 
       if (lockedIndex === -1 && millis() - lastSwitch > SWITCH_MS) {
-        currentIndex = (currentIndex + 1) % items.length;
+        const jump = 1 + Math.floor(Math.random() * 4); // random jump 1–4
+        currentIndex = (currentIndex + jump) % items.length;
         lastSwitch = millis();
       }
 
       const L = getLayout();
-
-      // pick which actual item index we are showing via the shuffled order
       const showIdx = order[currentIndex];
       const img = imgs[showIdx];
 
@@ -268,7 +267,6 @@
       const L = getLayout();
       const half = IMAGE_SIZE / 2;
       if (mouseX >= L.imgX - half && mouseX <= L.imgX + half && mouseY >= L.imgY - half && mouseY <= L.imgY + half) {
-        // lock onto the currently displayed shuffled index
         lockedIndex = order[currentIndex];
         showResult(lockedIndex);
       }
