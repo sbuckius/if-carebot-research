@@ -110,17 +110,34 @@
       ? window.captions
       : Array.from({length:20}, (_,i)=>`Robot ${i}: placeholder text`);
 
-    const items = Array.from({ length: 30 }, (_, i) => ({
+    // Keep items fixed; we will randomize a separate 'order' of indices.
+    const items = Array.from({ length: 20 }, (_, i) => ({
       idx: i,
       text: CAPTIONS[i],
       link: `paid.html`,
       resolvedSrc: null
     }));
 
+    // Fisher-Yates shuffle for an array (in place)
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // Build a shuffled order of indices [0..N-1]
+    function makeOrder(n) {
+      const a = Array.from({length:n}, (_,i)=>i);
+      shuffle(a);
+      return a;
+    }
+
     let imgs = [];
-    let currentIndex = 0;
+    let currentIndex = 0;   // position inside 'order'
+    let order = [];         // shuffled list of item indices
     let lastSwitch = 0;
-    let lockedIndex = -1;
+    let lockedIndex = -1;   // the actual chosen item index (0..N-1)
 
     const overlay = document.getElementById('overlay');
     const resultTitle = document.getElementById('resultTitle');
@@ -137,6 +154,10 @@
       lockedIndex = -1;
       overlay.style.display = 'none';
       hintEl.style.display = 'block';
+      // reshuffle order and reset position
+      order = makeOrder(items.length);
+      currentIndex = 0;
+      lastSwitch = millis();
       loop();
     });
 
@@ -179,6 +200,8 @@
       c.parent('game-frame');
       imageMode(CENTER);
       noStroke();
+      order = makeOrder(items.length); // initial shuffle
+      currentIndex = 0;
       lastSwitch = millis();
     }
 
@@ -211,7 +234,10 @@
       }
 
       const L = getLayout();
-      const img = imgs[currentIndex];
+
+      // pick which actual item index we are showing via the shuffled order
+      const showIdx = order[currentIndex];
+      const img = imgs[showIdx];
 
       push();
       fill('#cc338b');
@@ -242,7 +268,8 @@
       const L = getLayout();
       const half = IMAGE_SIZE / 2;
       if (mouseX >= L.imgX - half && mouseX <= L.imgX + half && mouseY >= L.imgY - half && mouseY <= L.imgY + half) {
-        lockedIndex = currentIndex;
+        // lock onto the currently displayed shuffled index
+        lockedIndex = order[currentIndex];
         showResult(lockedIndex);
       }
     }
