@@ -143,9 +143,16 @@
     function preload() {
       const tryExts = [".jpg", ".jpeg", ".png", ".JPG", ".JPEG", ".PNG"];
       imgs = new Array(items.length);
+
       items.forEach((it, ix) => {
-        const name = `robot${it.idx}`;
-        const candidates = tryExts.map(ext => `${ASSET_BASE}/${name}${ext}`);
+        const idxStr = String(it.idx);          // "0", "1", ..., "19"
+        const z2 = idxStr.padStart(2, "0");     // "00", "01", ..., "19"
+        const nameCandidates = [`robot${idxStr}`, `robot${z2}`];
+
+        const candidates = nameCandidates.flatMap(name =>
+          tryExts.map(ext => `${ASSET_BASE}/${name}${ext}`)
+        );
+
         const attempt = (k) => {
           if (k >= candidates.length) {
             const pg = createGraphics(IMAGE_SIZE, IMAGE_SIZE);
@@ -153,7 +160,7 @@
             pg.fill(255);
             pg.textAlign(CENTER, CENTER);
             pg.textSize(12);
-            pg.text(`Missing\n${name}.*`, IMAGE_SIZE/2, IMAGE_SIZE/2);
+            pg.text(`Missing\nrobot${idxStr}.*`, IMAGE_SIZE/2, IMAGE_SIZE/2);
             imgs[ix] = pg;
             return;
           }
