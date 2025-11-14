@@ -28,8 +28,8 @@ function setup() {
 function resetBall() {
   x = random(width);
   y = random(height);
-  dx = random(-3, 3);
-  dy = random(-3, 3);
+  dx = random(-6, 6);
+  dy = random(-6, 6);
   if (abs(dx) < 1 && abs(dy) < 1) dx = 2;
 }
 
