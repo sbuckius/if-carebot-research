@@ -113,7 +113,6 @@
           <div class="pill">Next: <b>N</b></div>
         </div>
         <div class="actions">
-          <!-- ✅ Redirect button renamed -->
           <button id="openCalcBtn" class="btn secondary" type="button">Human Computers</button>
           <button id="undo" class="btn" type="button">Undo</button>
           <button id="next" class="btn" type="button" disabled>Next</button>
@@ -258,23 +257,45 @@ function drawCompletion(){
 
 /* ========= interaction ========= */
 function mousePressed(){
-  if(finished) return;
-  if(!inside(mouseX,mouseY)) return;
+  if(finished) return false;
+  if(!inside(mouseX,mouseY)) return false;
   dragging=true; dragStart={x:mouseX,y:mouseY};
   tempRect={x:mouseX,y:mouseY,w:0,h:0};
+  return false;
 }
-function mouseDragged(){ if(dragging){ tempRect.w=mouseX-dragStart.x; tempRect.h=mouseY-dragStart.y; } }
+function mouseDragged(){
+  if(!dragging) return false;
+  tempRect.w=mouseX-dragStart.x; tempRect.h=mouseY-dragStart.y;
+  return false;
+}
 function mouseReleased(){
-  if(!dragging) return; dragging=false;
-  const n=norm(tempRect); tempRect=null;
-  if(n.w<12 || n.h<12) return;
-  if(!inter(n)) return;
-  const r=toImg(n); imgMeta[current].boxes.push(r); updateUI();
+  if(!dragging) return false;
+  dragging=false;
+  const n=normalizeRect(tempRect);
+  tempRect=null;
+
+  // Clamp to image bounds and store if sufficiently large
+  const clampedCanvasRect = clampRectToImage(n);
+  const MIN = 10; // minimal visible size in canvas px
+  if(clampedCanvasRect.w < MIN || clampedCanvasRect.h < MIN) return false;
+
+  const rImg = canvasRectToImg(clampedCanvasRect);
+  imgMeta[current].boxes.push(rImg);
+  updateUI();
+  return false;
 }
-function touchStarted(){ mousePressed(); } function touchMoved(){ mouseDragged(); } function touchEnded(){ mouseReleased(); }
+// touch aliases (prevent default scroll/zoom)
+function touchStarted(){ return mousePressed(); }
+function touchMoved(){ return mouseDragged(); }
+function touchEnded(){ return mouseReleased(); }
+
 function keyPressed(){ if(key==='z'||key==='Z') undoLast(); if(key==='n'||key==='N') nextImage(); }
 
-function undoLast(){ if(finished) return; const b=imgMeta[current].boxes; if(b.length>0){ b.pop(); updateUI(); } }
+function undoLast(){
+  if(finished) return;
+  const b=imgMeta[current].boxes;
+  if(b.length>0){ b.pop(); updateUI(); }
+}
 function nextImage(){
   if(finished) return;
   if(imgMeta[current].boxes.length===0) return;
@@ -301,16 +322,37 @@ function updateScaleInfo(){
   scaleInfo={ x:(cw - iw*s)/2, y:(ch - ih*s)/2, w:iw*s, h:ih*s, scale:s };
 }
 function inside(x,y){ return scaleInfo && x>=scaleInfo.x && x<=scaleInfo.x+scaleInfo.w && y>=scaleInfo.y && y<=scaleInfo.y+scaleInfo.h; }
-function inter(r){
-  const ix=scaleInfo.x, iy=scaleInfo.y, iw=scaleInfo.w, ih=scaleInfo.h;
-  const rx2=r.x+r.w, ry2=r.y+r.h, ix2=ix+iw, iy2=iy+ih;
-  return !(r.x>ix2 || rx2<ix || r.y>iy2 || ry2<iy);
+
+function normalizeRect(r){
+  const x = r.w<0 ? r.x + r.w : r.x;
+  const y = r.h<0 ? r.y + r.h : r.y;
+  const w = Math.abs(r.w), h = Math.abs(r.h);
+  return { x, y, w, h };
 }
-function norm(r){ const x=r.w<0?r.x+r.w:r.x, y=r.h<0?r.y+r.h:r.y; return { x, y, w:Math.abs(r.w), h:Math.abs(r.h) }; }
-function toImg(r){
-  const sx=(r.x-scaleInfo.x)/scaleInfo.scale, sy=(r.y-scaleInfo.y)/scaleInfo.scale;
-  const sw=r.w/scaleInfo.scale, sh=r.h/scaleInfo.scale;
-  return { x:sx, y:sy, w:sw, h:sh };
+
+// Clamp any canvas-rect to the current image area (ensures it always “sticks”)
+function clampRectToImage(r){
+  if(!scaleInfo) return r;
+  const ix=scaleInfo.x, iy=scaleInfo.y, iw=scaleInfo.w, ih=scaleInfo.h;
+  const x1 = Math.max(ix, Math.min(ix + iw, r.x));
+  const y1 = Math.max(iy, Math.min(iy + ih, r.y));
+  const x2 = Math.max(ix, Math.min(ix + iw, r.x + r.w));
+  const y2 = Math.max(iy, Math.min(iy + ih, r.y + r.h));
+  return { x: Math.min(x1,x2), y: Math.min(y1,y2), w: Math.abs(x2 - x1), h: Math.abs(y2 - y1) };
+}
+
+// Conversions
+function canvasRectToImg(r){
+  const p1 = canvasToImgPoint(r.x, r.y);
+  const p2 = canvasToImgPoint(r.x + r.w, r.y + r.h);
+  const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
+  const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
+  return { x, y, w, h };
+}
+function canvasToImgPoint(px,py){
+  const sx=(px - scaleInfo.x)/scaleInfo.scale;
+  const sy=(py - scaleInfo.y)/scaleInfo.scale;
+  return { x:sx, y:sy };
 }
 function imgRectToCanvas(r){
   return {
