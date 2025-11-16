@@ -3,73 +3,107 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tech Work — Centered App (Auto Images + 3s Visit)</title>
+<title>Tech Work — Centered App</title>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
 <style>
   :root{
-    --bg1:#2b001a; --bg2:#3d0030; --bg3:#4c0044;
-    --ink:#ffe9f2; --muted:#ffd2e3; --accent:#ff4d8d; --accent-2:#b00055;
-    --btn:#c4007a; --btn-2:#a0008c; --card:#28001c; --border:#ff99c7;
-    --shadow: 0 8px 28px rgba(255, 64, 128, .25);
+    --rose:#ff5c8a; --hot:#ff335c; --candy:#ff7aa8; --bubble:#ffd2e6;
+    --berry:#8e004b; --crimson:#a1002b; --maroon:#5b001f; --wine:#6d0033;
+    --plum:#4c0038; --violet:#4c0044; --ink:#fff2f6;
+    --shadow:0 8px 28px rgba(255,64,128,.28); --border:var(--candy);
   }
-  html, body {
-    margin:0; height:100%;
-    color:var(--ink);
+  html,body{
+    margin:0;height:100%;color:var(--ink);
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
     background:
-      radial-gradient(1200px 1200px at 10% -10%, #8b0057 0%, transparent 50%),
-      radial-gradient(1200px 1200px at 110% 10%, #5d007a 0%, transparent 50%),
-      linear-gradient(160deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+      radial-gradient(1200px 1000px at -10% 0%,var(--rose)0%,transparent55%),
+      radial-gradient(1200px 900px at 110% 10%,var(--hot)0%,transparent55%),
+      radial-gradient(800px 800px at 50% 110%,var(--berry)0%,transparent60%),
+      linear-gradient(165deg,var(--maroon),var(--wine)45%,var(--violet));
   }
   .wrap{max-width:980px;margin:clamp(16px,4vmin,32px) auto;padding:0 clamp(12px,3vmin,24px) 48px;}
-  .app{border:1px solid var(--border);background:color-mix(in oklab,var(--card) 70%, #000 0%);
-       box-shadow:var(--shadow);border-radius:18px;overflow:hidden;}
-  .app-header,.app-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;
-       padding:12px 14px;background:linear-gradient(180deg, rgba(25,8,18,.8), rgba(25,8,18,.35));}
-  .title{font-weight:800;letter-spacing:.2px;font-size:clamp(14px,2.4vw,18px);}
+  .app{border:1px solid var(--border);
+    background:color-mix(in oklab,rgba(255,255,255,.04)20%,var(--maroon)80%);
+    box-shadow:var(--shadow);border-radius:18px;overflow:hidden;}
+  .app-header,.app-footer{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 14px;background:linear-gradient(180deg,rgba(25,8,18,.8),rgba(25,8,18,.35));
+  }
+  .title{
+    font-weight:800;letter-spacing:.2px;font-size:clamp(14px,2.4vw,18px);
+    background:linear-gradient(90deg,var(--hot),var(--rose)40%,var(--candy));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
   .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
   .canvas-shell{position:relative;width:100%;height:min(68vh,620px);background:#160012;}
   canvas{display:block;width:100%;height:100%;}
   .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
   .hints{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
-  .pill{background:color-mix(in oklab,#6b004a 22%,#000 78%);color:var(--muted);
-       padding:8px 10px;border-radius:999px;border:1px solid var(--border);font-size:clamp(12px,2vw,14px);}
+  .pill{
+    background:color-mix(in oklab,var(--plum)70%,#00030%);
+    color:var(--bubble);padding:8px 10px;border-radius:999px;
+    border:1px solid var(--border);font-size:clamp(12px,2vw,14px);
+  }
   .actions{display:flex;gap:8px;flex-wrap:wrap;}
-  .btn{appearance:none;border:1px solid var(--border);color:#fff;
-       background:linear-gradient(180deg,var(--btn),var(--accent-2));padding:12px 16px;border-radius:14px;
-       font-weight:700;font-size:16px;min-height:44px;cursor:pointer;box-shadow:var(--shadow);
-       -webkit-tap-highlight-color:transparent;}
-  .btn.secondary{background:linear-gradient(180deg,var(--btn-2),#6a00a6);}
+  .btn{
+    appearance:none;border:1px solid var(--border);color:#fff;
+    background:linear-gradient(180deg,var(--hot),var(--crimson));
+    padding:12px 16px;border-radius:14px;font-weight:700;font-size:16px;
+    min-height:44px;cursor:pointer;box-shadow:var(--shadow);
+    -webkit-tap-highlight-color:transparent;text-decoration:none;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .btn.secondary{background:linear-gradient(180deg,var(--rose),var(--berry));}
   .btn[disabled]{opacity:.6;cursor:not-allowed;filter:saturate(.7);}
-  a.final-link{color:#ffd1ec;text-decoration:underline;font-weight:700;font-size:18px;}
-  .sparkle{position:fixed;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.15;z-index:0;
-    background:
-      radial-gradient(3px 3px at 20% 30%, #ff9ac3 0 40%, transparent 45%),
-      radial-gradient(2px 2px at 70% 15%, #ca8bff 0 40%, transparent 45%),
-      radial-gradient(2.5px 2.5px at 85% 70%, #ff6aa7 0 40%, transparent 45%),
-      radial-gradient(2px 2px at 35% 80%, #ffb6dc 0 40%, transparent 45%);
-  }
-  /* Fallback message if pop-up is blocked */
+  .final-link-btn{display:inline-block;}
   .pop-msg{
-    position: fixed; left:50%; bottom: 14px; transform: translateX(-50%);
-    background: #2a001d; color: var(--muted); border:1px solid var(--border);
-    padding:10px 14px; border-radius:12px; box-shadow: var(--shadow);
-    font-size:14px; display:none; z-index:9999;
+    position:fixed;left:50%;bottom:14px;transform:translateX(-50%);
+    background:#2a001d;color:var(--bubble);border:1px solid var(--border);
+    padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);
+    font-size:14px;display:none;z-index:9999;
   }
-  .pop-msg.show{ display:block; }
+  .pop-msg.show{display:block;}
+  .overlay{
+    position:fixed;inset:0;
+    background:
+      radial-gradient(900px 900px at 50% -10%,rgba(255,77,141,.25),transparent60%),
+      rgba(18,0,22,.85);
+    display:none;z-index:9999;backdrop-filter:blur(2px);
+  }
+  .overlay.open{display:grid;place-items:center;}
+  .overlay-card{
+    width:min(100vw - 40px,1000px);
+    height:min(100vh - 40px,720px);
+    background:#1b0018;border:1px solid var(--candy);border-radius:18px;overflow:hidden;
+    box-shadow:0 12px 50px rgba(0,0,0,.45),0 4px 20px rgba(255,77,141,.25) inset;
+    display:grid;grid-template-rows:auto 1fr auto;
+  }
+  .overlay-header{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:10px 14px;background:linear-gradient(180deg,var(--crimson),var(--berry));
+    color:var(--bubble);font-weight:700;
+  }
+  .countdown{font-variant-numeric:tabular-nums;background:#25001a;
+    padding:6px 10px;border-radius:10px;border:1px solid var(--rose);}
+  .overlay iframe{width:100%;height:100%;border:0;background:#0f0011;}
+  .overlay-footer{padding:10px 14px;background:#230018;display:flex;justify-content:flex-end;gap:10px;}
+  .overlay a.inline-btn{
+    color:#fff;text-decoration:none;font-weight:700;
+    background:linear-gradient(180deg,var(--rose),var(--plum));
+    padding:10px 14px;border-radius:10px;border:1px solid var(--candy);
+  }
 </style>
 </head>
 <body>
-  <div class="sparkle" aria-hidden="true"></div>
-  <main class="wrap" role="main">
-    <section class="app" aria-label="Tech Work Task">
+  <main class="wrap">
+    <section class="app">
       <header class="app-header">
         <div class="title">Draw a box around every person doing work with technology</div>
         <div class="progress" id="progress"></div>
       </header>
 
       <div class="canvas-shell">
-        <div id="canvasHolder" style="position:absolute; inset:0;"></div>
+        <div id="canvasHolder" style="position:absolute;inset:0;"></div>
       </div>
 
       <footer class="app-footer">
@@ -79,7 +113,8 @@
           <div class="pill">Next: <b>N</b></div>
         </div>
         <div class="actions">
-          <button id="visit" class="btn secondary" type="button">Visit Calculator Page (3s)</button>
+          <!-- ✅ Redirect button renamed -->
+          <button id="openCalcBtn" class="btn secondary" type="button">Human Computers</button>
           <button id="undo" class="btn" type="button">Undo</button>
           <button id="next" class="btn" type="button" disabled>Next</button>
         </div>
@@ -87,250 +122,195 @@
     </section>
   </main>
 
-  <!-- Pop-up blocked helper -->
-  <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site or tap the link in the new tab.</div>
+  <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site.</div>
+
+  <!-- overlay fallback for redirect -->
+  <div id="calcOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="calcTitle">
+    <div class="overlay-card">
+      <header class="overlay-header">
+        <div id="calcTitle">Opening: Computer History Museum — Calculators</div>
+        <small>Auto-closing in <span class="countdown" id="countdown">3</span>s…</small>
+      </header>
+      <iframe id="calcFrame" title="CHM page"></iframe>
+      <div class="overlay-footer">
+        <a id="calcDirectLink" class="inline-btn" href="#" target="_blank" rel="noopener">Open in a new tab</a>
+        <a id="closeOverlayBtn" class="inline-btn" href="#" role="button">Close</a>
+      </div>
+    </div>
+  </div>
 
 <script>
 /* ========= Settings ========= */
-const FOLDER_PATH = "images/";
-const FILE_PREFIX = "techwork";
-const FILE_EXT    = ".png";
-const EXTERNAL_URL = "https://www.computerhistory.org/revolution/calculators/1/65";
-const DISPLAY_SECONDS = 3;            // how long the external tab stays open
-const MAX_ATTEMPTS    = 500;          // hard ceiling so we never loop forever
+const FOLDER_PATH="images/";
+const FILE_PREFIX="techwork";
+const FILE_EXT=".png";
+const MAX_ATTEMPTS=500;
 
-/* ========= p5 State ========= */
-let imgs = [];
-let imgMeta = [];
-let current = 0;
-let dragging = false;
-let dragStart = null;
-let tempRect = null;
-let scaleInfo = null;
-let finished = false;
-let canvas;
-let discovering = true;               // while we probe for files
+const EXTERNAL_URL="https://www.computerhistory.org/revolution/calculators/1/65";
+const DISPLAY_SECONDS=3;
 
-/* ========= Auto-discover images (robust) =========
-   We start at techwork0.png and keep going until the first miss.
-   This runs in setup() via an async IIFE so preload isn’t required. */
-function loadImageAsync(path){
-  return new Promise((resolve,reject)=>{
-    const im = loadImage(
-      path,
-      () => resolve(im),
-      () => reject(new Error("load-failed"))
-    );
+/* ========= State ========= */
+let imgs=[],imgMeta=[],current=0,dragging=false,dragStart=null,tempRect=null,scaleInfo=null,finished=false,canvas;
+let discovering=true;
+
+/* ========= Auto-discover images (contiguous from 0) ========= */
+function loadImageAsync(p){
+  return new Promise((res,rej)=>{
+    const im=loadImage(p,()=>res(im),()=>rej(new Error("load-failed")));
   });
 }
-
 async function discoverImages(){
-  let i = 0;
-  try {
-    for (; i < MAX_ATTEMPTS; i++){
-      const path = `${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`;
-      const img = await loadImageAsync(path);
-      imgs.push(img);
-      imgMeta.push({ boxes: [] });
+  let i=0;
+  try{
+    for(;i<MAX_ATTEMPTS;i++){
+      const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);
+      imgs.push(img); imgMeta.push({boxes:[]});
     }
-  } catch(e) {
-    // We stop at the first missing file — that’s expected.
-  } finally {
-    discovering = false;
-    if (imgs.length === 0) {
-      console.warn("No images found. Make sure your files exist at images/techwork0.png, techwork1.png, ...");
-    }
+  }catch(e){
+    // stop on first gap
+  }finally{
+    discovering=false;
   }
 }
 
-/* ========= p5 Hooks ========= */
+/* ========= p5 setup/draw ========= */
 function setup(){
-  const holder = document.getElementById('canvasHolder');
-  pixelDensity(window.devicePixelRatio || 1);
-  canvas = createCanvas(holder.clientWidth, holder.clientHeight);
+  const holder=document.getElementById('canvasHolder');
+  pixelDensity(window.devicePixelRatio||1);
+  canvas=createCanvas(holder.clientWidth,holder.clientHeight);
   canvas.parent('canvasHolder');
-  canvas.elt.oncontextmenu = e => e.preventDefault();
-  colorMode(HSB, 360, 100, 100, 1);
+  canvas.elt.oncontextmenu=e=>e.preventDefault();
+  colorMode(HSB,360,100,100,1);
 
-  // Responsive canvas inside the centered card
-  new ResizeObserver(() => {
-    resizeCanvas(holder.clientWidth, holder.clientHeight);
+  new ResizeObserver(()=>{
+    resizeCanvas(holder.clientWidth,holder.clientHeight);
     updateScaleInfo();
   }).observe(holder);
 
-  // Buttons
-  document.getElementById('undo').onclick = undoLast;
-  document.getElementById('next').onclick = nextImage;
-  document.getElementById('visit').onclick = visitCalculatorPage;
+  document.getElementById('undo').onclick=undoLast;
+  document.getElementById('next').onclick=nextImage;
+  document.getElementById('openCalcBtn').addEventListener('click',openInNewTabThenReturn);
 
-  // Begin discovery
-  (async () => {
-    await discoverImages();
-    updateScaleInfo();
-  })();
+  (async()=>{await discoverImages(); updateScaleInfo();})();
 }
 
 function draw(){
-  // Pulsing background (inside card)
-  const t = millis() * 0.001;
-  const baseHue = 335 + 15 * sin(t * 0.4);
-  const hue2 = (baseHue + 20) % 360;
-  const cTop = color(baseHue, 70, 25);
-  const cMid = color((baseHue + 10) % 360, 80, 40);
-  const cBot = color(hue2, 90, 55);
-  drawVertical3StopGradient(0, 0, width, height, cTop, cMid, cBot);
+  const t=millis()*0.001, base=335+15*sin(t*0.4);
+  const cTop=color(base,70,25), cMid=color((base+10)%360,80,40), cBot=color((base+20)%360,90,55);
+  drawGrad(cTop,cMid,cBot);
 
-  if (discovering) { drawStatus("Looking for images…"); return; }
-  if (imgs.length === 0) { drawStatus("No images found in images/"); return; }
-  if (finished) { drawCompletion(); return; }
+  if(discovering) return drawMsg("Looking for images…");
+  if(imgs.length===0) return drawMsg("No images found in images/");
+  if(finished) return drawCompletion();
 
-  const img = imgs[current];
-  if (!img) { drawStatus("Loading…"); return; }
+  const img=imgs[current];
+  if(!img) return drawMsg("Loading…");
 
-  image(img, scaleInfo.x, scaleInfo.y, scaleInfo.w, scaleInfo.h);
+  updateScaleInfo();
+  image(img,scaleInfo.x,scaleInfo.y,scaleInfo.w,scaleInfo.h);
 
-  // Existing boxes
-  push(); noFill(); strokeWeight(max(1, 2 * (width / 1024)));
-  for (const r of imgMeta[current].boxes) {
-    const {x, y, w, h} = imgRectToCanvas(r);
-    stroke(330, 60, 95, 0.85); rect(x, y, w, h);
-    stroke(330, 15, 100, 1);  rect(x, y, w, h);
-  } pop();
+  // draw saved boxes
+  push(); noFill(); strokeWeight(Math.max(1,2*(width/1024)));
+  for(const r of imgMeta[current].boxes){
+    const {x,y,w,h}=imgRectToCanvas(r);
+    stroke(330,60,95,0.85); rect(x,y,w,h);
+    stroke(330,15,100,1); rect(x,y,w,h);
+  }
+  pop();
 
-  // Live drag box
-  if (dragging && tempRect) {
-    push(); noFill(); stroke(330, 15, 100, 1); strokeWeight(3);
-    rect(tempRect.x, tempRect.y, tempRect.w, tempRect.h); pop();
+  // live drag
+  if(dragging && tempRect){
+    push(); noFill(); stroke(330,15,100,1); strokeWeight(3);
+    rect(tempRect.x,tempRect.y,tempRect.w,tempRect.h); pop();
   }
 
-  document.getElementById('progress').textContent = `Image ${current + 1} of ${imgs.length}`;
+  document.getElementById('progress').textContent=`Image ${current+1} of ${imgs.length}`;
 }
 
-/* ========= Drawing helpers ========= */
-function drawVertical3StopGradient(x, y, w, h, c1, c2, c3) {
-  const ctx = drawingContext;
-  const g = ctx.createLinearGradient(0, y, 0, y + h);
-  g.addColorStop(0, p5ColorToCanvas(c1));
-  g.addColorStop(0.5, p5ColorToCanvas(c2));
-  g.addColorStop(1, p5ColorToCanvas(c3));
-  ctx.save(); ctx.fillStyle = g; ctx.fillRect(x, y, w, h); ctx.restore();
+/* ========= helpers ========= */
+function drawGrad(a,b,c){
+  const ctx=drawingContext, g=ctx.createLinearGradient(0,0,0,height);
+  g.addColorStop(0, p5Col(a)); g.addColorStop(0.5, p5Col(b)); g.addColorStop(1, p5Col(c));
+  ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,0,width,height); ctx.restore();
 }
-function p5ColorToCanvas(col) {
-  const [r,g,b,a] = [red(col), green(col), blue(col), alpha(col)/255];
-  return `rgba(${r|0},${g|0},${b|0},${a})`;
-}
-function drawStatus(msg){
-  push(); fill(0,0,100); noStroke(); textAlign(CENTER, CENTER); textSize(16);
-  text(msg, width/2, height/2); pop();
-}
+function p5Col(col){return `rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`;}
+function drawMsg(m){push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16); text(m, width/2, height/2); pop();}
+
 function drawCompletion(){
-  push(); noStroke(); fill(330, 20, 100); textAlign(CENTER, CENTER); textSize(20);
+  push(); noStroke(); fill(330,20,100); textAlign(CENTER,CENTER); textSize(20);
   text("you have completed this HIT.", width/2, height/2 - 18);
   textSize(16); text("Get your next task here:", width/2, height/2 + 8); pop();
 
-  if (!document.getElementById('final-link')) {
-    const link = document.createElement('div');
-    link.id = 'final-link';
-    link.style.position = 'absolute';
-    link.style.left = '50%';
-    link.style.top = 'calc(50% + 34px)';
-    link.style.transform = 'translateX(-50%)';
-    link.innerHTML = `<a class="final-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">https://sbuckius.github.io/if-carebot-research/hit.html</a>`;
-    document.querySelector('.canvas-shell').appendChild(link);
+  if(!document.getElementById('final-link')){
+    const d=document.createElement('div');
+    d.id='final-link';
+    d.style.position='absolute';
+    d.style.left='50%';
+    d.style.top='calc(50% + 34px)';
+    d.style.transform='translateX(-50%)';
+    d.innerHTML=`
+      <a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
+        You completed this HIT! Go to your next task
+      </a>`;
+    document.querySelector('.canvas-shell').appendChild(d);
   }
 }
 
-/* ========= Interaction ========= */
+/* ========= interaction ========= */
 function mousePressed(){
-  if (finished) return;
-  if (!isInsideImage(mouseX, mouseY)) return;
-  dragging = true;
-  dragStart = { x: mouseX, y: mouseY };
-  tempRect = { x: mouseX, y: mouseY, w: 0, h: 0 };
+  if(finished) return;
+  if(!inside(mouseX,mouseY)) return;
+  dragging=true; dragStart={x:mouseX,y:mouseY};
+  tempRect={x:mouseX,y:mouseY,w:0,h:0};
 }
-function mouseDragged(){
-  if (!dragging) return;
-  tempRect.w = mouseX - dragStart.x;
-  tempRect.h = mouseY - dragStart.y;
-}
+function mouseDragged(){ if(dragging){ tempRect.w=mouseX-dragStart.x; tempRect.h=mouseY-dragStart.y; } }
 function mouseReleased(){
-  if (!dragging) return;
-  dragging = false;
-
-  const norm = normalizeRect(tempRect);
-  tempRect = null;
-  if (norm.w < 12 || norm.h < 12) return;
-  if (!rectIntersectsImage(norm)) return;
-
-  const rImg = canvasRectToImg(norm);
-  imgMeta[current].boxes.push(rImg);
-  updateUI();
+  if(!dragging) return; dragging=false;
+  const n=norm(tempRect); tempRect=null;
+  if(n.w<12 || n.h<12) return;
+  if(!inter(n)) return;
+  const r=toImg(n); imgMeta[current].boxes.push(r); updateUI();
 }
-// Touch & keys
 function touchStarted(){ mousePressed(); } function touchMoved(){ mouseDragged(); } function touchEnded(){ mouseReleased(); }
-function keyPressed(){ if (key==='z'||key==='Z') undoLast(); if (key==='n'||key==='N') nextImage(); }
+function keyPressed(){ if(key==='z'||key==='Z') undoLast(); if(key==='n'||key==='N') nextImage(); }
 
-/* ========= Actions ========= */
-function undoLast(){
-  if (finished) return;
-  const boxes = imgMeta[current].boxes;
-  if (boxes.length > 0) { boxes.pop(); updateUI(); }
-}
+function undoLast(){ if(finished) return; const b=imgMeta[current].boxes; if(b.length>0){ b.pop(); updateUI(); } }
 function nextImage(){
-  if (finished) return;
-  if (imgMeta[current].boxes.length === 0) return;
-  if (current < imgs.length - 1) {
-    current++;
-    updateScaleInfo(); updateUI();
-    const l = document.getElementById('final-link'); if (l) l.remove();
-  } else {
-    finished = true;
-    document.getElementById('undo').disabled = true;
-    document.getElementById('next').disabled = true;
+  if(finished) return;
+  if(imgMeta[current].boxes.length===0) return;
+  if(current<imgs.length-1){
+    current++; updateScaleInfo(); updateUI();
+    const l=document.getElementById('final-link'); if(l) l.remove();
+  }else{
+    finished=true;
+    document.getElementById('undo').disabled=true;
+    document.getElementById('next').disabled=true;
   }
 }
 function updateUI(){
-  const n = document.getElementById('next');
-  const u = document.getElementById('undo');
-  if (finished) { n.disabled = true; u.disabled = true; }
-  else { const has = imgMeta[current].boxes.length > 0; n.disabled = !has; u.disabled = !has; }
+  const n=document.getElementById('next'), u=document.getElementById('undo');
+  if(finished){ n.disabled=true; u.disabled=true; }
+  else { const has=imgMeta[current].boxes.length>0; n.disabled=!has; u.disabled=!has; }
 }
 
-/* ========= Geometry / scaling ========= */
+/* ========= geometry ========= */
 function updateScaleInfo(){
-  const img = imgs[current]; if (!img) return;
-  const cw = width, ch = height, iw = img.width, ih = img.height;
-  const s = Math.min(cw / iw, ch / ih);
-  scaleInfo = { x:(cw - iw*s)/2, y:(ch - ih*s)/2, w:iw*s, h:ih*s, scale:s };
+  const img=imgs[current]; if(!img) return;
+  const cw=width, ch=height, iw=img.width, ih=img.height;
+  const s=Math.min(cw/iw, ch/ih);
+  scaleInfo={ x:(cw - iw*s)/2, y:(ch - ih*s)/2, w:iw*s, h:ih*s, scale:s };
 }
-function isInsideImage(cx, cy){
-  if (!scaleInfo) return false;
-  return cx >= scaleInfo.x && cx <= scaleInfo.x + scaleInfo.w &&
-         cy >= scaleInfo.y && cy <= scaleInfo.y + scaleInfo.h;
-}
-function rectIntersectsImage(r){
-  if (!scaleInfo) return false;
+function inside(x,y){ return scaleInfo && x>=scaleInfo.x && x<=scaleInfo.x+scaleInfo.w && y>=scaleInfo.y && y<=scaleInfo.y+scaleInfo.h; }
+function inter(r){
   const ix=scaleInfo.x, iy=scaleInfo.y, iw=scaleInfo.w, ih=scaleInfo.h;
   const rx2=r.x+r.w, ry2=r.y+r.h, ix2=ix+iw, iy2=iy+ih;
   return !(r.x>ix2 || rx2<ix || r.y>iy2 || ry2<iy);
 }
-function normalizeRect(r){
-  const x = r.w < 0 ? r.x + r.w : r.x;
-  const y = r.h < 0 ? r.y + r.h : r.y;
-  const w = Math.abs(r.w), h = Math.abs(r.h);
-  return { x, y, w, h };
-}
-function canvasToImgPoint(px, py){
-  const sx = (px - scaleInfo.x) / scaleInfo.scale;
-  const sy = (py - scaleInfo.y) / scaleInfo.scale;
-  return { x: sx, y: sy };
-}
-function canvasRectToImg(r){
-  const p1 = canvasToImgPoint(r.x, r.y);
-  const p2 = canvasToImgPoint(r.x + r.w, r.y + r.h);
-  const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
-  const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
-  return { x, y, w, h };
+function norm(r){ const x=r.w<0?r.x+r.w:r.x, y=r.h<0?r.y+r.h:r.y; return { x, y, w:Math.abs(r.w), h:Math.abs(r.h) }; }
+function toImg(r){
+  const sx=(r.x-scaleInfo.x)/scaleInfo.scale, sy=(r.y-scaleInfo.y)/scaleInfo.scale;
+  const sw=r.w/scaleInfo.scale, sh=r.h/scaleInfo.scale;
+  return { x:sx, y:sy, w:sw, h:sh };
 }
 function imgRectToCanvas(r){
   return {
@@ -341,34 +321,70 @@ function imgRectToCanvas(r){
   };
 }
 
-/* ========= External “3s visit” (tab approach + graceful fallback) ========= */
-const popupMsg = document.getElementById('popupMsg');
-function showPopupBlockedHint(){
-  popupMsg.classList.add('show');
-  setTimeout(() => popupMsg.classList.remove('show'), 3500);
+/* ========= Redirect logic (open new tab + 3s + close; overlay fallback) ========= */
+const openBtn=document.getElementById('openCalcBtn'),
+      overlay=document.getElementById('calcOverlay'),
+      iframe=document.getElementById('calcFrame'),
+      countdown=document.getElementById('countdown'),
+      directLink=document.getElementById('calcDirectLink'),
+      closeOverlayBtn=document.getElementById('closeOverlayBtn'),
+      popup=document.getElementById('popupMsg');
+
+let timer=null, tick=null, remaining=DISPLAY_SECONDS;
+
+function resetCountdown(){
+  clearTimeout(timer); clearInterval(tick);
+  remaining=DISPLAY_SECONDS; countdown.textContent=remaining;
 }
-function visitCalculatorPage(){
-  // Open in a new tab (only allowed inside this click handler).
-  const w = window.open(EXTERNAL_URL, "_blank", "noopener,noreferrer");
-  if (w && !w.closed) {
-    // Try to close it after DISPLAY_SECONDS; if browser disallows, it will just stay open.
-    let remain = DISPLAY_SECONDS;
-    const tick = setInterval(() => {
-      remain--;
-      if (remain <= 0) clearInterval(tick);
-      document.title = `(${Math.max(remain,0)}s) Tech Work — Centered App`;
-    }, 1000);
-    setTimeout(() => {
-      try { w.close(); } catch(e) { /* ignored */ }
-      document.title = "Tech Work — Centered App";
-    }, DISPLAY_SECONDS * 1000);
-  } else {
-    // Pop-up blocked — tell the user
-    showPopupBlockedHint();
-    // As an extra nudge, navigating the current tab is possible, but we cannot auto-return.
-    // window.location.href = EXTERNAL_URL;  // Uncomment ONLY if you want same-tab navigation (no auto return)
+function closeOverlay(){
+  overlay.classList.remove('open');
+  iframe.src="about:blank";
+  resetCountdown();
+  openBtn.disabled=false;
+  document.title="Tech Work — Centered App";
+}
+function openOverlayFallback(){
+  openBtn.disabled=true;
+  overlay.classList.add('open');
+  iframe.src=EXTERNAL_URL;
+  directLink.href=EXTERNAL_URL;
+
+  resetCountdown();
+  tick=setInterval(()=>{
+    remaining-=1;
+    countdown.textContent=Math.max(remaining,0);
+    if(remaining<=0) clearInterval(tick);
+  },1000);
+  timer=setTimeout(closeOverlay, DISPLAY_SECONDS*1000);
+}
+function openInNewTabThenReturn(){
+  const newWin=window.open(EXTERNAL_URL,'_blank'); // attempt to close later
+  if(newWin && !newWin.closed){
+    openBtn.disabled=true;
+    resetCountdown();
+    tick=setInterval(()=>{
+      remaining-=1;
+      if(remaining<=0) clearInterval(tick);
+      document.title=`(${Math.max(remaining,0)}s) Tech Work — Centered App`;
+    },1000);
+    timer=setTimeout(()=>{
+      try{ newWin.close(); }catch(e){}
+      document.title="Tech Work — Centered App";
+      openBtn.disabled=false;
+      resetCountdown();
+    }, DISPLAY_SECONDS*1000);
+  }else{
+    // pop-up blocked → toast + overlay fallback
+    popup.classList.add('show');
+    setTimeout(()=>popup.classList.remove('show'), 3000);
+    openOverlayFallback();
   }
 }
+
+// overlay controls
+document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && overlay.classList.contains('open')) closeOverlay(); });
+overlay.addEventListener('click',(e)=>{ if(e.target===overlay) closeOverlay(); });
+closeOverlayBtn.addEventListener('click',(e)=>{ e.preventDefault(); closeOverlay(); });
 </script>
 </body>
 </html>
