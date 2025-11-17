@@ -13,76 +13,80 @@
     --shadow:0 8px 28px rgba(255,64,128,.28); --border:var(--candy);
   }
 
-  /* allow page scrolling; smooth on iOS */
-  html, body{
+  /* allow page scrolling on iPhone */
+  html,body{
     margin:0;
     min-height:100%;
     color:var(--ink);
     -webkit-overflow-scrolling: touch;
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
     background:
-      radial-gradient(1200px 1000px at -10% 0%,var(--rose)0%,transparent55%),
-      radial-gradient(1200px 900px at 110% 10%,var(--hot)0%,transparent55%),
-      radial-gradient(800px 800px at 50% 110%,var(--berry)0%,transparent60%),
-      linear-gradient(165deg,var(--maroon),var(--wine)45%,var(--violet));
+      radial-gradient(1200px 1000px at -10% 0%, var(--rose) 0%, transparent 55%),
+      radial-gradient(1200px 900px at 110% 10%, var(--hot) 0%, transparent 55%),
+      radial-gradient(800px 800px at 50% 110%, var(--berry) 0%, transparent 60%),
+      linear-gradient(165deg, var(--maroon), var(--wine) 45%, var(--violet));
   }
 
-  /* safe areas + nice breathing room */
+  /* safe-area padding, centered column */
   .wrap{
     max-width:980px;
-    margin: clamp(16px, 4vmin, 32px) auto;
+    margin:clamp(16px,4vmin,32px) auto;
     padding:
       max(0px, env(safe-area-inset-top))
-      clamp(12px, 3vmin, 24px)
+      clamp(12px,3vmin,24px)
       calc(56px + env(safe-area-inset-bottom))
-      clamp(12px, 3vmin, 24px);
+      clamp(12px,3vmin,24px);
   }
 
   .app{
     border:1px solid var(--border);
     background:color-mix(in oklab, rgba(255,255,255,.04) 20%, var(--maroon) 80%);
-    box-shadow:var(--shadow);border-radius:18px;overflow:hidden;
+    box-shadow:var(--shadow);border-radius:18px;
   }
+
   .app-header,.app-footer{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:12px 14px;background:linear-gradient(180deg,rgba(25,8,18,.8),rgba(25,8,18,.35));
+    padding:12px 14px;background:linear-gradient(180deg, rgba(25,8,18,.8), rgba(25,8,18,.35));
   }
+
   .title{
-    font-weight:800;letter-spacing:.2px;font-size:clamp(14px,2.4vw,18px);line-height:1.25;
-    background:linear-gradient(90deg,var(--hot),var(--rose)40%,var(--candy));
+    font-weight:800;letter-spacing:.2px;line-height:1.25;
+    font-size:clamp(14px,2.4vw,18px);
+    background:linear-gradient(90deg, var(--hot), var(--rose) 40%, var(--candy));
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
   .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
 
-  /* iPhone-safe canvas height with fallbacks; only the canvas area suppresses scroll */
+  /* iPhone-safe, shrink-to-fit canvas height; draw area only suppresses scroll */
   .canvas-shell{
     position:relative;width:100%;
-    height: min(calc(var(--vh, 1vh) * 68), 620px);
-    height: min(68dvh, 620px);
-    height: min(68svh, 620px);
-    height: min(68vh, 620px);
+    height: clamp(260px, 60svh, 520px);
     background:#160012;
-    touch-action: none; /* allow draw without page scrolling inside the canvas */
+    touch-action: none;
   }
   canvas{display:block;width:100%;height:100%;}
+
+  /* spacer so there’s always a spot to start scrolling */
+  .scroll-spacer{ height: 32px; }
 
   .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
   .hints{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
   .pill{
-    background:color-mix(in oklab,var(--plum)70%,#000 30%);
+    background:color-mix(in oklab, var(--plum) 70%, #000 30%);
     color:var(--bubble);padding:8px 10px;border-radius:999px;
     border:1px solid var(--border);font-size:clamp(12px,2vw,14px);
   }
   .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
   .btn{
     appearance:none;border:1px solid var(--border);color:#fff;
-    background:linear-gradient(180deg,var(--hot),var(--crimson));
+    background:linear-gradient(180deg, var(--hot), var(--crimson));
     padding:12px 16px;border-radius:14px;font-weight:700;font-size:16px;
     min-height:44px;cursor:pointer;box-shadow:var(--shadow);
     -webkit-tap-highlight-color:transparent;text-decoration:none;
     display:inline-flex;align-items:center;gap:10px;
   }
-  .btn.secondary{background:linear-gradient(180deg,var(--rose),var(--berry));}
+  .btn.secondary{background:linear-gradient(180deg, var(--rose), var(--berry));}
   .btn[disabled]{opacity:.6;cursor:not-allowed;filter:saturate(.7);}
   .final-link-btn{display:inline-block;}
 
@@ -97,7 +101,7 @@
   .overlay{
     position:fixed;inset:0;
     background:
-      radial-gradient(900px 900px at 50% -10%,rgba(255,77,141,.25),transparent60%),
+      radial-gradient(900px 900px at 50% -10%, rgba(255,77,141,.25), transparent 60%),
       rgba(18,0,22,.85);
     display:none;z-index:9999;backdrop-filter:blur(2px);
   }
@@ -111,7 +115,7 @@
   }
   .overlay-header{
     display:flex;align-items:center;justify-content:space-between;gap:8px;
-    padding:10px 14px;background:linear-gradient(180deg,var(--crimson),var(--berry));
+    padding:10px 14px;background:linear-gradient(180deg, var(--crimson), var(--berry));
     color:var(--bubble);font-weight:700;
   }
   .countdown{font-variant-numeric:tabular-nums;background:#25001a;padding:6px 10px;border-radius:10px;border:1px solid var(--rose);}
@@ -119,21 +123,10 @@
   .overlay-footer{padding:10px 14px;background:#230018;display:flex;justify-content:flex-end;gap:10px;}
   .overlay a.inline-btn{
     color:#fff;text-decoration:none;font-weight:700;
-    background:linear-gradient(180deg,var(--rose),var(--plum));
+    background:linear-gradient(180deg, var(--rose), var(--plum));
     padding:10px 14px;border-radius:10px;border:1px solid var(--candy);
   }
 </style>
-
-<!-- Reliable 1vh that follows iOS URL bar changes -->
-<script>
-  function setVH(){
-    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
-  }
-  setVH();
-  window.addEventListener('resize', setVH, { passive: true });
-  window.addEventListener('orientationchange', setVH);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(setVH, 50); });
-</script>
 </head>
 <body>
   <main class="wrap">
@@ -146,6 +139,7 @@
       <div class="canvas-shell">
         <div id="canvasHolder" style="position:absolute;inset:0;"></div>
       </div>
+      <div class="scroll-spacer" aria-hidden="true"></div>
 
       <footer class="app-footer">
         <div class="hints">
@@ -160,6 +154,9 @@
         </div>
       </footer>
     </section>
+
+    <!-- completion button appears here (outside .app so the page can scroll to it) -->
+    <div id="completionSlot"></div>
   </main>
 
   <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site.</div>
@@ -194,32 +191,34 @@ let imgs=[],imgMeta=[],current=0,dragging=false,dragStart=null,tempRect=null,sca
 let discovering=true;
 
 /* ========= Auto-discover images ========= */
-function loadImageAsync(p){return new Promise((res,rej)=>{const im=loadImage(p,()=>res(im),()=>rej());});}
+function loadImageAsync(p){return new Promise((res,rej)=>{const im=loadImage(p,()=>res(im),()=>rej(new Error("load-failed")));});}
 async function discoverImages(){let i=0;try{for(;i<MAX_ATTEMPTS;i++){const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);imgs.push(img);imgMeta.push({boxes:[]});}}catch(e){}finally{discovering=false;}}
 
 /* ========= p5 ========= */
 function setup(){
   const holder=document.getElementById('canvasHolder');
   pixelDensity(window.devicePixelRatio||1);
-  canvas=createCanvas(holder.clientWidth,holder.clientHeight);
+  canvas=createCanvas(holder.clientWidth, holder.clientHeight);
   canvas.parent('canvasHolder');
   canvas.elt.oncontextmenu=e=>e.preventDefault();
   colorMode(HSB,360,100,100,1);
 
-  // Resize canvas when the holder changes size (rotation, URL bar)
+  // Resize with URL bar/orientation changes
   new ResizeObserver(()=>{resizeCanvas(holder.clientWidth,holder.clientHeight);updateScaleInfo();}).observe(holder);
 
+  // UI
   document.getElementById('undo').onclick=undoLast;
   document.getElementById('next').onclick=nextImage;
   document.getElementById('openCalcBtn').addEventListener('click',openInNewTabThenReturn);
 
-  (async()=>{await discoverImages();updateScaleInfo();})();
+  // Load images
+  (async()=>{await discoverImages(); updateScaleInfo();})();
 }
 
 function draw(){
-  // pulsing gradient
-  const t=millis()*0.001,base=335+15*sin(t*0.4);
-  const cTop=color(base,70,25),cMid=color((base+10)%360,80,40),cBot=color((base+20)%360,90,55);
+  // pulsing gradient (maroon → pinks)
+  const t=millis()*0.001, base=335+15*sin(t*0.4);
+  const cTop=color(base,70,25), cMid=color((base+10)%360,80,40), cBot=color((base+20)%360,90,55);
   drawGrad(cTop,cMid,cBot);
 
   if(discovering) return drawMsg("Looking for images…");
@@ -227,16 +226,14 @@ function draw(){
   if(finished) return drawCompletion();
 
   const img=imgs[current]; if(!img) return drawMsg("Loading…");
-
-  updateScaleInfo();
-  image(img,scaleInfo.x,scaleInfo.y,scaleInfo.w,scaleInfo.h);
+  updateScaleInfo(); image(img,scaleInfo.x,scaleInfo.y,scaleInfo.w,scaleInfo.h);
 
   // saved boxes
   push(); noFill(); strokeWeight(Math.max(1,2*(width/1024)));
   for(const r of imgMeta[current].boxes){
     const {x,y,w,h}=imgRectToCanvas(r);
     stroke(330,60,95,.85); rect(x,y,w,h);
-    stroke(330,15,100,1); rect(x,y,w,h);
+    stroke(330,15,100,1);  rect(x,y,w,h);
   } pop();
 
   // live drag
@@ -248,64 +245,59 @@ function draw(){
   document.getElementById('progress').textContent=`Image ${current+1} of ${imgs.length}`;
 }
 
+/* ========= helpers ========= */
 function drawGrad(a,b,c){
-  const ctx=drawingContext,g=ctx.createLinearGradient(0,0,0,height);
-  g.addColorStop(0,p5Col(a)); g.addColorStop(.5,p5Col(b)); g.addColorStop(1,p5Col(c));
+  const ctx=drawingContext, g=ctx.createLinearGradient(0,0,0,height);
+  g.addColorStop(0, toRGBA(a)); g.addColorStop(.5, toRGBA(b)); g.addColorStop(1, toRGBA(c));
   ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,0,width,height); ctx.restore();
 }
-function p5Col(col){return`rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`;}
-function drawMsg(m){push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16); text(m,width/2,height/2); pop();}
+function toRGBA(col){return `rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`;}
+function drawMsg(m){ push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16); text(m, width/2, height/2); pop(); }
 
 /* ========= completion ========= */
 function drawCompletion(){
   push(); noStroke(); fill(330,20,100); textAlign(CENTER,CENTER); textSize(20);
-  text("you have completed this HIT.",width/2,height/2-18); textSize(16);
-  text("Get your next task here:",width/2,height/2+8); pop();
+  text("you have completed this HIT.", width/2, height/2 - 18);
+  textSize(16); text("Get your next task here:", width/2, height/2 + 8); pop();
 
-  // append the button only once
   if(!document.getElementById('final-link')){
     const d=document.createElement('div');
     d.id='final-link';
-    d.style.position='relative';
-    d.style.display='grid';
-    d.style.placeItems='center';
-    d.style.marginTop='24px';
+    d.style.display='grid'; d.style.placeItems='center'; d.style.marginTop='24px';
     d.innerHTML=`<a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
       You completed this HIT! Go to your next task</a>`;
-    // place the button after the canvas card, so the page can scroll if needed
-    document.querySelector('.app').appendChild(d);
+    document.getElementById('completionSlot').appendChild(d);
   }
 }
 
-/* ========= interaction ========= */
+/* ========= interaction (prevent default only while dragging) ========= */
 function mousePressed(){
-  if(finished) return false;
-  if(!inside(mouseX,mouseY)) return false;
+  if(finished) return;
+  if(!inside(mouseX,mouseY)) return;
   dragging=true;
   dragStart={x:mouseX,y:mouseY};
   tempRect={x:mouseX,y:mouseY,w:0,h:0};
   return false;
 }
 function mouseDragged(){
-  if(!dragging) return false;
+  if(!dragging) return;
   tempRect.w=mouseX-dragStart.x;
   tempRect.h=mouseY-dragStart.y;
   return false;
 }
 function mouseReleased(){
-  if(!dragging) return false;
+  if(!dragging) return;
   dragging=false;
-  const n=normalizeRect(tempRect);
-  tempRect=null;
+  const n=normalizeRect(tempRect); tempRect=null;
   const clamped=clampRectToImage(n);
-  const MIN=10; if(clamped.w<MIN||clamped.h<MIN) return false;
+  const MIN=10; if(clamped.w<MIN||clamped.h<MIN) return;
   imgMeta[current].boxes.push(canvasRectToImg(clamped));
   updateUI();
   return false;
 }
-function touchStarted(){return mousePressed();}
-function touchMoved(){return mouseDragged();}
-function touchEnded(){return mouseReleased();}
+function touchStarted(){ return mousePressed(); }
+function touchMoved(){ return mouseDragged(); }
+function touchEnded(){ return mouseReleased(); }
 
 function keyPressed(){ if(key==='z'||key==='Z') undoLast(); if(key==='n'||key==='N') nextImage(); }
 function undoLast(){ if(finished) return; const b=imgMeta[current].boxes; if(b.length>0){ b.pop(); updateUI(); } }
@@ -342,6 +334,12 @@ function normalizeRect(r){
   const y=r.h<0? r.y+r.h : r.y;
   return { x, y, w:Math.abs(r.w), h:Math.abs(r.h) };
 }
+function canvasToImgPoint(px,py){ return { x:(px-scaleInfo.x)/scaleInfo.scale, y:(py-scaleInfo.y)/scaleInfo.scale }; }
+function canvasRectToImg(r){
+  const p1=canvasToImgPoint(r.x, r.y);
+  const p2=canvasToImgPoint(r.x+r.w, r.y+r.h);
+  return { x:Math.min(p1.x,p2.x), y:Math.min(p1.y,p2.y), w:Math.abs(p2.x-p1.x), h:Math.abs(p2.y-p1.y) };
+}
 function clampRectToImage(r){
   if(!scaleInfo) return r;
   const ix=scaleInfo.x, iy=scaleInfo.y, iw=scaleInfo.w, ih=scaleInfo.h;
@@ -350,12 +348,6 @@ function clampRectToImage(r){
   const x2=Math.max(ix, Math.min(ix+iw, r.x+r.w));
   const y2=Math.max(iy, Math.min(iy+ih, r.y+r.h));
   return { x:Math.min(x1,x2), y:Math.min(y1,y2), w:Math.abs(x2-x1), h:Math.abs(y2-y1) };
-}
-function canvasToImgPoint(px,py){return { x:(px-scaleInfo.x)/scaleInfo.scale, y:(py-scaleInfo.y)/scaleInfo.scale }; }
-function canvasRectToImg(r){
-  const p1=canvasToImgPoint(r.x, r.y);
-  const p2=canvasToImgPoint(r.x+r.w, r.y+r.h);
-  return { x:Math.min(p1.x,p2.x), y:Math.min(p1.y,p2.y), w:Math.abs(p2.x-p1.x), h:Math.abs(p2.y-p1.y) };
 }
 function imgRectToCanvas(r){
   return { x:scaleInfo.x+r.x*scaleInfo.scale, y:scaleInfo.y+r.y*scaleInfo.scale, w:r.w*scaleInfo.scale, h:r.h*scaleInfo.scale };
