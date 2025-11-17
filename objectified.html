@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Presentation Labor — Centered App</title>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
 <style>
@@ -15,9 +15,12 @@
     --shadow:0 8px 28px rgba(255,64,128,.28); --border:var(--candy);
   }
 
-  /* rearranged background with more pink stops */
+  /* allow page scrolling on iPhone */
   html,body{
-    margin:0;height:100%;color:var(--ink);
+    margin:0;
+    min-height:100%;
+    color:var(--ink);
+    -webkit-overflow-scrolling: touch;
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
     background:
       radial-gradient(1200px 900px at 15% 0%, var(--blush) 0%, transparent 55%),
@@ -27,10 +30,22 @@
       linear-gradient(170deg, var(--maroon), var(--wine) 35%, var(--violet));
   }
 
-  .wrap{max-width:980px;margin:clamp(16px,4vmin,32px) auto;padding:0 clamp(12px,3vmin,24px) 48px;}
-  .app{border:1px solid var(--border);
+  /* iPhone safe-area padding */
+  .wrap{
+    max-width:980px;
+    margin:clamp(16px,4vmin,32px) auto;
+    padding:
+      max(0px, env(safe-area-inset-top))
+      clamp(12px,3vmin,24px)
+      calc(56px + env(safe-area-inset-bottom))
+      clamp(12px,3vmin,24px);
+  }
+
+  .app{
+    border:1px solid var(--border);
     background:color-mix(in oklab, rgba(255,255,255,.05) 22%, var(--maroon) 78%);
-    box-shadow:var(--shadow);border-radius:18px;overflow:hidden;}
+    box-shadow:var(--shadow);border-radius:18px;overflow:hidden;
+  }
   .app-header,.app-footer{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     padding:12px 14px;background:
@@ -45,7 +60,16 @@
   }
   .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
 
-  .canvas-shell{position:relative;width:100%;height:min(68vh,620px);background:#160012;}
+  /* iPhone-safe height with fallbacks; prevent scroll during draw only inside the canvas */
+  .canvas-shell{
+    position:relative;width:100%;
+    height: min(calc(var(--vh, 1vh) * 68), 620px);
+    height: min(68dvh, 620px);
+    height: min(68svh, 620px);
+    height: min(68vh, 620px);
+    background:#160012;
+    touch-action: none;
+  }
   canvas{display:block;width:100%;height:100%;}
 
   .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
@@ -109,6 +133,17 @@
     padding:10px 14px;border-radius:10px;border:1px solid var(--candy);
   }
 </style>
+
+<!-- Reliable 1vh for iOS URL-bar changes -->
+<script>
+  function setVH(){
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH, { passive: true });
+  window.addEventListener('orientationchange', setVH);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(setVH, 50); });
+</script>
 </head>
 <body>
   <main class="wrap">
@@ -151,6 +186,9 @@
         </div>
       </footer>
     </section>
+
+    <!-- The completion button will be appended here (after .app) so the page can scroll -->
+    <div id="completionSlot"></div>
   </main>
 
   <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site.</div>
@@ -286,15 +324,15 @@ function drawCompletion(){
   if (!document.getElementById('final-link')){
     const d=document.createElement('div');
     d.id='final-link';
-    d.style.position='absolute';
-    d.style.left='50%';
-    d.style.top='calc(50% + 34px)';
-    d.style.transform='translateX(-50%)';
+    d.style.display='grid';
+    d.style.placeItems='center';
+    d.style.marginTop='24px';
     d.innerHTML=`
       <a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
         You completed this HIT! Go to your next task
       </a>`;
-    document.querySelector('.canvas-shell').appendChild(d);
+    // append after the app so the page can scroll down to it
+    document.getElementById('completionSlot').appendChild(d);
   }
 }
 
