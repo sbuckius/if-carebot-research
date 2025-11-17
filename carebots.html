@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>If (x=CAREbot), Then (y=humancomputers); While (t=typewriter, p=punch cards, s=sewingmachines, m=matildaeffect);</title>
+  <style>
+    :root {
+      --bg: #000;
+      --fg: #eaeaea;
+      --muted: #b3b3b3;
+      --accent: #7dd3fc;
+      --card: #0b0b0b;
+      --card-border: #1a1a1a;
+      --divider: #222;
+    }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans"; background: var(--bg); color: var(--fg); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header { position: sticky; top: 0; z-index: 50; background: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.75)); backdrop-filter: saturate(120%) blur(8px); border-bottom: 1px solid var(--card-border); }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 16px 20px; }
+    .title { font-size: clamp(20px, 3vw, 28px); font-weight: 700; margin: 0 0 8px; }
+    .sub { margin: 0; color: var(--muted); font-size: 14px; }
+
+    nav { margin-top: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .thumb { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); transition: transform .15s ease, box-shadow .15s ease; }
+    .thumb:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.45); }
+    .thumb img { width: 100%; height: 80px; object-fit: cover; display: block; }
+
+    main { padding: 32px 20px 60px; }
+    section { max-width: 1200px; margin: 0 auto 64px; scroll-margin-top: 110px; }
+    section h2 { font-size: clamp(22px, 3vw, 30px); margin: 0 0 16px; }
+    section p.lead { margin: 0 0 16px; color: var(--muted); }
+
+    .feature-pair { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+    @media (max-width: 700px) { .feature-pair { grid-template-columns: 1fr; } }
+    .feature { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--card-border); background: #090909; }
+    .feature img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+    .feature a { display:block; }
+
+    .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 900px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 680px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 440px)  { .grid { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: transform .15s ease, box-shadow .15s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.5); }
+    .card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .card .content { padding: 10px; display: grid; gap: 6px; }
+    .card h3 { font-size: 13px; margin: 0; line-height: 1.3; }
+    .card p { font-size: 12px; color: var(--muted); margin: 0; line-height: 1.3; }
+    .btn { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #111; border: 1px solid var(--card-border); color: var(--fg); font-weight: 600; text-align: center; font-size: 12px; transition: background .15s ease, transform .05s ease; }
+    .btn:hover { background: #181818; text-decoration: none; }
+    .btn:active { transform: translateY(1px); }
+
+    .muted { color: var(--muted); }
+    .top-link { position: fixed; right: 18px; bottom: 18px; }
+  </style>
+</head>
+<body>
+  <a id="top"></a>
+  <header>
+    <div class="wrap">
+      <h1 class="title">If (x=CAREbot), Then (y=humancomputers); While (t=typewriter, p=punch cards, s=sewingmachines, m=matildaeffect);</h1>
+      <p class="sub">Two large feature images per section (click to view full image) followed by 10 linked cards.</p>
+      <nav>
+        <a class="thumb" href="#section-1"><img src="images/carebot_01_feature_01.png" alt="Carebot 1 thumb"></a>
+        <a class="thumb" href="#section-2"><img src="images/carebot_02_feature_01.png" alt="Carebot 2 thumb"></a>
+        <a class="thumb" href="#section-3"><img src="images/carebot_03_feature_01.png" alt="Carebot 3 thumb"></a>
+        <a class="thumb" href="#section-4"><img src="images/carebot_04_feature_01.png" alt="Carebot 4 thumb"></a>
+        <a class="thumb" href="#section-5"><img src="images/carebot_05_feature_01.png" alt="Carebot 5 thumb"></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content"></main>
+
+  <p class="wrap" style="text-align:center; color: var(--muted);">— End of page —</p>
+  <a class="btn top-link" href="#top">Back to top ↑</a>
+
+  <script>
+    const sections = [
+      {
+        id: 1,
+        title: 'Carebot 1',
+        lead: 'The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Human Computer',
+        links: [
+          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
+          'https://www.computerhistory.org/revolution/calculators/1/65/272',
+          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
+          'https://patents.google.com/patent/US258518A',
+          'https://patents.google.com/patent/US666578A',
+          'https://patents.google.com/patent/US683901A',
+          'https://patents.google.com/patent/US640348A',
+          'https://www.computerhistory.org/revolution/minicomputers/11/intro/1910',
+          'https://www.computerhistory.org/revolution/minicomputers/11/362'
+        ]
+      },
+      {
+        id: 2,
+        title: 'CAREBOT 2.0',
+        lead: 'The Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer',
+        links: [
+          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
+          'https://www.computerhistory.org/revolution/calculators/1/65/272',
+          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
+          'https://patents.google.com/patent/US745167A',
+          'https://patents.google.com/patent/US829474A',
+          'https://patents.google.com/patent/US829830A',
+          'https://patents.google.com/patent/US837620A',
+          'https://www.computerhistory.org/brochures/overview/',
+          'https://d1yx3ys82bpsa0.cloudfront.net/brochures/pds.1020.1964.102646239.pdf'
+        ]
+      },
+      {
+        id: 3,
+        title: 'CAREBOT 3.0',
+        lead: 'Exploration of textile-based computation and embodied algorithms.',
+        links: []
+      },
+      {
+        id: 4,
+        title: 'CAREBOT 4.0',
+        lead: 'Integration of data and labor histories through stitched circuits.',
+        links: []
+      },
+      {
+        id: 5,
+        title: 'CAREBOT 5.0',
+        lead: 'Envisioning future care technologies merging mechanical memory and empathy.',
+        links: []
+      }
+    ];
+
+    const container = document.getElementById('main-content');
+
+    sections.forEach(sec => {
+      const section = document.createElement('section');
+      section.id = `section-${sec.id}`;
+
+      section.innerHTML = `
+        <h2>${sec.title}</h2>
+        <p class="lead">${sec.lead}</p>
+        <div class="feature-pair">
+          <div class="feature"><a href="images/carebot_0${sec.id}_feature_01.png" target="_blank" rel="noopener"><img src="images/carebot_0${sec.id}_feature_01.png" alt="${sec.title} feature 1"></a></div>
+          <div class="feature"><a href="images/carebot_0${sec.id}_feature_02.png" target="_blank" rel="noopener"><img src="images/carebot_0${sec.id}_feature_02.png" alt="${sec.title} feature 2"></a></div>
+        </div>
+      `;
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      const totalCards = 10; // always 10 cards per section
+
+      for (let i = 1; i <= totalCards; i++) {
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const imgPath = `images/carebot_0${sec.id}_image_${String(i).padStart(2,'0')}.png`;
+        const link = sec.links[i - 1]; // if fewer than 10 links, placeholders appear
+
+        card.innerHTML = `
+          <img src="${imgPath}" alt="${sec.title} card ${i}">
+          <div class="content">
+            <h3>${sec.title} — P.${i}</h3>
+            <p class="muted">${link ? 'Linked resource' : 'Placeholder (no link)'}.</p>
+            ${link ? `<a class='btn' href='${link}' target='_blank' rel='noopener'>Open link</a>` : `<span class='btn' aria-disabled='true'>No link yet</span>`}
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+
+      section.appendChild(grid);
+      container.appendChild(section);
+    });
+  </script>
+</body>
+</html>
