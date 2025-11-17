@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Replacement Cost — Centered App</title>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
+<style>
+  :root{
+    /* pushed further into reds/scarlets/magentas */
+    --scarlet:#ff1133; --vermilion:#ff2a3f; --crimson:#c40032; --cherry:#a10028;
+    --rose:#ff567a; --hot:#ff2f59; --magenta:#ff1f8a; --candy:#ff7aa8;
+    --bubble:#ffe0eb; --berry:#8e003c; --plum:#4c0030; --violet:#4c0044;
+    --ink:#fff5f7; --border:#ff9abb; --shadow:0 10px 32px rgba(255, 54, 86, .34);
+  }
+
+  /* allow page scrolling on iPhone */
+  html,body{
+    margin:0; min-height:100%; color:var(--ink); -webkit-overflow-scrolling:touch;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
+    background:
+      radial-gradient(1300px 1000px at 10% -5%,  #ff8da3 0%, transparent 55%),
+      radial-gradient(1100px 900px  at 90% 8%,  #ff5b6c 0%, transparent 55%),
+      radial-gradient(900px 800px   at 35% 105%, #ff2f41 0%, transparent 60%),
+      radial-gradient(700px 650px   at 100% 100%,#ff1a3a 0%, transparent 60%),
+      linear-gradient(175deg, #6f001e, #5b001d 40%, #4c0030 68%, #4c0044 100%);
+  }
+
+  .wrap{
+    max-width:980px; margin:clamp(16px,4vmin,32px) auto;
+    padding:max(0px, env(safe-area-inset-top)) clamp(12px,3vmin,24px)
+            calc(64px + env(safe-area-inset-bottom)) clamp(12px,3vmin,24px);
+  }
+
+  .app{
+    border:1px solid var(--border);
+    background:color-mix(in oklab, rgba(255,255,255,.05) 16%, #5b001d 84%);
+    box-shadow:var(--shadow); border-radius:18px; overflow:hidden;
+  }
+
+  .app-header,.app-footer{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px;
+    background:linear-gradient(180deg,
+      color-mix(in oklab, #6f001e 64%, #000 36%),
+      color-mix(in oklab, #4c0030 64%, #000 36%));
+  }
+
+  .title{
+    font-weight:900; letter-spacing:.2px; line-height:1.25; font-size:clamp(16px,2.6vw,20px);
+    background:linear-gradient(90deg, var(--scarlet), var(--vermilion) 28%, var(--hot) 55%, var(--magenta) 80%, var(--candy));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .progress{font-size:clamp(12px,2vw,14px); opacity:.9;}
+
+  .canvas-shell{
+    position:relative; width:100%; height:clamp(260px, 60svh, 520px);
+    background:#200012; /* darker to make reds pop */
+  }
+  canvas{display:block; width:100%; height:100%;}
+  .scroll-spacer{ height: 20px; }
+
+  .entry{
+    padding:14px; border-top:1px solid var(--border);
+    background: color-mix(in oklab, #3a0018 88%, #000 12%);
+    display:grid; gap:10px;
+  }
+  .entry label{ font-weight:800; color:var(--bubble); }
+  .money-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .money{
+    flex:1 1 220px; padding:12px 14px; border-radius:12px;
+    border:1px solid var(--border); background:#2a0016; color:var(--ink);
+    font-size:16px; line-height:1.2;
+  }
+  .helper{ font-size:13px; color:var(--bubble); opacity:.9; }
+
+  .btn{
+    appearance:none; border:1px solid var(--border); color:#fff;
+    background:linear-gradient(180deg, var(--vermilion), var(--crimson));
+    padding:12px 16px; border-radius:14px; font-weight:800; font-size:16px;
+    min-height:44px; cursor:pointer; box-shadow:var(--shadow);
+    -webkit-tap-highlight-color:transparent; text-decoration:none;
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn.secondary{  background:linear-gradient(180deg, var(--rose),    var(--berry));}
+  .btn.tertiary{   background:linear-gradient(180deg, var(--hot),     var(--violet));}
+  .btn.quaternary{ background:linear-gradient(180deg, var(--magenta), var(--cherry));}
+  .btn[disabled]{opacity:.6; cursor:not-allowed; filter:saturate(.7);}
+  .final-link-btn{display:inline-block;}
+
+  /* overlay + toast for redirect fallback */
+  .pop-msg{
+    position:fixed; left:50%; bottom:14px; transform:translateX(-50%);
+    background:#2a0016; color:var(--bubble); border:1px solid var(--border);
+    padding:10px 14px; border-radius:12px; box-shadow:var(--shadow);
+    font-size:14px; display:none; z-index:9999;
+  }
+  .pop-msg.show{ display:block; }
+
+  .overlay{
+    position:fixed; inset:0;
+    background:radial-gradient(950px 950px at 50% -10%, rgba(255,69,96,.25), transparent 60%), rgba(18,0,22,.85);
+    display:none; z-index:9999; backdrop-filter:blur(2px);
+  }
+  .overlay.open{ display:grid; place-items:center; }
+  .overlay-card{
+    width:min(100vw - 40px,1000px); height:min(100vh - 40px,720px);
+    background:#1b0016; border:1px solid var(--border); border-radius:18px; overflow:hidden;
+    box-shadow:0 12px 50px rgba(0,0,0,.45), 0 4px 20px rgba(255,77,141,.25) inset;
+    display:grid; grid-template-rows:auto 1fr auto;
+  }
+  .overlay-header{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:10px 14px; background:linear-gradient(180deg, var(--crimson), var(--berry));
+    color:var(--bubble); font-weight:800;
+  }
+  .countdown{
+    font-variant-numeric:tabular-nums; background:#25000f; padding:6px 10px;
+    border-radius:10px; border:1px solid var(--rose);
+  }
+  .overlay iframe{ width:100%; height:100%; border:0; background:#0f000f; }
+  .overlay-footer{ padding:10px 14px; background:#230012; display:flex; justify-content:flex-end; gap:10px; }
+  .overlay a.inline-btn{
+    color:#fff; text-decoration:none; font-weight:800;
+    background:linear-gradient(180deg, var(--rose), var(--plum));
+    padding:10px 14px; border-radius:10px; border:1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="app" aria-label="Replacement Cost Task">
+      <header class="app-header">
+        <div class="title">How much would it cost to replace this item?</div>
+        <div class="progress" id="progress"></div>
+      </header>
+
+      <div class="canvas-shell"><div id="canvasHolder" style="position:absolute;inset:0;"></div></div>
+      <div class="scroll-spacer" aria-hidden="true"></div>
+
+      <div class="entry" aria-label="Enter amount">
+        <label for="moneyInput">Enter an amount</label>
+        <div class="money-row">
+          <input id="moneyInput" class="money" type="text" inputmode="decimal" placeholder="e.g., 49.99 or 50" autocomplete="off">
+          <button id="next" class="btn" type="button" disabled>Next</button>
+        </div>
+        <div class="helper">Type any number to enable the Next button.</div>
+      </div>
+
+      <footer class="app-footer">
+        <div class="hints"><div class="pill">Enter an amount for each image</div></div>
+        <div class="actions">
+          <!-- three redirect-style links (edit URLs/text as you like) -->
+          <button class="btn secondary redirBtn" type="button"
+                  data-url="https://www.computerhistory.org/revolution/calculators/1/65"
+                  data-seconds="3">Human Computers</button>
+
+          <button class="btn tertiary redirBtn" type="button"
+                  data-url="https://www.computerhistory.org/revolution/minicomputers/11/332"
+                  data-seconds="3">Minicomputers</button>
+
+          <button class="btn quaternary redirBtn" type="button"
+                  data-url="https://www.computerhistory.org/revolution/mainframe-computers/7"
+                  data-seconds="3">Mainframes</button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- Completion appears below to keep page scrollable on iPhone -->
+    <div id="completionSlot"></div>
+  </main>
+
+  <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site.</div>
+
+  <!-- Shared overlay fallback for redirect buttons -->
+  <div id="redirOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="redirTitle">
+    <div class="overlay-card">
+      <header class="overlay-header">
+        <div id="redirTitle">Opening external page…</div>
+        <small>Auto-closing in <span class="countdown" id="countdown">3</span>s…</small>
+      </header>
+      <iframe id="redirFrame" title="External page preview"></iframe>
+      <div class="overlay-footer">
+        <a id="redirDirectLink" class="inline-btn" href="#" target="_blank" rel="noopener">Open in a new tab</a>
+        <a id="closeOverlayBtn" class="inline-btn" href="#" role="button">Close</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ========= Settings ========= */
+const FOLDER_PATH="images/";
+const FILE_PREFIX="replacemachine";   // images/replacemachine0.png, replacemachine1.png, ...
+const FILE_EXT=".png";
+const MAX_ATTEMPTS=500;
+
+/* ========= State ========= */
+let imgs=[], current=0, scaleInfo=null, finished=false, canvas, discovering=true;
+const amounts=[];
+
+/* ========= Load images ========= */
+function loadImageAsync(p){
+  return new Promise((res,rej)=>{
+    const im=loadImage(p,()=>res(im),()=>rej(new Error("load-failed")));
+  });
+}
+async function discoverImages(){
+  let i=0;
+  try{
+    for(;i<MAX_ATTEMPTS;i++){
+      const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);
+      imgs.push(img);
+    }
+  }catch(e){
+    // stop at first gap
+  }finally{ discovering=false; }
+}
+
+/* ========= p5 ========= */
+function setup(){
+  const holder=document.getElementById('canvasHolder');
+  pixelDensity(window.devicePixelRatio||1);
+  canvas=createCanvas(holder.clientWidth,holder.clientHeight);
+  canvas.parent('canvasHolder');
+  colorMode(HSB,360,100,100,1);
+
+  new ResizeObserver(()=>{ resizeCanvas(holder.clientWidth,holder.clientHeight); updateScaleInfo(); }).observe(holder);
+
+  const moneyInput=document.getElementById('moneyInput');
+  const nextBtn=document.getElementById('next');
+
+  moneyInput.addEventListener('input', ()=>{ nextBtn.disabled = !hasNumber(moneyInput.value); });
+  moneyInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !nextBtn.disabled){ e.preventDefault(); nextBtn.click(); } });
+
+  nextBtn.addEventListener('click', ()=>{
+    const v=moneyInput.value.trim(); if(!hasNumber(v)) return;
+    amounts[current]=v;
+    if(current<imgs.length-1){
+      current++; updateScaleInfo(); moneyInput.value=""; nextBtn.disabled=true;
+      setTimeout(()=>moneyInput.focus(),50);
+    }else{
+      finished=true; nextBtn.disabled=true; moneyInput.disabled=true; showCompletion();
+    }
+  });
+
+  (async()=>{ await discoverImages(); updateScaleInfo(); })();
+}
+
+function draw(){
+  // pulsing red → magenta gradient inside canvas
+  const t=millis()*0.001, base=5 + 12 * sin(t * 0.5); // reds around 0–20°
+  const cTop=color((base+0)%360, 80, 30), cMid=color((base+10)%360, 90, 48), cBot=color((base+20)%360, 98, 65);
+  drawGrad(cTop,cMid,cBot);
+
+  if(discovering) return drawMsg("Looking for images…");
+  if(imgs.length===0) return drawMsg("No images found in images/");
+  if(finished) return drawMsg("Completed! See button below.");
+
+  const img=imgs[current]; if(!img) return drawMsg("Loading…");
+  updateScaleInfo();
+  image(img, scaleInfo.x, scaleInfo.y, scaleInfo.w, scaleInfo.h);
+
+  document.getElementById('progress').textContent=`Image ${current+1} of ${imgs.length}`;
+}
+
+/* ========= helpers ========= */
+function drawGrad(a,b,c){
+  const ctx=drawingContext, g=ctx.createLinearGradient(0,0,0,height);
+  g.addColorStop(0, toRGBA(a)); g.addColorStop(.5, toRGBA(b)); g.addColorStop(1, toRGBA(c));
+  ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,0,width,height); ctx.restore();
+}
+function toRGBA(col){return `rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`; }
+function drawMsg(m){ push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16); text(m, width/2, height/2); pop(); }
+
+function updateScaleInfo(){
+  const img=imgs[current]; if(!img) return;
+  const cw=width, ch=height, iw=img.width, ih=img.height;
+  const s=Math.min(cw/iw, ch/ih);
+  scaleInfo={ x:(cw - iw*s)/2, y:(ch - ih*s)/2, w:iw*s, h:ih*s, scale:s };
+}
+
+/* ========= completion ========= */
+function showCompletion(){
+  if(document.getElementById('final-link')) return;
+  const slot=document.getElementById('completionSlot');
+  const d=document.createElement('div');
+  d.id='final-link';
+  d.style.display='grid'; d.style.placeItems='center'; d.style.marginTop='24px';
+  d.innerHTML=`<a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
+      You completed this HIT! Go to your next task</a>`;
+  slot.appendChild(d);
+}
+
+/* ========= number validation ========= */
+function hasNumber(str){ return /\d/.test(str); }
+
+/* ========= Redirect logic (shared for all .redirBtn) ========= */
+const overlay   = document.getElementById('redirOverlay');
+const iframe    = document.getElementById('redirFrame');
+const countdown = document.getElementById('countdown');
+const directLink= document.getElementById('redirDirectLink');
+const closeBtn  = document.getElementById('closeOverlayBtn');
+const popup     = document.getElementById('popupMsg');
+
+let timer=null, tick=null, CURRENT_SECONDS=3;
+
+function resetCountdown(){ clearTimeout(timer); clearInterval(tick); if(countdown) countdown.textContent = CURRENT_SECONDS; }
+function closeOverlay(){
+  overlay.classList.remove('open');
+  iframe.src = "about:blank";
+  resetCountdown();
+  document.title = "Replacement Cost — Centered App";
+}
+function openOverlayFallback(url, seconds){
+  CURRENT_SECONDS = seconds;
+  overlay.classList.add('open'); iframe.src = url; directLink.href = url;
+  resetCountdown();
+  let remaining = seconds;
+  tick = setInterval(()=>{ remaining -= 1; if(countdown) countdown.textContent=Math.max(remaining,0); if(remaining<=0) clearInterval(tick); },1000);
+  timer = setTimeout(closeOverlay, seconds*1000);
+}
+function handleRedirect(btn){
+  const url = btn.getAttribute('data-url');
+  const seconds = parseInt(btn.getAttribute('data-seconds')||'3',10);
+  const w = window.open(url,'_blank');
+  if(w && !w.closed){
+    let remaining = seconds;
+    resetCountdown();
+    tick = setInterval(()=>{ remaining -= 1; if(remaining<=0) clearInterval(tick);
+      document.title = `(${Math.max(remaining,0)}s) Replacement Cost — Centered App`; },1000);
+    timer = setTimeout(()=>{ try{ w.close(); }catch(e){} document.title="Replacement Cost — Centered App"; resetCountdown(); }, seconds*1000);
+  } else {
+    popup.classList.add('show'); setTimeout(()=>popup.classList.remove('show'),3000);
+    openOverlayFallback(url, seconds);
+  }
+}
+document.querySelectorAll('.redirBtn').forEach(btn=>btn.addEventListener('click',()=>handleRedirect(btn)));
+document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && overlay.classList.contains('open')) closeOverlay(); });
+overlay.addEventListener('click',(e)=>{ if(e.target===overlay) closeOverlay(); });
+closeBtn.addEventListener('click',(e)=>{ e.preventDefault(); closeOverlay(); });
+</script>
+</body>
+</html>
