@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Tech Work — Centered App</title>
+<title>Technology Work</title>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
 <style>
   :root{
@@ -132,7 +132,7 @@
   <main class="wrap">
     <section class="app" aria-label="Tech Work Task">
       <header class="app-header">
-        <div class="title">Draw a box around every person doing work with technology</div>
+        <div class="title">Draw a box around every person who is working with technology.</div>
         <div class="progress" id="progress"></div>
       </header>
 
@@ -258,14 +258,14 @@ function drawMsg(m){ push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER)
 function drawCompletion(){
   push(); noStroke(); fill(330,20,100); textAlign(CENTER,CENTER); textSize(20);
   text("you have completed this HIT.", width/2, height/2 - 18);
-  textSize(16); text("Get your next task here:", width/2, height/2 + 8); pop();
+  textSize(16); text("Get your next task below.", width/2, height/2 + 8); pop();
 
   if(!document.getElementById('final-link')){
     const d=document.createElement('div');
     d.id='final-link';
     d.style.display='grid'; d.style.placeItems='center'; d.style.marginTop='24px';
     d.innerHTML=`<a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
-      You completed this HIT! Go to your next task</a>`;
+      You completed this HIT! Go to your next task by clicking on this button.</a>`;
     document.getElementById('completionSlot').appendChild(d);
   }
 }
