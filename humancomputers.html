@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Tech Work — Centered App</title>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
 <style>
@@ -21,10 +21,23 @@
       radial-gradient(800px 800px at 50% 110%,var(--berry)0%,transparent60%),
       linear-gradient(165deg,var(--maroon),var(--wine)45%,var(--violet));
   }
-  .wrap{max-width:980px;margin:clamp(16px,4vmin,32px) auto;padding:0 clamp(12px,3vmin,24px) 48px;}
-  .app{border:1px solid var(--border);
-    background:color-mix(in oklab,rgba(255,255,255,.04)20%,var(--maroon)80%);
-    box-shadow:var(--shadow);border-radius:18px;overflow:hidden;}
+
+  /* Respect iPhone safe areas and dynamic URL bar */
+  .wrap{
+    max-width: 980px;
+    margin: clamp(16px, 4vmin, 32px) auto;
+    padding:
+      max(0px, env(safe-area-inset-top))
+      clamp(12px, 3vmin, 24px)
+      calc(48px + env(safe-area-inset-bottom))
+      clamp(12px, 3vmin, 24px);
+  }
+
+  .app{
+    border:1px solid var(--border);
+    background:color-mix(in oklab, rgba(255,255,255,.04) 20%, var(--maroon) 80%);
+    box-shadow:var(--shadow);border-radius:18px;overflow:hidden;
+  }
   .app-header,.app-footer{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     padding:12px 14px;background:linear-gradient(180deg,rgba(25,8,18,.8),rgba(25,8,18,.35));
@@ -35,8 +48,20 @@
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
   .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
-  .canvas-shell{position:relative;width:100%;height:min(68vh,620px);background:#160012;}
+
+  /* iPhone-safe height with fallbacks + disable scroll while drawing */
+  .canvas-shell{
+    position:relative;
+    width:100%;
+    height: min(calc(var(--vh, 1vh) * 68), 620px);
+    height: min(68dvh, 620px);
+    height: min(68svh, 620px);
+    height: min(68vh, 620px);
+    background:#160012;
+    touch-action: none;
+  }
   canvas{display:block;width:100%;height:100%;}
+
   .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
   .hints{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
   .pill{
@@ -56,6 +81,7 @@
   .btn.secondary{background:linear-gradient(180deg,var(--rose),var(--berry));}
   .btn[disabled]{opacity:.6;cursor:not-allowed;filter:saturate(.7);}
   .final-link-btn{display:inline-block;}
+
   .pop-msg{
     position:fixed;left:50%;bottom:14px;transform:translateX(-50%);
     background:#2a001d;color:var(--bubble);border:1px solid var(--border);
@@ -63,6 +89,7 @@
     font-size:14px;display:none;z-index:9999;
   }
   .pop-msg.show{display:block;}
+
   .overlay{
     position:fixed;inset:0;
     background:
@@ -93,6 +120,17 @@
     padding:10px 14px;border-radius:10px;border:1px solid var(--candy);
   }
 </style>
+
+<!-- Reliable 1vh for iOS URL-bar changes -->
+<script>
+  function setVH(){
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH, { passive: true });
+  window.addEventListener('orientationchange', setVH);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(setVH, 50); });
+</script>
 </head>
 <body>
   <main class="wrap">
@@ -102,9 +140,7 @@
         <div class="progress" id="progress"></div>
       </header>
 
-      <div class="canvas-shell">
-        <div id="canvasHolder" style="position:absolute;inset:0;"></div>
-      </div>
+      <div class="canvas-shell"><div id="canvasHolder" style="position:absolute;inset:0;"></div></div>
 
       <footer class="app-footer">
         <div class="hints">
@@ -152,281 +188,118 @@ const DISPLAY_SECONDS=3;
 let imgs=[],imgMeta=[],current=0,dragging=false,dragStart=null,tempRect=null,scaleInfo=null,finished=false,canvas;
 let discovering=true;
 
-/* ========= Auto-discover images (contiguous from 0) ========= */
-function loadImageAsync(p){
-  return new Promise((res,rej)=>{
-    const im=loadImage(p,()=>res(im),()=>rej(new Error("load-failed")));
-  });
-}
-async function discoverImages(){
-  let i=0;
-  try{
-    for(;i<MAX_ATTEMPTS;i++){
-      const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);
-      imgs.push(img); imgMeta.push({boxes:[]});
-    }
-  }catch(e){
-    // stop on first gap
-  }finally{
-    discovering=false;
-  }
-}
+/* ========= Auto-discover images ========= */
+function loadImageAsync(p){return new Promise((res,rej)=>{const im=loadImage(p,()=>res(im),()=>rej());});}
+async function discoverImages(){let i=0;try{for(;i<MAX_ATTEMPTS;i++){const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);imgs.push(img);imgMeta.push({boxes:[]});}}catch(e){}finally{discovering=false;}}
 
-/* ========= p5 setup/draw ========= */
+/* ========= p5 ========= */
 function setup(){
   const holder=document.getElementById('canvasHolder');
   pixelDensity(window.devicePixelRatio||1);
-  canvas=createCanvas(holder.clientWidth,holder.clientHeight);
-  canvas.parent('canvasHolder');
-  canvas.elt.oncontextmenu=e=>e.preventDefault();
-  colorMode(HSB,360,100,100,1);
-
-  new ResizeObserver(()=>{
-    resizeCanvas(holder.clientWidth,holder.clientHeight);
-    updateScaleInfo();
-  }).observe(holder);
-
-  document.getElementById('undo').onclick=undoLast;
-  document.getElementById('next').onclick=nextImage;
+  canvas=createCanvas(holder.clientWidth,holder.clientHeight);canvas.parent('canvasHolder');
+  canvas.elt.oncontextmenu=e=>e.preventDefault();colorMode(HSB,360,100,100,1);
+  new ResizeObserver(()=>{resizeCanvas(holder.clientWidth,holder.clientHeight);updateScaleInfo();}).observe(holder);
+  document.getElementById('undo').onclick=undoLast;document.getElementById('next').onclick=nextImage;
   document.getElementById('openCalcBtn').addEventListener('click',openInNewTabThenReturn);
-
-  (async()=>{await discoverImages(); updateScaleInfo();})();
+  (async()=>{await discoverImages();updateScaleInfo();})();
 }
-
 function draw(){
-  const t=millis()*0.001, base=335+15*sin(t*0.4);
-  const cTop=color(base,70,25), cMid=color((base+10)%360,80,40), cBot=color((base+20)%360,90,55);
+  const t=millis()*0.001,base=335+15*sin(t*0.4);
+  const cTop=color(base,70,25),cMid=color((base+10)%360,80,40),cBot=color((base+20)%360,90,55);
   drawGrad(cTop,cMid,cBot);
-
-  if(discovering) return drawMsg("Looking for images…");
-  if(imgs.length===0) return drawMsg("No images found in images/");
-  if(finished) return drawCompletion();
-
-  const img=imgs[current];
-  if(!img) return drawMsg("Loading…");
-
-  updateScaleInfo();
-  image(img,scaleInfo.x,scaleInfo.y,scaleInfo.w,scaleInfo.h);
-
-  // draw saved boxes
-  push(); noFill(); strokeWeight(Math.max(1,2*(width/1024)));
-  for(const r of imgMeta[current].boxes){
-    const {x,y,w,h}=imgRectToCanvas(r);
-    stroke(330,60,95,0.85); rect(x,y,w,h);
-    stroke(330,15,100,1); rect(x,y,w,h);
-  }
-  pop();
-
-  // live drag
-  if(dragging && tempRect){
-    push(); noFill(); stroke(330,15,100,1); strokeWeight(3);
-    rect(tempRect.x,tempRect.y,tempRect.w,tempRect.h); pop();
-  }
-
+  if(discovering)return drawMsg("Looking for images…");
+  if(imgs.length===0)return drawMsg("No images found in images/");
+  if(finished)return drawCompletion();
+  const img=imgs[current];if(!img)return drawMsg("Loading…");
+  updateScaleInfo();image(img,scaleInfo.x,scaleInfo.y,scaleInfo.w,scaleInfo.h);
+  push();noFill();strokeWeight(Math.max(1,2*(width/1024)));
+  for(const r of imgMeta[current].boxes){const {x,y,w,h}=imgRectToCanvas(r);
+    stroke(330,60,95,.85);rect(x,y,w,h);stroke(330,15,100,1);rect(x,y,w,h);}pop();
+  if(dragging&&tempRect){push();noFill();stroke(330,15,100,1);strokeWeight(3);rect(tempRect.x,tempRect.y,tempRect.w,tempRect.h);pop();}
   document.getElementById('progress').textContent=`Image ${current+1} of ${imgs.length}`;
 }
+function drawGrad(a,b,c){const ctx=drawingContext,g=ctx.createLinearGradient(0,0,0,height);
+  g.addColorStop(0,p5Col(a));g.addColorStop(.5,p5Col(b));g.addColorStop(1,p5Col(c));
+  ctx.save();ctx.fillStyle=g;ctx.fillRect(0,0,width,height);ctx.restore();}
+function p5Col(col){return`rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`;}
+function drawMsg(m){push();fill(0,0,100);noStroke();textAlign(CENTER,CENTER);textSize(16);text(m,width/2,height/2);pop();}
 
-/* ========= helpers ========= */
-function drawGrad(a,b,c){
-  const ctx=drawingContext, g=ctx.createLinearGradient(0,0,0,height);
-  g.addColorStop(0, p5Col(a)); g.addColorStop(0.5, p5Col(b)); g.addColorStop(1, p5Col(c));
-  ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,0,width,height); ctx.restore();
-}
-function p5Col(col){return `rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`;}
-function drawMsg(m){push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16); text(m, width/2, height/2); pop();}
-
+/* ========= completion ========= */
 function drawCompletion(){
-  push(); noStroke(); fill(330,20,100); textAlign(CENTER,CENTER); textSize(20);
-  text("you have completed this HIT.", width/2, height/2 - 18);
-  textSize(16); text("Get your next task here:", width/2, height/2 + 8); pop();
-
+  push();noStroke();fill(330,20,100);textAlign(CENTER,CENTER);textSize(20);
+  text("you have completed this HIT.",width/2,height/2-18);textSize(16);
+  text("Get your next task here:",width/2,height/2+8);pop();
   if(!document.getElementById('final-link')){
     const d=document.createElement('div');
-    d.id='final-link';
-    d.style.position='absolute';
-    d.style.left='50%';
-    d.style.top='calc(50% + 34px)';
+    d.id='final-link';d.style.position='absolute';d.style.left='50%';d.style.top='calc(50% + 34px)';
     d.style.transform='translateX(-50%)';
-    d.innerHTML=`
-      <a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
-        You completed this HIT! Go to your next task
-      </a>`;
+    d.innerHTML=`<a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
+      You completed this HIT! Go to your next task</a>`;
     document.querySelector('.canvas-shell').appendChild(d);
   }
 }
 
 /* ========= interaction ========= */
-function mousePressed(){
-  if(finished) return false;
-  if(!inside(mouseX,mouseY)) return false;
-  dragging=true; dragStart={x:mouseX,y:mouseY};
-  tempRect={x:mouseX,y:mouseY,w:0,h:0};
-  return false;
-}
-function mouseDragged(){
-  if(!dragging) return false;
-  tempRect.w=mouseX-dragStart.x; tempRect.h=mouseY-dragStart.y;
-  return false;
-}
+function mousePressed(){if(finished)return false;if(!inside(mouseX,mouseY))return false;
+  dragging=true;dragStart={x:mouseX,y:mouseY};tempRect={x:mouseX,y:mouseY,w:0,h:0};return false;}
+function mouseDragged(){if(!dragging)return false;tempRect.w=mouseX-dragStart.x;tempRect.h=mouseY-dragStart.y;return false;}
 function mouseReleased(){
-  if(!dragging) return false;
-  dragging=false;
-  const n=normalizeRect(tempRect);
-  tempRect=null;
-
-  // Clamp to image bounds and store if sufficiently large
-  const clampedCanvasRect = clampRectToImage(n);
-  const MIN = 10; // minimal visible size in canvas px
-  if(clampedCanvasRect.w < MIN || clampedCanvasRect.h < MIN) return false;
-
-  const rImg = canvasRectToImg(clampedCanvasRect);
-  imgMeta[current].boxes.push(rImg);
-  updateUI();
-  return false;
-}
-// touch aliases (prevent default scroll/zoom)
-function touchStarted(){ return mousePressed(); }
-function touchMoved(){ return mouseDragged(); }
-function touchEnded(){ return mouseReleased(); }
-
-function keyPressed(){ if(key==='z'||key==='Z') undoLast(); if(key==='n'||key==='N') nextImage(); }
-
-function undoLast(){
-  if(finished) return;
-  const b=imgMeta[current].boxes;
-  if(b.length>0){ b.pop(); updateUI(); }
-}
-function nextImage(){
-  if(finished) return;
-  if(imgMeta[current].boxes.length===0) return;
-  if(current<imgs.length-1){
-    current++; updateScaleInfo(); updateUI();
-    const l=document.getElementById('final-link'); if(l) l.remove();
-  }else{
-    finished=true;
-    document.getElementById('undo').disabled=true;
-    document.getElementById('next').disabled=true;
-  }
-}
-function updateUI(){
-  const n=document.getElementById('next'), u=document.getElementById('undo');
-  if(finished){ n.disabled=true; u.disabled=true; }
-  else { const has=imgMeta[current].boxes.length>0; n.disabled=!has; u.disabled=!has; }
-}
+  if(!dragging)return false;dragging=false;
+  const n=normalizeRect(tempRect);tempRect=null;
+  const clamped=clampRectToImage(n);const MIN=10;if(clamped.w<MIN||clamped.h<MIN)return false;
+  imgMeta[current].boxes.push(canvasRectToImg(clamped));updateUI();return false;}
+function touchStarted(){return mousePressed();}function touchMoved(){return mouseDragged();}function touchEnded(){return mouseReleased();}
+function keyPressed(){if(key==='z'||key==='Z')undoLast();if(key==='n'||key==='N')nextImage();}
+function undoLast(){if(finished)return;const b=imgMeta[current].boxes;if(b.length>0){b.pop();updateUI();}}
+function nextImage(){if(finished)return;if(imgMeta[current].boxes.length===0)return;
+  if(current<imgs.length-1){current++;updateScaleInfo();updateUI();const l=document.getElementById('final-link');if(l)l.remove();}
+  else{finished=true;document.getElementById('undo').disabled=true;document.getElementById('next').disabled=true;}}
+function updateUI(){const n=document.getElementById('next'),u=document.getElementById('undo');
+  if(finished){n.disabled=u.disabled=true;}else{const has=imgMeta[current].boxes.length>0;n.disabled=!has;u.disabled=!has;}}
 
 /* ========= geometry ========= */
-function updateScaleInfo(){
-  const img=imgs[current]; if(!img) return;
-  const cw=width, ch=height, iw=img.width, ih=img.height;
-  const s=Math.min(cw/iw, ch/ih);
-  scaleInfo={ x:(cw - iw*s)/2, y:(ch - ih*s)/2, w:iw*s, h:ih*s, scale:s };
-}
-function inside(x,y){ return scaleInfo && x>=scaleInfo.x && x<=scaleInfo.x+scaleInfo.w && y>=scaleInfo.y && y<=scaleInfo.y+scaleInfo.h; }
-
-function normalizeRect(r){
-  const x = r.w<0 ? r.x + r.w : r.x;
-  const y = r.h<0 ? r.y + r.h : r.y;
-  const w = Math.abs(r.w), h = Math.abs(r.h);
-  return { x, y, w, h };
-}
-
-// Clamp any canvas-rect to the current image area (ensures it always “sticks”)
+function updateScaleInfo(){const img=imgs[current];if(!img)return;
+  const cw=width,ch=height,iw=img.width,ih=img.height;const s=Math.min(cw/iw,ch/ih);
+  scaleInfo={x:(cw-iw*s)/2,y:(ch-ih*s)/2,w:iw*s,h:ih*s,scale:s};}
+function inside(x,y){return scaleInfo&&x>=scaleInfo.x&&x<=scaleInfo.x+scaleInfo.w&&y>=scaleInfo.y&&y<=scaleInfo.y+scaleInfo.h;}
+function normalizeRect(r){const x=r.w<0?r.x+r.w:r.x,y=r.h<0?r.y+r.h:r.y;return{x,y,w:Math.abs(r.w),h:Math.abs(r.h)};}
 function clampRectToImage(r){
-  if(!scaleInfo) return r;
-  const ix=scaleInfo.x, iy=scaleInfo.y, iw=scaleInfo.w, ih=scaleInfo.h;
-  const x1 = Math.max(ix, Math.min(ix + iw, r.x));
-  const y1 = Math.max(iy, Math.min(iy + ih, r.y));
-  const x2 = Math.max(ix, Math.min(ix + iw, r.x + r.w));
-  const y2 = Math.max(iy, Math.min(iy + ih, r.y + r.h));
-  return { x: Math.min(x1,x2), y: Math.min(y1,y2), w: Math.abs(x2 - x1), h: Math.abs(y2 - y1) };
+  if(!scaleInfo)return r;const ix=scaleInfo.x,iy=scaleInfo.y,iw=scaleInfo.w,ih=scaleInfo.h;
+  const x1=Math.max(ix,Math.min(ix+iw,r.x));const y1=Math.max(iy,Math.min(iy+ih,r.y));
+  const x2=Math.max(ix,Math.min(ix+iw,r.x+r.w));const y2=Math.max(iy,Math.min(iy+ih,r.y+r.h));
+  return{ x:Math.min(x1,x2), y:Math.min(y1,y2), w:Math.abs(x2-x1), h:Math.abs(y2-y1) };
 }
+function canvasRectToImg(r){const p1=canvasToImgPoint(r.x,r.y),p2=canvasToImgPoint(r.x+r.w,r.y+r.h);
+  return{x:Math.min(p1.x,p2.x),y:Math.min(p1.y,p2.y),w:Math.abs(p2.x-p1.x),h:Math.abs(p2.y-p1.y)};}
+function canvasToImgPoint(px,py){return{ x:(px-scaleInfo.x)/scaleInfo.scale, y:(py-scaleInfo.y)/scaleInfo.scale };}
+function imgRectToCanvas(r){return{x:scaleInfo.x+r.x*scaleInfo.scale,y:scaleInfo.y+r.y*scaleInfo.scale,w:r.w*scaleInfo.scale,h:r.h*scaleInfo.scale};}
 
-// Conversions
-function canvasRectToImg(r){
-  const p1 = canvasToImgPoint(r.x, r.y);
-  const p2 = canvasToImgPoint(r.x + r.w, r.y + r.h);
-  const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
-  const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
-  return { x, y, w, h };
-}
-function canvasToImgPoint(px,py){
-  const sx=(px - scaleInfo.x)/scaleInfo.scale;
-  const sy=(py - scaleInfo.y)/scaleInfo.scale;
-  return { x:sx, y:sy };
-}
-function imgRectToCanvas(r){
-  return {
-    x: scaleInfo.x + r.x * scaleInfo.scale,
-    y: scaleInfo.y + r.y * scaleInfo.scale,
-    w: r.w * scaleInfo.scale,
-    h: r.h * scaleInfo.scale
-  };
-}
+/* ========= Redirect (new tab + 3s + close; overlay fallback) ========= */
+const openBtn=document.getElementById('openCalcBtn'),overlay=document.getElementById('calcOverlay'),
+iframe=document.getElementById('calcFrame'),countdown=document.getElementById('countdown'),
+directLink=document.getElementById('calcDirectLink'),closeBtn=document.getElementById('closeOverlayBtn'),
+popup=document.getElementById('popupMsg');
+let timer=null,tick=null,remain=DISPLAY_SECONDS;
 
-/* ========= Redirect logic (open new tab + 3s + close; overlay fallback) ========= */
-const openBtn=document.getElementById('openCalcBtn'),
-      overlay=document.getElementById('calcOverlay'),
-      iframe=document.getElementById('calcFrame'),
-      countdown=document.getElementById('countdown'),
-      directLink=document.getElementById('calcDirectLink'),
-      closeOverlayBtn=document.getElementById('closeOverlayBtn'),
-      popup=document.getElementById('popupMsg');
-
-let timer=null, tick=null, remaining=DISPLAY_SECONDS;
-
-function resetCountdown(){
-  clearTimeout(timer); clearInterval(tick);
-  remaining=DISPLAY_SECONDS; countdown.textContent=remaining;
-}
-function closeOverlay(){
-  overlay.classList.remove('open');
-  iframe.src="about:blank";
-  resetCountdown();
-  openBtn.disabled=false;
-  document.title="Tech Work — Centered App";
-}
-function openOverlayFallback(){
-  openBtn.disabled=true;
-  overlay.classList.add('open');
-  iframe.src=EXTERNAL_URL;
-  directLink.href=EXTERNAL_URL;
-
-  resetCountdown();
-  tick=setInterval(()=>{
-    remaining-=1;
-    countdown.textContent=Math.max(remaining,0);
-    if(remaining<=0) clearInterval(tick);
-  },1000);
-  timer=setTimeout(closeOverlay, DISPLAY_SECONDS*1000);
-}
+function reset(){clearTimeout(timer);clearInterval(tick);remain=DISPLAY_SECONDS;countdown.textContent=remain;}
+function closeO(){overlay.classList.remove('open');iframe.src="about:blank";reset();openBtn.disabled=false;document.title="Tech Work — Centered App";}
+function overlayFallback(){openBtn.disabled=true;overlay.classList.add('open');iframe.src=EXTERNAL_URL;directLink.href=EXTERNAL_URL;
+  reset();tick=setInterval(()=>{remain--;countdown.textContent=Math.max(remain,0);if(remain<=0)clearInterval(tick);},1000);
+  timer=setTimeout(closeO,DISPLAY_SECONDS*1000);}
 function openInNewTabThenReturn(){
-  const newWin=window.open(EXTERNAL_URL,'_blank'); // attempt to close later
-  if(newWin && !newWin.closed){
-    openBtn.disabled=true;
-    resetCountdown();
-    tick=setInterval(()=>{
-      remaining-=1;
-      if(remaining<=0) clearInterval(tick);
-      document.title=`(${Math.max(remaining,0)}s) Tech Work — Centered App`;
-    },1000);
-    timer=setTimeout(()=>{
-      try{ newWin.close(); }catch(e){}
-      document.title="Tech Work — Centered App";
-      openBtn.disabled=false;
-      resetCountdown();
-    }, DISPLAY_SECONDS*1000);
-  }else{
-    // pop-up blocked → toast + overlay fallback
-    popup.classList.add('show');
-    setTimeout(()=>popup.classList.remove('show'), 3000);
-    openOverlayFallback();
+  const newWin=window.open(EXTERNAL_URL,'_blank');
+  if(newWin&&!newWin.closed){
+    openBtn.disabled=true;reset();
+    tick=setInterval(()=>{remain--;if(remain<=0)clearInterval(tick);
+      document.title=`(${Math.max(remain,0)}s) Tech Work — Centered App`;},1000);
+    timer=setTimeout(()=>{try{newWin.close();}catch(e){}document.title="Tech Work — Centered App";openBtn.disabled=false;reset();},DISPLAY_SECONDS*1000);
+  } else {
+    popup.classList.add('show');setTimeout(()=>popup.classList.remove('show'),3000);overlayFallback();
   }
 }
-
-// overlay controls
-document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && overlay.classList.contains('open')) closeOverlay(); });
-overlay.addEventListener('click',(e)=>{ if(e.target===overlay) closeOverlay(); });
-closeOverlayBtn.addEventListener('click',(e)=>{ e.preventDefault(); closeOverlay(); });
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))closeO();});
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeO();});
+closeBtn.addEventListener('click',e=>{e.preventDefault();closeO();});
 </script>
 </body>
 </html>
