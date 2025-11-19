@@ -12,7 +12,6 @@
       --accent: #7dd3fc;
       --card: #0b0b0b;
       --card-border: #1a1a1a;
-      --divider: #222;
     }
     html { scroll-behavior: smooth; }
     body { margin: 0; font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans"; background: var(--bg); color: var(--fg); }
@@ -47,8 +46,6 @@
     .btn { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #111; border: 1px solid var(--card-border); color: var(--fg); font-weight: 600; text-align: center; font-size: 12px; transition: background .15s ease, transform .05s ease; }
     .btn:hover { background: #181818; text-decoration: none; }
     .btn:active { transform: translateY(1px); }
-
-    .muted { color: var(--muted); }
     .top-link { position: fixed; right: 18px; bottom: 18px; }
   </style>
 </head>
@@ -57,28 +54,16 @@
   <header>
     <div class="wrap">
       <h1 class="title">If (x=CAREbot), Then (y=humancomputers); While (t=typewriter, p=punch cards, s=sewingmachines, m=matildaeffect);</h1>
-      <p class="sub">Two large feature images at the top, followed by a single grid of cards (5 per row). Add as many cards as you like — the grid will keep wrapping.</p>
+      <p class="sub">The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer</p>
     </div>
   </header>
 
   <main>
-    <section aria-label="Feature images and card grid">
-      <!-- Two big images at the top -->
+    <section>
       <div class="feature-pair">
-        <!-- Using the same filenames as in your code -->
-        <div class="feature">
-          <a href="images/carebot_01_feature_01.png" target="_blank" rel="noopener">
-            <img src="images/carebot_01_feature_01.png" alt="Feature image 1">
-          </a>
-        </div>
-        <div class="feature">
-          <a href="images/carebot_01_feature_02.png" target="_blank" rel="noopener">
-            <img src="images/carebot_01_feature_02.png" alt="Feature image 2">
-          </a>
-        </div>
+        <div class="feature"><a href="images/carebot_01_feature_01.png" target="_blank"><img src="images/carebot_01_feature_01.png" alt="Feature 1"></a></div>
+        <div class="feature"><a href="images/carebot_01_feature_02.png" target="_blank"><img src="images/carebot_01_feature_02.png" alt="Feature 2"></a></div>
       </div>
-
-      <!-- Unified 5-column grid for all cards -->
       <div class="grid" id="card-grid"></div>
     </section>
   </main>
@@ -87,84 +72,48 @@
   <a class="btn top-link" href="#top">Back to top ↑</a>
 
   <script>
-    // Keep all your original text (titles/leads) and links intact:
-    const sections = [
-      {
-        id: 1,
-        title: 'Carebot 1',
-        lead: 'The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Human Computer',
-        links: [
-          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
-          'https://www.computerhistory.org/revolution/calculators/1/65/272',
-          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
-          'https://patents.google.com/patent/US258518A',
-          'https://patents.google.com/patent/US666578A',
-          'https://patents.google.com/patent/US683901A',
-          'https://patents.google.com/patent/US640348A',
-          'https://www.computerhistory.org/revolution/minicomputers/11/intro/1910',
-          'https://www.computerhistory.org/revolution/minicomputers/11/362',
-          'https://www.computerhistory.org/revolution/minicomputers/11/362/1955'
-        ]
-      },
-      {
-        id: 2,
-        title: 'CAREBOT 2.0',
-        lead: 'The Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer',
-        links: [
-          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
-          'https://www.computerhistory.org/revolution/calculators/1/65/272',
-          'https://www.computerhistory.org/revolution/calculators/1/65/2209',
-          'https://patents.google.com/patent/US745167A',
-          'https://patents.google.com/patent/US829474A',
-          'https://patents.google.com/patent/US829830A',
-          'https://patents.google.com/patent/US837620A',
-          'https://www.computerhistory.org/brochures/overview/',
-          'https://d1yx3ys82bpsa0.cloudfront.net/brochures/pds.1020.1964.102646239.pdf',
-          'https://computerhistory.org/blog/women-and-the-public-face-of-computing/'
-        ]
-      },
-      {
-        id: 3,
-        title: 'CAREBOT 3.0',
-        lead: 'Exploration of textile-based computation and embodied algorithms.',
-        links: []
-      },
-      {
-        id: 4,
-        title: 'CAREBOT 4.0',
-        lead: 'Integration of data and labor histories through stitched circuits.',
-        links: []
-      },
-      {
-        id: 5,
-        title: 'CAREBOT 5.0',
-        lead: 'Envisioning future care technologies merging mechanical memory and empathy.',
-        links: []
-      }
+    const entries = [
+      { title: "P.1 Human Computers", text: "This image shows women working as human computers.", link: "https://www.computerhistory.org/revolution/calculators/1/65/2209" },
+      { title: "P.2 Human Computers", text: "This image shows women working as human computers.", link: "https://www.computerhistory.org/revolution/calculators/1/65/272" },
+      { title: "P.3 Human Computers", text: "This image shows people (including women) working as human computers.", link: "https://www.computerhistory.org/revolution/calculators/1/65/2209" },
+      { title: "P.4 Adding Machine Patent by Mary E. Winter", text: "This patent is for an “Adding Machine” by Mary E. Winter", link: "https://patents.google.com/patent/US258518A" },
+      { title: "P.5 Sewing Machine Patent by Harriet Ruth Tracy", text: "Patent for a sewing machine by Harriet Ruth Tracy.", link: "https://patents.google.com/patent/US666578A" },
+      { title: "P.6 Overseaming Sewing Machine Patent by Helen A. Blanchard", text: "This patent is for a sewing machine by Helen A. Blanchard.", link: "https://patents.google.com/patent/US683901A" },
+      { title: "P.7 Computing Attachment for Scale Beams Patent by Margaret A. Wise", text: "Patent for a computing attachment for scale beams by Margaret A. Wise.", link: "https://patents.google.com/patent/US640348A" },
+      { title: "P.8 TechnoObjectified Presentation Labor", text: "This image is of a woman’s leg with a PDP-8 computer. Caption reads “A later model in the PDP-8 family of minicomputers is under the heel of a miniskirted young woman.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/intro/1910" },
+      { title: "P.9 TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" },
+      { title: "P.10 Kitchen Computer", text: "The Kitchen Computer was one of many exotic gifts featured in the Neiman-Marcus Christmas Catalog.", link: "https://www.computerhistory.org/revolution/minicomputers/11/362/2006" },
+      { title: "P.11 Human Computers", text: "This image shows women working as human computers.", link: "https://www.computerhistory.org/revolution/calculators/1/65/2209" },
+      { title: "P.12 Human Computers", text: "This image shows women working as human computers.", link: "https://www.computerhistory.org/revolution/calculators/1/65/272" },
+      { title: "P.13 Human Computers", text: "This image shows people (including women) working as human computers.", link: "https://www.computerhistory.org/revolution/calculators/1/65/2209" },
+      { title: "P.14 Calculator Patent by Emily C. Duncan (1903)", text: "This patent is for a “Calculator” by Emily C. Duncan", link: "https://patents.google.com/patent/US745167A" },
+      { title: "P.15 Loom Patent by Mary P C Hooper", text: "Patent for a loom by Mary P C Hooper.", link: "https://patents.google.com/patent/US829474A" },
+      { title: "P.16 Work Attachment for a Sewing Machine Patent by Sarah L. Bailey", text: "This patent is for Work Attachment for Sewing Machine by Sarah L. Bailey.", link: "https://patents.google.com/patent/US829830A" },
+      { title: "P.17 Sewing Machine Cabinet Patent by Margaret Graaf", text: "Sewing Machine Cabinet patent by Margaret Graaf.", link: "https://patents.google.com/patent/US837620A" },
+      { title: "P.18 TechnoObjectified Presentation Labor", text: "This image is of a woman sitting on top of a PDS 1020 Digital Computer.", link: "https://www.computerhistory.org/brochures/overview/" },
+      { title: "P.19 TechnoObjectified Presentation Labor", text: "This link is to the brochure with this image of a woman sitting on top of a PDS 1020 Digital Computer.", link: "https://d1yx3ys82bpsa0.cloudfront.net/brochures/pds.1020.1964.102646239.pdf" },
+      { title: "P.20 Women & Face of Computing", text: "This is an article called “Women and the Public Face of Computing”", link: "https://computerhistory.org/blog/women-and-the-public-face-of-computing/" }
     ];
 
-    // Build one unified grid of 50 cards (10 per section) — rows of 5
-    const grid = document.getElementById('card-grid');
-    sections.forEach(sec => {
-      const totalCards = 10; // add more here (or more sections) and the grid will keep wrapping at 5 per row
-      for (let i = 1; i <= totalCards; i++) {
-        const card = document.createElement('article');
-        card.className = 'card';
-
-        const imgPath = `images/carebot_0${sec.id}_image_${String(i).padStart(2,'0')}.png`;
-        const link = sec.links[i - 1];
-
+    const grid = document.getElementById("card-grid");
+    let imgCount = 1;
+    // Repeat the 20 entries 3 times for 60 cards
+    for (let repeat = 1; repeat <= 3; repeat++) {
+      entries.forEach((e, idx) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        const imgPath = `images/carebot_0${repeat}_image_${String(idx + 1).padStart(2, "0")}.png`;
         card.innerHTML = `
-          <img src="${imgPath}" alt="${sec.title} card ${i}">
+          <img src="${imgPath}" alt="${e.title}">
           <div class="content">
-            <h3>${sec.title} — P.${i}</h3>
-            <p class="muted">${sec.lead}</p>
-            ${link ? `<a class='btn' href='${link}' target='_blank' rel='noopener'>Open link</a>` : `<span class='btn' aria-disabled='true'>No link yet</span>`}
-          </div>
-        `;
+            <h3>${e.title}</h3>
+            <p>${e.text}</p>
+            <a class='btn' href='${e.link}' target='_blank'>Open link</a>
+          </div>`;
         grid.appendChild(card);
-      }
-    });
+        imgCount++;
+      });
+    }
   </script>
 </body>
 </html>
