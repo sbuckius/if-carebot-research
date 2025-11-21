@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CEO Identification — Centered App</title>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
+<style>
+  :root{
+    /* Reds / pinks (mobile-friendly contrast) */
+    --scarlet:#ff1133; --vermilion:#ff2a3f; --crimson:#c40032; --cherry:#a10028;
+    --rose:#ff567a; --hot:#ff2f59; --magenta:#ff1f8a; --candy:#ff7aa8;
+    --bubble:#ffe0eb; --berry:#8e003c; --plum:#4c0030; --violet:#4c0044;
+    --ink:#fff5f7; --border:#ff9abb; --shadow:0 10px 32px rgba(255, 54, 86, .34);
+  }
+
+  html,body{
+    margin:0; min-height:100%; color:var(--ink); -webkit-overflow-scrolling:touch;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
+    background:
+      radial-gradient(1300px 1000px at 10% -5%,  #ff8da3 0%, transparent 55%),
+      radial-gradient(1100px 900px  at 90% 8%,  #ff5b6c 0%, transparent 55%),
+      radial-gradient(900px 800px   at 35% 105%, #ff2f41 0%, transparent 60%),
+      radial-gradient(700px 650px   at 100% 100%,#ff1a3a 0%, transparent 60%),
+      linear-gradient(175deg, #6f001e, #5b001d 40%, #4c0030 68%, #4c0044 100%);
+  }
+
+  .wrap{
+    max-width:980px; margin:clamp(16px,4vmin,32px) auto;
+    padding:max(0px, env(safe-area-inset-top)) clamp(12px,3vmin,24px)
+            calc(64px + env(safe-area-inset-bottom)) clamp(12px,3vmin,24px);
+  }
+
+  .app{
+    border:1px solid var(--border);
+    background:color-mix(in oklab, rgba(255,255,255,.05) 16%, #5b001d 84%);
+    box-shadow:var(--shadow); border-radius:18px; overflow:hidden;
+  }
+
+  .app-header,.app-footer{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px;
+    background:linear-gradient(180deg,
+      color-mix(in oklab, #6f001e 64%, #000 36%),
+      color-mix(in oklab, #4c0030 64%, #000 36%));
+  }
+  .title{
+    font-weight:900; letter-spacing:.2px; line-height:1.35; font-size:clamp(15px,2.4vw,18px);
+    background:linear-gradient(90deg, var(--scarlet), var(--vermilion) 28%, var(--hot) 55%, var(--magenta) 80%, var(--candy));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-wrap:balance;
+  }
+  .progress{font-size:clamp(12px,2vw,14px); opacity:.9;}
+
+  .canvas-shell{
+    position:relative; width:100%; height:clamp(260px, 60svh, 520px);
+    background:#210012;
+    touch-action: none; /* block scroll only while interacting with canvas */
+  }
+  canvas{display:block; width:100%; height:100%;}
+  .scroll-spacer{ height: 16px; }
+
+  .controls{
+    padding:12px 14px; display:grid; gap:10px;
+    background: color-mix(in oklab, #3a0018 88%, #000 12%);
+    border-top:1px solid var(--border);
+  }
+
+  .option-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+  .check{
+    appearance:none; width:22px; height:22px; border-radius:6px; cursor:pointer;
+    border:1.5px solid var(--border); background:#2a0016; position:relative;
+  }
+  .check:checked{ background:linear-gradient(180deg, var(--vermilion), var(--crimson)); border-color:var(--border); }
+  .check:checked::after{
+    content:""; position:absolute; inset:5px;
+    border-right:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(45deg);
+  }
+  .check-label{ font-weight:800; color:var(--bubble); }
+
+  .btn{
+    appearance:none; border:1px solid var(--border); color:#fff;
+    background:linear-gradient(180deg, var(--vermilion), var(--crimson));
+    padding:12px 16px; border-radius:14px; font-weight:800; font-size:16px;
+    min-height:44px; cursor:pointer; box-shadow:var(--shadow);
+    -webkit-tap-highlight-color:transparent; text-decoration:none;
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn.secondary{  background:linear-gradient(180deg, var(--rose),    var(--berry));}
+  .btn.muted{      background:linear-gradient(180deg, #6a1730, #4a0f23);}
+  .btn[disabled]{opacity:.6; cursor:not-allowed; filter:saturate(.7);}
+
+  .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
+  .hints{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .pill{
+    background: color-mix(in oklab, #4c0030 70%, #000 30%);
+    color:var(--bubble); padding:8px 10px; border-radius:999px;
+    border:1px solid var(--border); font-size:clamp(12px,2vw,14px);
+  }
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  /* Attribution note at page bottom */
+  .legal-note{
+    margin: 14px auto 0;
+    max-width: 980px;
+    color: var(--bubble);
+    font-size: 12.5px;
+    opacity: 0.9;
+    border: 1px dashed var(--border);
+    background: color-mix(in oklab, #3a0018 80%, #000 20%);
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="app" aria-label="CEO Identification Task">
+      <header class="app-header">
+        <div class="title">
+          Draw a box around the person who looks like the person who is the CEO in the room.
+          If the image does not contain a person who looks like the CEO in the room, click on the box labeled
+          “CEO looks different from the person depicted in this image”.
+        </div>
+        <div class="progress" id="progress"></div>
+      </header>
+
+      <div class="canvas-shell">
+        <div id="canvasHolder" style="position:absolute;inset:0;"></div>
+      </div>
+      <div class="scroll-spacer" aria-hidden="true"></div>
+
+      <!-- below-image option + next/undo -->
+      <div class="controls" aria-label="Options">
+        <div class="option-row">
+          <input id="diffCheck" type="checkbox" class="check" />
+          <label class="check-label" for="diffCheck">
+            CEO looks different from the person depicted in this image
+          </label>
+        </div>
+        <div class="option-row">
+          <button id="undo" class="btn muted" type="button" disabled>Undo Box</button>
+          <button id="clear" class="btn muted" type="button" disabled>Clear Boxes</button>
+          <button id="next" class="btn" type="button" disabled>Next</button>
+        </div>
+        <small class="check-label" style="opacity:.9">
+          Tip: Draw at least one box around the CEO-looking person, or check the option above to proceed.
+        </small>
+      </div>
+
+      <footer class="app-footer">
+        <div class="hints">
+          <div class="pill">Drag over the image to draw rectangles</div>
+          <div class="pill">Undo: <b>Z</b> • Clear: <b>C</b> • Next: <b>N</b></div>
+        </div>
+        <div class="actions"></div>
+      </footer>
+    </section>
+
+    <!-- Completion below keeps page scrollable on iPhone -->
+    <div id="completionSlot"></div>
+  </main>
+
+  <!-- Attribution / comment at the very bottom -->
+  <div class="legal-note">
+    NOTE: All of these images were generated by ChatGPT or Midjourney with the prompt
+    “create an image of a ceo of technology company giving a presentation”.
+  </div>
+
+<script>
+/* ========= Settings ========= */
+const FOLDER_PATH="images/";
+const FILE_PREFIX="ceo";       // images/ceo0.png, ceo1.png, ...
+const FILE_EXT=".png";
+const MAX_ATTEMPTS=500;
+
+/* ========= State ========= */
+let imgs=[], imgMeta=[], current=0, dragging=false, dragStart=null, tempRect=null,
+    scaleInfo=null, finished=false, canvas;
+let discovering=true;
+
+/* ========= Image discovery ========= */
+function loadImageAsync(p){
+  return new Promise((res,rej)=>{ const im=loadImage(p,()=>res(im),()=>rej(new Error("load-failed"))); });
+}
+async function discoverImages(){
+  let i=0;
+  try{
+    for(; i<MAX_ATTEMPTS; i++){
+      const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);
+      imgs.push(img);
+      imgMeta.push({ boxes: [], diff:false });
+    }
+  }catch(e){
+    // stop at first missing file
+  }finally{
+    discovering=false;
+  }
+}
+
+/* ========= p5 setup/draw ========= */
+function setup(){
+  const holder=document.getElementById('canvasHolder');
+  pixelDensity(window.devicePixelRatio||1);
+  canvas=createCanvas(holder.clientWidth, holder.clientHeight);
+  canvas.parent('canvasHolder');
+  canvas.elt.oncontextmenu = e => e.preventDefault();
+  colorMode(HSB,360,100,100,1);
+
+  // resize on iOS URL bar/orientation changes
+  new ResizeObserver(()=>{ resizeCanvas(holder.clientWidth,holder.clientHeight); updateScaleInfo(); }).observe(holder);
+
+  // UI
+  document.getElementById('undo').onclick = undoLast;
+  document.getElementById('clear').onclick = clearAll;
+  document.getElementById('next').onclick = nextImage;
+
+  const diffCheck = document.getElementById('diffCheck');
+  diffCheck.addEventListener('change', ()=>{
+    imgMeta[current].diff = diffCheck.checked;
+    if (diffCheck.checked){
+      // when choosing "different", clear any boxes and disable drawing temporarily
+      imgMeta[current].boxes = [];
+      dragging=false; tempRect=null;
+    }
+    updateUI();
+  });
+
+  // keyboard shortcuts
+  window.addEventListener('keydown', (e)=>{
+    if (finished) return;
+    if (e.key === 'z' || e.key === 'Z') { e.preventDefault(); undoLast(); }
+    if (e.key === 'c' || e.key === 'C') { e.preventDefault(); clearAll(); }
+    if (e.key === 'n' || e.key === 'N') { e.preventDefault(); nextImage(); }
+  });
+
+  // load images
+  (async()=>{ await discoverImages(); updateScaleInfo(); updateUI(); })();
+}
+
+function draw(){
+  // pulsing red → magenta canvas background
+  const t=millis()*0.001, base=5 + 12 * sin(t * 0.5);
+  const cTop=color((base+0)%360, 80, 30), cMid=color((base+10)%360, 90, 48), cBot=color((base+20)%360, 98, 65);
+  drawGrad(cTop,cMid,cBot);
+
+  if (discovering) return drawMsg("Looking for images…");
+  if (imgs.length===0) return drawMsg("No images found in images/");
+  if (finished) return drawMsg("Completed! See button below.");
+
+  const img = imgs[current];
+  if (!img) return drawMsg("Loading…");
+
+  updateScaleInfo();
+  image(img, scaleInfo.x, scaleInfo.y, scaleInfo.w, scaleInfo.h);
+
+  // saved boxes
+  push(); noFill(); strokeWeight(Math.max(1, 2*(width/1024)));
+  for (const r of imgMeta[current].boxes){
+    const {x,y,w,h} = imgRectToCanvas(r);
+    stroke(330, 60, 95, .85); rect(x,y,w,h);
+    stroke(330, 15, 100, 1);  rect(x,y,w,h);
+  }
+  pop();
+
+  // live box
+  if (dragging && tempRect){
+    push(); noFill(); stroke(330, 15, 100, 1); strokeWeight(3);
+    rect(tempRect.x, tempRect.y, tempRect.w, tempRect.h); pop();
+  }
+
+  document.getElementById('progress').textContent = `Image ${current + 1} of ${imgs.length}`;
+}
+
+/* ========= Drawing interactions ========= */
+function mousePressed(){
+  if (finished) return false;
+  if (imgMeta[current].diff) return false; // disabled if "different" checked
+  if (!inside(mouseX, mouseY)) return false;
+  dragging = true;
+  dragStart = { x: mouseX, y: mouseY };
+  tempRect = { x: mouseX, y: mouseY, w: 0, h: 0 };
+  return false;
+}
+function mouseDragged(){
+  if (!dragging) return false;
+  tempRect.w = mouseX - dragStart.x;
+  tempRect.h = mouseY - dragStart.y;
+  return false;
+}
+function mouseReleased(){
+  if (!dragging) return false;
+  dragging = false;
+
+  const n = normalizeRect(tempRect); tempRect = null;
+  const clamped = clampRectToImage(n);
+  const MIN = 10;
+  if (clamped.w < MIN || clamped.h < MIN) return false;
+
+  const rImg = canvasRectToImg(clamped);
+  imgMeta[current].boxes.push(rImg);
+  imgMeta[current].diff = false; // uncheck logically if a box was added
+  document.getElementById('diffCheck').checked = false;
+  updateUI();
+  return false;
+}
+// touch aliases
+function touchStarted(){ return mousePressed(); }
+function touchMoved(){ return mouseDragged(); }
+function touchEnded(){ return mouseReleased(); }
+
+/* ========= Actions ========= */
+function undoLast(){
+  const b = imgMeta[current].boxes;
+  if (b.length > 0){ b.pop(); }
+  updateUI();
+}
+function clearAll(){
+  imgMeta[current].boxes = [];
+  updateUI();
+}
+function nextImage(){
+  if (!canProceed()) return;
+  if (current < imgs.length - 1){
+    current++;
+    updateScaleInfo();
+    // reset checkbox UI to current image state
+    document.getElementById('diffCheck').checked = !!imgMeta[current].diff;
+    updateUI();
+  } else {
+    finished = true;
+    showCompletion();
+    updateUI();
+  }
+}
+
+/* ========= UI helpers ========= */
+function canProceed(){
+  const hasBoxes = imgMeta[current]?.boxes.length > 0;
+  const isDifferent = !!imgMeta[current]?.diff;
+  return hasBoxes || isDifferent;
+}
+function updateUI(){
+  const hasBoxes = imgMeta[current]?.boxes.length > 0;
+  const isDifferent = !!imgMeta[current]?.diff;
+
+  document.getElementById('undo').disabled  = !hasBoxes;
+  document.getElementById('clear').disabled = !hasBoxes;
+  document.getElementById('next').disabled  = !(hasBoxes || isDifferent);
+}
+
+/* ========= Geometry helpers ========= */
+function updateScaleInfo(){
+  const img=imgs[current]; if (!img) return;
+  const cw=width, ch=height, iw=img.width, ih=img.height;
+  const s=Math.min(cw/iw, ch/ih);
+  scaleInfo={ x:(cw - iw*s)/2, y:(ch - ih*s)/2, w:iw*s, h:ih*s, scale:s };
+}
+function inside(x,y){
+  return scaleInfo && x>=scaleInfo.x && x<=scaleInfo.x+scaleInfo.w &&
+         y>=scaleInfo.y && y<=scaleInfo.y+scaleInfo.h;
+}
+function normalizeRect(r){
+  const x = r.w<0 ? r.x + r.w : r.x;
+  const y = r.h<0 ? r.y + r.h : r.y;
+  return { x, y, w:Math.abs(r.w), h:Math.abs(r.h) };
+}
+function clampRectToImage(r){
+  if (!scaleInfo) return r;
+  const ix=scaleInfo.x, iy=scaleInfo.y, iw=scaleInfo.w, ih=scaleInfo.h;
+  const x1 = Math.max(ix, Math.min(ix+iw, r.x));
+  const y1 = Math.max(iy, Math.min(iy+ih, r.y));
+  const x2 = Math.max(ix, Math.min(ix+iw, r.x + r.w));
+  const y2 = Math.max(iy, Math.min(iy+ih, r.y + r.h));
+  return { x:Math.min(x1,x2), y:Math.min(y1,y2), w:Math.abs(x2-x1), h:Math.abs(y2-y1) };
+}
+function canvasToImgPoint(px,py){
+  const sx=(px - scaleInfo.x)/scaleInfo.scale;
+  const sy=(py - scaleInfo.y)/scaleInfo.scale;
+  return { x:sx, y:sy };
+}
+function canvasRectToImg(r){
+  const p1=canvasToImgPoint(r.x, r.y);
+  const p2=canvasToImgPoint(r.x + r.w, r.y + r.h);
+  return { x:Math.min(p1.x,p2.x), y:Math.min(p1.y,p2.y), w:Math.abs(p2.x-p1.x), h:Math.abs(p2.y-p1.y) };
+}
+function imgRectToCanvas(r){
+  return {
+    x: scaleInfo.x + r.x * scaleInfo.scale,
+    y: scaleInfo.y + r.y * scaleInfo.scale,
+    w: r.w * scaleInfo.scale,
+    h: r.h * scaleInfo.scale
+  };
+}
+
+/* ========= Canvas background gradient ========= */
+function drawGrad(a,b,c){
+  const ctx=drawingContext, g=ctx.createLinearGradient(0,0,0,height);
+  g.addColorStop(0, toRGBA(a)); g.addColorStop(.5, toRGBA(b)); g.addColorStop(1, toRGBA(c));
+  ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,0,width,height); ctx.restore();
+}
+function toRGBA(col){ return `rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`; }
+function drawMsg(m){
+  push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16);
+  text(m, width/2, height/2); pop();
+}
+
+/* ========= Completion ========= */
+function showCompletion(){
+  if (document.getElementById('final-link')) return;
+  const slot=document.getElementById('completionSlot');
+  const d=document.createElement('div');
+  d.id='final-link';
+  d.style.display='grid'; d.style.placeItems='center'; d.style.marginTop='24px';
+  d.innerHTML = `
+    <a class="btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
+      You completed this HIT! Go to your next task
+    </a>`;
+  slot.appendChild(d);
+}
+</script>
+</body>
+</html>
