@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kitchen Computer Plushy</title>
+
+<style>
+:root {
+  --bg:#000; --fg:#eaeaea; --muted:#aaa;
+  --accent:#7dd3fc; --card:#0b0b0b; --border:#1a1a1a;
+}
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  font:16px/1.5 system-ui, sans-serif;
+  background:var(--bg); color:var(--fg);
+}
+a { color:var(--accent); text-decoration:none; }
+
+header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(0,0,0,.85);
+  border-bottom:1px solid var(--border);
+}
+.wrap { max-width:1200px; margin:auto; padding:16px; }
+
+h1 { margin:0 0 6px; font-size:clamp(20px,3vw,28px); }
+.sub { margin:0; font-size:14px; color:var(--muted); }
+
+.button-bar {
+  display:flex; gap:12px; overflow-x:auto;
+  padding:12px 0;
+}
+.button-bar img {
+  height:72px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  transition:.15s ease;
+}
+.button-bar img:hover { transform:translateY(-2px); }
+
+section {
+  max-width:1200px;
+  margin:64px auto;
+  padding:0 16px;
+}
+.section-title {
+  font-size:22px;
+  margin-bottom:16px;
+  font-weight:bold;
+}
+
+.diagram-wrap {
+  position:relative;
+  margin-bottom:32px;
+}
+.diagram-image {
+  width:100%;
+  border-radius:16px;
+  border:1px solid var(--border);
+}
+
+.diagram-button {
+  position:absolute;
+  min-width:90px;
+  padding:4px 6px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:9px;
+  color:var(--fg);
+  box-shadow:0 6px 12px rgba(0,0,0,.6);
+}
+.diagram-button:hover { background:#111; }
+
+.left-label { left:8px; }
+.right-label { right:8px; }
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:16px;
+}
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+}
+.card img {
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  display:block;
+}
+.card .content {
+  padding:10px;
+}
+
+.card .content strong {
+  color: #ffffff; /* pure white */
+}
+.card p {
+  margin:0 0 6px;
+  font-size:12px;
+  color:var(--muted);
+}
+.btn {
+  display:inline-block;
+  padding:6px 10px;
+  font-size:12px;
+  border-radius:999px;
+  background:#111;
+  border:1px solid var(--border);
+}
+</style>
+</head>
+
+<body id="top">
+
+<header>
+  <div class="wrap">
+    <h1>
+Kitchen Computer Plushy
+    </h1>
+
+    <nav class="button-bar">
+      <a href="#Kitchen Computer Plushy"><img src="kitchen_computer_plushy_images/kitchen_computer_plushy.png" alt="Kitchen Computer Plushy"></a>
+      <a href="#fabric1"><img src="kitchen_computer_plushy_images/fabric_01.png" alt="Kitchen Computer Plushy Fabric 1"></a>
+      <a href="#fabric3=2"><img src="kitchen_computer_plushy_images/fabric_02.png" alt="Kitchen Computer Plushy Fabric 2"></a>
+      <a href="#fabric3"><img src="kitchen_computer_plushy_images/fabric_03.png" alt="Kitchen Computer Plushy Fabric 3"></a>
+      <a href="#fabric4"><img src="kitchen_computer_plushy_images/fabric_04.png" alt="Kitchen Computer Plushy Fabric 4"></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= CAREBOT SECTIONS ================= -->
+<section id="carebot1">
+  <h2 class="section-title">Kitchen Computer Plushy</h2>
+  <div class="diagram-wrap">
+    <img src="kitchen_computer_plushy_images/kitchen_computer_plushy.png" class="diagram-image" alt="Kitchen Computer Plushy">
+    <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
+    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
+  </div>
+  <div class="grid" id="carebot1-grid"></div>
+</section>
+
+<section id="carebot2">
+  <h2 class="section-title">Fabric 1</h2>
+  <div class="diagram-wrap">
+     <img src="kitchen_computer_plushy_images/fabric_01.png" class="diagram-image" alt="Fabric 1">
+     <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
+    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
+  </div>
+  <div class="grid" id="carebot2-grid"></div>
+</section>
+
+<section id="carebot3">
+  <h2 class="section-title">Fabric 2</h2>
+  <div class="diagram-wrap">
+   <img src="kitchen_computer_plushy_images/fabric_02.png" class="diagram-image" alt="Fabric 2">
+     <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
+    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
+  </div>
+  <div class="grid" id="carebot3-grid"></div>
+</section>
+
+<section id="carebot4">
+  <h2 class="section-title">Fabric 3</h2>
+  <div class="diagram-wrap">
+   <img src="kitchen_computer_plushy_images/fabric_03.png" class="diagram-image" alt="Fabric 3">
+  <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
+    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
+  </div>
+  <div class="grid" id="carebot4-grid"></div>
+</section>
+
+<section id="carebot5">
+  <h2 class="section-title">Fabric 4</h2>
+  <div class="diagram-wrap">
+  <img src="kitchen_computer_plushy_images/fabric_05.png" class="diagram-image" alt="Fabric 4">
+  <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
+    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
+  </div>
+  <div class="grid" id="carebot5-grid"></div>
+</section>
+
+</main>
+
+<script>
+// ===== CAREBOT ENTRIES =====
+const carebot1Entries = [
+    { title: "TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" },
+  { title: "TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" }
+];
+
+const carebot2Entries = [
+    { title: "Textile Fabric Design Patent by Annie G. Thyng (1892)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD21525S" },
+  { title: "TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" }
+];
+
+const carebot3Entries = [    { title: "Textile Fabric Design Patent by Annie G. Thyng (1892)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD21998S" },
+  { title: "TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" }]; 
+
+
+const carebot4Entries = [    { title: "Textile Fabric Design Patent by Elizabeth A. Fenner (1888)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD18001S" },
+  { title: "TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" }];
+
+const carebot5Entries = [    { title: "Textile Fabric Design Patent by Elizabeth A. Fenner (1888)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD18001S" },
+  { title: "TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" }];
+
+// ===== FUNCTION TO POPULATE CARDS =====
+function populateCarebotGrid({gridId, entries, imagePath}) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+
+  entries.forEach((d, i) => {
+    const card = document.createElement("article");
+    card.className = "card";
+
+    const pNum = `P.${i+1} `;
+
+    // Only show title if it does NOT start with CAREbot (prevents duplication)
+    const titleHTML = (d.title && !d.title.startsWith("CAREbot")) ? `<p><strong>${pNum}${d.title}</strong></p>` : `<p><strong>${pNum}</strong></p>`;
+
+    card.innerHTML = `
+      <img src="${imagePath}/kitchen_computer_fabric_${String(i+1).padStart(2,"0")}.png" alt="">
+      <div class="content">
+        ${titleHTML}
+        <p>${d.text}</p>
+        <a class="btn" href="${d.link}" target="_blank">Open link</a>
+      </div>`;
+    
+    grid.appendChild(card);
+  });
+}
+
+// Populate all grids
+document.addEventListener("DOMContentLoaded", () => {
+  populateCarebotGrid({gridId:"carebot1-grid", imagePath:"kitchen_computer_plushy_images/image1", entries:carebot1Entries});
+  populateCarebotGrid({gridId:"carebot2-grid", imagePath:"kitchen_computer_plushy_images/fabric1", entries:carebot2Entries});
+  populateCarebotGrid({gridId:"carebot3-grid", imagePath:"kitchen_computer_plushy_images/fabric2", entries:carebot3Entries});
+  populateCarebotGrid({gridId:"carebot4-grid", imagePath:"kitchen_computer_plushy_images/fabric3", entries:carebot4Entries});
+  populateCarebotGrid({gridId:"carebot5-grid", imagePath:"kitchen_computer_plushy_images/fabric4", entries:carebot5Entries});
+});
+</script>
+
+</body>
+</html>
