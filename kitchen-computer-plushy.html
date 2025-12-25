@@ -146,6 +146,22 @@ section {
   border-bottom: 1px solid var(--border);
   font-weight: 600;
 }
+
+#image-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#image-overlay img {
+  max-width: 95%;
+  max-height: 95%;
+  cursor: zoom-out;
+}
 </style>
 </head>
 
@@ -173,7 +189,7 @@ Kitchen Computer Plushy
 <section id="kitchencomputer">
   <h2 class="section-title">Kitchen Computer Plushy</h2>
   <div class="diagram-wrap">
-    <img src="kitchen_computer_plushy_images/kitchen_computer_plushy.png" class="diagram-image" alt="Kitchen Computer Plushy">
+    <img src="kitchen_computer_plushy_images/kitchen_computer_plushy.png" class="diagram-image zoomable" alt="Kitchen Computer Plushy">
     <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
 <p>In 1969, Honeywell introduced the Kitchen Computer, promoted with the tagline, “If only she can cook as well as Honeywell can compute.” Marketed for $10,600, it was never sold, but its messaging embodied the era’s gendered assumptions about technology and domesticity, prompting questions about the intersection of women, labor, and innovation.
@@ -190,7 +206,7 @@ Despite advances in technology, AI and robotics still struggle with the unruly n
 <section id="fabric1">
   <h2 class="section-title">Fabric 1</h2>
   <div class="diagram-wrap">
-     <img src="kitchen_computer_plushy_images/fabric_01.png" class="diagram-image" alt="Fabric 1">
+     <img src="kitchen_computer_plushy_images/fabric_01.png" class="diagram-image zoomable" alt="Fabric 1">
      <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
   </div>
@@ -200,7 +216,7 @@ Despite advances in technology, AI and robotics still struggle with the unruly n
 <section id="fabric2">
   <h2 class="section-title">Fabric 2</h2>
   <div class="diagram-wrap">
-   <img src="kitchen_computer_plushy_images/fabric_02.png" class="diagram-image" alt="Fabric 2">
+   <img src="kitchen_computer_plushy_images/fabric_02.png" class="diagram-image zoomable" alt="Fabric 2">
      <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
 <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
@@ -211,7 +227,7 @@ Despite advances in technology, AI and robotics still struggle with the unruly n
 <section id="fabric3">
   <h2 class="section-title">Fabric 3</h2>
   <div class="diagram-wrap">
-   <img src="kitchen_computer_plushy_images/fabric_03.png" class="diagram-image" alt="Fabric 3">
+   <img src="kitchen_computer_plushy_images/fabric_03.png" class="diagram-image zoomable" alt="Fabric 3">
   <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
   </div>
@@ -221,7 +237,7 @@ Despite advances in technology, AI and robotics still struggle with the unruly n
 <section id="fabric4">
   <h2 class="section-title">Fabric 4</h2>
   <div class="diagram-wrap">
-  <img src="kitchen_computer_plushy_images/fabric_04.png" class="diagram-image" alt="Fabric 4">
+  <img src="kitchen_computer_plushy_images/fabric_04.png" class="diagram-image zoomable" alt="Fabric 4">
   <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
   </div>
@@ -289,6 +305,41 @@ document.addEventListener("DOMContentLoaded", () => {
   populateCarebotGrid({gridId:"carebot5-grid", imagePath:"kitchen_computer_plushy_images/fabric4", entries:carebot5Entries});
 });
 </script>
+
+<div id="image-overlay">
+  <img src="" alt="">
+</div>
+
+<script>
+const overlay = document.getElementById("image-overlay");
+const overlayImg = overlay.querySelector("img");
+
+// Open zoom overlay on click
+document.addEventListener("click", (e) => {
+  const img = e.target.closest(".zoomable");
+  if (!img) return;
+
+  overlayImg.src = img.src;
+  overlayImg.alt = img.alt || "";
+  overlay.style.display = "flex";
+});
+
+// Close overlay when clicking outside
+overlay.addEventListener("click", () => {
+  overlay.style.display = "none";
+  overlayImg.src = "";
+});
+
+// Optional: close with Escape key
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    overlay.style.display = "none";
+    overlayImg.src = "";
+  }
+});
+</script>
+
+
 
 </body>
 </html>
