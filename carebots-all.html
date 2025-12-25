@@ -146,7 +146,29 @@ section {
   border-bottom: 1px solid var(--border);
   font-weight: 600;
 }
+
+.zoomable {
+  cursor: zoom-in;
+}
+
+#image-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#image-overlay img {
+  max-width: 95%;
+  max-height: 95%;
+  cursor: zoom-out;
+}
+
 </style>
+
 </head>
 
 <body id="top">
@@ -174,7 +196,7 @@ section {
 <section id="carebot1">
   <h2 class="section-title">CAREbot 01: The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer</h2>
   <div class="diagram-wrap">
-    <img src="new_carebot_images/carebot_01_feature_02.png" class="diagram-image" alt="CAREbot 1 diagram">
+    <img src="new_carebot_images/carebot_01_feature_02.png" class="diagram-image zoomable" alt="CAREbot 1 diagram">
     <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/calculators/1/65/2209" target="_blank">P.6 Human Computers</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/US829830A" target="_blank">P.5 Sewing Attachment</a>
   </div>
@@ -184,7 +206,7 @@ section {
 <section id="carebot2">
   <h2 class="section-title">CAREbot 02: The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer</h2>
   <div class="diagram-wrap">
-    <img src="new_carebot_images/carebot_02_feature_02.png" class="diagram-image" alt="CAREbot 2 diagram">
+    <img src="new_carebot_images/carebot_02_feature_02.png" class="diagram-image zoomable" alt="CAREbot 2 diagram">
     <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/calculators/1/65/2209" target="_blank">P.6 Human Computers</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/US829830A" target="_blank">P.5 Sewing Attachment</a>
   </div>
@@ -194,7 +216,7 @@ section {
 <section id="carebot3">
   <h2 class="section-title">CAREbot 03: The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer</h2>
   <div class="diagram-wrap">
-    <img src="new_carebot_images/carebot_03_feature_02.png" class="diagram-image" alt="CAREbot 3 diagram">
+    <img src="new_carebot_images/carebot_03_feature_02.png" class="diagram-image zoomable" alt="CAREbot 3 diagram">
     <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/calculators/1/65/2209" target="_blank">P.6 Human Computers</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/US829830A" target="_blank">P.5 Sewing Attachment</a>
   </div>
@@ -204,7 +226,7 @@ section {
 <section id="carebot4">
   <h2 class="section-title">CAREbot 04: The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer</h2>
   <div class="diagram-wrap">
-    <img src="new_carebot_images/carebot_04_feature_02.png" class="diagram-image" alt="CAREbot 4 diagram">
+    <img src="new_carebot_images/carebot_04_feature_02.png" class="diagram-image zoomable" alt="CAREbot 4 diagram">
  <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/calculators/1/65/2209" target="_blank">P.6 Human Computers</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/US829830A" target="_blank">P.5 Sewing Attachment</a>
   </div>
@@ -214,7 +236,7 @@ section {
 <section id="carebot5">
   <h2 class="section-title">CAREbot 05: The Adding Kitchen Computer PDP-8 Large-scale Tabulating Operation Computing Attachment for Scaling Beams Overseaming Sewing Machine Work Attachment for a Sewing Machine Calculator Loom Cabinet Human Computer</h2>
   <div class="diagram-wrap">
-    <img src="new_carebot_images/carebot_05_feature_02.png" class="diagram-image" alt="CAREbot 5 diagram">
+    <img src="new_carebot_images/carebot_05_feature_02.png" class="diagram-image zoomable" alt="CAREbot 5 diagram">
  <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/calculators/1/65/2209" target="_blank">P.6 Human Computers</a>
     <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/US829830A" target="_blank">P.5 Sewing Attachment</a>
   </div>
@@ -270,7 +292,11 @@ function populateCarebotGrid({gridId, entries, imagePath}) {
     const titleHTML = (d.title && !d.title.startsWith("CAREbot")) ? `<p><strong>${pNum}${d.title}</strong></p>` : `<p><strong>${pNum}</strong></p>`;
 
     card.innerHTML = `
-      <img src="${imagePath}/carebot_image_${String(i+1).padStart(2,"0")}.png" alt="">
+     <img
+  src="${imagePath}/carebot_image_${String(i+1).padStart(2,"0")}.png"
+  alt=""
+  class="zoomable"
+>
       <div class="content">
         ${titleHTML}
         <p>${d.text}</p>
@@ -291,5 +317,26 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<div id="image-overlay">
+  <img src="" alt="">
+</div>
+<script>
+  const overlay = document.getElementById("image-overlay");
+  const overlayImg = overlay.querySelector("img");
+
+  document.addEventListener("click", (e) => {
+  const img = e.target.closest(".zoomable");
+  if (!img) return;
+      overlayImg.src = img.src;
+      overlayImg.alt = img.alt;
+      overlay.style.display = "flex";
+  
+  });
+
+  overlay.addEventListener("click", () => {
+    overlay.style.display = "none";
+    overlayImg.src = "";
+  });
+</script>
 </body>
 </html>
