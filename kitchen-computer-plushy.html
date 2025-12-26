@@ -56,11 +56,7 @@ h1 {
 }
 .button-bar img:hover { transform:translateY(-2px); }
 
-section {
-  max-width:1200px;
-  margin:64px auto;
-  padding:0 16px;
-}
+
 .section-title {
   font-size:22px;
   margin-bottom:16px;
@@ -179,6 +175,7 @@ Kitchen Computer Plushy
       <a href="#fabric2"><img src="kitchen_computer_plushy_images/fabric_02.png" alt="Kitchen Computer Plushy Fabric 2"></a>
       <a href="#fabric3"><img src="kitchen_computer_plushy_images/fabric_03.png" alt="Kitchen Computer Plushy Fabric 3"></a>
       <a href="#fabric4"><img src="kitchen_computer_plushy_images/fabric_04.png" alt="Kitchen Computer Plushy Fabric 4"></a>
+      <a href="#fabric5"><img src="kitchen_computer_plushy_images/fabric_05.png" alt="Kitchen Computer Plushy Fabric 5"></a>
     </nav>
   </div>
 </header>
@@ -244,6 +241,16 @@ Despite advances in technology, AI and robotics still struggle with the unruly n
   <div class="grid" id="carebot5-grid"></div>
 </section>
 
+<section id="fabric5">
+  <h2 class="section-title">Fabric 5</h2>
+  <div class="diagram-wrap">
+  <img src="kitchen_computer_plushy_images/fabric_05.png" class="diagram-image zoomable" alt="Fabric 5">
+  <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
+    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
+  </div>
+  <div class="grid" id="carebot6-grid"></div>
+</section>
+
 </main>
 
 <script>
@@ -269,6 +276,15 @@ const carebot4Entries = [    { title: "Textile Fabric Design Patent by Elizabeth
 const carebot5Entries = [    { title: "Textile Fabric Design Patent by Ellen A. Whitcomb (1893)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD22554S" },
 { title: "Design for a Textile Fabric Patent by Helen Parker Johnstone (1906)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD38119S" },
   { title: "TechnoObjectified Presentation Labor", text: "This image is of a woman with a kitchen computer. Caption reads “If she can only cook as well as Honeywell can compute.”", link: "https://www.computerhistory.org/revolution/minicomputers/11/362" }];
+
+const carebot6Entries = [
+  { title: "Textile Fabric Design Patent by Emma W. Doughty (1905)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD37614S" },
+  { title: "Type Writing Machine Patent by Lizzie J. Magie (1893)", text: "Scale", link: "https://patents.google.com/patent/US498129A" },
+
+  { title: "Design for Textile Fabric Patent by Harriet Webster Fowler (1905)", text: "Textile Patent", link: "https://patents.google.com/patent/USD37622S" },
+  { title: "Design for Textile Fabric Patent by Helen Parker Johnstone (1905)", text: "Textile Patent", link: "https://patents.google.com/patent/USD37629S" },
+  { title: "Sewing Machine Patent by Helen A. Blanchard (1898)", text: "Sewing Machine Patent", link: "https://patents.google.com/patent/US612011A" }
+];
 
 // ===== FUNCTION TO POPULATE CARDS =====
 function populateCarebotGrid({gridId, entries, imagePath}) {
@@ -303,6 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
   populateCarebotGrid({gridId:"carebot3-grid", imagePath:"kitchen_computer_plushy_images/fabric2", entries:carebot3Entries});
   populateCarebotGrid({gridId:"carebot4-grid", imagePath:"kitchen_computer_plushy_images/fabric3", entries:carebot4Entries});
   populateCarebotGrid({gridId:"carebot5-grid", imagePath:"kitchen_computer_plushy_images/fabric4", entries:carebot5Entries});
+  populateCarebotGrid({gridId:"carebot6-grid", imagePath:"kitchen_computer_plushy_images/fabric5", entries:carebot6Entries});
 });
 </script>
 
