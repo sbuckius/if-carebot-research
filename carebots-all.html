@@ -10,67 +10,104 @@
   --bg:#000; --fg:#eaeaea; --muted:#aaa;
   --accent:#7dd3fc; --card:#0b0b0b; --border:#1a1a1a;
 }
+
 html { scroll-behavior:smooth; }
+
 body {
   margin:0;
   font:16px/1.5 system-ui, sans-serif;
   background:var(--bg); color:var(--fg);
 }
-a { color: #ff6fae; }
+
+a { color:#ff6fae; }
+
+/* ================= HEADER ================= */
 
 header {
   position:sticky; top:0; z-index:100;
   background:rgba(0,0,0,.85);
   border-bottom:1px solid var(--border);
 }
-.wrap { max-width:1200px; margin:auto; padding:16px; }
 
-h1 { 
-  margin: 0 0 6px;
-  font-size: clamp(20px, 3vw, 28px);
-  text-align: center;   /* ← add this */
+.wrap {
+  max-width:1200px;
+  margin:auto;
+  padding:16px;
 }
-.sub { margin:0; font-size:14px; color:var(--muted); }
+
+h1 {
+  margin:0 0 6px;
+  font-size:clamp(20px,3vw,28px);
+  text-align:center;
+}
+
+/* ================= BUTTON BAR (FIXED) ================= */
 
 .button-bar {
-  display: flex;
-  gap: 12px;
-  padding: 12px 0;
-
-  flex-wrap: wrap;              /* allows buttons to move to next row */
-  justify-content: center;      /* keeps it visually balanced */
-}
-.button-bar img {
-  height: clamp(48px, 8vw, 72px);  /* shrinks on small screens */
-  max-width: 100%;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  transition: transform .15s ease;
+  display:flex;
+  gap:12px;
+  padding:12px 0;
+  flex-wrap:wrap;
+  justify-content:center;
 }
 
+/* BUTTONS SCALE WITH TEXT */
 .button-bar a {
-  flex: 1 1 auto;
-  max-width: 160px;   /* keeps them from getting huge */
-  display: flex;
-  justify-content: center;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:clamp(12px,1.6vw,16px); /* ← master control */
+  padding:0.6em 0.8em;
+
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+
+  flex:0 0 auto;      /* ← NO flex growth */
+  text-decoration:none;
 }
-.button-bar img:hover { transform:translateY(-2px); }
+
+/* IMAGE SCALES RELATIVE TO TEXT */
+.button-bar img {
+  height:2.4em;       /* ← relative to font-size */
+  width:auto;
+  display:block;
+
+  border-radius:10px;
+  transition:transform .15s ease;
+}
+
+.button-bar img:hover {
+  transform:translateY(-2px);
+}
+
+/* ================= SECTIONS ================= */
 
 section {
   max-width:1200px;
-  margin:64px auto;
-  padding:0 16px;
+  margin:72px auto;
+  padding:32px 24px;
+  background:#050505;
+  border:1px solid var(--border);
+  border-radius:24px;
 }
+
 .section-title {
-  font-size: clamp(16px, 2.2vw, 20px);
-  margin-bottom: 12px;
-  font-weight: 600;
+  font-size:clamp(16px,2.2vw,20px);
+  margin-bottom:20px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+  font-weight:600;
 }
+
+/* ================= DIAGRAM ================= */
 
 .diagram-wrap {
   position:relative;
   margin-bottom:32px;
 }
+
 .diagram-image {
   width:100%;
   border-radius:16px;
@@ -88,40 +125,41 @@ section {
   color:var(--fg);
   box-shadow:0 6px 12px rgba(0,0,0,.6);
 }
+
 .diagram-button:hover { background:#111; }
 
-.left-label { left:8px; }
-.right-label { right:8px; }
+/* ================= GRID ================= */
 
 .grid {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
   gap:16px;
 }
+
 .card {
   background:var(--card);
   border:1px solid var(--border);
   border-radius:14px;
   overflow:hidden;
 }
+
 .card img {
   width:100%;
   height:200px;
   object-fit:cover;
   display:block;
 }
-.card .content {
-  padding:10px;
-}
 
-.card .content strong {
-  color: #ffffff; /* pure white */
-}
+.card .content { padding:10px; }
+
+.card strong { color:#fff; }
+
 .card p {
   margin:0 0 6px;
   font-size:12px;
   color:var(--muted);
 }
+
 .btn {
   display:inline-block;
   padding:6px 10px;
@@ -131,46 +169,27 @@ section {
   border:1px solid var(--border);
 }
 
-section {
-  margin: 72px auto;
-  padding: 32px 24px;
-  background: #050505;
-  border: 1px solid var(--border);
-  border-radius: 24px;
-}
+.zoomable { cursor:zoom-in; }
 
-.section-title {
-  font-size: clamp(16px, 2.2vw, 20px);
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-  font-weight: 600;
-}
-
-.zoomable {
-  cursor: zoom-in;
-}
+/* ================= OVERLAY ================= */
 
 #image-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
 }
 
 #image-overlay img {
-  max-width: 95%;
-  max-height: 95%;
-  cursor: zoom-out;
+  max-width:95%;
+  max-height:95%;
+  cursor:zoom-out;
 }
-
 </style>
-
 </head>
-
 <body id="top">
 
 <header>
