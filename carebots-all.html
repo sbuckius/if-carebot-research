@@ -285,18 +285,7 @@ section {
 </head>
 
 
-  <script>
-  const toggle = document.querySelector(".intro-toggle");
-  const content = document.querySelector(".intro-content");
-  const chevron = toggle.querySelector(".chevron");
-
-  toggle.addEventListener("click", () => {
-    const expanded = toggle.getAttribute("aria-expanded") === "true";
-    toggle.setAttribute("aria-expanded", !expanded);
-    content.hidden = expanded;
-    chevron.textContent = expanded ? "+" : "–";
-  });
-</script>
+ 
 <body id="top">
 
 <header>
@@ -664,6 +653,21 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.style.display = "none";
     overlayImg.src = "";
   });
+</script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.querySelector(".intro-toggle");
+  const content = document.querySelector(".intro-content");
+  const chevron = toggle.querySelector(".chevron");
+
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    content.hidden = expanded;
+    chevron.textContent = expanded ? "+" : "–";
+  });
+});
 </script>
 </body>
 </html>
