@@ -188,6 +188,42 @@ section {
   max-height:95%;
   cursor:zoom-out;
 }
+
+  /* ================= White Circles ================= */
+.diagram-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;              /* space between circle and text */
+}
+
+/* blank circle */
+.diagram-button::before {
+  content: "";
+  width: 0.9em;
+  height: 0.9em;
+
+  border-radius: 50%;
+  background: #fff;        /* white center */
+  border: 0.18em solid #000; /* black ring */
+
+  flex-shrink: 0;
+}
+
+.diagram-button:hover::before {
+  transform: scale(1.1);
+}
+
+.diagram-button::before {
+  transition: transform 0.15s ease;
+}
+.diagram-button::before {
+  border-color: #111;
+}
+.diagram-button::before {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05) inset;
+}
+
+  
 </style>
 </head>
 <body id="top">
