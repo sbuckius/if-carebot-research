@@ -100,41 +100,67 @@ section {
   border-bottom:1px solid var(--border);
   font-weight:600;
 }
-/* ================= INTRO TEXT ================= */
+/* ================= COLLAPSIBLE INTRO ================= */
 
 .intro {
   max-width: 1200px;
-  margin: 56px auto 0;
-  padding: 32px 24px;
+  margin: 48px auto 0;
+  padding: 24px;
   background: #050505;
   border: 1px solid var(--border);
   border-radius: 24px;
+  text-align: center;
 }
 
-.intro-inner {
-  max-width: 720px; /* readable line length */
+.intro-toggle {
+  all: unset;
+  cursor: pointer;
+
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.intro p {
-  margin: 0 0 16px;
-  font-size: 14px;
+.intro-toggle:hover {
+  color: var(--fg);
+}
+
+.chevron {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.intro-content {
+  max-width: 640px;
+  margin: 20px auto 0;
+  text-align: left;
+}
+
+.intro-content p {
+  margin: 0 0 14px;
+  font-size: 13px;
   line-height: 1.65;
   color: var(--muted);
 }
 
-.intro p:last-child {
+.intro-content p:last-child {
   margin-bottom: 0;
 }
 
-.intro em {
+.intro-content em {
   color: var(--fg);
   font-style: normal;
 }
 
 .intro-accent {
   color: #ff6fae;
-  font-size: 13px;
-  letter-spacing: 0.02em;
+  font-size: 12px;
+  letter-spacing: 0.03em;
 }
 /* ================= DIAGRAM ================= */
 
@@ -257,6 +283,20 @@ section {
   
 </style>
 </head>
+
+
+  <script>
+  const toggle = document.querySelector(".intro-toggle");
+  const content = document.querySelector(".intro-content");
+  const chevron = toggle.querySelector(".chevron");
+
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", !expanded);
+    content.hidden = expanded;
+    chevron.textContent = expanded ? "+" : "–";
+  });
+</script>
 <body id="top">
 
 <header>
@@ -276,35 +316,35 @@ section {
   </div>
 </header>
 <section class="intro">
-  <div class="intro-inner">
+  <button class="intro-toggle" aria-expanded="false">
+    About CAREBOTS
+    <span class="chevron">+</span>
+  </button>
+
+  <div class="intro-content" hidden>
     <p>
       CAREBOTS are built from collaged digital bits of 1) patents by women for computation,
       textiles, sewing machines, typewriters, and garments, 2) photographs of human computers,
       3) text from <em>Woman as Inventor</em>, and 4) images of women with computers.
-      These digital amalgams of imagery related to DEI in STEM fields are converted to 3D models
-      by using technology in absurd ways to resist dominant cultural techno-paradigms such as
-      technological determinism and the inevitable march of technological innovation, without
-      care and consideration of people and the planet.
+      These digital amalgams are converted to 3D models by using technology in absurd ways
+      to resist dominant cultural techno-paradigms such as technological determinism and the
+      inevitable march of technological innovation.
     </p>
 
     <p>
-      Feeding the found imagery into digital technology converts it into numbers (code), and then
-      I construct 3D models made of fiber (hair) using the collaged, deconstructed imagery.
-      CAREBOTS point to the complex interconnections among technology and biology, gender and labor,
-      invention and creativity, and carework.
+      Feeding found imagery into digital technology converts it into numbers (code), which are
+      then reconstructed as fiber-based 3D forms. CAREBOTS point to interconnections among
+      technology and biology, gender and labor, invention and creativity, and carework.
     </p>
 
     <p class="intro-accent">
-      Blood, flowers, skin, pink gendered consumer electronic products, living organs, cotton candy,
-      flesh, cherries, human tissue, bubble gum, baby animals, pink plastic, pigs, breast cancer logo,
-      peppers, glitter, bodily fluids, pink labor.
+      Blood, flowers, skin, pink consumer electronics, organs, cotton candy, flesh, glitter,
+      bodily fluids, pink labor.
     </p>
 
     <p>
-      Referencing the connection between computer technology and textile technology, the Matilda
-      Effect, work by women with textiles and computers, and the increasing need for care in the
-      technology landscape, CAREBOTS are science-fictional beings at the intersection of care and
-      technology.
+      Referencing textile–computer histories, the Matilda Effect, and care in technological
+      systems, CAREBOTS are science-fictional beings at the intersection of care and technology.
     </p>
   </div>
 </section>
