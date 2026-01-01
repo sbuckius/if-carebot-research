@@ -176,8 +176,6 @@ Kitchen Computer Plushy
       <a href="#fabric3"><img src="kitchen_computer_plushy_images/fabric_03.png" alt="Kitchen Computer Plushy Fabric 3"></a>
       <a href="#fabric4"><img src="kitchen_computer_plushy_images/fabric_04.png" alt="Kitchen Computer Plushy Fabric 4"></a>
       <a href="#fabric5"><img src="kitchen_computer_plushy_images/fabric_05.png" alt="Kitchen Computer Plushy Fabric 5"></a>
- <a href="#fabric6"><img src="kitchen_computer_plushy_images/fabric_06.png" alt="Kitchen Computer Plushy Fabric 6"></a>
-<a href="#fabric7"><img src="kitchen_computer_plushy_images/fabric_07.png" alt="Kitchen Computer Plushy Fabric 7"></a>
     </nav>
   </div>
 </header>
@@ -253,25 +251,6 @@ Despite advances in technology, AI and robotics still struggle with the unruly n
   <div class="grid" id="carebot6-grid"></div>
 </section>
 
-<section id="fabric6">
-  <h2 class="section-title">Fabric 6</h2>
-  <div class="diagram-wrap">
-  <img src="kitchen_computer_plushy_images/fabric_06.png" class="diagram-image zoomable" alt="Fabric 6">
-  <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
-    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
-  </div>
-  <div class="grid" id="carebot7-grid"></div>
-</section>
-
-<section id="fabric7">
-  <h2 class="section-title">Fabric 7</h2>
-  <div class="diagram-wrap">
-  <img src="kitchen_computer_plushy_images/fabric_07.png" class="diagram-image zoomable" alt="Fabric 7">
-  <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a>
-    <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a>
-  </div>
-  <div class="grid" id="carebot8-grid"></div>
-</section>
 
 </main>
 
@@ -400,33 +379,7 @@ const carebot5Entries = [
   }
 ];
 
-const carebot6Entries = [
-  { title: "Textile Fabric Design Patent by Emma W. Doughty (1905)", text: "Patent for a textile design.", link: "https://patents.google.com/patent/USD37614S" },
-  { title: "Type Writing Machine Patent by Lizzie J. Magie (1893)", text: "Type Writing Machine", link: "https://patents.google.com/patent/US498129A" },
 
-  { title: "Design for Textile Fabric Patent by Harriet Webster Fowler (1905)", text: "Textile Patent", link: "https://patents.google.com/patent/USD37622S" },
-  { title: "Design for Textile Fabric Patent by Helen Parker Johnstone (1905)", text: "Textile Patent", link: "https://patents.google.com/patent/USD37629S" },
-  { title: "Sewing Machine Patent by Helen A. Blanchard (1898)", text: "Sewing Machine Patent", link: "https://patents.google.com/patent/US612011A" }
-];
-
-const carebot7Entries = [
-  { title: "Infant's Bib Patent by Mary Matilde Odell (1895)", text: "Patent for an infant's bib.", link: "https://patents.google.com/patent/US540756A" },
-  { title: "Design for a textile fabric Patent by Sophia L. crownfield (1905)", text: "Design for a textile fabric.", link: "https://patents.google.com/patent/USD37615S" },
-
-  { title: "Woman as Inventor (Page 1) by Matilda Joslyn Gage (1870)", text: "Page 1 of Woman as Inventor by Matilda Joslyn Gage", link: "https://iiif.lib.harvard.edu/manifests/view/drs:2575141$1i" },
-  { title: "Design for Textile Fabric Patent by Anna Olsson (1910)", text: "Textile Patent", link: "https://patents.google.com/patent/USD40782S" },
-  { title: "Sewing Machine Patent by Edith Clarke (1921)", text: "Calculator Patent", link: "https://patents.google.com/patent/US1552113A" }
-];
-
-const carebot8Entries = [
-  { title: "Brassiere Patent by Mary P. Jacob (1914)", text: "Patent for a brassiere", link: "https://patents.google.com/patent/US1115674A" },
-{ title: "Brassiere Patent by Mary P. Jacob (1914)", text: "Patent for a brassiere", link: "https://patents.google.com/patent/US1115674A" },
-  { title: "Textile Fabric for the upolstery of the like Patent by Edna F. Leonhardt (1932)", text: "Patent for a textile fabric for upholstery or the like", link: "https://patents.google.com/patent/USD86782S" },
-  { title: "Design for Textile fabric or the like patent by Irene A. Weitz (1932)", text: "Design for a textile fabric or the like Patent", link: "https://patents.google.com/patent/USD88338S" },
-  { title: "Tax Computer by Sarah A. Ayres (1951)", text: "Tax Computer Patent", link: "https://patents.google.com/patent/USD164150S" },
-  { title: "Woman as Inventor (Page 1) by Matilda Joslyn Gage (1870)", text: "Page 1 of Woman as Inventor by Matilda Joslyn Gage", link: "https://iiif.lib.harvard.edu/manifests/view/drs:2575141$1i" },
- { title: "Dress-Shield Protector Patent by Anna E. Bienstock (1915)", text: "Dress-Shield Protector Patent", link: "https://patents.google.com/patent/US1137452A" }
-];
 
 // ===== FUNCTION TO POPULATE CARDS =====
 function populateCarebotGrid({gridId, entries, imagePath}) {
@@ -461,9 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
   populateCarebotGrid({gridId:"carebot3-grid", imagePath:"kitchen_computer_plushy_images/fabric2", entries:carebot3Entries});
   populateCarebotGrid({gridId:"carebot4-grid", imagePath:"kitchen_computer_plushy_images/fabric3", entries:carebot4Entries});
   populateCarebotGrid({gridId:"carebot5-grid", imagePath:"kitchen_computer_plushy_images/fabric4", entries:carebot5Entries});
-  populateCarebotGrid({gridId:"carebot6-grid", imagePath:"kitchen_computer_plushy_images/fabric5", entries:carebot6Entries});
-  populateCarebotGrid({gridId:"carebot7-grid", imagePath:"kitchen_computer_plushy_images/fabric6", entries:carebot7Entries});
-  populateCarebotGrid({gridId:"carebot8-grid", imagePath:"kitchen_computer_plushy_images/fabric7", entries:carebot8Entries});
+
 });
 </script>
 
