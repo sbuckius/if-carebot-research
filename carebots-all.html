@@ -114,17 +114,7 @@ section {
   border:1px solid var(--border);
 }
 
-.diagram-button {
-  position:absolute;
-  min-width:90px;
-  padding:4px 6px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:10px;
-  font-size:9px;
-  color:var(--fg);
-  box-shadow:0 6px 12px rgba(0,0,0,.6);
-}
+
 
 .diagram-button:hover { background:#111; }
 
@@ -189,40 +179,46 @@ section {
   cursor:zoom-out;
 }
 
-  /* ================= White Circles ================= */
+/* ================= Diagram Buttons ================= */
+
 .diagram-button {
+  position: absolute;
+
   display: inline-flex;
   align-items: center;
-  gap: 0.4em;              /* space between circle and text */
+  gap: 0.4em;
+
+  width: fit-content;
+  white-space: nowrap;
+
+  padding: 0.25em 0.45em;
+  font-size: 9px;
+
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--fg);
+
+  box-shadow: 0 6px 12px rgba(0,0,0,.6);
 }
 
-/* blank circle */
+/* white blank circle */
 .diagram-button::before {
   content: "";
   width: 0.9em;
   height: 0.9em;
 
   border-radius: 50%;
-  background: #fff;        /* white center */
-  border: 0.18em solid #000; /* black ring */
+  background: #fff;
+  border: 0.18em solid #111;
 
   flex-shrink: 0;
+  transition: transform 0.15s ease;
 }
 
 .diagram-button:hover::before {
   transform: scale(1.1);
 }
-
-.diagram-button::before {
-  transition: transform 0.15s ease;
-}
-.diagram-button::before {
-  border-color: #111;
-}
-.diagram-button::before {
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.05) inset;
-}
-
   
 </style>
 </head>
