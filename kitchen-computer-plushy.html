@@ -158,6 +158,73 @@ section {
   max-height: 95%;
   cursor: zoom-out;
 }
+
+
+
+
+/* ================= COLLAPSIBLE INTRO ================= */
+
+.intro {
+  max-width: 1200px;
+  margin: 48px auto 0;
+  padding: 24px;
+  background: #050505;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  text-align: center;
+}
+
+.intro-toggle {
+  all: unset;
+  cursor: pointer;
+
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.intro-toggle:hover {
+  color: var(--fg);
+}
+
+.chevron {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.intro-content {
+  max-width: 640px;
+  margin: 20px auto 0;
+  text-align: left;
+}
+
+.intro-content p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.intro-content p:last-child {
+  margin-bottom: 0;
+}
+
+.intro-content em {
+  color: var(--fg);
+  font-style: normal;
+}
+
+.intro-accent {
+  color: #ff6fae;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+}
+
 </style>
 </head>
 
@@ -179,7 +246,48 @@ Kitchen Computer Plushy
     </nav>
   </div>
 </header>
+<section class="intro">
+  <button class="intro-toggle" aria-expanded="false">
+    About The Kitchen Computer Plushy
+    <span class="chevron">+</span>
+  </button>
 
+  <div class="intro-content" hidden>
+    <p>
+In 1969, Honeywell introduced the Kitchen Computer, promoted with the tagline, 
+“If only she can cook as well as Honeywell can compute.” 
+Marketed for $10,600, it was never sold, but its messaging embodied the era’s 
+gendered assumptions about technology and domesticity, prompting questions about 
+the intersection of women, labor, and innovation. 
+    </p>
+
+    <p>
+     As a mother of three, I witness my children’s desire to join the plush toy craze—a phenomenon 
+built on the invisible labor of marginalized women. Drawing on the economic, social, and 
+technological systems in which these plushies exist, I reimagined the Kitchen Computer 
+as a soft, plush object.
+    </p>
+
+    <p>
+     I constructed it from textiles designed using 3D models based on patents by women inventors 
+from the late 1800s and early 1900s, most of which are textile designs. Translating fragments 
+of these patents into digital collage patterns, I mirrored the logic of weaving: up and down, 
+over and under, (0 and 1), pointing to underamplified connections between women’s roles in 
+computing and textile design. Transforming this hard-edged, seemingly functional computer 
+into a soft, inviting plush subverts its original purpose and actually renders it useful, 
+unlike the original! Transforming it from a computer to a toy highlights the absurdity of 
+these cultural dynamics, while honoring the undervalued, dexterous labor of women 
+who manufacture plush toys. 
+    </p>
+
+    <p>
+      Despite advances in technology, AI and robotics still struggle with the unruly nature of 
+cloth—a challenge known as the “floppy cloth problem.” Even my own attempts to 3D-model the 
+Kitchen Computer using AI failed, highlighting the irreplaceable value of human skill in 
+textile creation and reminding us that women’s labor remains essential to this system. 
+    </p>
+  </div>
+</section>
 <main>
 
 <!-- ================= CAREBOT SECTIONS ================= -->
@@ -189,13 +297,7 @@ Kitchen Computer Plushy
     <img src="kitchen_computer_plushy_images/kitchen_computer_plushy.png" class="diagram-image zoomable" alt="Kitchen Computer Plushy">
     <!-- <a class="diagram-button left-label" style="top:11%" href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank">Kitchen Computer</a> -->
     <!-- <a class="diagram-button right-label" style="top:52%" href="https://patents.google.com/patent/USD18001S" target="_blank">Textile Fabric Design Patent by Elizabeth A. Fenner (1888)</a> -->
-<p>In 1969, Honeywell introduced the Kitchen Computer, promoted with the tagline, “If only she can cook as well as Honeywell can compute.” Marketed for $10,600, it was never sold, but its messaging embodied the era’s gendered assumptions about technology and domesticity, prompting questions about the intersection of women, labor, and innovation.
 
-As a mother of three, I witness my children’s desire to join the plush toy craze—a phenomenon built on the invisible labor of marginalized women. Drawing on the economic, social, and technological systems in which these plushies exist, I reimagined the Kitchen Computer as a soft, plush object. I constructed it from textiles designed using 3D models based on patents by women inventors from the late 1800s and early 1900s, most of which are textile designs. Translating fragments of these patents into digital collage patterns, I mirrored the logic of weaving: up and down, over and under, (0 and 1), pointing to underamplified connections between women’s roles in computing and textile design.
-
-Transforming this hard-edged, seemingly functional computer into a soft, inviting plush subverts its original purpose and actually renders it useful, unlike the original! Transforming it from a computer to a toy highlights the absurdity of these cultural dynamics, while honoring the undervalued, dexterous labor of women who manufacture plush toys.
-
-Despite advances in technology, AI and robotics still struggle with the unruly nature of cloth—a challenge known as the “floppy cloth problem.” Even my own attempts to 3D-model the Kitchen Computer using AI failed, highlighting the irreplaceable value of human skill in textile creation and reminding us that women’s labor remains essential to this system. </p>
   </div>
   <div class="grid" id="carebot1-grid"></div>
 </section>
@@ -425,7 +527,20 @@ document.addEventListener("keydown", (e) => {
 });
 </script>
 
+ <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.querySelector(".intro-toggle");
+  const content = document.querySelector(".intro-content");
+  const chevron = toggle.querySelector(".chevron");
 
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    content.hidden = expanded;
+    chevron.textContent = expanded ? "+" : "–";
+  });
+});
+</script>
 
 </body>
 </html>
