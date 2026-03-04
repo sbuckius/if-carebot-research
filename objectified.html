@@ -14,7 +14,6 @@
     --shadow:0 8px 28px rgba(255,64,128,.28); --border:var(--candy);
   }
 
-  /* allow page scrolling on iPhone */
   html,body{
     margin:0;
     min-height:100%;
@@ -29,7 +28,6 @@
       linear-gradient(170deg, var(--maroon), var(--wine) 35%, var(--violet));
   }
 
-  /* safe-area padding, centered column */
   .wrap{
     max-width:980px;
     margin:clamp(16px,4vmin,32px) auto;
@@ -60,16 +58,13 @@
   }
   .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
 
-  /* iPhone-safe, shrink-to-fit canvas height; touch-action none only on the canvas area */
   .canvas-shell{
     position:relative;width:100%;
-    height: clamp(260px, 60svh, 520px); /* <— main fix */
+    height: clamp(260px, 60svh, 520px);
     background:#160012;
     touch-action: none;
   }
   canvas{display:block;width:100%;height:100%;}
-
-  /* A small spacer below the canvas ensures there’s always an area to start scrolling */
   .scroll-spacer{ height: 32px; }
 
   .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
@@ -132,6 +127,33 @@
     background:linear-gradient(180deg, var(--rose), var(--plum));
     padding:10px 14px;border-radius:10px;border:1px solid var(--candy);
   }
+
+  /* Completion card */
+  #completionSlot .completion-card{
+    margin-top:24px;
+    background:color-mix(in oklab, rgba(255,255,255,.05) 22%, var(--maroon) 78%);
+    border:1px solid var(--border);border-radius:18px;
+    padding:28px 24px;box-shadow:var(--shadow);
+    text-align:center;
+  }
+  #completionSlot .completion-card h2{
+    margin:0 0 12px;font-size:clamp(18px,3vw,24px);
+    background:linear-gradient(90deg, var(--fuchsia), var(--rose) 35%, var(--candy), var(--blush));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-weight:800;
+  }
+  #completionSlot .completion-card p{
+    margin:0 0 20px;font-size:clamp(14px,2vw,16px);
+    color:var(--bubble);line-height:1.6;
+  }
+  #completionSlot .completion-card .area-stat{
+    display:inline-block;
+    background:linear-gradient(135deg, var(--plum), var(--wine));
+    border:1px solid var(--border);border-radius:12px;
+    padding:10px 18px;margin:0 0 20px;
+    font-size:clamp(18px,3vw,26px);font-weight:800;
+    color:#fff;letter-spacing:.5px;
+  }
 </style>
 </head>
 <body>
@@ -157,7 +179,6 @@
           <div class="pill">Next: <b>N</b></div>
         </div>
         <div class="actions">
-          <!-- Redirect buttons -->
           <button class="btn secondary redirBtn" type="button"
                   data-url="https://www.computerhistory.org/revolution/minicomputers/11/332"
                   data-seconds="3">Objectified</button>
@@ -176,13 +197,11 @@
       </footer>
     </section>
 
-    <!-- completion button appears here (outside .app so the page can scroll to it) -->
     <div id="completionSlot"></div>
   </main>
 
-  <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site.</div>
+  <div id="popupMsg" class="pop-msg">Couldn't open a temporary tab. Please allow pop-ups for this site.</div>
 
-  <!-- Shared overlay fallback for any redirect button -->
   <div id="redirOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="redirTitle">
     <div class="overlay-card">
       <header class="overlay-header">
@@ -222,11 +241,34 @@ async function discoverImages(){
       const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);
       imgs.push(img); imgMeta.push({ boxes: [] });
     }
-  }catch(e){
-    // stop at first gap
-  }finally{
+  }catch(e){}finally{
     discovering=false;
   }
+}
+
+/* ========= Area calculation ========= */
+function calcTotalBoxArea(){
+  let total=0;
+  for(let i=0;i<imgMeta.length;i++){
+    for(const r of imgMeta[i].boxes){
+      total += r.w * r.h;
+    }
+  }
+  return total;
+}
+
+function calcTotalImageArea(){
+  let total=0;
+  for(const img of imgs){
+    if(img) total += img.width * img.height;
+  }
+  return total;
+}
+
+function formatPercent(ratio){
+  const pct = ratio * 100;
+  if(pct < 0.01) return "<0.01%";
+  return parseFloat(pct.toFixed(2)) + "%";
 }
 
 /* ========= p5 ========= */
@@ -238,15 +280,12 @@ function setup(){
   canvas.elt.oncontextmenu=e=>e.preventDefault();
   colorMode(HSB,360,100,100,1);
 
-  // Resize with URL bar/orientation changes
   new ResizeObserver(()=>{resizeCanvas(holder.clientWidth,holder.clientHeight);updateScaleInfo();}).observe(holder);
 
-  // UI
   document.getElementById('undo').onclick = undoLast;
   document.getElementById('next').onclick = nextImage;
   document.querySelectorAll('.redirBtn').forEach(btn=>btn.addEventListener('click',()=>handleRedirect(btn)));
 
-  // Load images
   (async()=>{await discoverImages(); updateScaleInfo();})();
 }
 
@@ -262,7 +301,6 @@ function draw(){
   const img=imgs[current]; if(!img) return drawMsg("Loading…");
   updateScaleInfo(); image(img, scaleInfo.x, scaleInfo.y, scaleInfo.w, scaleInfo.h);
 
-  // saved boxes
   push(); noFill(); strokeWeight(Math.max(1, 2*(width/1024)));
   for(const r of imgMeta[current].boxes){
     const {x,y,w,h}=imgRectToCanvas(r);
@@ -270,7 +308,6 @@ function draw(){
     stroke(330,15,100,1);  rect(x,y,w,h);
   } pop();
 
-  // live drag
   if(dragging && tempRect){
     push(); noFill(); stroke(330,15,100,1); strokeWeight(3);
     rect(tempRect.x,tempRect.y,tempRect.w,tempRect.h); pop();
@@ -291,45 +328,64 @@ function drawMsg(m){ push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER)
 /* ========= completion ========= */
 function drawCompletion(){
   push(); noStroke(); fill(330,20,100); textAlign(CENTER,CENTER); textSize(20);
-  text("you have completed this HIT.", width/2, height/2 - 18);
-  textSize(16); text("Get your next task by clicking on the button below.", width/2, height/2 + 8); pop();
+  text("You have completed this HIT.", width/2, height/2 - 18);
+  textSize(16); text("See your results and next task below.", width/2, height/2 + 8); pop();
 
   if(!document.getElementById('final-link')){
-    const d=document.createElement('div');
-    d.id='final-link';
-    d.style.display='grid'; d.style.placeItems='center'; d.style.marginTop='24px';
-    d.innerHTML=`<a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
-      You completed this HIT! Go to your next task by clicking this button.</a>`;
+    const totalBoxArea   = calcTotalBoxArea();
+    const totalImageArea = calcTotalImageArea();
+    const ratio          = totalImageArea > 0 ? totalBoxArea / totalImageArea : 0;
+    const pctStr         = formatPercent(ratio);
+
+    const d = document.createElement('div');
+    d.id = 'final-link';
+    d.className = 'completion-card';
+    d.innerHTML = `
+      <h2>Task Complete!</h2>
+      <p>
+        All of the boxes frame people doing presentation labor—work to present themselves
+        according to specific gender norms, objectified like the computers in these images.
+        The total area of presentation labor in the images is:
+      </p>
+      <div class="area-stat">${pctStr} of all image area</div>
+      <p style="font-size:13px;opacity:.7;margin:0 0 20px;">
+        (${Math.round(totalBoxArea).toLocaleString()} px² of boxes &nbsp;÷&nbsp;
+         ${Math.round(totalImageArea).toLocaleString()} px² of images combined)
+      </p>
+      <a class="final-link-btn btn secondary"
+         href="https://sbuckius.github.io/if-carebot-research/hit.html"
+         target="_blank" rel="noopener">
+        You completed this HIT! Go to your next task →
+      </a>`;
     document.getElementById('completionSlot').appendChild(d);
   }
 }
 
-/* ========= interaction (only prevent default while dragging) ========= */
+/* ========= interaction ========= */
 function mousePressed(){
   if(finished) return;
   if(!inside(mouseX,mouseY)) return;
   dragging=true;
   dragStart={x:mouseX,y:mouseY};
   tempRect={x:mouseX,y:mouseY,w:0,h:0};
-  return false; // prevent scroll while starting a drag
+  return false;
 }
 function mouseDragged(){
   if(!dragging) return;
   tempRect.w=mouseX-dragStart.x;
   tempRect.h=mouseY-dragStart.y;
-  return false; // prevent scroll during drag
+  return false;
 }
 function mouseReleased(){
   if(!dragging) return;
   dragging=false;
-
   const n=normalizeRect(tempRect); tempRect=null;
   const clamped=clampRectToImage(n);
   const MIN=10; if(clamped.w<MIN||clamped.h<MIN) return;
   const rImg=canvasRectToImg(clamped);
   imgMeta[current].boxes.push(rImg);
   updateUI();
-  return false; // prevent a stray flick scroll at release
+  return false;
 }
 function touchStarted(){ return mousePressed(); }
 function touchMoved(){ return mouseDragged(); }
@@ -389,7 +445,7 @@ function imgRectToCanvas(r){
   return { x:scaleInfo.x+r.x*scaleInfo.scale, y:scaleInfo.y+r.y*scaleInfo.scale, w:r.w*scaleInfo.scale, h:r.h*scaleInfo.scale };
 }
 
-/* ========= Shared redirect logic for all .redirBtn buttons ========= */
+/* ========= Redirect logic ========= */
 const overlay   = document.getElementById('redirOverlay');
 const iframe    = document.getElementById('redirFrame');
 const countdown = document.getElementById('countdown');
@@ -405,7 +461,7 @@ function closeOverlay(){
   overlay.classList.remove('open');
   iframe.src = "about:blank";
   resetCountdown();
-  document.title = "Presentation Labor — Centered App";
+  document.title = "Presentation Labor — Women & Computers";
 }
 function openOverlayFallback(url, seconds){
   CURRENT_SECONDS = seconds;
@@ -423,8 +479,8 @@ function handleRedirect(btn){
     let remaining=seconds;
     resetCountdown();
     tick=setInterval(()=>{ remaining -= 1; if(remaining<=0) clearInterval(tick);
-      document.title=`(${Math.max(remaining,0)}s) Presentation Labor — Centered App`; },1000);
-    timer=setTimeout(()=>{ try{w.close();}catch(e){} document.title="Presentation Labor — Centered App"; resetCountdown(); }, seconds*1000);
+      document.title=`(${Math.max(remaining,0)}s) Presentation Labor — Women & Computers`; },1000);
+    timer=setTimeout(()=>{ try{w.close();}catch(e){} document.title="Presentation Labor — Women & Computers"; resetCountdown(); }, seconds*1000);
   }else{
     popup.classList.add('show'); setTimeout(()=>popup.classList.remove('show'),3000);
     openOverlayFallback(url, seconds);
