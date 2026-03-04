@@ -13,7 +13,6 @@
     --shadow:0 8px 28px rgba(255,64,128,.28); --border:var(--candy);
   }
 
-  /* allow page scrolling on iPhone */
   html,body{
     margin:0;
     min-height:100%;
@@ -27,7 +26,6 @@
       linear-gradient(165deg, var(--maroon), var(--wine) 45%, var(--violet));
   }
 
-  /* safe-area padding, centered column */
   .wrap{
     max-width:980px;
     margin:clamp(16px,4vmin,32px) auto;
@@ -57,7 +55,6 @@
   }
   .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
 
-  /* iPhone-safe, shrink-to-fit canvas height; draw area only suppresses scroll */
   .canvas-shell{
     position:relative;width:100%;
     height: clamp(260px, 60svh, 520px);
@@ -66,7 +63,6 @@
   }
   canvas{display:block;width:100%;height:100%;}
 
-  /* spacer so there’s always a spot to start scrolling */
   .scroll-spacer{ height: 32px; }
 
   .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
@@ -126,6 +122,33 @@
     background:linear-gradient(180deg, var(--rose), var(--plum));
     padding:10px 14px;border-radius:10px;border:1px solid var(--candy);
   }
+
+  /* Completion card in the DOM (below canvas) */
+  #completionSlot .completion-card{
+    margin-top:24px;
+    background:color-mix(in oklab, rgba(255,255,255,.06) 20%, var(--maroon) 80%);
+    border:1px solid var(--candy);border-radius:18px;
+    padding:28px 24px;box-shadow:var(--shadow);
+    text-align:center;
+  }
+  #completionSlot .completion-card h2{
+    margin:0 0 12px;font-size:clamp(18px,3vw,24px);
+    background:linear-gradient(90deg, var(--hot), var(--rose) 40%, var(--candy));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-weight:800;
+  }
+  #completionSlot .completion-card p{
+    margin:0 0 20px;font-size:clamp(14px,2vw,16px);
+    color:var(--bubble);line-height:1.6;
+  }
+  #completionSlot .completion-card .area-stat{
+    display:inline-block;
+    background:linear-gradient(135deg, var(--plum), var(--wine));
+    border:1px solid var(--candy);border-radius:12px;
+    padding:10px 18px;margin:0 0 20px;
+    font-size:clamp(18px,3vw,26px);font-weight:800;
+    color:#fff;letter-spacing:.5px;
+  }
 </style>
 </head>
 <body>
@@ -155,13 +178,11 @@
       </footer>
     </section>
 
-    <!-- completion button appears here (outside .app so the page can scroll to it) -->
     <div id="completionSlot"></div>
   </main>
 
-  <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site.</div>
+  <div id="popupMsg" class="pop-msg">Couldn't open a temporary tab. Please allow pop-ups for this site.</div>
 
-  <!-- overlay fallback for redirect -->
   <div id="calcOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="calcTitle">
     <div class="overlay-card">
       <header class="overlay-header">
@@ -194,6 +215,34 @@ let discovering=true;
 function loadImageAsync(p){return new Promise((res,rej)=>{const im=loadImage(p,()=>res(im),()=>rej(new Error("load-failed")));});}
 async function discoverImages(){let i=0;try{for(;i<MAX_ATTEMPTS;i++){const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);imgs.push(img);imgMeta.push({boxes:[]});}}catch(e){}finally{discovering=false;}}
 
+/* ========= Area calculation ========= */
+function calcTotalBoxArea(){
+  // Sum of all drawn box areas, in IMAGE pixels (not canvas pixels)
+  let total=0;
+  for(let i=0;i<imgMeta.length;i++){
+    for(const r of imgMeta[i].boxes){
+      total += r.w * r.h;
+    }
+  }
+  return total;
+}
+
+function calcTotalImageArea(){
+  // Sum of pixel areas of all loaded images
+  let total=0;
+  for(const img of imgs){
+    if(img) total += img.width * img.height;
+  }
+  return total;
+}
+
+function formatPercent(ratio){
+  // Express as a percentage with up to 2 decimal places, stripping trailing zeros
+  const pct = ratio * 100;
+  if(pct < 0.01) return "<0.01%";
+  return parseFloat(pct.toFixed(2)) + "%";
+}
+
 /* ========= p5 ========= */
 function setup(){
   const holder=document.getElementById('canvasHolder');
@@ -203,20 +252,16 @@ function setup(){
   canvas.elt.oncontextmenu=e=>e.preventDefault();
   colorMode(HSB,360,100,100,1);
 
-  // Resize with URL bar/orientation changes
   new ResizeObserver(()=>{resizeCanvas(holder.clientWidth,holder.clientHeight);updateScaleInfo();}).observe(holder);
 
-  // UI
   document.getElementById('undo').onclick=undoLast;
   document.getElementById('next').onclick=nextImage;
   document.getElementById('openCalcBtn').addEventListener('click',openInNewTabThenReturn);
 
-  // Load images
   (async()=>{await discoverImages(); updateScaleInfo();})();
 }
 
 function draw(){
-  // pulsing gradient (maroon → pinks)
   const t=millis()*0.001, base=335+15*sin(t*0.4);
   const cTop=color(base,70,25), cMid=color((base+10)%360,80,40), cBot=color((base+20)%360,90,55);
   drawGrad(cTop,cMid,cBot);
@@ -228,7 +273,6 @@ function draw(){
   const img=imgs[current]; if(!img) return drawMsg("Loading…");
   updateScaleInfo(); image(img,scaleInfo.x,scaleInfo.y,scaleInfo.w,scaleInfo.h);
 
-  // saved boxes
   push(); noFill(); strokeWeight(Math.max(1,2*(width/1024)));
   for(const r of imgMeta[current].boxes){
     const {x,y,w,h}=imgRectToCanvas(r);
@@ -236,7 +280,6 @@ function draw(){
     stroke(330,15,100,1);  rect(x,y,w,h);
   } pop();
 
-  // live drag
   if(dragging && tempRect){
     push(); noFill(); stroke(330,15,100,1); strokeWeight(3);
     rect(tempRect.x,tempRect.y,tempRect.w,tempRect.h); pop();
@@ -254,23 +297,44 @@ function drawGrad(a,b,c){
 function toRGBA(col){return `rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`;}
 function drawMsg(m){ push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16); text(m, width/2, height/2); pop(); }
 
-/* ========= completion ========= */
+/* ========= completion (canvas layer — minimal) ========= */
 function drawCompletion(){
   push(); noStroke(); fill(330,20,100); textAlign(CENTER,CENTER); textSize(20);
-  text("you have completed this HIT.", width/2, height/2 - 18);
-  textSize(16); text("Get your next task below.", width/2, height/2 + 8); pop();
+  text("You have completed this HIT.", width/2, height/2 - 18);
+  textSize(16); text("See your results and next task below.", width/2, height/2 + 8); pop();
 
+  // Only inject the DOM card once
   if(!document.getElementById('final-link')){
-    const d=document.createElement('div');
-    d.id='final-link';
-    d.style.display='grid'; d.style.placeItems='center'; d.style.marginTop='24px';
-    d.innerHTML=`<a class="final-link-btn btn secondary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
-      You completed this HIT! Go to your next task by clicking on this button.</a>`;
+    const totalBoxArea    = calcTotalBoxArea();
+    const totalImageArea  = calcTotalImageArea();
+    const ratio           = totalImageArea > 0 ? totalBoxArea / totalImageArea : 0;
+    const pctStr          = formatPercent(ratio);
+
+    const d = document.createElement('div');
+    d.id = 'final-link';
+    d.className = 'completion-card';
+    d.innerHTML = `
+      <h2>Task Complete!</h2>
+      <p>
+        All of the boxes frame <strong>human computers</strong> — people who made complex
+        calculations before computer technology became advanced enough.
+        The total area of human computers in the images is:
+      </p>
+      <div class="area-stat">${pctStr} of all image area</div>
+      <p style="font-size:13px;opacity:.7;margin:0 0 20px;">
+        (${Math.round(totalBoxArea).toLocaleString()} px² of boxes &nbsp;÷&nbsp;
+         ${Math.round(totalImageArea).toLocaleString()} px² of images combined)
+      </p>
+      <a class="final-link-btn btn secondary"
+         href="https://sbuckius.github.io/if-carebot-research/hit.html"
+         target="_blank" rel="noopener">
+        You completed this HIT! Go to your next task →
+      </a>`;
     document.getElementById('completionSlot').appendChild(d);
   }
 }
 
-/* ========= interaction (prevent default only while dragging) ========= */
+/* ========= interaction ========= */
 function mousePressed(){
   if(finished) return;
   if(!inside(mouseX,mouseY)) return;
@@ -353,7 +417,7 @@ function imgRectToCanvas(r){
   return { x:scaleInfo.x+r.x*scaleInfo.scale, y:scaleInfo.y+r.y*scaleInfo.scale, w:r.w*scaleInfo.scale, h:r.h*scaleInfo.scale };
 }
 
-/* ========= Redirect (new tab + 3s + close; overlay fallback) ========= */
+/* ========= Redirect ========= */
 const openBtn=document.getElementById('openCalcBtn'),
       overlay=document.getElementById('calcOverlay'),
       iframe=document.getElementById('calcFrame'),
@@ -364,7 +428,7 @@ const openBtn=document.getElementById('openCalcBtn'),
 let timer=null,tick=null,remain=DISPLAY_SECONDS;
 
 function reset(){clearTimeout(timer);clearInterval(tick);remain=DISPLAY_SECONDS;if(countdown) countdown.textContent=remain;}
-function closeO(){overlay.classList.remove('open');iframe.src="about:blank";reset();openBtn.disabled=false;document.title="Tech Work — Centered App";}
+function closeO(){overlay.classList.remove('open');iframe.src="about:blank";reset();openBtn.disabled=false;document.title="Tech Work";}
 function overlayFallback(){
   openBtn.disabled=true;overlay.classList.add('open');iframe.src=EXTERNAL_URL;directLink.href=EXTERNAL_URL;
   reset();tick=setInterval(()=>{remain--;if(countdown) countdown.textContent=Math.max(remain,0);if(remain<=0)clearInterval(tick);},1000);
@@ -375,8 +439,8 @@ function openInNewTabThenReturn(){
   if(newWin&&!newWin.closed){
     openBtn.disabled=true;reset();
     tick=setInterval(()=>{remain--;if(remain<=0)clearInterval(tick);
-      document.title=`(${Math.max(remain,0)}s) Tech Work — Centered App`;},1000);
-    timer=setTimeout(()=>{try{newWin.close();}catch(e){}document.title="Tech Work — Centered App";openBtn.disabled=false;reset();},DISPLAY_SECONDS*1000);
+      document.title=`(${Math.max(remain,0)}s) Tech Work`;},1000);
+    timer=setTimeout(()=>{try{newWin.close();}catch(e){}document.title="Tech Work";openBtn.disabled=false;reset();},DISPLAY_SECONDS*1000);
   } else {
     popup.classList.add('show'); setTimeout(()=>popup.classList.remove('show'),3000);
     overlayFallback();
