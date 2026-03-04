@@ -7,22 +7,18 @@
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
 <style>
   :root{
-    /* More reds & magentas */
     --rose:#ff5c8a; --hot:#ff2f5f; --candy:#ff7aa8; --bubble:#ffd9ea;
     --crimson:#c4003e; --scarlet:#ff0033; --magenta:#ff1f8a; --fuchsia:#ff2c7a;
     --rasp:#b20064; --berry:#8e004b; --plum:#4c0038; --violet:#4c0044;
     --ink:#fff2f7; --border:#ff96c1; --shadow: 0 8px 28px rgba(255, 64, 128, .32);
   }
 
-  /* Let the page scroll on iPhone */
   html,body{
     margin:0;
     min-height:100%;
     color:var(--ink);
     -webkit-overflow-scrolling: touch;
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
-
-    /* Red/pink/magenta background with pockets of berry/plum */
     background:
       radial-gradient(1200px 900px at 12% 0%,    #ff9bb9 0%, transparent 55%),
       radial-gradient(1100px 900px at 88% 12%,   #ff6d97 0%, transparent 55%),
@@ -31,7 +27,6 @@
       linear-gradient(170deg, #6f0029, #5b0022 40%, #4c0038 68%, #4c0044 100%);
   }
 
-  /* Centered column with safe-area padding */
   .wrap{
     max-width:980px;
     margin:clamp(16px,4vmin,32px) auto;
@@ -65,7 +60,6 @@
   }
   .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
 
-  /* iPhone-safe, shrink-to-fit canvas height; only the draw area blocks scroll while drawing */
   .canvas-shell{
     position:relative;width:100%;
     height: clamp(260px, 60svh, 520px);
@@ -73,7 +67,7 @@
     touch-action: none;
   }
   canvas{display:block;width:100%;height:100%;}
-  .scroll-spacer{ height: 32px; } /* makes it easy to start a page-scroll below canvas */
+  .scroll-spacer{ height: 32px; }
 
   .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
   .hints{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
@@ -135,6 +129,33 @@
     background:linear-gradient(180deg, var(--rose), var(--plum));
     padding:10px 14px;border-radius:10px;border:1px solid var(--border);
   }
+
+  /* Completion card */
+  #completionSlot .completion-card{
+    margin-top:24px;
+    background: color-mix(in oklab, rgba(255,255,255,.06) 18%, #5b001f 82%);
+    border:1px solid var(--border);border-radius:18px;
+    padding:28px 24px;box-shadow:var(--shadow);
+    text-align:center;
+  }
+  #completionSlot .completion-card h2{
+    margin:0 0 12px;font-size:clamp(18px,3vw,24px);
+    background:linear-gradient(90deg, var(--scarlet), var(--hot) 30%, var(--magenta) 65%, var(--candy));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-weight:800;
+  }
+  #completionSlot .completion-card p{
+    margin:0 0 20px;font-size:clamp(14px,2vw,16px);
+    color:var(--bubble);line-height:1.6;
+  }
+  #completionSlot .completion-card .area-stat{
+    display:inline-block;
+    background:linear-gradient(135deg, var(--plum), #6d0033);
+    border:1px solid var(--border);border-radius:12px;
+    padding:10px 18px;margin:0 0 20px;
+    font-size:clamp(18px,3vw,26px);font-weight:800;
+    color:#fff;letter-spacing:.5px;
+  }
 </style>
 </head>
 <body>
@@ -159,7 +180,6 @@
           <div class="pill">Next: <b>N</b></div>
         </div>
         <div class="actions">
-          <!-- Three redirect buttons (edit URLs or seconds as you like) -->
           <button class="btn secondary redirBtn" type="button"
                   data-url="https://www.loc.gov/item/2017861340/"
                   data-seconds="3">Machine 1</button>
@@ -178,13 +198,11 @@
       </footer>
     </section>
 
-    <!-- Completion goes below so the page can scroll to it on iPhone -->
     <div id="completionSlot"></div>
   </main>
 
-  <div id="popupMsg" class="pop-msg">Couldn’t open a temporary tab. Please allow pop-ups for this site.</div>
+  <div id="popupMsg" class="pop-msg">Couldn't open a temporary tab. Please allow pop-ups for this site.</div>
 
-  <!-- Shared overlay fallback for any redirect button -->
   <div id="redirOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="redirTitle">
     <div class="overlay-card">
       <header class="overlay-header">
@@ -224,11 +242,34 @@ async function discoverImages(){
       const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);
       imgs.push(img); imgMeta.push({ boxes: [] });
     }
-  }catch(e){
-    // stop at first gap
-  }finally{
+  }catch(e){}finally{
     discovering=false;
   }
+}
+
+/* ========= Area calculation ========= */
+function calcTotalBoxArea(){
+  let total=0;
+  for(let i=0;i<imgMeta.length;i++){
+    for(const r of imgMeta[i].boxes){
+      total += r.w * r.h;
+    }
+  }
+  return total;
+}
+
+function calcTotalImageArea(){
+  let total=0;
+  for(const img of imgs){
+    if(img) total += img.width * img.height;
+  }
+  return total;
+}
+
+function formatPercent(ratio){
+  const pct = ratio * 100;
+  if(pct < 0.01) return "<0.01%";
+  return parseFloat(pct.toFixed(2)) + "%";
 }
 
 /* ========= p5 ========= */
@@ -244,15 +285,13 @@ function setup(){
 
   document.getElementById('undo').onclick = undoLast;
   document.getElementById('next').onclick = nextImage;
-  document.querySelectorAll('.redirBtn').forEach(btn=>btn.addEventListener('click',()=>handleRedirect(btn)));
 
   (async()=>{ await discoverImages(); updateScaleInfo(); })();
 }
 
 function draw(){
-  // pulsing pink/magenta gradient
   const t=millis()*0.001;
-  const base=345 + 20*sin(t*0.45); // pink → magenta drift
+  const base=345 + 20*sin(t*0.45);
   const cTop=color(base,78,28), cMid=color((base+10)%360,88,46), cBot=color((base+20)%360,96,62);
   drawGrad(cTop,cMid,cBot);
 
@@ -264,7 +303,6 @@ function draw(){
   updateScaleInfo();
   image(img, scaleInfo.x, scaleInfo.y, scaleInfo.w, scaleInfo.h);
 
-  // saved boxes
   push(); noFill(); strokeWeight(Math.max(1,2*(width/1024)));
   for(const r of imgMeta[current].boxes){
     const {x,y,w,h}=imgRectToCanvas(r);
@@ -272,7 +310,6 @@ function draw(){
     stroke(330,15,100,1);  rect(x,y,w,h);
   } pop();
 
-  // live drag
   if(dragging && tempRect){
     push(); noFill(); stroke(330,15,100,1); strokeWeight(3);
     rect(tempRect.x,tempRect.y,tempRect.w,tempRect.h); pop();
@@ -293,26 +330,39 @@ function drawMsg(m){ push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER)
 /* ========= completion ========= */
 function drawCompletion(){
   push(); noStroke(); fill(330,22,100); textAlign(CENTER,CENTER); textSize(20);
-  text("you have completed this HIT.", width/2, height/2 - 18);
-  textSize(16); text("Get your next task here:", width/2, height/2 + 8); pop();
+  text("You have completed this HIT.", width/2, height/2 - 18);
+  textSize(16); text("See your results and next task below.", width/2, height/2 + 8); pop();
 
   if(!document.getElementById('final-link')){
-    const d=document.createElement('div');
-    d.id='final-link';
-    d.style.display='grid';
-    d.style.placeItems='center';
-    d.style.marginTop='24px';
-    d.innerHTML=`
+    const totalBoxArea   = calcTotalBoxArea();
+    const totalImageArea = calcTotalImageArea();
+    const ratio          = totalImageArea > 0 ? totalBoxArea / totalImageArea : 0;
+    const pctStr         = formatPercent(ratio);
+
+    const d = document.createElement('div');
+    d.id = 'final-link';
+    d.className = 'completion-card';
+    d.innerHTML = `
+      <h2>Task Complete!</h2>
+      <p>
+        All of the boxes frame people doing work with a machine.
+        The total area of machine workers in the images is:
+      </p>
+      <div class="area-stat">${pctStr} of all image area</div>
+      <p style="font-size:13px;opacity:.7;margin:0 0 20px;">
+        (${Math.round(totalBoxArea).toLocaleString()} px² of boxes &nbsp;÷&nbsp;
+         ${Math.round(totalImageArea).toLocaleString()} px² of images combined)
+      </p>
       <a class="final-link-btn btn secondary"
          href="https://sbuckius.github.io/if-carebot-research/hit.html"
          target="_blank" rel="noopener">
-        You completed this HIT! Go to your next task
+        You completed this HIT! Go to your next task →
       </a>`;
     document.getElementById('completionSlot').appendChild(d);
   }
 }
 
-/* ========= interaction (prevent default only while dragging) ========= */
+/* ========= interaction ========= */
 function mousePressed(){
   if(finished) return;
   if(!inside(mouseX,mouseY)) return;
@@ -330,7 +380,6 @@ function mouseDragged(){
 function mouseReleased(){
   if(!dragging) return;
   dragging=false;
-
   const n=normalizeRect(tempRect); tempRect=null;
   const clamped=clampRectToImage(n);
   const MIN=10; if(clamped.w<MIN||clamped.h<MIN) return;
@@ -396,7 +445,7 @@ function imgRectToCanvas(r){
   return { x:scaleInfo.x+r.x*scaleInfo.scale, y:scaleInfo.y+r.y*scaleInfo.scale, w:r.w*scaleInfo.scale, h:r.h*scaleInfo.scale };
 }
 
-/* ========= Redirect (new tab + countdown + close; overlay fallback) ========= */
+/* ========= Redirect ========= */
 const overlay   = document.getElementById('redirOverlay');
 const iframe    = document.getElementById('redirFrame');
 const countdown = document.getElementById('countdown');
