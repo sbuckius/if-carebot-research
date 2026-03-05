@@ -1,172 +1,347 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <title>HIT Task Launcher</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-    <style>
-      :root {
-        --bg1: #ffc0cb;
-        --bg2: #ffb6c1;
-        --bg3: #ff69b4;
-        --maroon: #800000;
-      }
-      html, body {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
-        background-size: 400% 400%;
-        animation: gradientShift 8s ease infinite;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      @keyframes gradientShift {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>✦ CAREtech ✦ HIT Launcher</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --bubble:  #ffe4f0;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #1a0012;
+    --card:    rgba(255,255,255,.055);
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 8px 50px rgba(255,45,107,.45), 0 0 100px rgba(255,30,128,.18);
+    --text-dim:  rgba(255,200,224,.55);
+  }
 
-      /* Fullscreen layout that respects iPhone safe areas */
-      .screen {
-        position: fixed;
-        inset: 0;
-        padding: env(safe-area-inset-top) env(safe-area-inset-right)
-                 env(safe-area-inset-bottom) env(safe-area-inset-left);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      /* Centered column content */
-      .stack {
-        width: min(92vw, 720px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: clamp(16px, 4vh, 32px);
-        text-align: center;
-        z-index: 2; /* above the canvas */
-      }
+  html, body {
+    height: 100%; width: 100%;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  }
 
-      h1 {
-        margin: 0;
-        color: var(--maroon);
-        font-weight: 600;
-        /* Fluid type that shrinks on iPhone */
-        font-size: clamp(18px, 6vw, 32px);
-        line-height: 1.2;
-      }
+  /* ── deep background ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 15%,  rgba(180,0,50,.4)   0%, transparent 55%),
+      radial-gradient(ellipse 60% 70% at 90% 85%,  rgba(120,0,30,.35)  0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 50% 50%,  rgba(255,45,107,.08) 0%, transparent 65%),
+      linear-gradient(160deg, #220008, #180008 45%, #120005);
+  }
 
-      /* Big comfy button for easy tapping */
-      .cta {
-        appearance: none;
-        border: none;
-        border-radius: 18px;
-        color: #fff;
-        background: linear-gradient(135deg, #b30059, #cc0066, #993366);
-        box-shadow: 0 10px 24px rgba(128, 0, 64, 0.28);
-        cursor: pointer;
-        /* Large hit area that scales with screen width */
-        font-size: clamp(16px, 5vw, 22px);
-        padding: clamp(14px, 3.5vh, 18px) clamp(28px, 8vw, 36px);
-        min-width: 56%;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-        transition: transform 0.08s ease, box-shadow 0.2s ease, background 0.3s ease;
-      }
-      .cta:focus-visible {
-        outline: 3px solid #fce4ef;
-        outline-offset: 3px;
-      }
-      .cta:hover {
-        background: linear-gradient(90deg, #b30059, #d147a3);
-      }
-      .cta:active {
-        transform: translateY(1px) scale(0.99);
-        box-shadow: 0 6px 18px rgba(128, 0, 64, 0.25);
-      }
+  /* floating orbs */
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(70px); }
+  .orb-1 { width:500px;height:500px;background:var(--maroon); opacity:.25; top:-120px; left:-100px; animation:drift1 20s ease-in-out infinite; }
+  .orb-2 { width:400px;height:400px;background:#c40032;        opacity:.2;  bottom:-80px; right:-80px; animation:drift2 24s ease-in-out infinite; }
+  .orb-3 { width:300px;height:300px;background:var(--hot);     opacity:.12; top:35%; left:55%;       animation:drift3 16s ease-in-out infinite; }
+  .orb-4 { width:200px;height:200px;background:var(--candy);   opacity:.15; top:10%; right:20%;      animation:drift2 19s ease-in-out infinite reverse; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,35px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-25px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-25px,18px)}66%{transform:translate(18px,-12px)}}
 
-      /* Put canvas behind everything and never intercept touches */
-      canvas {
-        position: fixed !important;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="screen">
-      <div class="stack" role="main">
-        <h1>Click the button to begin your HIT (human intelligence task)</h1>
-        <button id="startBtn" class="cta" aria-label="Begin Task">
-          💗 Begin Task 💗
-        </button>
+  /* sparkles */
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{
+    0%  {opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}
+    15% {opacity:.7}
+    85% {opacity:.4}
+    100%{opacity:0;transform:translateY(-140px) scale(1.1) rotate(180deg)}
+  }
+
+  /* p5 canvas sits behind everything */
+  canvas { position:fixed !important; inset:0; z-index:1; pointer-events:none; }
+
+  /* ── screen layout ── */
+  .screen {
+    position: fixed; inset: 0; z-index: 10;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0;
+  }
+
+  /* ── mascot bar ── */
+  .mascot-bar {
+    position: absolute; top: max(20px, env(safe-area-inset-top));
+    left: clamp(16px,4vw,32px); right: clamp(16px,4vw,32px);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .mascot { display: flex; align-items: center; gap: 10px; }
+  .bot-face {
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,50,.35));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
+  }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  /* ── center card ── */
+  .card {
+    width: min(92vw, 560px);
+    background: rgba(15,0,8,.72);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 28px;
+    box-shadow: var(--pop-glow), inset 0 1px 0 rgba(255,160,200,.08);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    padding: clamp(28px,6vw,48px) clamp(24px,6vw,44px);
+    display: flex; flex-direction: column; align-items: center;
+    gap: clamp(20px,4vh,32px);
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+
+  /* shimmer top line */
+  .card::before {
+    content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+    box-shadow:0 0 14px var(--candy);border-radius:999px;
+  }
+  /* subtle inner glow */
+  .card::after {
+    content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,45,107,.07) 0%, transparent 70%);
+  }
+
+  /* ── icon ── */
+  .hero-icon {
+    width: clamp(64px,14vw,88px);
+    height: clamp(64px,14vw,88px);
+    border-radius: 22px;
+    background: linear-gradient(135deg, rgba(255,45,107,.22), rgba(180,0,50,.32));
+    border: 1.5px solid var(--card-border-bright);
+    box-shadow: 0 0 30px rgba(255,45,107,.35), inset 0 1px 0 rgba(255,255,255,.07);
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(30px,7vw,44px);
+    animation: wobble 4s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  /* ── heading ── */
+  .heading {
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(18px, 5vw, 26px); line-height: 1.35;
+    background: linear-gradient(120deg, var(--cream) 20%, var(--blush) 55%, var(--fuchsia) 85%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    letter-spacing: -.01em;
+  }
+
+  .subtext {
+    font-size: clamp(11px,2.5vw,13px);
+    color: var(--text-dim); letter-spacing: .08em;
+    text-transform: uppercase; margin-top: -12px;
+  }
+
+  /* ── CTA button ── */
+  .cta {
+    appearance: none; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(15px,4vw,19px); letter-spacing: .04em;
+    color: var(--cream); cursor: pointer; text-decoration: none; border: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: clamp(14px,3.5vh,18px) clamp(32px,10vw,52px);
+    border-radius: 18px; width: min(100%, 340px);
+    background: linear-gradient(135deg, var(--hot) 0%, var(--berry) 50%, var(--maroon) 100%);
+    box-shadow: 0 6px 30px rgba(255,45,107,.45), 0 2px 0 rgba(255,255,255,.08) inset;
+    transition: all .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    position: relative; overflow: hidden;
+    animation: ctaPulse 3s ease-in-out infinite;
+  }
+  .cta::before {
+    content:'';position:absolute;inset:0;border-radius:inherit;
+    background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 55%);
+    pointer-events:none;
+  }
+  @keyframes ctaPulse {
+    0%,100% { box-shadow: 0 6px 30px rgba(255,45,107,.45), 0 2px 0 rgba(255,255,255,.08) inset; }
+    50%      { box-shadow: 0 8px 44px rgba(255,45,107,.65), 0 0 60px rgba(255,30,128,.2), 0 2px 0 rgba(255,255,255,.08) inset; }
+  }
+  .cta:hover {
+    transform: translateY(-3px) scale(1.04);
+    background: linear-gradient(135deg, var(--fuchsia) 0%, var(--hot) 50%, var(--berry) 100%);
+    animation: none;
+    box-shadow: 0 12px 40px rgba(255,45,107,.6), 0 0 80px rgba(255,30,128,.25), 0 2px 0 rgba(255,255,255,.1) inset;
+  }
+  .cta:active {
+    transform: translateY(0) scale(.97);
+    box-shadow: 0 4px 18px rgba(255,45,107,.4);
+    animation: none;
+  }
+  .cta:focus-visible {
+    outline: 2px solid var(--candy); outline-offset: 4px;
+  }
+
+  /* ── decorative chips ── */
+  .chip-row {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    margin-top: -8px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(255,45,107,.08); border: 1px solid rgba(255,130,180,.2);
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .chip .dot { width:4px;height:4px;border-radius:50%;background:var(--candy); }
+
+  /* ── bottom wordmark ── */
+  .bottom-mark {
+    position: absolute;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 0; right: 0;
+    display: flex; justify-content: center;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,160,200,.2);
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="orb orb-4"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CAREtech ✦</div>
+        <div class="bot-sub">HIT Launcher · Online</div>
       </div>
     </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
+  </div>
 
-    <script>
-      // Links to choose from
-      const links = [
-        "harlow-shapley.html",
-        "katharine-johnson-nasa-work.html",
-        "woman-as-inventor-work.html",
-        "game-1-biased-image.html",
-        "direct-robot-1.html",
-        "humancomputers.html",
-        "objectified.html",
-        "machines.html",
-        "replacemachinework.html",
-        "ceo.html"
-      ];
+  <!-- center card -->
+  <div class="card" role="main">
+    <div class="hero-icon">💗</div>
 
-      // p5 background canvas (kept only for visual flair)
-      function setup() {
-        const c = createCanvas(windowWidth, windowHeight);
-        noLoop();
-        drawBg();
-      }
+    <div>
+      <h1 class="heading">Click the button to begin your HIT</h1>
+      <p class="subtext" style="margin-top:8px;">(Human Intelligence Task)</p>
+    </div>
 
-      function windowResized() {
-        resizeCanvas(windowWidth, windowHeight);
-        drawBg();
-      }
+    <div class="chip-row">
+      <div class="chip"><div class="dot"></div> Randomized task</div>
+      <div class="chip"><div class="dot"></div> CAREBOT-07</div>
+      <div class="chip"><div class="dot"></div> Active</div>
+    </div>
 
-      function drawBg() {
-        // Optional: soft vignette so the centered content pops a bit
-        clear(); // canvas is behind; avoid drawing text here
-        const g = drawingContext.createRadialGradient(
-          width/2, height/2, min(width, height)*0.1,
-          width/2, height/2, max(width, height)*0.7
-        );
-        g.addColorStop(0, "rgba(255,255,255,0.08)");
-        g.addColorStop(1, "rgba(0,0,0,0.10)");
-        drawingContext.fillStyle = g;
-        noStroke();
-        rect(0, 0, width, height);
-      }
+    <button id="startBtn" class="cta" aria-label="Begin Task">
+      ✦ Begin Task ✦
+    </button>
+  </div>
 
-      // Reliable button interactions (click + keyboard)
-      const startBtn = document.getElementById("startBtn");
-      function goToRandomLink() {
-        const idx = Math.floor(Math.random() * links.length);
-        // Use location.assign for iOS reliability
-        window.location.assign(links[idx]);
-      }
-      startBtn.addEventListener("click", goToRandomLink);
-      startBtn.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          goToRandomLink();
-        }
-      });
-    </script>
-  </body>
+  <div class="bottom-mark">✦ carebot research system · v2.4 ✦</div>
+</div>
+
+<script>
+/* ── sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀','°'];
+  for(let i=0;i<32;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-80+'px';
+    s.style.fontSize=(9+Math.random()*12)+'px';
+    s.style.color=`hsl(${310+Math.random()*50},75%,${65+Math.random()*25}%)`;
+    s.style.animationDuration=(7+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*14)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
+
+/* ── p5 soft vignette ── */
+function setup(){
+  const c=createCanvas(windowWidth,windowHeight);
+  noLoop();
+  drawBg();
+}
+function windowResized(){
+  resizeCanvas(windowWidth,windowHeight);
+  drawBg();
+}
+function drawBg(){
+  clear();
+  const ctx=drawingContext;
+  const g=ctx.createRadialGradient(width/2,height/2,min(width,height)*0.08,width/2,height/2,max(width,height)*0.75);
+  g.addColorStop(0,'rgba(255,45,107,0.04)');
+  g.addColorStop(0.5,'rgba(0,0,0,0.0)');
+  g.addColorStop(1,'rgba(0,0,0,0.18)');
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,width,height);
+}
+
+/* ── navigation ── */
+const links = [
+  "harlow-shapley.html",
+  "katharine-johnson-nasa-work.html",
+  "woman-as-inventor-work.html",
+  "game-1-biased-image.html",
+  "direct-robot-1.html",
+  "humancomputers.html",
+  "objectified.html",
+  "machines.html",
+  "replacemachinework.html",
+  "ceo.html"
+];
+
+const startBtn=document.getElementById('startBtn');
+function goToRandomLink(){
+  const idx=Math.floor(Math.random()*links.length);
+  window.location.assign(links[idx]);
+}
+startBtn.addEventListener('click', goToRandomLink);
+startBtn.addEventListener('keydown', e=>{
+  if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goToRandomLink(); }
+});
+</script>
+</body>
 </html>
