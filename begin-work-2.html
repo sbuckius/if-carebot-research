@@ -1,126 +1,311 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Thank You</title>
-  <style>
-    body {
-      background-color: #b30f5c; /* darker pink-magenta shade */
-      color: #4b0082; /* dark purple text */
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      text-align: center;
-      overflow-x: hidden;
-      padding: 1rem;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-top: 3rem;
-      margin-bottom: 1rem;
-    }
-    #workerID {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 1.25rem;
-    }
-    .image-holder {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: min(90vw, 480px);
-      height: min(55vh, 360px);
-      background: rgba(255,255,255,0.2);
-      border-radius: 16px;
-      padding: 10px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-      overflow: hidden;
-    }
-    .image-holder img {
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 10px;
-      object-fit: contain;
-    }
-    .caption {
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-      opacity: 0.85;
-    }
-    a.button {
-      display: inline-block;
-      background-color: #800000; /* maroon */
-      color: #ffe6f2; /* light pink text */
-      font-size: 1rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-      margin-top: 1.5rem;
-    }
-    a.button:hover {
-      background-color: #4b0082; /* dark purple hover */
-    }
-    .note {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: #ffe6f2;
-      max-width: 90%;
-      line-height: 1.3;
-      opacity: 0.85;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>✦ CARETECH ✦ Worker ID</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --bubble:  #ffe4f0;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #1a0012;
+    --card:    rgba(255,255,255,.055);
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 8px 50px rgba(255,45,107,.4), 0 0 90px rgba(255,30,128,.15);
+    --text-dim:  rgba(255,200,224,.55);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100%;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream); background: var(--bg);
+    -webkit-overflow-scrolling: touch;
+    -webkit-font-smoothing: antialiased;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  }
+
+  /* ── background ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 55% at 18% 12%, rgba(200,0,50,.35)  0%, transparent 60%),
+      radial-gradient(ellipse 55% 65% at 82% 80%, rgba(140,0,40,.3)   0%, transparent 60%),
+      radial-gradient(ellipse 90% 40% at 50% 105%,rgba(110,0,30,.22)  0%, transparent 55%),
+      linear-gradient(160deg, #220008, #180008 50%, #120005);
+  }
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(65px); }
+  .orb-1 { width:450px;height:450px;background:var(--maroon); opacity:.22; top:-100px; left:-90px;  animation:drift1 20s ease-in-out infinite; }
+  .orb-2 { width:360px;height:360px;background:#c40032;        opacity:.18; bottom:-70px; right:-70px; animation:drift2 24s ease-in-out infinite; }
+  .orb-3 { width:240px;height:240px;background:var(--hot);     opacity:.12; top:35%; left:58%;      animation:drift3 16s ease-in-out infinite; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(45px,30px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-22px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-20px,15px)}66%{transform:translate(15px,-10px)}}
+
+  /* sparkles */
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.7}85%{opacity:.4}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+
+  /* ── layout ── */
+  .wrap {
+    position: relative; z-index: 2;
+    max-width: 680px; margin: 0 auto;
+    padding:
+      max(20px, env(safe-area-inset-top))
+      clamp(14px,4vmin,28px)
+      calc(48px + env(safe-area-inset-bottom))
+      clamp(14px,4vmin,28px);
+    display: grid; gap: 16px;
+  }
+
+  /* ── mascot bar ── */
+  .mascot-bar { display:flex;align-items:center;justify-content:space-between; }
+  .mascot { display:flex;align-items:center;gap:10px; }
+  .bot-face {
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,50,.35));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
+  }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  /* ── main card ── */
+  .card {
+    background: rgba(15,0,8,.75);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 26px;
+    box-shadow: var(--pop-glow), inset 0 1px 0 rgba(255,160,200,.08);
+    backdrop-filter: blur(22px) saturate(1.5);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    overflow: hidden; position: relative;
+    padding: clamp(24px,5vw,40px) clamp(20px,5vw,36px);
+    display: grid; gap: 22px;
+    text-align: center;
+  }
+  .card::before {
+    content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+    box-shadow:0 0 14px var(--candy);border-radius:999px;
+  }
+
+  /* ── heading block ── */
+  .heading-block { display:grid; gap:10px; }
+  .eyebrow {
+    font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);
+  }
+  .heading-block h1 {
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(18px,4vw,26px);line-height:1.35;
+    background:linear-gradient(120deg,var(--cream) 20%,var(--blush) 55%,var(--fuchsia) 85%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  /* ── worker ID display ── */
+  .id-bubble {
+    display:inline-flex;flex-direction:column;align-items:center;gap:4px;
+    background:linear-gradient(135deg,rgba(255,45,107,.15),rgba(180,0,50,.2));
+    border:1.5px solid var(--card-border-bright);
+    border-radius:18px;padding:14px 28px;
+    box-shadow:0 4px 28px rgba(255,45,107,.25),inset 0 1px 0 rgba(255,255,255,.06);
+    margin:0 auto;
+  }
+  .id-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);}
+  .id-number {
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(32px,8vw,52px);line-height:1;
+    background:linear-gradient(135deg,var(--blush) 20%,var(--fuchsia) 55%,var(--hot));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 12px rgba(255,45,107,.4));
+    letter-spacing:.05em;
+  }
+
+  /* ── divider ── */
+  .divider {
+    height:1px;background:linear-gradient(90deg,transparent,rgba(255,130,180,.2),transparent);
+  }
+
+  /* ── badge section ── */
+  .badge-label {
+    font-family:'Nunito',sans-serif;font-weight:800;
+    font-size:clamp(14px,3vw,18px);
+    background:linear-gradient(90deg,var(--blush),var(--fuchsia));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  .image-holder {
+    display:inline-flex;align-items:center;justify-content:center;
+    width:min(100%,420px);
+    aspect-ratio:4/3;
+    background:rgba(255,45,107,.06);
+    border:1.5px solid var(--card-border);
+    border-radius:18px;padding:12px;
+    box-shadow:var(--soft-glow);
+    overflow:hidden;margin:0 auto;
+    transition:box-shadow .3s;
+  }
+  .image-holder:hover { box-shadow:var(--pop-glow); }
+  .image-holder img {
+    max-width:100%;max-height:100%;
+    border-radius:12px;object-fit:contain;
+  }
+  .caption {
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--text-dim);margin-top:-8px;
+  }
+
+  /* ── CTA button ── */
+  .cta {
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    appearance:none;font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(14px,3.5vw,17px);letter-spacing:.04em;
+    color:var(--cream);cursor:pointer;text-decoration:none;border:none;
+    padding:14px 32px;border-radius:16px;width:min(100%,340px);margin:0 auto;
+    background:linear-gradient(135deg,var(--hot) 0%,var(--berry) 50%,var(--maroon) 100%);
+    box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.09);
+    transition:all .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    position:relative;overflow:hidden;
+    animation:ctaPulse 3s ease-in-out infinite;
+  }
+  .cta::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 55%);pointer-events:none;}
+  @keyframes ctaPulse{0%,100%{box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.09)}50%{box-shadow:0 8px 44px rgba(255,45,107,.65),0 0 60px rgba(255,30,128,.2),inset 0 1px 0 rgba(255,255,255,.09)}}
+  .cta:hover{transform:translateY(-3px) scale(1.04);background:linear-gradient(135deg,var(--fuchsia) 0%,var(--hot) 50%,var(--berry) 100%);animation:none;box-shadow:0 12px 40px rgba(255,45,107,.6),0 0 70px rgba(255,30,128,.22),inset 0 1px 0 rgba(255,255,255,.1);}
+  .cta:active{transform:translateY(0) scale(.97);animation:none;}
+
+  /* ── note ── */
+  .note {
+    background:rgba(255,45,107,.05);
+    border:1.5px dashed rgba(255,130,180,.2);
+    border-radius:14px;padding:12px 16px;
+    font-size:11px;color:var(--text-dim);line-height:1.65;letter-spacing:.03em;
+    text-align:left;
+  }
+</style>
 </head>
 <body>
-  <h1>Mechanical Turk Worker<br>Your Worker ID # is</h1>
-  <div id="workerID"></div>
 
- <h1>Your ID Badge is below</h1>
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
 
-  <div class="image-holder">
-    <img id="workerImage" src="" alt="Worker image" />
+<main class="wrap">
+
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CARETECH ✦</div>
+        <div class="bot-sub">Worker ID System · Online</div>
+      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
   </div>
 
+  <!-- main card -->
+  <div class="card">
 
+    <div class="heading-block">
+      <div class="eyebrow">✦ Mechanical Turk Worker</div>
+      <h1>Your Worker ID # is</h1>
+    </div>
 
-  <div class="caption" id="imageCaption"></div>
+    <div class="id-bubble">
+      <div class="id-label">Worker ID</div>
+      <div class="id-number" id="workerID">——</div>
+    </div>
 
-  <a href="verify-1.html" class="button">To begin your work, click here</a>
+    <div class="divider"></div>
 
-  <p class="note">NOTE: all of the images were the first 40 images generated using AI with the prompt "worker ID badge" and "technology worker ID badge".</p>
+    <div class="badge-label">✦ Your ID Badge is below</div>
 
-  <script>
-    // ---- Config ----
-    const TOTAL_IMAGES = 41; // or 40 if you have id_00.png to id_39.png
-    const IMAGE_PREFIX = "images/id_";
-    const IMAGE_EXT = ".png";
+    <div class="image-holder">
+      <img id="workerImage" src="" alt="Worker ID badge image" />
+    </div>
+    <div class="caption" id="imageCaption"></div>
 
-    // ---- Generate a random 6-digit worker ID ----
-    const workerID = Math.floor(100000 + Math.random() * 900000);
-    document.getElementById("workerID").textContent = workerID;
+    <a href="verify-1.html" class="cta">✦ Begin your work here ✦</a>
 
-    // ---- Map Worker ID to a specific image ----
-    const index = workerID % TOTAL_IMAGES;
-    const indexStr = index.toString().padStart(2, "0");
-    const imagePath = `${IMAGE_PREFIX}${indexStr}${IMAGE_EXT}`;
+  </div>
 
-    const imgEl = document.getElementById("workerImage");
-    const captionEl = document.getElementById("imageCaption");
+  <div class="note">
+    ✦ NOTE: All of the images were the first 40 images generated using AI with the prompt
+    "worker ID badge" and "technology worker ID badge".
+  </div>
 
-    imgEl.src = imagePath;
-    imgEl.alt = `Image id_${indexStr}`;
-    captionEl.textContent = `Image: id_${indexStr}.png`;
+</main>
 
-    // ---- Fallback if an image is missing ----
-    imgEl.addEventListener("error", () => {
-      imgEl.src = `${IMAGE_PREFIX}00${IMAGE_EXT}`;
-      captionEl.textContent = `Image not found for id_${indexStr}.png — showing id_00.png`;
-    });
-  </script>
+<script>
+/* ── sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*11)+'px';
+    s.style.color=`hsl(${310+Math.random()*50},75%,${65+Math.random()*25}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
+
+/* ── worker ID & image ── */
+const TOTAL_IMAGES  = 41;
+const IMAGE_PREFIX  = "images/id_";
+const IMAGE_EXT     = ".png";
+
+const workerID = Math.floor(100000 + Math.random() * 900000);
+document.getElementById("workerID").textContent = workerID;
+
+const index    = workerID % TOTAL_IMAGES;
+const indexStr = index.toString().padStart(2, "0");
+const imagePath = `${IMAGE_PREFIX}${indexStr}${IMAGE_EXT}`;
+
+const imgEl     = document.getElementById("workerImage");
+const captionEl = document.getElementById("imageCaption");
+imgEl.src     = imagePath;
+imgEl.alt     = `Image id_${indexStr}`;
+captionEl.textContent = `Image: id_${indexStr}.png`;
+
+imgEl.addEventListener("error", () => {
+  imgEl.src = `${IMAGE_PREFIX}00${IMAGE_EXT}`;
+  captionEl.textContent = `Image not found for id_${indexStr}.png — showing id_00.png`;
+});
+</script>
 </body>
 </html>
