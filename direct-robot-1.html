@@ -1,304 +1,522 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>p5.js Robot Image Picker</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <script src="captions.js"></script>
-  <style>
-    :root { --w: 400px; --h: 600px; }
-    html, body {
-      height: 100%; margin: 0;
-      background: #3b0a0a;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    }
-    .wrap { min-height: 100%; display: grid; place-items: center; padding: 12px; }
-    .frame {
-      width: var(--w); height: var(--h);
-      position: relative; border-radius: 24px;
-      overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.45);
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>✦ CAREBOT-04 ✦ Robot Picker</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="captions.js"></script>
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --crimson: #8b0030;
+    --maroon:  #4a001a;
+    --fuchsia: #ff1f80;
+    --bg:      #0e0008;
+    --card-border: rgba(255,140,185,.25);
+    --card-border-bright: rgba(255,80,150,.6);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2);
+    --pop-glow:  0 8px 50px rgba(255,45,107,.45), 0 0 90px rgba(200,0,80,.15);
+    --text-dim:  rgba(255,190,220,.5);
+  }
 
-    #defaultCanvas0 {
-      display: block;
-      position: absolute; inset: 0;
-      z-index: 1;
-    }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .overlay, .hint { z-index: 2; }
+  html, body {
+    height: 100%; min-height: 100%;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream);
+    background: var(--bg);
+    -webkit-overflow-scrolling: touch;
+    -webkit-font-smoothing: antialiased;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  }
 
-    .overlay {
-      position:absolute; inset:0;
-      display:flex; flex-direction:column;
-      justify-content:flex-end; align-items:center;
-      padding:16px; gap:10px; pointer-events:auto;
-    }
+  /* ── background — berry/maroon/crimson palette ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 75% 55% at 5% 90%,   rgba(180,0,60,.38)  0%, transparent 58%),
+      radial-gradient(ellipse 60% 65% at 95% 10%,   rgba(120,0,35,.32)  0%, transparent 58%),
+      radial-gradient(ellipse 50% 40% at 50% 50%,   rgba(255,30,100,.06) 0%, transparent 65%),
+      linear-gradient(155deg, #160008, #0e0005 50%, #080003);
+  }
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(65px); }
+  .orb-1 { width:380px;height:380px;background:var(--crimson); opacity:.2;  bottom:-80px; left:-70px;  animation:drift1 21s ease-in-out infinite; }
+  .orb-2 { width:300px;height:300px;background:var(--berry);   opacity:.18; top:-60px;    right:-60px; animation:drift2 25s ease-in-out infinite; }
+  .orb-3 { width:200px;height:200px;background:var(--hot);     opacity:.1;  top:42%; left:55%;         animation:drift3 17s ease-in-out infinite; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
 
-    .card {
-      background: rgba(15,17,21,0.7);
-      border: 1px solid rgba(255,255,255,0.1);
-      color:#fff; border-radius:12px;
-      padding:10px 14px; backdrop-filter: blur(10px);
-      max-width: 90%; text-align:center;
-      font-size:14px;
-    }
-    .title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
-    .desc { font-size: 14px; color: #ff99cc; margin:0; line-height:1.4; }
+  .sparkles { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
+  .sp { position:absolute;opacity:0;animation:floatUp linear infinite; }
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
 
-    .row {
-      display:flex; justify-content:center;
-      gap:10px; flex-wrap: wrap;
-      margin-top:6px;
-    }
+  /* ── outer layout ── */
+  .screen {
+    position: relative; z-index: 2;
+    min-height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center;
+    padding:
+      max(16px, env(safe-area-inset-top))
+      clamp(12px,4vmin,24px)
+      calc(32px + env(safe-area-inset-bottom))
+      clamp(12px,4vmin,24px);
+    gap: 14px;
+  }
 
-    .btn {
-      text-decoration:none;
-      background:#fff; color:#111827;
-      font-weight:700; padding:6px 10px;
-      border-radius:10px; font-size:13px;
-      transition: background 0.2s, color 0.2s;
-    }
-    .btn:active { transform: translateY(1px); }
+  /* ── mascot bar ── */
+  .mascot-bar {
+    width: 100%; max-width: 500px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .mascot { display:flex;align-items:center;gap:10px; }
+  .bot-face {
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,rgba(255,45,107,.22),rgba(180,0,60,.32));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
+  }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
 
-    #restart {
-      background:#660033; color:#fff;
-      font-size:14px; font-weight:700;
-      border:2px solid #660033;
-      padding:6px 10px; border-radius:10px;
-    }
-    #restart:hover {
-      background:#cc0066; border-color:#cc0066; color:#fff;
-    }
+  /* ── game frame ── */
+  .frame-wrap {
+    width: min(100%, 460px);
+    position: relative;
+  }
 
-    .hint {
-      position:absolute; top:10px; left:50%;
-      transform:translateX(-50%);
-      color:#fff; font-size:12px; opacity:.75;
-      background:rgba(255,255,255,.08);
-      padding:6px 10px; border-radius:999px;
-    }
-  </style>
+  /* shimmer border ring around the game frame */
+  .frame-wrap::before {
+    content: '';
+    position: absolute; inset: -2px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, var(--hot), var(--berry), var(--crimson), var(--maroon), var(--berry), var(--hot));
+    background-size: 300% 300%;
+    animation: borderShimmer 6s linear infinite;
+    z-index: 0; filter: blur(1px);
+  }
+  @keyframes borderShimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+  .frame {
+    width: 100%;
+    aspect-ratio: 2/3;
+    position: relative;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: var(--pop-glow);
+    z-index: 1;
+    background: var(--maroon);
+    /* ensure canvas fills */
+    display: block;
+  }
+
+  /* p5 canvas */
+  #defaultCanvas0 {
+    display: block;
+    position: absolute; inset: 0;
+    width: 100% !important; height: 100% !important;
+    z-index: 1;
+  }
+
+  /* hint pill */
+  .hint {
+    position: absolute; top: 12px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    font-family: 'Quicksand', sans-serif; font-weight: 700;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(255,200,220,.75);
+    background: rgba(255,45,107,.12);
+    border: 1px solid rgba(255,100,160,.28);
+    padding: 6px 14px; border-radius: 999px;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+  }
+
+  /* result overlay */
+  .overlay {
+    position: absolute; inset: 0;
+    z-index: 4;
+    display: flex; flex-direction: column;
+    justify-content: flex-end; align-items: center;
+    padding: 16px; gap: 10px;
+    background: linear-gradient(to top, rgba(10,0,6,.92) 0%, rgba(10,0,6,.3) 55%, transparent 100%);
+    backdrop-filter: blur(2px);
+  }
+
+  .result-card {
+    width: 100%;
+    background: rgba(12,0,7,.82);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 18px;
+    padding: 14px 16px;
+    backdrop-filter: blur(16px);
+    box-shadow: var(--soft-glow), inset 0 1px 0 rgba(255,140,185,.07);
+    position: relative; overflow: hidden;
+  }
+  .result-card::before {
+    content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--candy) 40%,var(--hot) 50%,var(--candy) 60%,transparent);
+    box-shadow:0 0 8px var(--candy);border-radius:999px;
+  }
+  .result-title {
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 13px; letter-spacing: .06em;
+    background: linear-gradient(90deg, var(--blush), var(--fuchsia));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 6px;
+  }
+  .result-text {
+    font-size: 13px; color: rgba(255,200,225,.75);
+    line-height: 1.5; margin: 0;
+  }
+
+  .btn-row { display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%; }
+
+  .btn {
+    appearance: none; font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 12px; letter-spacing: .05em;
+    color: var(--cream); text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 10px 18px; border-radius: 13px; min-height: 38px;
+    border: 1.5px solid var(--card-border); cursor: pointer;
+    transition: all .2s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+  }
+  .btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);pointer-events:none;}
+  .btn.primary {
+    background: linear-gradient(135deg, var(--hot), var(--berry), var(--crimson));
+    border-color: var(--hot);
+    box-shadow: 0 4px 20px rgba(255,45,107,.35), inset 0 1px 0 rgba(255,255,255,.1);
+    flex: 1;
+  }
+  .btn.primary:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 8px 28px rgba(255,45,107,.5); }
+  .btn.soft {
+    background: rgba(255,255,255,.05);
+    border-color: rgba(255,140,185,.2);
+    color: var(--text-dim);
+  }
+  .btn.soft:hover { background:rgba(255,45,107,.15);border-color:var(--card-border-bright);color:var(--blush); transform:translateY(-2px) scale(1.03); }
+  .btn:active { transform:translateY(0) scale(.97) !important; }
+
+  /* ── bottom wordmark ── */
+  .wordmark {
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,140,185,.18);
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CAREBOT-04 ✦</div>
+        <div class="bot-sub">Robot Picker · Online</div>
+      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- game frame -->
+  <div class="frame-wrap">
     <div class="frame" id="game-frame">
-      <div class="hint" id="hint">Tap the image to select</div>
-      <div class="overlay" id="overlay" style="display:none">
-        <div class="card">
-          <p class="title" id="resultTitle">You picked:</p>
-          <p class="desc" id="resultText">—</p>
+      <div class="hint" id="hint">✦ Tap the image to select</div>
+      <div class="overlay" id="overlay" style="display:none;">
+        <div class="result-card">
+          <div class="result-title" id="resultTitle">You picked:</div>
+          <p class="result-text" id="resultText">—</p>
         </div>
-        <div class="row">
-          <a id="resultLink" class="btn" href="#" target="_blank" rel="noopener noreferrer">
-            If you were paid, advance!
+        <div class="btn-row">
+          <a id="resultLink" class="btn primary" href="#" target="_blank" rel="noopener noreferrer">
+            ✦ Advance to next task
           </a>
-          <a id="restart" class="btn" href="#">Play Again</a>
+          <button id="restart" class="btn soft">Replay ↩</button>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    const ASSET_BASE = "./images";
-    const CANVAS_W = 400, CANVAS_H = 600;
-    const IMAGE_SIZE = 160;
-    const SWITCH_MS = 30; // ⚡ Fast scrolling speed
-    const INSTRUCTION = "Select an image. Once you have selected your image, go tell the human robot to perform the action described below.";
+  <div class="wordmark">✦ carebot research system · v2.4 ✦</div>
+</div>
 
-    // Make sure there are 33 captions or placeholders
-    const CAPTIONS =
-      (Array.isArray(window.captions) && window.captions.length >= 33)
-        ? window.captions
-        : Array.from({ length: 33 }, (_, i) => `Robot ${i}: placeholder text`);
+<script>
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
 
-    // 33 images
-    const items = Array.from({ length: 33 }, (_, i) => ({
-      idx: i,
-      text: (CAPTIONS[i] ?? `Robot ${i}: placeholder text`),
-      link: `paid.html`,
-      resolvedSrc: null
-    }));
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
 
-    // Shuffle helper
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+/* ── Game config ── */
+const ASSET_BASE = "./images";
+const IMAGE_SIZE = 160;
+const SWITCH_MS  = 30;
+const INSTRUCTION = "Select an image. Once you have selected your image, go tell the human robot to perform the action described below.";
+
+const CAPTIONS =
+  (Array.isArray(window.captions) && window.captions.length >= 33)
+    ? window.captions
+    : Array.from({ length: 33 }, (_, i) => `Robot ${i}: placeholder text`);
+
+const items = Array.from({ length: 33 }, (_, i) => ({
+  idx: i,
+  text: (CAPTIONS[i] ?? `Robot ${i}: placeholder text`),
+  link: `paid.html`,
+  resolvedSrc: null
+}));
+
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+}
+function makeOrder(n){ const a=Array.from({length:n},(_,i)=>i); shuffle(a); return a; }
+
+let imgs=[], currentIndex=0, order=[], lastSwitch=0, lockedIndex=-1;
+let CANVAS_W=400, CANVAS_H=600;
+
+const overlay    = document.getElementById('overlay');
+const resultTitle= document.getElementById('resultTitle');
+const resultText = document.getElementById('resultText');
+const resultLink = document.getElementById('resultLink');
+const restartBtn = document.getElementById('restart');
+const hintEl     = document.getElementById('hint');
+
+overlay.addEventListener('click',   e=>e.stopPropagation(), {passive:true});
+overlay.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+
+restartBtn.addEventListener('click',(e)=>{
+  e.preventDefault();
+  lockedIndex=-1;
+  overlay.style.display='none';
+  hintEl.style.display='block';
+  order=makeOrder(items.length);
+  currentIndex=Math.floor(Math.random()*items.length);
+  lastSwitch=millis();
+  loop();
+});
+
+function preload(){
+  const tryExts=[".jpg",".jpeg",".png",".JPG",".JPEG",".PNG"];
+  imgs=new Array(items.length);
+  items.forEach((it,ix)=>{
+    const idxStr=String(it.idx), z2=idxStr.padStart(2,"0");
+    const nameCandidates=[`robot${idxStr}`,`robot${z2}`];
+    const candidates=nameCandidates.flatMap(name=>tryExts.map(ext=>`${ASSET_BASE}/${name}${ext}`));
+    const attempt=(k)=>{
+      if(k>=candidates.length){
+        const pg=createGraphics(IMAGE_SIZE,IMAGE_SIZE);
+        pg.background(20,0,10); pg.fill(255,150,180); pg.textAlign(CENTER,CENTER); pg.textSize(11);
+        pg.text(`Missing\nrobot${idxStr}.*`,IMAGE_SIZE/2,IMAGE_SIZE/2);
+        imgs[ix]=pg; return;
       }
-    }
+      loadImage(candidates[k],(img)=>{ imgs[ix]=img; items[ix].resolvedSrc=candidates[k]; },()=>attempt(k+1));
+    };
+    attempt(0);
+  });
+}
 
-    // Make random order of indices
-    function makeOrder(n) {
-      const a = Array.from({ length: n }, (_, i) => i);
-      shuffle(a);
-      return a;
-    }
+function setup(){
+  // Size canvas to match the frame element
+  const frame=document.getElementById('game-frame');
+  CANVAS_W=frame.clientWidth||400;
+  CANVAS_H=frame.clientHeight||600;
+  const c=createCanvas(CANVAS_W,CANVAS_H);
+  c.parent('game-frame');
+  imageMode(CENTER); noStroke();
+  order=makeOrder(items.length);
+  currentIndex=Math.floor(Math.random()*items.length);
+  lastSwitch=millis();
+}
 
-    let imgs = [];
-    let currentIndex = 0;
-    let order = [];
-    let lastSwitch = 0;
-    let lockedIndex = -1;
+function getLayout(){
+  const boxX=width/2, boxY=height*0.38;
+  const boxW=width-28, boxH=Math.min(230, height*0.38);
+  const boxLeft=boxX-boxW/2, boxRight=boxX+boxW/2;
+  const leftColW=IMAGE_SIZE+100;
+  const imgX=boxLeft+leftColW/2, imgY=boxY;
+  const textPad=16, textX=boxLeft+leftColW+textPad;
+  const textY=imgY-IMAGE_SIZE/2+4;
+  const textW=Math.max(100, boxRight-textX-textPad);
+  return{boxX,boxY,boxW,boxH,imgX,imgY,textX,textY,textW};
+}
 
-    const overlay = document.getElementById('overlay');
-    const resultTitle = document.getElementById('resultTitle');
-    const resultText = document.getElementById('resultText');
-    const resultLink = document.getElementById('resultLink');
-    const restartBtn = document.getElementById('restart');
-    const hintEl = document.getElementById('hint');
+function draw(){
+  // deep bg
+  background(14,0,8);
 
-    overlay.addEventListener('click', e => e.stopPropagation(), { passive: true });
-    overlay.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
+  if(lockedIndex===-1 && millis()-lastSwitch>SWITCH_MS){
+    const jump=1+Math.floor(Math.random()*4);
+    currentIndex=(currentIndex+jump)%items.length;
+    lastSwitch=millis();
+  }
 
-    restartBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      lockedIndex = -1;
-      overlay.style.display = 'none';
-      hintEl.style.display = 'block';
-      order = makeOrder(items.length);
-      currentIndex = Math.floor(Math.random() * items.length); // start randomly
-      lastSwitch = millis();
-      loop();
-    });
+  const L=getLayout();
+  const showIdx=order[currentIndex];
+  const img=imgs[showIdx];
 
-    function preload() {
-      const tryExts = [".jpg", ".jpeg", ".png", ".JPG", ".JPEG", ".PNG"];
-      imgs = new Array(items.length);
+  // card bg — crimson/berry gradient instead of flat color
+  push();
+  noStroke();
+  const ctx=drawingContext;
+  const grad=ctx.createLinearGradient(L.boxX-L.boxW/2, L.boxY-L.boxH/2, L.boxX+L.boxW/2, L.boxY+L.boxH/2);
+  grad.addColorStop(0,'rgba(140,0,45,0.95)');
+  grad.addColorStop(0.5,'rgba(100,0,32,0.98)');
+  grad.addColorStop(1,'rgba(70,0,22,0.98)');
+  ctx.save();
+  ctx.fillStyle=grad;
+  ctx.beginPath();
+  ctx.roundRect(L.boxX-L.boxW/2, L.boxY-L.boxH/2, L.boxW, L.boxH, 18);
+  ctx.fill();
+  ctx.restore();
 
-      items.forEach((it, ix) => {
-        const idxStr = String(it.idx);
-        const z2 = idxStr.padStart(2, "0");
-        const nameCandidates = [`robot${idxStr}`, `robot${z2}`];
-        const candidates = nameCandidates.flatMap(name =>
-          tryExts.map(ext => `${ASSET_BASE}/${name}${ext}`)
-        );
+  // shimmer top line on card
+  ctx.save();
+  const shimmer=ctx.createLinearGradient(L.boxX-L.boxW/2, 0, L.boxX+L.boxW/2, 0);
+  shimmer.addColorStop(0,'rgba(255,90,140,0)');
+  shimmer.addColorStop(0.35,'rgba(255,133,179,0.7)');
+  shimmer.addColorStop(0.5,'rgba(255,45,107,0.9)');
+  shimmer.addColorStop(0.65,'rgba(255,133,179,0.7)');
+  shimmer.addColorStop(1,'rgba(255,90,140,0)');
+  ctx.fillStyle=shimmer;
+  ctx.fillRect(L.boxX-L.boxW/2+12, L.boxY-L.boxH/2, L.boxW-24, 1.5);
+  ctx.restore();
 
-        const attempt = (k) => {
-          if (k >= candidates.length) {
-            const pg = createGraphics(IMAGE_SIZE, IMAGE_SIZE);
-            pg.background(30);
-            pg.fill(255);
-            pg.textAlign(CENTER, CENTER);
-            pg.textSize(12);
-            pg.text(`Missing\nrobot${idxStr}.*`, IMAGE_SIZE/2, IMAGE_SIZE/2);
-            imgs[ix] = pg;
-            return;
-          }
-          const url = candidates[k];
-          loadImage(url, (img) => {
-            imgs[ix] = img;
-            items[ix].resolvedSrc = url;
-          }, () => attempt(k + 1));
-        };
-        attempt(0);
-      });
-    }
+  // border glow on card
+  ctx.save();
+  ctx.strokeStyle='rgba(255,100,155,0.4)';
+  ctx.lineWidth=1.5;
+  ctx.beginPath();
+  ctx.roundRect(L.boxX-L.boxW/2, L.boxY-L.boxH/2, L.boxW, L.boxH, 18);
+  ctx.stroke();
+  ctx.restore();
 
-    function setup() {
-      const c = createCanvas(CANVAS_W, CANVAS_H);
-      c.parent('game-frame');
-      imageMode(CENTER);
-      noStroke();
-      order = makeOrder(items.length);
-      currentIndex = Math.floor(Math.random() * items.length); // random start
-      lastSwitch = millis();
-    }
+  // image or placeholder
+  if(img&&img.width>0){
+    // soft circular clip for image
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(L.imgX-IMAGE_SIZE/2, L.imgY-IMAGE_SIZE/2, IMAGE_SIZE, IMAGE_SIZE, 14);
+    ctx.clip();
+    image(img, L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE);
+    ctx.restore();
+    // image border ring
+    ctx.save();
+    ctx.strokeStyle='rgba(255,133,179,0.5)';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.roundRect(L.imgX-IMAGE_SIZE/2, L.imgY-IMAGE_SIZE/2, IMAGE_SIZE, IMAGE_SIZE, 14);
+    ctx.stroke();
+    ctx.restore();
+  } else {
+    fill(255,255,255,20); rectMode(CENTER);
+    rect(L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE, 14);
+    fill(255,160,200); textAlign(CENTER,CENTER); textSize(13);
+    text('Loading…', L.imgX, L.imgY);
+  }
 
-    function getLayout() {
-      const boxX = width / 2;
-      const boxY = 150;
-      const boxW = width - 30;
-      const boxH = 220;
-      const boxLeft  = boxX - boxW / 2;
-      const boxRight = boxX + boxW / 2;
+  // instruction text
+  fill(255,210,230);
+  textSize(13); textWrap(WORD); textAlign(LEFT,TOP);
+  text(INSTRUCTION, L.textX, L.textY, L.textW);
 
-      const leftColW = IMAGE_SIZE + 130;
-      const imgX = boxLeft + leftColW / 2;
-      const imgY = boxY;
+  pop();
 
-      const textPad = 20;
-      const textX = boxLeft + leftColW + textPad;
-      const textY = imgY - IMAGE_SIZE / 2 + 4;
-      const textW = Math.max(140, boxRight - textX - textPad);
+  // bottom label
+  push();
+  fill(255,150,190,80);
+  textAlign(CENTER,BOTTOM); textSize(10);
+  textStyle(NORMAL);
+  text('✦ tap image to select ✦', width/2, height-10);
+  pop();
 
-      return { boxX, boxY, boxW, boxH, imgX, imgY, textX, textY, textW };
-    }
+  if(lockedIndex!==-1) noLoop();
+}
 
-    function draw() {
-      background('#3b0a0a');
+function mousePressed(){
+  if(lockedIndex!==-1) return;
+  const L=getLayout();
+  const half=IMAGE_SIZE/2;
+  if(mouseX>=L.imgX-half&&mouseX<=L.imgX+half&&mouseY>=L.imgY-half&&mouseY<=L.imgY+half){
+    lockedIndex=order[currentIndex];
+    showResult(lockedIndex);
+  }
+}
 
-      if (lockedIndex === -1 && millis() - lastSwitch > SWITCH_MS) {
-        const jump = 1 + Math.floor(Math.random() * 4); // random jump 1–4
-        currentIndex = (currentIndex + jump) % items.length;
-        lastSwitch = millis();
-      }
+function touchStarted(e){
+  const cnv=document.getElementById('defaultCanvas0');
+  if(!cnv) return;
+  const rect=cnv.getBoundingClientRect();
+  const t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0]);
+  if(!t) return;
+  const x=t.clientX,y=t.clientY;
+  if(x<rect.left||x>rect.right||y<rect.top||y>rect.bottom) return;
+  mousePressed();
+}
 
-      const L = getLayout();
-      const showIdx = order[currentIndex];
-      const img = imgs[showIdx];
+function showResult(idx){
+  const{text,link}=items[idx];
+  resultTitle.textContent=`✦ You picked robot #${idx}`;
+  resultText.textContent=text;
+  resultLink.href=link;
+  overlay.style.display='flex';
+  hintEl.style.display='none';
+  loop();
+}
 
-      push();
-      fill('#cc338b');
-      rectMode(CENTER);
-      rect(L.boxX, L.boxY, L.boxW, L.boxH, 20);
-
-      if (img && img.width > 0) image(img, L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE);
-      else {
-        fill(255, 255, 255, 28);
-        rectMode(CENTER);
-        rect(L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE, 18);
-        fill(255); textAlign(CENTER, CENTER); textSize(14);
-        text('Loading...', L.imgX, L.imgY);
-      }
-
-      fill('#fff');
-      textSize(15);
-      textWrap(WORD);
-      textAlign(LEFT, TOP);
-      text(INSTRUCTION, L.textX, L.textY, L.textW);
-      pop();
-
-      if (lockedIndex !== -1) noLoop();
-    }
-
-    function mousePressed() {
-      if (lockedIndex !== -1) return;
-      const L = getLayout();
-      const half = IMAGE_SIZE / 2;
-      if (mouseX >= L.imgX - half && mouseX <= L.imgX + half && mouseY >= L.imgY - half && mouseY <= L.imgY + half) {
-        lockedIndex = order[currentIndex];
-        showResult(lockedIndex);
-      }
-    }
-
-    function touchStarted(e) {
-      const cnv = document.getElementById('defaultCanvas0');
-      if (!cnv) return;
-      const rect = cnv.getBoundingClientRect();
-      const t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-      if (!t) return;
-      const x = t.clientX, y = t.clientY;
-      const insideCanvas = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-      if (!insideCanvas) return;
-      mousePressed();
-    }
-
-    function showResult(idx) {
-      const { text, link } = items[idx];
-      resultTitle.textContent = `You picked robot #${idx}`;
-      resultText.textContent = text;
-      resultLink.href = link;
-      overlay.style.display = 'flex';
-      hintEl.style.display = 'none';
-      loop();
-    }
-
-    window.preload = preload;
-    window.setup = setup;
-    window.draw = draw;
-    window.mousePressed = mousePressed;
-    window.touchStarted = touchStarted;
-  </script>
+window.preload=preload;
+window.setup=setup;
+window.draw=draw;
+window.mousePressed=mousePressed;
+window.touchStarted=touchStarted;
+</script>
 </body>
 </html>
