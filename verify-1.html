@@ -1,84 +1,311 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Human Verification</title>
-  <style>
-    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { 
-      min-height: 100svh; 
-      display: grid; 
-      place-items: center; 
-      background: #d63384; /* dark pink */
-      margin: 0; 
-      color: #4b0082; /* dark purple (indigo) */
-    }
-    .card { 
-      background: #ffe6f2; 
-      padding: 2rem; 
-      border-radius: 14px; 
-      box-shadow: 0 6px 24px rgba(0,0,0,.15); 
-      width: min(92vw, 420px);
-      color: #800000; /* maroon text */
-    }
-    .row { display: flex; align-items: center; gap: .75rem; }
-    .status { margin-top: .75rem; font-size: .95rem; color: #4b0082; }
-    .actions { margin-top: 1rem; }
-    button { 
-      padding: .7rem 1rem; 
-      border-radius: 10px; 
-      border: 0; 
-      font-weight: 600; 
-      background: #800000; /* maroon */
-      color: #ffe6f2;
-      cursor: pointer;
-    }
-    button[disabled] { opacity: .5; cursor: not-allowed; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>✦ CARETECH ✦ Human Verification</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #1a0012;
+    --card:    rgba(255,255,255,.055);
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 8px 50px rgba(255,45,107,.4), 0 0 90px rgba(255,30,128,.15);
+    --text-dim:  rgba(255,200,224,.55);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100svh;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream); background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  }
+
+  /* ── background ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 55% at 18% 12%, rgba(200,0,80,.32)  0%, transparent 60%),
+      radial-gradient(ellipse 55% 65% at 82% 80%, rgba(140,0,70,.28)  0%, transparent 60%),
+      radial-gradient(ellipse 90% 40% at 50% 105%,rgba(110,0,50,.2)   0%, transparent 55%),
+      linear-gradient(160deg, #200015, #150010 50%, #0e000d);
+  }
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(65px); }
+  .orb-1 { width:420px;height:420px;background:var(--hot);    opacity:.18; top:-100px; left:-80px;  animation:drift1 20s ease-in-out infinite; }
+  .orb-2 { width:340px;height:340px;background:var(--fuchsia);opacity:.15; bottom:-70px;right:-70px; animation:drift2 24s ease-in-out infinite; }
+  .orb-3 { width:200px;height:200px;background:var(--candy);  opacity:.1;  top:40%; left:58%;       animation:drift3 16s ease-in-out infinite; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,28px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-18px,14px)}66%{transform:translate(14px,-10px)}}
+
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.7}85%{opacity:.4}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+
+  /* ── screen ── */
+  .screen {
+    position: relative; z-index: 2;
+    min-height: 100svh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding:
+      max(20px, env(safe-area-inset-top))
+      clamp(14px,4vmin,28px)
+      max(20px, env(safe-area-inset-bottom))
+      clamp(14px,4vmin,28px);
+    gap: 16px;
+  }
+
+  /* ── mascot bar ── */
+  .mascot-bar {
+    width: 100%; max-width: 480px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .mascot { display:flex;align-items:center;gap:10px; }
+  .bot-face {
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,60,.35));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
+  }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  /* ── card ── */
+  .card {
+    width: min(92vw, 480px);
+    background: rgba(15,0,8,.78);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 26px;
+    box-shadow: var(--pop-glow), inset 0 1px 0 rgba(255,160,200,.07);
+    backdrop-filter: blur(22px) saturate(1.5);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    padding: clamp(26px,5vw,42px) clamp(22px,5vw,38px);
+    display: grid; gap: 24px;
+    position: relative; overflow: hidden;
+  }
+  /* shimmer top line */
+  .card::before {
+    content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+    box-shadow:0 0 14px var(--candy);border-radius:999px;
+  }
+
+  /* ── heading ── */
+  .eyebrow {
+    font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);
+    margin-bottom:8px;
+  }
+  .heading {
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(20px,4.5vw,28px);line-height:1.25;
+    background:linear-gradient(120deg,var(--cream) 20%,var(--blush) 55%,var(--fuchsia) 85%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  /* ── checkbox row ── */
+  .check-wrap {
+    display: flex; align-items: flex-start; gap: 12px; cursor: pointer;
+    padding: 14px 16px; border-radius: 16px;
+    border: 1.5px solid rgba(255,130,180,.18);
+    background: rgba(255,45,107,.05);
+    transition: all .2s;
+  }
+  .check-wrap:hover { border-color: var(--card-border-bright); background: rgba(255,45,107,.1); }
+
+  .check-wrap input[type=checkbox] {
+    appearance: none; flex-shrink: 0;
+    width: 22px; height: 22px; border-radius: 8px;
+    border: 1.5px solid var(--card-border-bright);
+    background: rgba(255,45,107,.08);
+    cursor: pointer; position: relative;
+    transition: all .2s; margin-top: 1px;
+  }
+  .check-wrap input[type=checkbox]:checked {
+    background: linear-gradient(135deg, var(--hot), var(--berry));
+    border-color: var(--hot);
+    box-shadow: 0 0 12px rgba(255,45,107,.45);
+  }
+  .check-wrap input[type=checkbox]:checked::after {
+    content:'';position:absolute;left:6px;top:3px;
+    width:7px;height:12px;
+    border-right:2.5px solid #fff;border-bottom:2.5px solid #fff;
+    transform:rotate(45deg);
+  }
+  .check-label {
+    font-family:'Nunito',sans-serif;font-weight:800;
+    font-size:clamp(14px,3vw,17px);color:var(--cream);line-height:1.3;
+  }
+
+  /* ── status text ── */
+  .status-box {
+    padding: 14px 16px; border-radius: 14px;
+    background: rgba(255,45,107,.06);
+    border: 1px solid rgba(255,130,180,.15);
+    font-size: clamp(12px,2.5vw,14px);
+    color: rgba(255,200,224,.7);
+    line-height: 1.7; letter-spacing: .02em;
+    transition: all .3s;
+  }
+  .status-box.verified {
+    background: rgba(255,45,107,.12);
+    border-color: rgba(255,100,160,.35);
+    color: var(--blush);
+  }
+
+  /* ── submit button ── */
+  .submit-btn {
+    appearance: none; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(14px,3.5vw,17px); letter-spacing: .04em;
+    color: var(--cream); cursor: pointer; border: none;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 28px; border-radius: 16px; width: 100%;
+    background: linear-gradient(135deg, var(--hot) 0%, var(--berry) 55%, var(--maroon) 100%);
+    box-shadow: 0 6px 28px rgba(255,45,107,.4), inset 0 1px 0 rgba(255,255,255,.1);
+    transition: all .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+    animation: ctaPulse 3s ease-in-out infinite;
+  }
+  .submit-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 55%);pointer-events:none;}
+  @keyframes ctaPulse{0%,100%{box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.1)}50%{box-shadow:0 8px 44px rgba(255,45,107,.62),0 0 60px rgba(255,30,128,.18),inset 0 1px 0 rgba(255,255,255,.1)}}
+  .submit-btn:hover:not([disabled]){transform:translateY(-3px) scale(1.03);animation:none;background:linear-gradient(135deg,var(--fuchsia),var(--hot) 55%,var(--berry));box-shadow:0 10px 38px rgba(255,45,107,.6);}
+  .submit-btn:active:not([disabled]){transform:translateY(0) scale(.97);animation:none;}
+  .submit-btn[disabled]{opacity:.3;cursor:not-allowed;transform:none!important;animation:none;box-shadow:none;}
+
+  /* ── bottom wordmark ── */
+  .wordmark {
+    font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,160,200,.2);
+  }
+</style>
 </head>
 <body>
-  <main class="card" role="region" aria-labelledby="heading">
-    <h1 id="heading" style="margin-top:0;font-size:1.25rem">Verify that you are human.</h1>
 
-    <form id="human-form" novalidate>
-      <div class="row">
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CARETECH ✦</div>
+        <div class="bot-sub">Human Verification · Online</div>
+      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- verification card -->
+  <main class="card" role="region" aria-labelledby="heading">
+
+    <div>
+      <div class="eyebrow">✦ Identity Check</div>
+      <h1 class="heading" id="heading">Verify that you are human.</h1>
+    </div>
+
+    <form id="human-form" novalidate style="display:contents;">
+
+      <label class="check-wrap" for="human">
         <input type="checkbox" id="human" name="human" aria-describedby="status" />
-        <label for="human">I am a human.</label>
+        <span class="check-label">I am a human.</span>
+      </label>
+
+      <div id="status" class="status-box" aria-live="polite">
+        If you think that you are human, check the box. What does it mean to be human today, anyway.
+        Even if you don't know the answer, check the box.
       </div>
-      <div id="status" class="status" aria-live="polite">If you think that you are human, check the box. What does it mean to be human today, anyway. Even if you don't know the answer, check the box.</div>
-      <div class="actions">
-        <button id="continue" type="submit" disabled>Continue</button>
-      </div>
+
+      <button id="continue" class="submit-btn" type="submit" disabled>
+        ✦ Continue ✦
+      </button>
+
     </form>
+
   </main>
 
-  <script>
-    const checkbox = document.getElementById('human');
-    const statusEl = document.getElementById('status');
-    const btn = document.getElementById('continue');
-    const form = document.getElementById('human-form');
+  <div class="wordmark">✦ caretech research system · v2.4 ✦</div>
 
-    function updateUI() {
-      if (checkbox.checked) {
-        statusEl.textContent = '✅ Verified — you may continue even if you are uncertain.';
-        btn.disabled = false;
-      } else {
-        statusEl.textContent = 'Please check the box to continue even if being human today is an unclear state.';
-        btn.disabled = true;
-      }
-    }
+</div>
 
-    checkbox.addEventListener('change', updateUI);
+<script>
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!checkbox.checked) return updateUI();
-      // Redirect to next page after verification
-      window.location.href = "hit.html";
-    });
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
 
-    updateUI();
-  </script>
+/* ── Form logic ── */
+const checkbox = document.getElementById('human');
+const statusEl = document.getElementById('status');
+const btn      = document.getElementById('continue');
+const form     = document.getElementById('human-form');
+
+function updateUI(){
+  if(checkbox.checked){
+    statusEl.textContent = '✦ Verified — you may continue even if you are uncertain.';
+    statusEl.classList.add('verified');
+    btn.disabled = false;
+  } else {
+    statusEl.textContent = 'If you think that you are human, check the box. What does it mean to be human today, anyway. Even if you don\'t know the answer, check the box.';
+    statusEl.classList.remove('verified');
+    btn.disabled = true;
+  }
+}
+
+checkbox.addEventListener('change', updateUI);
+form.addEventListener('submit',(e)=>{
+  e.preventDefault();
+  if(!checkbox.checked) return updateUI();
+  window.location.href = "hit.html";
+});
+updateUI();
+</script>
 </body>
 </html>
