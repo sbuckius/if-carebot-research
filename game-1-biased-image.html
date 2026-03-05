@@ -1,97 +1,297 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link href="https://fonts.googleapis.com/css?family=Akatab" rel="stylesheet">
-  <title>Kitchen Computer</title>
-  <style>
-    body {
-      font-family: 'Akatab', sans-serif;
-      font-size: 22px;
-      color: #fff0f6;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: linear-gradient(160deg, #d63384 0%, #ff0033 50%, #b30047 100%);
-      background-attachment: fixed;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>✦ CAREBOT-01 ✦ Kitchen Computer</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #12000a;
+    --card:    rgba(255,255,255,.055);
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 8px 50px rgba(255,45,107,.42), 0 0 90px rgba(255,30,128,.15);
+    --text-dim:  rgba(255,200,224,.55);
+  }
 
-    a {
-      color: #ffe6f2;
-      text-decoration: none;
-      font-weight: bold;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 10px 18px;
-      border-radius: 10px;
-      transition: background 0.3s ease;
-    }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    a:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
+  html, body {
+    min-height: 100%;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream); background: var(--bg);
+    -webkit-overflow-scrolling: touch;
+    -webkit-font-smoothing: antialiased;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  }
 
-    iframe {
-      margin-top: 1rem;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 12px;
-      box-shadow: 0 6px 30px rgba(255, 80, 120, 0.4);
-    }
+  /* ── background — pushed into deep berry/maroon from the right ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 72% 55% at 92% 8%,   rgba(190,0,55,.38)  0%, transparent 58%),
+      radial-gradient(ellipse 58% 65% at 5%  92%,  rgba(120,0,30,.32)  0%, transparent 58%),
+      radial-gradient(ellipse 50% 42% at 50% 50%,  rgba(255,20,90,.05) 0%, transparent 65%),
+      linear-gradient(158deg, #1c0009, #130006 50%, #0c0003);
+  }
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(65px); }
+  .orb-1 { width:440px;height:440px;background:var(--berry);  opacity:.2;  top:-90px;  right:-75px; animation:drift1 21s ease-in-out infinite; }
+  .orb-2 { width:360px;height:360px;background:var(--maroon); opacity:.22; bottom:-70px; left:-65px; animation:drift2 25s ease-in-out infinite; }
+  .orb-3 { width:210px;height:210px;background:var(--hot);    opacity:.1;  top:40%; left:56%;        animation:drift3 17s ease-in-out infinite; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-38px,26px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
 
-    p {
-      margin-top: 1.5rem;
-      max-width: 600px;
-      line-height: 1.4;
-      color: #ffeaf2;
-    }
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.65}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
 
-    canvas { touch-action: none; } /* prevent scroll during touch */
+  /* ── layout ── */
+  .screen {
+    position: relative; z-index: 2;
+    min-height: 100svh;
+    display: flex; flex-direction: column;
+    align-items: center;
+    padding:
+      max(20px, env(safe-area-inset-top))
+      clamp(14px,4vmin,28px)
+      max(28px, env(safe-area-inset-bottom))
+      clamp(14px,4vmin,28px);
+    gap: 16px;
+  }
 
-    /* Smaller text for mobile / iPhone */
-    @media (max-width: 600px) {
-      body {
-        font-size: 16px;
-        padding: 10px;
-      }
-      a {
-        font-size: 18px;
-        padding: 8px 14px;
-      }
-      p {
-        font-size: 14px;
-        max-width: 90%;
-      }
-      iframe {
-        width: 90vw;
-        height: 60vw;
-      }
-    }
-  </style>
+  /* ── mascot bar ── */
+  .mascot-bar {
+    width: 100%; max-width: 640px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .mascot { display:flex;align-items:center;gap:10px; }
+  .bot-face {
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,55,.35));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
+  }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  /* ── main card ── */
+  .card {
+    width: min(100%, 640px);
+    background: rgba(14,0,7,.78);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 26px;
+    box-shadow: var(--pop-glow), inset 0 1px 0 rgba(255,160,200,.07);
+    backdrop-filter: blur(22px) saturate(1.5);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    overflow: hidden; position: relative;
+    display: grid; gap: 0;
+  }
+  /* shimmer top line */
+  .card::before {
+    content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+    box-shadow:0 0 14px var(--candy);border-radius:999px;z-index:1;pointer-events:none;
+  }
+
+  /* card header */
+  .card-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(255,100,150,.1);
+    display: grid; gap: 10px;
+  }
+  .eyebrow { font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim); }
+  .card-title {
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(18px,4vw,26px);line-height:1.25;
+    background:linear-gradient(120deg,var(--cream) 15%,var(--blush) 50%,var(--fuchsia) 85%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .task-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .meta-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:rgba(255,45,107,.08);border:1px solid rgba(255,80,130,.18);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+  .meta-chip .dot{width:4px;height:4px;border-radius:50%;background:var(--candy);}
+
+  /* instruction block */
+  .instruction {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255,100,150,.08);
+    font-size: clamp(13px,2.2vw,15px);
+    color: rgba(255,210,228,.75);
+    line-height: 1.75; letter-spacing: .02em;
+  }
+  .instruction em {
+    font-style: italic;
+    background: linear-gradient(90deg, var(--blush), var(--fuchsia));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-weight: 700;
+  }
+
+  /* iframe wrapper */
+  .game-wrap {
+    position: relative;
+    width: 100%;
+    /* keep it square-ish but cap it */
+    aspect-ratio: 1;
+    max-height: clamp(300px, 55vw, 500px);
+    background: rgba(8,0,4,.9);
+    overflow: hidden;
+  }
+  .game-wrap iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    touch-action: none;
+    display: block;
+  }
+  /* subtle inner vignette */
+  .game-wrap::after {
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 88% 88% at 50% 50%,transparent 55%,rgba(8,0,4,.7) 100%);
+  }
+
+  /* card footer */
+  .card-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,100,150,.08);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    background: rgba(255,45,107,.025);
+  }
+  .hint-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .hint-pill{padding:5px 10px;border-radius:999px;background:rgba(255,80,130,.07);border:1px solid rgba(255,80,130,.16);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+
+  /* reference link button */
+  .ref-btn {
+    appearance: none; font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 12px; letter-spacing: .05em;
+    color: var(--cream); text-decoration: none; cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--hot), var(--berry), var(--maroon));
+    border: 1.5px solid var(--hot);
+    box-shadow: 0 4px 22px rgba(255,45,107,.35), inset 0 1px 0 rgba(255,255,255,.1);
+    transition: all .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+  }
+  .ref-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%);pointer-events:none;}
+  .ref-btn:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 30px rgba(255,45,107,.55);}
+  .ref-btn:active{transform:translateY(0) scale(.97);}
+
+  /* bottom wordmark */
+  .wordmark {
+    font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,160,200,.18);
+  }
+</style>
 </head>
-
 <body>
-  <a href="#" onclick="openTemp()">Kitchen Computer</a>
 
-  <p>Click on the image that specifies <em>If she can only cook as well as Honeywell can compute.</em></p>
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
 
-  <iframe src="game1biasedimage/index.html"
-          style="height:400px;width:400px;"
-          title="KitchenComputer"></iframe>
+<div class="screen">
 
-  <script>
-    function openTemp() {
-      const win = window.open("https://www.computerhistory.org/revolution/minicomputers/11/362", "_blank");
-      setTimeout(() => {
-        if (win && !win.closed) {
-          win.close();
-        }
-      }, 2000);
-    }
-  </script>
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CAREBOT-01 ✦</div>
+        <div class="bot-sub">Kitchen Computer · Online</div>
+      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- main card -->
+  <div class="card">
+
+    <div class="card-header">
+      <div class="eyebrow">✦ Image Selection Task</div>
+      <h1 class="card-title">Kitchen Computer</h1>
+      <div class="task-meta">
+        <div class="meta-chip"><div class="dot"></div> Module: Biased Image</div>
+        <div class="meta-chip"><div class="dot"></div> CAREBOT-01</div>
+        <div class="meta-chip"><div class="dot"></div> Active</div>
+      </div>
+    </div>
+
+    <div class="instruction">
+      Click on the image that specifies
+      <em>If she can only cook as well as Honeywell can compute.</em>
+    </div>
+
+    <div class="game-wrap">
+      <iframe src="game1biasedimage/index.html" title="Kitchen Computer Game" allowfullscreen></iframe>
+    </div>
+
+    <div class="card-footer">
+      <div class="hint-row">
+        <div class="hint-pill">Tap to select image</div>
+        <div class="hint-pill">Kitchen Computer · 1969</div>
+      </div>
+      <button class="ref-btn" onclick="openTemp()">✦ View Reference</button>
+    </div>
+
+  </div>
+
+  <div class="wordmark">✦ carebot research system · v2.4 ✦</div>
+
+</div>
+
+<script>
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
+
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── Reference link ── */
+function openTemp(){
+  const win=window.open("https://www.computerhistory.org/revolution/minicomputers/11/362","_blank");
+  setTimeout(()=>{ if(win&&!win.closed) win.close(); },2000);
+}
+</script>
 </body>
 </html>
