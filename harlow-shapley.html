@@ -228,6 +228,8 @@
   .target-span{cursor:pointer;border-radius:5px;padding:1px 3px;transition:background .25s,box-shadow .25s,color .25s;}
   .target-span:hover{background:rgba(255,213,0,.12);}
   .target-span.highlighted{background:rgba(255,213,0,.32);color:#fff5c0;box-shadow:0 0 10px rgba(255,213,0,.28);}
+  @keyframes flashRed{0%,100%{background:transparent;box-shadow:none}40%,60%{background:rgba(255,20,20,.2);box-shadow:0 0 24px rgba(255,0,0,.35) inset;}}
+  .flash-error{animation:flashRed .6s ease;border-radius:12px;}
 
   .giggle-note{margin-top:14px;padding:12px 16px;border-radius:12px;background:rgba(255,45,107,.07);border:1px solid rgba(255,130,180,.2);font-size:12px;color:rgba(255,180,210,.65);letter-spacing:.04em;line-height:1.7;}
   .giggle-note span{color:var(--candy);font-weight:700;}
@@ -368,7 +370,7 @@
         <div class="audio-label">✦ Your Task</div>
         <div class="instr-box">
           <strong>Step 1:</strong> Listen to the audio clip above.<br>
-          <strong>Step 2:</strong> Click each target phrase in the checklist (or in the transcript) to highlight it.<br>
+          <strong>Step 2:</strong> <strong>Click and drag to select</strong> each target phrase directly in the transcript below — it will highlight automatically when recognised.<br>
           <strong>Step 3:</strong> While listening, find the <strong style="color:var(--candy)">giggle</strong> that occurs right after the speaker says <span class="target-badge">girl hours</span> — note when it happens.<br><br>
           Phrases to highlight: &nbsp;
           <span class="target-badge">assistants</span> &nbsp;
@@ -390,24 +392,24 @@
 
     <!-- checklist -->
     <div class="checklist">
-      <div class="checklist-label">✦ Target Phrases — click to toggle highlight</div>
-      <div class="check-item" id="ci-assistants" onclick="togglePhrase('assistants')">
+      <div class="checklist-label">✦ Progress — highlights update as you select text</div>
+      <div class="check-item" id="ci-assistants">
         <div class="ci-icon">○</div>
         <span class="ci-phrase">"assistants"</span>
       </div>
-      <div class="check-item" id="ci-girl" onclick="togglePhrase('girl')">
+      <div class="check-item" id="ci-girl">
         <div class="ci-icon">○</div>
         <span class="ci-phrase">"girl"</span>
       </div>
-      <div class="check-item" id="ci-girl-hours" onclick="togglePhrase('girl-hours')">
+      <div class="check-item" id="ci-girl-hours">
         <div class="ci-icon">○</div>
         <span class="ci-phrase">"girl hours"</span>
       </div>
-      <div class="check-item" id="ci-hunching" onclick="togglePhrase('hunching')">
+      <div class="check-item" id="ci-hunching">
         <div class="ci-icon">○</div>
         <span class="ci-phrase">"I don't think I had much help in the hunching"</span>
       </div>
-      <div class="check-item" id="ci-swarming" onclick="togglePhrase('swarming')">
+      <div class="check-item" id="ci-swarming">
         <div class="ci-icon">○</div>
         <span class="ci-phrase">"swarming with these assistants"</span>
       </div>
@@ -417,17 +419,7 @@
     <div class="transcript-section">
       <div class="transcript-label">✦ Transcript — click phrases above or directly in the text</div>
       <div class="transcript" id="transcript">
-        The discussion mostly was with Gretchen and maybe one or two
-        <span class="target-span" data-key="assistants" id="ts-assistants">assistants</span>.
-        You see, it took a tremendous lot of measures. I introduced the term
-        "<span class="target-span" data-key="girl-hours" id="ts-girl-hours">girl hours</span>,"
-        and it would take a lot of
-        <span class="target-span" data-key="girl" id="ts-girl">girl</span>
-        hours to solve some of the problems. In fact, one job took several kilo-girl hours to get it through. So I should say that I had help on a lot of the details. But
-        <span class="target-span" data-key="hunching" id="ts-hunching">I don't think I had much help in the hunching</span>.
-        Weiner: This was at Mount Wilson? Shapley: Both places. But not many girl hours at Mount Wilson. Very few. I had one full time girl assistant as I got along, but there were very few at Mount Wilson whereas Harvard was just
-        <span class="target-span" data-key="swarming" id="ts-swarming">swarming with these assistants</span>.
-        That's why we got somewhere, got it done.
+        Harlow Shapley on his <span class="target-span" data-key="assistants">assistants</span> and "<span class="target-span" data-key="girl-hours">girl hours</span>." ORAL HISTORY AUDIO EXCERPT Harlow Shapley on his <span class="target-span" data-key="assistants">assistants</span> and "<span class="target-span" data-key="girl-hours">girl hours</span>." Weiner: You talk of the work on globular clusters and the revolutionary implications of it which you pursued and published. And you talked of"we." Now, was this a solo effort or were there others involved with you in a discussion of this? You indicated that there wasn't too much discussion, but this was a big thing. Shapley: The discussion mostly was with Gretchen and maybe one or two <span class="target-span" data-key="assistants">assistants</span>. You see, it took a tremendous lot of measures. I introduced the term "<span class="target-span" data-key="girl-hours">girl hours</span>," and it would take a lot of <span class="target-span" data-key="girl">girl</span> hours to solve some of the problems. In fact, one job took several kilo-<span class="target-span" data-key="girl">girl</span> hours to get it through. So I should say that I had help on alot of the details. But <span class="target-span" data-key="hunching">I don't think I had much help in the hunching</span>. Weiner: This was at Mount Wilson? Shapley: Both places. But not many <span class="target-span" data-key="girl-hours">girl hours</span> at Mount Wilson. Very few. I had one full time <span class="target-span" data-key="girl">girl</span> <span class="target-span" data-key="assistants">assistant</span> as I got along, but there were very few at Mount Wilson whereas Harvard was just <span class="target-span" data-key="swarming">swarming with these assistants</span>. That's why wegot somewhere, got it done. And elsewhere people had <span class="target-span" data-key="assistants">assistants</span>. But I was at the observatory at Mount Wilson for many years when nobody was expected to have <span class="target-span" data-key="assistants">assistants</span>.
       </div>
       <div class="giggle-note">
         🎵 <span>Audio cue:</span> Listen for the <strong style="color:var(--candy)">giggle</strong> that occurs immediately after the speaker says "girl hours" — this is a key moment in the recording. Note the timestamp.
@@ -562,36 +554,60 @@ closeOverlayBtn.addEventListener('click',e=>{ e.preventDefault(); closeRedir(); 
 
 /* ── Highlight logic ── */
 const phraseMap={
-  'assistants': { ci:'ci-assistants', ts:'ts-assistants' },
-  'girl':       { ci:'ci-girl',       ts:'ts-girl' },
-  'girl-hours': { ci:'ci-girl-hours', ts:'ts-girl-hours' },
-  'hunching':   { ci:'ci-hunching',   ts:'ts-hunching' },
-  'swarming':   { ci:'ci-swarming',   ts:'ts-swarming' },
+  'assistants': { ci:'ci-assistants', targets:['assistant','assistants'] },
+  'girl':       { ci:'ci-girl',       targets:['girl'] },
+  'girl-hours': { ci:'ci-girl-hours', targets:['girl hours','girl hour'] },
+  'hunching':   { ci:'ci-hunching',   targets:['hunching','help in the hunching','had help in the hunching'] },
+  'swarming':   { ci:'ci-swarming',   targets:['swarming','swarming with'] },
 };
 const highlighted=new Set();
 
-function togglePhrase(key){
-  const{ci,ts}=phraseMap[key];
-  const ciEl=document.getElementById(ci);
-  const tsEl=document.getElementById(ts);
-  if(highlighted.has(key)){
-    highlighted.delete(key);
-    ciEl.classList.remove('done');
-    ciEl.querySelector('.ci-icon').textContent='○';
-    tsEl.classList.remove('highlighted');
-  } else {
-    highlighted.add(key);
-    ciEl.classList.add('done');
-    ciEl.querySelector('.ci-icon').textContent='✦';
-    tsEl.classList.add('highlighted');
+function fuzzyMatch(selection){
+  const sel=selection.toLowerCase().replace(/\s+/g,' ').trim();
+  if(!sel||sel.length<2) return null;
+  for(const [key,{targets}] of Object.entries(phraseMap)){
+    if(highlighted.has(key)) continue;
+    for(const t of targets){
+      const tNorm=t.toLowerCase().replace(/\s+/g,' ').trim();
+      if(sel.includes(tNorm)||tNorm.includes(sel)) return key;
+    }
   }
+  return null;
+}
+
+function markPhrase(key){
+  if(highlighted.has(key)) return;
+  highlighted.add(key);
+  const ciEl=document.getElementById(phraseMap[key].ci);
+  ciEl.classList.add('done');
+  ciEl.querySelector('.ci-icon').textContent='✦';
+  document.querySelectorAll(`.target-span[data-key="${key}"]`)
+    .forEach(s=>s.classList.add('highlighted'));
   updateProgress();
 }
 
-// also clickable directly in transcript
-document.querySelectorAll('.target-span').forEach(span=>{
-  span.addEventListener('click',()=>{ const k=span.getAttribute('data-key'); if(k) togglePhrase(k); });
-});
+function flashError(){
+  const t=document.getElementById('transcript');
+  t.classList.add('flash-error');
+  setTimeout(()=>t.classList.remove('flash-error'),600);
+}
+
+document.getElementById('transcript').addEventListener('mouseup',handleSelectionEnd);
+document.getElementById('transcript').addEventListener('touchend',()=>setTimeout(handleSelectionEnd,50));
+
+function handleSelectionEnd(){
+  const sel=window.getSelection();
+  if(!sel||sel.isCollapsed) return;
+  const text=sel.toString();
+  const key=fuzzyMatch(text);
+  if(key){
+    markPhrase(key);
+  } else {
+    const trimmed=text.replace(/\s+/g,' ').trim();
+    if(trimmed.length>1) flashError();
+  }
+  setTimeout(()=>window.getSelection().removeAllRanges(),300);
+}
 
 function updateProgress(){
   const count=highlighted.size, total=Object.keys(phraseMap).length;
@@ -603,8 +619,9 @@ function updateProgress(){
 function calcArea(){
   let total=0;
   for(const key of highlighted){
-    const el=document.getElementById(phraseMap[key].ts);
-    if(el){ const r=el.getBoundingClientRect(); total+=r.width*r.height; }
+    document.querySelectorAll(`.target-span[data-key="${key}"]`).forEach(el=>{
+      const r=el.getBoundingClientRect(); total+=r.width*r.height;
+    });
   }
   return Math.round(total);
 }
