@@ -1,65 +1,309 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Microtask Reward</title>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        background-color: #8b0000; /* deep red */
-      }
-      button {
-        background-color: #800080; /* purple */
-        color: pink;
-        border: none;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
-      }
-      button:hover {
-        transform: scale(1.1);
-        background-color: #9932cc; /* lighter purple */
-      }
-    </style>
-  </head>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>✦ CARETECH ✦ Microtask Reward</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #1a0012;
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.22), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 8px 60px rgba(255,45,107,.5), 0 0 120px rgba(255,30,128,.2);
+    --text-dim:  rgba(255,200,224,.55);
+  }
 
-  <body>
-    <script>
-      let button;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      function setup() {
-        createCanvas(windowWidth, windowHeight);
-        textAlign(CENTER, CENTER);
-        textFont('Helvetica');
-        noStroke();
+  html, body {
+    height: 100%; min-height: 100%;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream); background: var(--bg);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  }
 
-        // Create button
-        button = createButton("Click for more work!");
-        button.position(width / 2 - 120, height / 2 + 60);
-        button.mousePressed(() => {
-          window.location.href = "hit.html"; // 🔗 Change this link
-        });
-      }
+  /* ── background ── */
+  .bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 75% 60% at 15% 10%,  rgba(255,20,90,.28)  0%, transparent 58%),
+      radial-gradient(ellipse 60% 70% at 85% 85%,  rgba(160,0,60,.3)    0%, transparent 58%),
+      radial-gradient(ellipse 50% 45% at 50% 50%,  rgba(255,30,120,.06) 0%, transparent 65%),
+      linear-gradient(158deg, #220010, #180008 50%, #0f0005);
+  }
 
-      function draw() {
-        background("#8B0000"); // deep red
-        fill("pink");
-        textSize(48);
-        text("You earned $0.01!", width / 2, height / 2 - 60);
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(70px); }
+  .orb-1 { width:500px;height:500px;background:var(--hot);    opacity:.2;  top:-130px; left:-100px;  animation:drift1 22s ease-in-out infinite; }
+  .orb-2 { width:420px;height:420px;background:var(--fuchsia);opacity:.16; bottom:-90px;right:-80px; animation:drift2 26s ease-in-out infinite; }
+  .orb-3 { width:260px;height:260px;background:var(--candy);  opacity:.12; top:35%; left:55%;        animation:drift3 18s ease-in-out infinite; }
+  .orb-4 { width:180px;height:180px;background:var(--berry);  opacity:.18; top:60%; left:20%;        animation:drift1 14s ease-in-out infinite reverse; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(45px,30px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-24px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-20px,16px)}66%{transform:translate(16px,-12px)}}
 
-        fill("#800000"); // maroon
-        textSize(32);
-        text("Great work! Click to get more work!", width / 2, height / 2);
-      }
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.8}85%{opacity:.45}100%{opacity:0;transform:translateY(-160px) scale(1.2) rotate(200deg)}}
 
-      function windowResized() {
-        resizeCanvas(windowWidth, windowHeight);
-        button.position(width / 2 - 120, height / 2 + 60);
-      }
-    </script>
-  </body>
+  /* ── screen ── */
+  .screen {
+    position: relative; z-index: 2;
+    height: 100svh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between;
+    padding:
+      max(18px, env(safe-area-inset-top))
+      clamp(16px,4vmin,32px)
+      max(18px, env(safe-area-inset-bottom))
+      clamp(16px,4vmin,32px);
+    gap: 0;
+  }
+
+  /* ── top bar ── */
+  .top-bar {
+    width: 100%; max-width: 540px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .mascot { display:flex;align-items:center;gap:10px; }
+  .bot-face {
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,60,.35));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
+  }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  /* ── hero area ── */
+  .hero {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: clamp(20px,3vmin,32px);
+    flex: 1;
+    text-align: center;
+  }
+
+  /* coin / reward visual */
+  .reward-ring {
+    position: relative;
+    width: clamp(110px,22vmin,160px);
+    height: clamp(110px,22vmin,160px);
+  }
+  .reward-ring-outer {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--hot), var(--fuchsia), var(--candy), var(--blush), var(--hot));
+    animation: spinRing 6s linear infinite;
+    filter: blur(1px);
+  }
+  @keyframes spinRing{to{transform:rotate(360deg)}}
+  .reward-ring-inner {
+    position: absolute; inset: 4px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse 80% 80% at 40% 38%, rgba(255,90,140,.35), rgba(14,0,6,.96));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--pop-glow);
+    font-size: clamp(36px,8vmin,56px);
+    animation: coinBounce 3s ease-in-out infinite;
+  }
+  @keyframes coinBounce{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.07) translateY(-8px)}}
+
+  /* reward text */
+  .reward-amount {
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(52px,12vmin,92px);
+    line-height: 1;
+    background: linear-gradient(135deg, var(--cream) 5%, var(--blush) 35%, var(--fuchsia) 65%, var(--candy) 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 24px rgba(255,45,107,.5));
+    animation: textPulse 3s ease-in-out infinite;
+    letter-spacing: -.02em;
+  }
+  @keyframes textPulse{0%,100%{filter:drop-shadow(0 0 24px rgba(255,45,107,.5))}50%{filter:drop-shadow(0 0 44px rgba(255,45,107,.85)) drop-shadow(0 0 80px rgba(255,30,128,.3))}}
+
+  .reward-label {
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--text-dim); margin-top: -8px;
+  }
+
+  /* message card */
+  .message-card {
+    background: rgba(14,0,8,.72);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 22px;
+    box-shadow: var(--soft-glow), inset 0 1px 0 rgba(255,160,200,.07);
+    backdrop-filter: blur(20px) saturate(1.4);
+    padding: clamp(20px,4vmin,32px) clamp(28px,5vmin,48px);
+    max-width: 480px; width: 100%;
+    position: relative; overflow: hidden;
+  }
+  .message-card::before {
+    content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+    box-shadow:0 0 14px var(--candy);border-radius:999px;
+  }
+  .message-heading {
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(20px,4vw,28px);
+    background: linear-gradient(120deg, var(--blush) 20%, var(--fuchsia) 60%, var(--candy) 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 10px; line-height: 1.2;
+  }
+  .message-sub {
+    font-size: clamp(13px,2.2vw,16px);
+    color: rgba(255,210,228,.7);
+    line-height: 1.65; letter-spacing: .02em;
+  }
+  .message-sub em {
+    color: var(--blush); font-style: normal; font-weight: 700;
+  }
+
+  /* decorative chips below heading */
+  .chips { display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px; }
+  .chip {
+    padding: 5px 12px; border-radius: 999px;
+    background: rgba(255,45,107,.1); border: 1px solid rgba(255,100,160,.24);
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim);
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .chip-dot { width:4px;height:4px;border-radius:50%;background:var(--rose); }
+
+  /* CTA button */
+  .cta-btn {
+    appearance: none; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(15px,2.8vw,19px); letter-spacing: .04em;
+    color: var(--cream); cursor: pointer; text-decoration: none; border: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: clamp(14px,2.5vmin,18px) clamp(32px,6vmin,52px);
+    border-radius: 18px; max-width: 420px; width: 100%;
+    background: linear-gradient(135deg, var(--hot) 0%, var(--berry) 55%, var(--maroon) 100%);
+    border: 1.5px solid var(--hot);
+    box-shadow: 0 6px 32px rgba(255,45,107,.45), inset 0 1px 0 rgba(255,255,255,.12);
+    transition: all .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+    animation: ctaPulse 2.8s ease-in-out infinite;
+  }
+  .cta-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 55%);pointer-events:none;}
+  @keyframes ctaPulse{0%,100%{box-shadow:0 6px 32px rgba(255,45,107,.45),inset 0 1px 0 rgba(255,255,255,.12)}50%{box-shadow:0 10px 52px rgba(255,45,107,.7),0 0 80px rgba(255,30,128,.22),inset 0 1px 0 rgba(255,255,255,.12)}}
+  .cta-btn:hover{transform:translateY(-3px) scale(1.04);animation:none;background:linear-gradient(135deg,var(--fuchsia),var(--hot) 55%,var(--berry));box-shadow:0 12px 44px rgba(255,45,107,.65);}
+  .cta-btn:active{transform:translateY(0) scale(.97);animation:none;}
+
+  /* ── bottom wordmark ── */
+  .wordmark {
+    font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,160,200,.18);
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="orb orb-4"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- top bar -->
+  <div class="top-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CARETECH ✦</div>
+        <div class="bot-sub">Reward · Microtask System</div>
+      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- hero -->
+  <div class="hero">
+
+    <!-- spinning reward coin -->
+    <div class="reward-ring">
+      <div class="reward-ring-outer"></div>
+      <div class="reward-ring-inner">💰</div>
+    </div>
+
+    <!-- amount -->
+    <div>
+      <div class="reward-amount">$0.01</div>
+      <div class="reward-label">✦ earned · task complete ✦</div>
+    </div>
+
+    <!-- message card -->
+    <div class="message-card">
+      <div class="message-heading">Great work! ✦</div>
+      <div class="message-sub">
+        You completed this task and earned <em>$0.01</em>.<br>
+        Ready for your next assignment?
+      </div>
+      <div class="chips">
+        <div class="chip"><div class="chip-dot"></div> Reward confirmed</div>
+        <div class="chip"><div class="chip-dot"></div> CARETECH · Active</div>
+        <div class="chip"><div class="chip-dot"></div> More work available</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <a class="cta-btn" href="hit.html">
+      ✦ Click for more work! ✦
+    </a>
+
+  </div>
+
+  <div class="wordmark">✦ caretech research system · v2.4 ✦</div>
+
+</div>
+
+<script>
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
+
+/* ── Sparkles — extra dense for celebration ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀','$','¢','★'];
+  for(let i=0;i<44;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-80+'px';
+    s.style.fontSize=(8+Math.random()*14)+'px';
+    s.style.color=`hsl(${310+Math.random()*55},80%,${68+Math.random()*22}%)`;
+    s.style.animationDuration=(5+Math.random()*12)+'s';
+    s.style.animationDelay=(Math.random()*14)+'s';
+    wrap.appendChild(s);
+  }
+})();
+</script>
+</body>
 </html>
