@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ AI Career Coach · Engagement Activity ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose:#ff5c8a; --hot:#ff2d6b; --candy:#ff85b3; --blush:#ffb3cf;
+  --cream:#fff5f8; --berry:#c4005a; --crimson:#8b0030; --maroon:#4a001a;
+  --fuchsia:#ff1f80; --bg:#0e0008;
+  --surface:rgba(18,0,10,.92); --surface2:rgba(28,0,15,.95);
+  --border:rgba(255,140,185,.2); --border2:rgba(255,80,150,.5);
+  --text:#fff5f8; --muted:rgba(255,190,220,.5); --muted2:rgba(255,200,230,.7);
+  --fh:'Nunito',sans-serif; --fb:'Quicksand',sans-serif;
+  --soft-glow:0 4px 30px rgba(255,45,107,.2);
+  --pop-glow:0 8px 50px rgba(255,45,107,.4),0 0 80px rgba(200,0,80,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  min-height:100%;
+  font-family:var(--fb);font-weight:600;
+  color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+}
+
+/* ── background ── */
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 55% at 90% 5%,rgba(180,0,55,.35) 0%,transparent 58%),
+    radial-gradient(ellipse 55% 60% at 5% 95%,rgba(110,0,28,.3) 0%,transparent 58%),
+    radial-gradient(ellipse 45% 40% at 50% 50%,rgba(255,20,90,.04) 0%,transparent 65%),
+    linear-gradient(158deg,#1c0009,#130006 50%,#0c0003);
+}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+.orb-1{width:440px;height:440px;background:var(--berry);opacity:.18;top:-90px;right:-75px;animation:drift1 21s ease-in-out infinite;}
+.orb-2{width:360px;height:360px;background:var(--maroon);opacity:.2;bottom:-70px;left:-65px;animation:drift2 25s ease-in-out infinite;}
+.orb-3{width:200px;height:200px;background:var(--hot);opacity:.09;top:40%;left:55%;animation:drift3 17s ease-in-out infinite;}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,24px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(28px,-18px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-14px,10px)}66%{transform:translate(10px,-8px)}}
+
+.sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.3}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+
+/* ── layout ── */
+.screen{
+  position:relative;z-index:2;
+  max-width:680px;margin:0 auto;
+  padding:clamp(16px,3vmin,28px) clamp(14px,4vmin,24px) 40px;
+  display:flex;flex-direction:column;gap:16px;
+}
+
+/* ── mascot bar ── */
+.mascot-bar{display:flex;align-items:center;justify-content:space-between;}
+.mascot{display:flex;align-items:center;gap:10px;}
+.bot-face{
+  width:42px;height:42px;border-radius:13px;
+  background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,55,.35));
+  border:1.5px solid var(--border2);box-shadow:var(--soft-glow);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  animation:wobble 4s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+.bot-name{font-family:var(--fh);font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:1px;}
+.time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:10px;letter-spacing:.1em;color:var(--muted);}
+.time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+/* ── glass card ── */
+.card{
+  background:rgba(14,0,7,.82);
+  border:1.5px solid var(--border2);
+  border-radius:22px;
+  box-shadow:var(--pop-glow),inset 0 1px 0 rgba(255,160,200,.06);
+  backdrop-filter:blur(22px) saturate(1.5);
+  -webkit-backdrop-filter:blur(22px) saturate(1.5);
+  overflow:hidden;position:relative;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  box-shadow:0 0 14px var(--candy);border-radius:999px;z-index:1;pointer-events:none;
+}
+
+/* ── video ── */
+.video-header{
+  padding:16px 22px 14px;
+  border-bottom:1px solid rgba(255,100,150,.1);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.video-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);}
+.video-title{font-family:var(--fh);font-weight:900;font-size:clamp(15px,3vw,19px);
+  background:linear-gradient(120deg,var(--cream) 15%,var(--blush) 55%,var(--fuchsia) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.vid-btn{
+  appearance:none;font-family:var(--fh);font-weight:800;font-size:11px;letter-spacing:.04em;
+  color:var(--cream);border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 16px;border-radius:12px;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+  -webkit-tap-highlight-color:transparent;
+}
+.vid-btn-primary{background:linear-gradient(135deg,var(--hot),var(--berry));box-shadow:0 3px 14px rgba(255,45,107,.35);}
+.vid-btn-secondary{background:rgba(255,255,255,.06);border:1px solid var(--border);}
+.vid-btn:hover{transform:translateY(-2px) scale(1.04);}
+.video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.video-wrap.watched{max-height:0;overflow:hidden;transition:max-height .5s ease;}
+
+/* ── main card body ── */
+.card-body{padding:26px 28px;}
+.eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:800;}
+.card-title{
+  font-family:var(--fh);font-weight:900;font-size:clamp(17px,3.5vw,22px);line-height:1.3;
+  background:linear-gradient(120deg,var(--cream) 15%,var(--blush) 55%,var(--fuchsia) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:10px;
+}
+.card-desc{font-size:.92rem;color:var(--muted2);line-height:1.7;margin-bottom:24px;}
+
+/* ── game area ── */
+.game-prompt{
+  font-family:var(--fh);font-weight:800;font-size:.95rem;
+  color:var(--blush);text-align:center;margin-bottom:18px;letter-spacing:.02em;
+}
+.choice-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+.choice-btn{
+  appearance:none;font-family:var(--fh);font-weight:900;font-size:clamp(22px,5vw,28px);
+  width:clamp(80px,22vw,100px);height:clamp(80px,22vw,100px);
+  border-radius:20px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,rgba(255,45,107,.18),rgba(180,0,55,.28));
+  border:1.5px solid var(--border2);
+  box-shadow:var(--soft-glow);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
+  color:var(--cream);
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+}
+.choice-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.08),transparent 55%);pointer-events:none;}
+.choice-btn:hover{transform:translateY(-4px) scale(1.08);box-shadow:var(--pop-glow);border-color:var(--candy);}
+.choice-btn:active{transform:scale(.95);}
+.choice-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:800;}
+
+/* ── result card ── */
+.result-box{
+  display:none;
+  padding:20px 22px;
+  background:linear-gradient(135deg,rgba(255,45,107,.1),rgba(140,0,45,.15));
+  border:1.5px solid var(--border2);
+  border-radius:16px;
+  animation:resultIn .4s cubic-bezier(.34,1.4,.64,1) forwards;
+}
+@keyframes resultIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.result-box.visible{display:block;}
+.result-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.result-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:999px;
+  background:rgba(255,45,107,.1);border:1px solid var(--border2);
+  font-size:11px;letter-spacing:.08em;font-weight:800;font-family:var(--fh);
+  color:var(--blush);
+}
+.outcome-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:999px;
+  font-family:var(--fh);font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:14px;
+}
+.outcome-win{background:linear-gradient(135deg,rgba(80,200,80,.2),rgba(40,160,40,.15));border:1px solid rgba(80,220,80,.4);color:#7fff7f;}
+.outcome-lose{background:linear-gradient(135deg,rgba(255,45,107,.2),rgba(180,0,55,.15));border:1px solid var(--border2);color:var(--candy);}
+.outcome-tie{background:linear-gradient(135deg,rgba(163,123,185,.2),rgba(140,80,160,.15));border:1px solid rgba(163,123,185,.4);color:#d4aaff;}
+.result-message{
+  font-size:.95rem;line-height:1.7;color:var(--muted2);
+  font-style:italic;
+}
+
+/* ── status / footer ── */
+.status-bar{
+  padding:14px 22px;
+  border-top:1px solid rgba(255,100,150,.08);
+  background:rgba(255,45,107,.025);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+}
+.status-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.status-chip{
+  padding:4px 10px;border-radius:999px;
+  background:rgba(255,80,130,.06);border:1px solid rgba(255,80,130,.15);
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  font-weight:800;
+}
+.momentum-score{
+  font-family:var(--fh);font-weight:900;font-size:11px;letter-spacing:.1em;
+  color:var(--candy);
+}
+
+/* ── advance card ── */
+.advance-card{
+  background:linear-gradient(135deg,rgba(140,0,45,.88),rgba(60,0,18,.96));
+  border:1.5px solid var(--border2);border-radius:20px;
+  padding:22px 28px;text-align:center;position:relative;overflow:hidden;
+  box-shadow:var(--pop-glow);
+}
+.advance-card::before{
+  content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  box-shadow:0 0 12px var(--candy);border-radius:999px;
+}
+.advance-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:800;}
+.advance-title{
+  font-family:var(--fh);font-weight:900;font-size:clamp(15px,3vw,18px);
+  background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:16px;
+}
+.btn-advance{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  font-family:var(--fh);font-weight:800;font-size:14px;letter-spacing:.05em;
+  color:var(--cream);text-decoration:none;
+  background:linear-gradient(135deg,var(--hot),var(--berry),var(--maroon));
+  border:1.5px solid var(--hot);border-radius:16px;padding:13px 28px;
+  box-shadow:0 4px 22px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.1);
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
+  position:relative;overflow:hidden;
+}
+.btn-advance::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%);pointer-events:none;}
+.btn-advance:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 36px rgba(255,45,107,.55);}
+.btn-advance:active{transform:scale(.97);}
+
+.wordmark{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,160,200,.15);text-align:center;padding-bottom:8px;}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🎯</div>
+      <div>
+        <div class="bot-name">CAREBOT · AI Career Coach ✦</div>
+        <div class="bot-sub">Engagement Activity · Online</div>
+      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- video card -->
+  <div class="card">
+    <div class="video-header">
+      <div>
+        <div class="video-eyebrow">✦ Watch First</div>
+        <div class="video-title">AI Career Coach</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="vid-btn vid-btn-primary" id="doneWatchingBtn" onclick="collapseVideo()">Done watching</button>
+        <button class="vid-btn vid-btn-secondary" id="rewatchBtn" onclick="rewatchVideo()" style="display:none;">Rewatch ↩</button>
+      </div>
+    </div>
+    <div class="video-wrap" id="videoWrap">
+      <iframe id="vimeoPlayer"
+        src="https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479"
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+        title="AI Career Coach">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- main game card -->
+  <div class="card">
+    <div class="card-body">
+      <div class="eyebrow">✦ Boost Your Job Search</div>
+      <h1 class="card-title">Interactive Career Strategy Game</h1>
+      <p class="card-desc">
+        We know job searching can feel overwhelming — so we built a quick engagement activity to help you sharpen your competitive edge!
+      </p>
+
+      <div class="game-prompt">Select Rock, Paper, or Scissors to optimize your career trajectory:</div>
+
+      <div class="choice-row">
+        <button class="choice-btn" onclick="play('Rock')">
+          <span>🪨</span>
+          <span class="choice-label">Rock</span>
+        </button>
+        <button class="choice-btn" onclick="play('Paper')">
+          <span>📄</span>
+          <span class="choice-label">Paper</span>
+        </button>
+        <button class="choice-btn" onclick="play('Scissors')">
+          <span>✂️</span>
+          <span class="choice-label">Scissors</span>
+        </button>
+      </div>
+
+      <!-- result -->
+      <div class="result-box" id="resultBox">
+        <div class="result-chips">
+          <div class="result-chip">You: <span id="userChoiceLabel">—</span></div>
+          <div class="result-chip">AI Coach: <span id="aiChoiceLabel">—</span></div>
+        </div>
+        <div class="outcome-badge" id="outcomeBadge"></div>
+        <div class="result-message" id="resultMessage"></div>
+      </div>
+    </div>
+
+    <!-- status bar -->
+    <div class="status-bar">
+      <div class="status-chips">
+        <div class="status-chip">Automated Engagement</div>
+        <div class="status-chip">Career Momentum Score™</div>
+        <div class="status-chip" id="playsChip">Plays: 0</div>
+      </div>
+      <div class="momentum-score" id="momentumScore">Score: —</div>
+    </div>
+  </div>
+
+  <!-- advance card -->
+  <div class="advance-card">
+    <div class="advance-eyebrow">✦ CAREBOT · Career Coach</div>
+    <div class="advance-title">Ready for your next task? ✦</div>
+    <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">✦ Advance to next task</a>
+  </div>
+
+  <div class="wordmark">✦ carebot/caretech research system · v2.4 ✦</div>
+
+</div>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+// ── Clock ──
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+// ── Sparkles ──
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+// ── Vimeo ──
+(function(){
+  if(typeof Vimeo==='undefined')return;
+  const player=new Vimeo.Player(document.getElementById('vimeoPlayer'));
+  function collapse(){
+    document.getElementById('videoWrap').classList.add('watched');
+    document.getElementById('doneWatchingBtn').style.display='none';
+    document.getElementById('rewatchBtn').style.display='';
+  }
+  player.on('ended',collapse);
+  player.on('timeupdate',d=>{if(d.percent>=.95)collapse();});
+})();
+
+function collapseVideo(){
+  document.getElementById('videoWrap').classList.add('watched');
+  document.getElementById('doneWatchingBtn').style.display='none';
+  document.getElementById('rewatchBtn').style.display='';
+}
+function rewatchVideo(){
+  document.getElementById('videoWrap').classList.remove('watched');
+  const iframe=document.getElementById('vimeoPlayer');
+  const src=iframe.src;iframe.src='';iframe.src=src;
+  document.getElementById('doneWatchingBtn').style.display='';
+  document.getElementById('rewatchBtn').style.display='none';
+}
+
+// ── Game ──
+let plays=0, wins=0, losses=0, ties=0;
+
+function play(userChoice){
+  const aiChoice=["Rock","Paper","Scissors"][Math.floor(Math.random()*3)];
+  const beats={Rock:"Scissors",Paper:"Rock",Scissors:"Paper"};
+  let outcome;
+  if(userChoice===aiChoice) outcome="Tie";
+  else if(beats[userChoice]===aiChoice) outcome="Win";
+  else outcome="Lose";
+
+  const responses={
+    Win:[
+      "Congratulations! Your strategic mindset is impressive. Unfortunately, the role has been placed on hold.",
+      "Excellent decision-making! You are clearly adaptable. Please re-upload your resume in PDF format.",
+      "Amazing! You outperformed our algorithm. Sadly, we selected an internal candidate."
+    ],
+    Lose:[
+      "Growth opportunity detected! Consider upskilling in three additional platforms.",
+      "Resilience is key! Have you tried networking more?",
+      "Market conditions are competitive. Try again tomorrow!"
+    ],
+    Tie:[
+      "Alignment detected! 1,247 other applicants made the same choice.",
+      "Great minds think alike! The position has received unprecedented interest.",
+      "Synergy achieved! Please complete this personality assessment."
+    ]
+  };
+
+  const message=responses[outcome][Math.floor(Math.random()*responses[outcome].length)];
+
+  plays++;
+  if(outcome==='Win')wins++;
+  else if(outcome==='Lose')losses++;
+  else ties++;
+
+  // Update result box
+  document.getElementById('userChoiceLabel').textContent=userChoice;
+  document.getElementById('aiChoiceLabel').textContent=aiChoice;
+
+  const badge=document.getElementById('outcomeBadge');
+  badge.className='outcome-badge';
+  if(outcome==='Win'){badge.classList.add('outcome-win');badge.textContent='✓ Win';}
+  else if(outcome==='Lose'){badge.classList.add('outcome-lose');badge.textContent='✗ Loss';}
+  else{badge.classList.add('outcome-tie');badge.textContent='⟳ Tie';}
+
+  document.getElementById('resultMessage').textContent=message;
+
+  const box=document.getElementById('resultBox');
+  box.classList.remove('visible');
+  void box.offsetWidth; // reflow to re-trigger animation
+  box.classList.add('visible');
+
+  // Update status bar
+  document.getElementById('playsChip').textContent=`Plays: ${plays}`;
+  const score=Math.floor((wins*100)+(ties*30)-(losses*10)+(plays*5));
+  document.getElementById('momentumScore').textContent=`Career Momentum Score™: ${score}`;
+}
+</script>
+</body>
+</html>
