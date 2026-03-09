@@ -145,10 +145,9 @@
   .game-wrap {
     position: relative;
     width: 100%;
-    /* keep it square-ish but cap it */
     aspect-ratio: 1;
     max-height: clamp(300px, 55vw, 500px);
-    background: rgba(8,0,4,.9);
+    background: #12000a;
     overflow: hidden;
   }
   .game-wrap iframe {
@@ -157,6 +156,8 @@
     border: 0;
     touch-action: none;
     display: block;
+    background: transparent;
+    color-scheme: dark;
   }
   /* subtle inner vignette */
   .game-wrap::after {
@@ -193,7 +194,47 @@
   .ref-btn:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 30px rgba(255,45,107,.55);}
   .ref-btn:active{transform:translateY(0) scale(.97);}
 
-  /* bottom wordmark */
+  /* ── advance card ── */
+  .advance-card {
+    width: min(100%, 640px);
+    background: linear-gradient(135deg,rgba(140,0,45,.85),rgba(70,0,22,.95));
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 20px; padding: 20px 24px;
+    text-align: center; position: relative; overflow: hidden;
+    box-shadow: var(--pop-glow);
+  }
+  .advance-card::before {
+    content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+    box-shadow:0 0 12px var(--candy);border-radius:999px;
+  }
+  .advance-eyebrow { font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;font-weight:700; }
+  .advance-title {
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(15px,3.5vw,18px);
+    background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:14px;
+  }
+  .btn-advance {
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;letter-spacing:.05em;
+    color:var(--cream);text-decoration:none;
+    background:linear-gradient(135deg,var(--hot),var(--berry),var(--maroon));
+    border:1.5px solid var(--hot);border-radius:16px;
+    padding:13px 28px;
+    box-shadow:0 4px 22px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.1);
+    transition:all .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color:transparent;
+    position:relative;overflow:hidden;
+  }
+  .btn-advance::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%);pointer-events:none;}
+  .btn-advance:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 36px rgba(255,45,107,.55);}
+  .btn-advance:active{transform:scale(.97);}
+  @keyframes advanceIn {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
   .wordmark {
     font-size:10px;letter-spacing:.2em;text-transform:uppercase;
     color:rgba(255,160,200,.18);
@@ -244,7 +285,7 @@
     </div>
 
     <div class="game-wrap">
-      <iframe src="game1biasedimage/index.html" title="Kitchen Computer Game" allowfullscreen></iframe>
+      <iframe src="game1biasedimage/index.html" title="Kitchen Computer Game" allowfullscreen id="gameFrame"></iframe>
     </div>
 
     <div class="card-footer">
@@ -255,6 +296,13 @@
       <button class="ref-btn" onclick="openTemp()">✦ View Reference</button>
     </div>
 
+  </div>
+
+  <!-- advance to next task — hidden until game signals correct click -->
+  <div class="advance-card" id="advance-card" style="display:none;animation:advanceIn .5s cubic-bezier(.34,1.4,.64,1) forwards;">
+    <div class="advance-eyebrow">✦ CAREBOT-01 · Task Complete</div>
+    <div class="advance-title">Ready for your next task?</div>
+    <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">✦ Advance to next task</a>
   </div>
 
   <div class="wordmark">✦ carebot research system · v2.4 ✦</div>
@@ -287,7 +335,29 @@ setInterval(updateClock,1000); updateClock();
   }
 })();
 
-/* ── Reference link ── */
+/* ── Inject background into iframe on load ── */
+(function(){
+  const frame = document.getElementById('gameFrame');
+  frame.addEventListener('load', () => {
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const style = doc.createElement('style');
+      style.textContent = 'html, body { background: #12000a !important; background-color: #12000a !important; }';
+      doc.head.appendChild(style);
+    } catch(e) {
+      // cross-origin restriction — can't inject, wrapper bg shows instead
+    }
+  });
+})();
+
+/* ── Listen for game win message from iframe ── */
+window.addEventListener('message', function(e) {
+  if (e.data === 'imageClicked') {
+    const card = document.getElementById('advance-card');
+    card.style.display = 'block';
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+});
 function openTemp(){
   const win=window.open("https://www.computerhistory.org/revolution/minicomputers/11/362","_blank");
   setTimeout(()=>{ if(win&&!win.closed) win.close(); },2000);
