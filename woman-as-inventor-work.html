@@ -1,343 +1,572 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Transcribe this audio file</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>✦ CAREBOT-11 ✦ Transcribe · Woman as Inventor</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* Core palette — more reds & pinks, shuffled maroons */
-    --rose:#ff5c8a;       /* rose pink */
-    --hot:#ff335c;        /* hot red-pink */
-    --candy:#ff7aa8;      /* candy pink */
-    --bubble:#ffd2e6;     /* very light pink */
-    --berry:#8e004b;      /* berry */
-    --crimson:#a1002b;    /* crimson */
-    --maroon:#5b001f;     /* maroon */
-    --wine:#6d0033;       /* wine */
-    --plum:#4c0038;       /* plum */
-    --violet:#4c0044;     /* deep violet */
-    --ink:#fff2f6;        /* page text */
-    --shadow: 0 8px 28px rgba(255, 64, 128, .28);
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #1a0012;
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 6px 44px rgba(255,45,107,.4), 0 0 80px rgba(255,30,128,.15);
+    --text-dim:  rgba(255,200,224,.55);
   }
 
-  /* Page background now leans red/pink with maroon pockets */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   html, body {
-    height: 100%;
-    margin: 0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-    color: var(--ink);
-    background:
-      radial-gradient(1200px 1000px at -10% 0%, var(--rose) 0%, transparent 55%),
-      radial-gradient(1200px 900px at 110% 10%, var(--hot) 0%, transparent 55%),
-      radial-gradient(800px 800px at 50% 110%, var(--berry) 0%, transparent 60%),
-      linear-gradient(165deg, var(--maroon), var(--wine) 45%, var(--violet));
+    min-height: 100%;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream); background: var(--bg);
+    -webkit-overflow-scrolling: touch;
+    -webkit-font-smoothing: antialiased;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
   }
 
+  .bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 55% at 18% 12%, rgba(200,0,80,.32)  0%, transparent 60%),
+      radial-gradient(ellipse 55% 65% at 82% 80%, rgba(140,0,70,.28)  0%, transparent 60%),
+      radial-gradient(ellipse 90% 40% at 50% 108%,rgba(110,0,50,.2)   0%, transparent 55%),
+      linear-gradient(160deg, #200015, #150010 50%, #0e000d);
+  }
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(62px); }
+  .orb-1 { width:420px;height:420px;background:var(--hot);    opacity:.17; top:-100px; left:-80px;  animation:drift1 20s ease-in-out infinite; }
+  .orb-2 { width:340px;height:340px;background:var(--fuchsia);opacity:.15; bottom:-70px;right:-70px; animation:drift2 24s ease-in-out infinite; }
+  .orb-3 { width:200px;height:200px;background:var(--candy);  opacity:.1;  top:40%; left:58%;        animation:drift3 16s ease-in-out infinite; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,28px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-18px,14px)}66%{transform:translate(14px,-10px)}}
+
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.65}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+
+  /* ── layout ── */
   .wrap {
-    max-width: 960px;
-    margin: clamp(16px, 4vmin, 32px) auto;
-    padding: 0 clamp(12px, 3vmin, 24px) 64px;
+    position: relative; z-index: 2;
+    max-width: 960px; margin: 0 auto;
+    padding:
+      max(20px, env(safe-area-inset-top))
+      clamp(12px,3vmin,24px)
+      calc(60px + env(safe-area-inset-bottom))
+      clamp(12px,3vmin,24px);
+    display: grid; gap: 16px;
   }
 
-  /* Title: stronger red→pink sweep */
-  .title {
-    background: linear-gradient(90deg, var(--hot), var(--rose) 40%, var(--candy));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-weight: 800;
-    letter-spacing: .2px;
-    line-height: 1.2;
-    font-size: clamp(22px, 3.8vmin + 6px, 42px);
-    margin: 10px 0 18px 0;
-    text-wrap: balance;
+  /* ── mascot bar ── */
+  .mascot-bar { display:flex;align-items:center;justify-content:space-between; }
+  .mascot { display:flex;align-items:center;gap:10px; }
+  .bot-face {
+    width:44px;height:44px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,60,.35));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
   }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:11px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
 
-  /* Cards now themed per-section by class */
-  .card {
-    border: 1px solid var(--rose);
-    background: color-mix(in oklab, rgba(255,255,255,0.04) 20%, var(--maroon) 80%);
-    box-shadow: var(--shadow);
-    padding: clamp(14px, 2.5vmin, 20px);
-    border-radius: 18px;
-    backdrop-filter: blur(6px);
-    margin-bottom: 22px;
+  /* ── VIDEO ── */
+  .video-section {
+    background: rgba(12,0,8,.78);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 24px;
+    box-shadow: var(--pop-glow), inset 0 1px 0 rgba(255,160,200,.07);
+    backdrop-filter: blur(20px) saturate(1.4);
+    overflow: hidden; position: relative;
+    transition: all 0.6s cubic-bezier(.4,0,.2,1);
   }
+  .video-section::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 12px var(--candy);border-radius:999px;z-index:5;pointer-events:none;}
+  .video-top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,130,180,.12);}
+  .video-top-label{display:flex;align-items:center;gap:10px;}
+  .video-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(255,45,107,.3),rgba(200,0,90,.38));border:1.5px solid var(--card-border-bright);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 14px rgba(255,45,107,.3);animation:breathe 3s ease-in-out infinite;}
+  .video-label-text{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .video-label-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .video-badge{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:rgba(255,45,107,.1);border:1px solid rgba(255,100,160,.3);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);}
+  .video-embed-wrap{position:relative;width:100%;padding-bottom:56.25%;background:#080004;}
+  .video-embed-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;}
+  .video-placeholder{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:28px;background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(120,0,70,.35) 0%,rgba(8,0,4,.94) 100%);}
+  .placeholder-ring{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(255,45,107,.18),rgba(200,0,90,.22));border:1.5px solid var(--card-border-bright);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 28px rgba(255,45,107,.35);animation:wobble 3.5s ease-in-out infinite;}
+  .placeholder-heading{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(15px,2.5vw,20px);background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center;}
+  .placeholder-sub{font-size:12px;color:var(--text-dim);letter-spacing:.06em;text-align:center;}
+  .video-bottom-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 20px;border-top:1px solid rgba(255,130,180,.1);background:rgba(6,0,4,.4);}
+  .video-hint{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,160,200,.3);}
+  .change-btn{appearance:none;font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:6px 14px;border-radius:10px;border:1px solid rgba(255,130,180,.22);background:transparent;color:var(--text-dim);transition:all .2s;display:none;}
+  .change-btn:hover{border-color:var(--card-border-bright);color:var(--blush);background:rgba(255,45,107,.08);}
+  .change-btn.visible{display:inline-block;}
+  .video-section.watched .video-embed-wrap,.video-section.watched .video-top-bar,.video-section.watched::before{display:none;}
+  .video-section.watched .video-bottom-bar{border-top:none;background:transparent;padding:10px 16px;justify-content:center;}
+  .watched-pill{display:none;align-items:center;gap:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,160,200,.45);}
+  .watched-pill .wpcheck{width:20px;height:20px;border-radius:50%;background:rgba(255,45,107,.15);border:1px solid rgba(255,130,180,.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--candy);}
+  .video-section.watched .watched-pill{display:flex;}
+  .video-section.watched .video-hint,.video-section.watched .change-btn{display:none !important;}
+  .rewatch-btn{appearance:none;font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,130,180,.2);background:transparent;color:rgba(255,160,200,.4);transition:all .2s;margin-left:4px;}
+  .rewatch-btn:hover{border-color:var(--card-border-bright);color:var(--blush);background:rgba(255,45,107,.08);}
+  .done-btn{appearance:none;font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:6px 14px;border-radius:999px;border:1px solid rgba(255,130,180,.28);background:rgba(255,45,107,.08);color:rgba(255,160,200,.55);transition:all .2s;letter-spacing:.06em;}
+  .done-btn:hover{border-color:var(--card-border-bright);color:var(--blush);background:rgba(255,45,107,.15);}
+  .video-section.watched .done-btn{display:none;}
 
-  /* Audio card: brighter border & inner tint */
-  .card.audio {
-    border-color: var(--candy);
-    background:
-      linear-gradient(180deg, color-mix(in oklab, var(--wine) 70%, #000 30%), color-mix(in oklab, var(--plum) 70%, #000 30%));
+  /* ── TASK CARD ── */
+  .app {
+    background: rgba(255,255,255,.035);
+    border: 1.5px solid var(--card-border);
+    border-radius: 24px;
+    box-shadow: var(--soft-glow);
+    backdrop-filter: blur(20px) saturate(1.5);
+    overflow: hidden; position: relative;
   }
+  .app::before{content:'';position:absolute;top:0;left:16px;right:16px;height:1px;background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;pointer-events:none;}
 
-  /* Provided text: dashed candy border, plum body, softer text */
-  .mono-card {
-    border: 1px dashed var(--candy);
-    background: color-mix(in oklab, var(--plum) 78%, #000 22%);
-    box-shadow: var(--shadow);
-    padding: clamp(14px, 2.5vmin, 20px);
-    border-radius: 16px;
-    white-space: pre-wrap;
-    line-height: 1.45;
-    font-size: clamp(12.5px, 1.45vmin + 8px, 15px);
-    color: var(--bubble);
-  }
-  .mono-card.reading { border-color: var(--rose); }
+  .task-header{padding:22px 24px 18px;border-bottom:1px solid rgba(255,160,200,.1);display:grid;gap:10px;}
+  .eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);}
+  .task-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(18px,3.5vw,26px);line-height:1.3;background:linear-gradient(120deg,var(--cream) 15%,var(--blush) 55%,var(--fuchsia) 90%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .task-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .meta-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:rgba(255,130,180,.08);border:1px solid rgba(255,130,180,.18);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+  .meta-dot{width:4px;height:4px;border-radius:50%;background:var(--candy);}
 
-  .btn-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 16px;
-  }
+  /* sections */
+  .task-section{padding:18px 24px;border-bottom:1px solid rgba(255,160,200,.08);display:grid;gap:12px;}
+  .section-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
 
-  /* Buttons — primary = red-hot, secondary = pink→berry */
-  .btn {
-    appearance: none;
-    border: none;
-    color: white;
-    background: linear-gradient(180deg, var(--hot), var(--crimson));
-    padding: 14px 18px;
-    border-radius: 14px;
-    font-weight: 700;
-    letter-spacing: .2px;
-    cursor: pointer;
-    box-shadow: var(--shadow);
-    transition: transform .08s ease, filter .08s ease, box-shadow .12s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .btn:hover { filter: brightness(1.08) saturate(1.06); }
-  .btn:active { transform: translateY(1px) scale(.995); }
+  /* instructions box */
+  .instr-box{background:rgba(255,45,107,.06);border:1px solid rgba(255,130,180,.18);border-radius:14px;padding:14px 16px;font-size:clamp(12px,1.9vw,14px);color:rgba(255,210,228,.8);line-height:1.85;}
+  .instr-box strong{color:var(--blush);font-family:'Nunito',sans-serif;}
+  .word-badge{display:inline-block;background:rgba(255,213,0,.14);border:1px solid rgba(255,220,50,.36);border-radius:6px;padding:1px 7px;color:#ffe870;font-weight:700;font-family:'Nunito',sans-serif;font-size:.9em;white-space:nowrap;}
 
-  .btn.secondary {
-    background: linear-gradient(180deg, var(--rose), var(--berry));
-  }
+  /* audio player */
+  .audio-wrap{background:rgba(255,45,107,.06);border:1.5px solid var(--card-border-bright);border-radius:16px;padding:16px 18px;display:grid;gap:12px;}
+  .audio-label-row{display:flex;align-items:center;gap:10px;}
+  .audio-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(255,45,107,.28),rgba(200,0,90,.36));border:1.5px solid var(--card-border-bright);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;animation:breathe 3s ease-in-out infinite;}
+  .audio-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:var(--cream);}
+  .audio-sub{font-size:10px;color:var(--text-dim);margin-top:2px;}
+  audio{width:100%;accent-color:var(--hot);filter:drop-shadow(0 2px 10px rgba(255,45,107,.3));}
 
-  .hidden { display:none !important; }
+  /* provided text */
+  .text-box{background:rgba(8,0,4,.6);border:1px solid rgba(255,130,180,.14);border-radius:14px;padding:18px 20px;font-size:clamp(11px,1.6vw,13px);line-height:1.85;color:rgba(255,220,235,.7);font-family:'Nunito',sans-serif;font-weight:600;max-height:380px;overflow-y:auto;white-space:pre-wrap;letter-spacing:.01em;scrollbar-width:thin;scrollbar-color:rgba(255,100,160,.3) transparent;}
+  .text-box::-webkit-scrollbar{width:4px;}
+  .text-box::-webkit-scrollbar-track{background:transparent;}
+  .text-box::-webkit-scrollbar-thumb{background:rgba(255,100,160,.3);border-radius:999px;}
 
-  /* Overlay (fallback viewer) — crimson header */
-  .overlay {
-    position: fixed; inset: 0;
-    background:
-      radial-gradient(900px 900px at 50% -10%, rgba(255,77,141,.25), transparent 60%),
-      rgba(18, 0, 22, .85);
-    display: none; z-index: 9999; backdrop-filter: blur(2px);
-  }
-  .overlay.open { display: grid; place-items: center; }
+  /* ref button */
+  .ref-btn{appearance:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;letter-spacing:.04em;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:12px;border:1.5px solid var(--card-border);background:rgba(255,45,107,.08);color:var(--text-dim);transition:all .2s;}
+  .ref-btn:hover{border-color:var(--card-border-bright);color:var(--blush);background:rgba(255,45,107,.18);}
 
-  .overlay-card {
-    width: min(100vw - 40px, 1000px);
-    height: min(100vh - 40px, 720px);
-    background: #1b0018;
-    border: 1px solid var(--candy);
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 12px 50px rgba(0,0,0,.45), 0 4px 20px rgba(255,77,141,.25) inset;
-    display: grid; grid-template-rows: auto 1fr auto;
-  }
-  .overlay-header {
-    display: flex; align-items: center; justify-content: space-between; gap: 8px;
-    padding: 10px 14px;
-    background: linear-gradient(180deg, var(--crimson), var(--berry));
-    color: var(--bubble); font-weight: 700;
-  }
-  .countdown { font-variant-numeric: tabular-nums; background:#25001a; padding:6px 10px; border-radius:10px; border:1px solid var(--rose); }
-  .overlay iframe { width: 100%; height: 100%; border: 0; background: #0f0011; }
-  .overlay-footer { padding: 10px 14px; background:#230018; display:flex; justify-content:flex-end; gap:10px; }
-  .overlay a.inline-btn{
-    color:#fff; text-decoration:none; font-weight:700;
-    background: linear-gradient(180deg, var(--rose), var(--plum));
-    padding:10px 14px; border-radius:10px; border:1px solid var(--candy);
-  }
+  /* transcription textarea */
+  .transcribe-textarea{width:100%;min-height:140px;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,100,160,.25);background:rgba(8,0,4,.65);color:var(--cream);font-family:'Quicksand',sans-serif;font-weight:600;font-size:clamp(12px,1.8vw,14px);line-height:1.75;resize:vertical;outline:none;transition:border-color .2s,box-shadow .2s;}
+  .transcribe-textarea:focus{border-color:var(--rose);box-shadow:0 0 16px rgba(255,80,130,.25);}
+  .transcribe-textarea::placeholder{color:rgba(255,160,200,.25);}
 
-  /* Text entry styling — pinkier shell with maroon text area */
-  .input-label { display:block; font-weight:800; margin:6px 0 8px; color:var(--candy); }
-  .text-entry {
-    width: 100%; min-height: 120px; padding: 12px 14px; border-radius: 12px;
-    border: 1px solid var(--rose); background: #2a001a; color: var(--ink); font: inherit;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
-  }
-  .helper { margin-top:8px; color:var(--bubble); font-size:13px; opacity:.9; }
+  /* count input */
+  .count-card{background:rgba(255,45,107,.06);border:1.5px solid var(--card-border-bright);border-radius:18px;padding:20px 22px;position:relative;overflow:hidden;}
+  .count-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--rose) 40%,var(--hot) 50%,var(--rose) 60%,transparent);box-shadow:0 0 8px var(--rose);border-radius:999px;}
+  .count-heading{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,2.2vw,17px);color:var(--cream);margin-bottom:6px;}
+  .count-sub{font-size:12px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;}
+  .word-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+  .count-input-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .count-input{flex:1;min-width:120px;max-width:180px;font-family:'Quicksand',sans-serif;font-weight:700;font-size:22px;text-align:center;background:rgba(255,45,107,.08);border:1.5px solid rgba(255,100,160,.3);color:var(--cream);padding:12px 16px;border-radius:14px;outline:none;transition:border-color .2s,box-shadow .2s;-moz-appearance:textfield;}
+  .count-input::-webkit-inner-spin-button,.count-input::-webkit-outer-spin-button{-webkit-appearance:none;}
+  .count-input:focus{border-color:var(--rose);box-shadow:0 0 16px rgba(255,80,130,.3);}
+  .count-input::placeholder{color:rgba(255,160,200,.25);font-size:16px;}
+  .count-helper{font-size:11px;color:var(--text-dim);letter-spacing:.03em;line-height:1.6;}
 
-  footer { margin-top: 26px; opacity:.85; font-size:13px; color:var(--bubble); }
-  .sparkle { position: fixed; inset:0; pointer-events:none; mix-blend-mode: screen; opacity:.15;
-    background:
-      radial-gradient(3px 3px at 20% 30%, #ff9ac3 0 40%, transparent 45%),
-      radial-gradient(2px 2px at 70% 15%, #ff90a4 0 40%, transparent 45%),
-      radial-gradient(2.5px 2.5px at 85% 70%, #ff6aa7 0 40%, transparent 45%),
-      radial-gradient(2px 2px at 35% 80%, #ffc2d8 0 40%, transparent 45%);
-  }
+  /* footer */
+  .app-footer{padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(255,130,180,.08);}
+  .hint-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .hint-pill{padding:5px 10px;border-radius:999px;background:rgba(255,130,180,.07);border:1px solid rgba(255,130,180,.16);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+
+  .submit-btn{appearance:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;letter-spacing:.04em;color:var(--cream);cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:11px 24px;border-radius:14px;min-height:42px;border:1.5px solid var(--hot);background:linear-gradient(135deg,rgba(255,45,107,.6),rgba(180,0,80,.65));box-shadow:0 4px 20px rgba(255,45,107,.3),inset 0 1px 0 rgba(255,255,255,.12);transition:all .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;animation:ctaPulse 3s ease-in-out infinite;}
+  .submit-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);pointer-events:none;}
+  @keyframes ctaPulse{0%,100%{box-shadow:0 4px 20px rgba(255,45,107,.3),inset 0 1px 0 rgba(255,255,255,.12)}50%{box-shadow:0 8px 36px rgba(255,45,107,.55),0 0 60px rgba(255,30,128,.15),inset 0 1px 0 rgba(255,255,255,.12)}}
+  .submit-btn:hover:not([disabled]){transform:translateY(-2px) scale(1.04);animation:none;box-shadow:0 8px 32px rgba(255,45,107,.5);}
+  .submit-btn:active:not([disabled]){transform:translateY(0) scale(.97);animation:none;}
+  .submit-btn[disabled]{opacity:.28;cursor:not-allowed;transform:none!important;box-shadow:none!important;animation:none;}
+
+  /* completion card */
+  #completionSlot .completion-card{background:rgba(20,0,14,.88);border:1.5px solid var(--card-border-bright);box-shadow:var(--pop-glow),inset 0 1px 0 rgba(255,160,200,.07);border-radius:24px;padding:40px 28px;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(20px);}
+  #completionSlot .completion-card::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;}
+  .c-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+  #completionSlot .completion-card h2{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(24px,4vw,36px);background:linear-gradient(100deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px;}
+  #completionSlot .completion-card p{font-size:clamp(12px,1.9vw,15px);color:rgba(255,210,230,.7);line-height:1.85;margin-bottom:22px;max-width:560px;margin-left:auto;margin-right:auto;}
+  .stat-bubble{display:inline-flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(135deg,rgba(255,45,107,.15),rgba(200,0,90,.18));border:1.5px solid var(--card-border-bright);border-radius:20px;padding:18px 36px;margin-bottom:8px;box-shadow:0 4px 30px rgba(255,45,107,.25),inset 0 1px 0 rgba(255,255,255,.06);}
+  .stat-number{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(44px,8vw,72px);line-height:1;background:linear-gradient(135deg,var(--blush) 20%,var(--fuchsia) 55%,var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(255,45,107,.5));}
+  .stat-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
+  .stat-sentence{font-size:clamp(14px,2.2vw,17px);color:rgba(255,210,228,.8);margin-bottom:8px;line-height:1.6;font-style:italic;font-family:'Nunito',sans-serif;}
+  .stat-raw{font-size:11px;color:rgba(255,160,200,.35);letter-spacing:.04em;margin-bottom:26px;}
+  .next-btn{appearance:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,2.5vw,17px);letter-spacing:.04em;color:var(--cream);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:clamp(13px,2vmin,17px) clamp(28px,5vmin,44px);border-radius:16px;border:1.5px solid var(--hot);background:linear-gradient(135deg,var(--hot) 0%,var(--berry) 55%,var(--maroon) 100%);box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.12);transition:all .22s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;animation:ctaPulse 2.8s ease-in-out infinite;}
+  .next-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%);pointer-events:none;}
+  .next-btn:hover{transform:translateY(-3px) scale(1.04);animation:none;box-shadow:0 10px 40px rgba(255,45,107,.6);}
+  .next-btn:active{transform:translateY(0) scale(.97);animation:none;}
+
+  /* overlay */
+  .overlay-shell{position:fixed;inset:0;z-index:9000;background:rgba(8,0,5,.84);backdrop-filter:blur(14px);display:none;place-items:center;}
+  .overlay-shell.open{display:grid;}
+  .redir-card{width:min(100vw - 28px,1000px);height:min(100vh - 28px,720px);background:rgba(14,0,8,.95);border:1.5px solid var(--card-border);box-shadow:var(--soft-glow);border-radius:20px;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;}
+  .redir-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,130,180,.1);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+  .redir-countdown{background:rgba(255,45,107,.1);border:1px solid var(--card-border);border-radius:8px;padding:4px 10px;color:var(--rose);}
+  .redir-card iframe{width:100%;height:100%;border:0;}
+  .redir-footer{display:flex;justify-content:flex-end;gap:8px;padding:10px 18px;border-top:1px solid rgba(255,130,180,.1);}
+  .redir-link{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:var(--cream);text-decoration:none;padding:9px 18px;border-radius:12px;border:1.5px solid var(--card-border);background:rgba(255,45,107,.1);transition:all .2s;cursor:pointer;appearance:none;}
+  .redir-link:hover{border-color:var(--card-border-bright);background:rgba(255,45,107,.2);}
+
+  .wordmark{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,160,200,.18);text-align:center;}
 </style>
 </head>
 <body>
-  <div class="sparkle" aria-hidden="true"></div>
-  <main class="wrap" role="main">
-    <h1 class="title">Transcribe this audio file.</h1>
 
-    <!-- AUDIO SECTION -->
-    <section class="card audio" aria-label="Audio">
-      <audio controls preload="metadata" style="width:100%">
-        <source src="woman_as_inventor.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-    </section>
+<div class="bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
 
-    <!-- LONG PROVIDED TEXT -->
-    <section class="mono-card reading" aria-label="Provided text">
-0 WOMAN SUFFRAGE TRA(~S-NO. L WOMAN AS INVENTOR, By MRS. M. E. JOSLYN GAGES ISSUED UNDEE THE AUSMC NEW YORK WfATI WOEAN 8Uff3M~I ASN~IA~IUL P. A. IANUMS, 5 ANN - WUM, NATUYDL3, N.Y. 1870.
+<main class="wrap">
 
-WOMAN AS INVENTOR.
-
-THE (XYE!ON GIN. IT may, pediaps, be unknown to many persons, tl~at the invention of the cotton-gin, one of the greatest meckaahieul friumphs of modern times, is due to a woman. AlthougW~i work on the model was done by the hands of Eli W~tn~y~ yet Mrs. Greene originated the idea, and knowing Whitiiey~~ be a practical mechanic, she his doing &~ -~k. This was during the winter of 1792-3, when he vasi ~ ather house, near Savannah -~ Mis. Greene, whose maiden name was Catharin~ was the widow of Gen. Greene, of Rev After the return of peace (len Greene moved wUi'h~ f~*m~ from Rhode Island to Mulberry Grove, on the Savannah rit~ where lie soon died, leaving his estate much ~ad five ~hlldren for his wife to educate. Skotily iItet~ tltis,~ Whitney went south to teach in a private &n~ily: ~When ibe~ reaebe& Georgia he fqund his j~lace suppIied~& &e~z~bi~ decided to apply himself to the study ofikw, Greeno's house his home. The great difficulty of separating cc Wfrou~th~ seed 4 WO~h=I AS ~VE1~TOB. at that time a staple subject of complaint among cotton- plant ers. To separate a pound of the black seed variety, to which the lint does not adhere even so closely as to the green, was a negro~s task for a day. So slow was the process that it be came the regular practice for all the family of a cotton-planter to engage every night in the laborious work; and the task was looked upon as so great that it was the ordinary topic of con versation among those who cultivated cotton, and a fortune was prophesied for the lucky inventor: of a machine capable of doing the work. It was after a conversation of this character, which had been held by some guests in her house, that Mrs. Greene pro posed to Whitney the making of such a machine, and upon her idea he commenced. The work was done in her house, and under her immediate supervision. The wooden teeth first tried did not do the work well, and Whitney, despairing, was about to throw the work aside, when Mrs. Greene, whose confidence in ultimate success never `~ravered, proposed the substitution of wire. Whitney thereupon replaced the wooden by wire teeth, and within ten days from the first conception of Mrs. Greene's idea a small ~node1 was completed. This primitive little model was of such.perfect construction that it has ever since stood as the model of all cotton-gins, and the inventive genius of universal male Yankeedom has not yet been able to suggest any practical improvement in the machine. Mrs. Greene, through her second husband, Mr. Miller, became the partner of Whitney in the manufacture of gins. By meiws of this invention an extraordinary impetus was given to the culture of cotton. Instead of a pound a day, as was formerly cleaned by hand, three hundred pounds were cleaned by the gin, and in a much better manner than hand work could do. The importance of the invention can hardly be over-estimated. Every cotton-mill throughout the world that whirrs its machinery in drawing out threads, or whose WOXAI As INVENTOL 5 shuttles Iv back and forth in the manufacture o~ cloth, is in-. debted to Mrs. Greene for its activity. Every sewing-machine used in sh?~p or private house plies its treadle more rapidly on aceonnt of Mrs. Greene's genius. The cry, "Cotton is king," could never have arisen had not the gin, with its myriad man-. power, first come into existence. The importance of the .mvention was weil described in the -. charge of fudge Johnson, of Savannah, in a suit brought to sustainthevalidityofthepatent. Hesays:-.--. "The green seed is a species much more productive than the black, and by nature adapted to a much greater variety of climate. But by reason of the strong adherence of the fibreto the seed, without the aid of some more powerful machinery for separating it than any formerly known among us, the cub tivation of it would never have been made an ob~ject. The machine, of which Mr. Whitney ci.&ixs the invention, so 6-. dilitates the preparation of this species for use, that the culti-. vation of it ha~ suddenly become an objectof infinitely greater national importance than that of the other speEies ever can be. With regard to the utility of this discovery the whole in.. tenor of the Southern States was and its inhab-. itante emigrating for want of some object to engage their at-.~. tention and employ their industry, wheul the inventam of this machine at once opened views to them that set the whole ama~ try in active motion. From childhood to age it has presented to us a lucrative employment~ Individuals who weredepremd with poverty and sunk in idleness have suddenly risen to wealth and respectability. Our debts have been paid off~ ouz~ capitals have increaspd, and our lands trebled themselves in value. We cannot express the weight of the obligation which the country owes *o this invention," etc., etc. There is scarcely a manufacture or a branch of the govein.. ment that has not been benefited by this invention. Evay particle of revenue the government receives from cotton has been ten thousand tin~es enhanced by the inventive genina of this woman. Every cotton lord, aorth or south, rolls in his / 6 woxd As INVENTOB. wealth from the inventive genius of a woman; and, as has been said, even "the Yatent Office itself finds a prolific source of revenue from it, both as a whole machine and in its part&" Let every woman who hereafter enters that building examine well the original model of the cotton-gin there deposited, and when she looks at it remember it was the invention of a woman.
-
-*It may be asked why Mrs. Greene did not take out'the pat ent in her own name. To have done so would have exposed her to the contumely and ridicule of her friend& Custom, that unwritten law, has for years frowned upon any attempt of womantotakesuchastep. If shehas been gifted with an inventive genius, she has either stifled its exercise, expended it upon style of dress-that being deemed her legitimate prov ince-or, like Mrs. Greene, suffered some man to claim the award her due. She shrunk from the persecution that would have attended her claiming the patent, while by associating herself with Whitney as his partner in the manufacture of the machines, she hoped at least to share in the pecuniary advan tages of the invention. Women have not dared to exercise their faculties except in certain directions, unless in a covert manner. A knowledge of mechanics has been deemed unwomaidy, and yet I have. * known women `whose natural tastes led them to be interested in everything pertaining to this science. I once had a lady friend, who, to use her own words, "had a perfect passion for engineering," and who if she "had been a man, would have been an engineer." But she was a woman. She had been taught from her earliest childhood that to make use of this talent with which God had endowed her, would be an outrage against society; so she lived for a few years, going through the routine of breakfast and dinners, journeys and parties, that society de manded of her, and at last sank into her grave, after having been of little use either to the world or h~rselL What a benefli~ she might have been to her sex had she WOMAN AS INVE~TOL dared to exercise her powers. Her example would have openedthe wayfor hundreds more to find health and wages and freedom in some congenial occupation outside of the pmsclibed limits. So of Mrs. Greene~ Had the patent of the cotton-gin been taken in her own name, either singly or in union with Wbitney, what a wide-spread benefit her example would have been to others of her se~ It would have encouraged inventive genius among women; it would have induced many to claim as their own right, patents that have gone out to the world accredited to man; it would have encouraged industry, opened new avocations to both women and men; and the world would to-day have been so much wiser and better, as it ever is after even oue humble individual has dared to do right. AU progress in the arts, in scienos, in wisdom, is the result of successive steps; and it is impossilie to loresee the consequences which may arise from the omission or the commission of an act by even the most obscure person. Mrs. Greene does not stand alone as a female inventor of great genius, even within the limits of the present century.
-
-4 8 WOXA)I AS IN1E1~TOL F SILK, GAUZE, STRAW BRAIDING, ETC., ETC. While this article was in course of preparation, the Report to the Department of State on Silk and Silk Manufactures, made by~he United States Commissioner to the Paris Expo sitionwasbroughtintomyhouse. I was glad to find that justice to the inventive genius of -woman had been done in that report by giving her the meed of notice her due as the in ventor of silk, but there are points not. mentionQ& by Mr. Godwin upoii which I wish totouch. In the theory of political economy propounded. by a French man a few years ago, he maintained that only those; who brought into usethe properties of nature contained in the aniaal4vegeAable and mineral kingdoms, should be considered as the inereasers of wealth in the community. The mere salesmen or hands through which these useful6 ,ommodities passed, he called non-~roducers~ it is easy for us to see that the community which, under enlightened direction, by means of labor-saving machinery like the cotton-gin, or by a method of making some heretofore valueless prQduct into a widely useful material, as silk, has within itself an element of s~iccess which, if pursued, cannot failtogiveitahigh place among nations, and by its wide spread diffusion into other countries have great influence m elevating the whole world. Since the invention of silken fabrics by the Chinese Em press, Si-ling-chi, between three and four thousand years ago, silk has stood next to rice in causing the unparalleled pros perity of China-a country which has no public debt, and which supports a surprisingly numerous population. Even at the present time, silk furnishes material for more than half W~UAN AS iNYENTOL- 9 the clothing of that great empire, where cotton was unknown till within about eight hundred years, and where, had it not been for the fortunate invention of the former, poverty and suffering would long since have blotted the nati~n from existence. After the introduction of silk to the notice of the Europeans, during the reign of Alexander the Great, A formed a great article of commerce between China and many European na- tions, and caravans laden with 1~he fabric were accompanied by armed escorLs. Aristotle is one of the first European writers to mention it. It wins then called Ser, from the portion of China where it originated, and from whence Pliny says, the Roman ladies received their "vestes serica." Not long after Ser was introduced into Europe, it was, Penelope like, unwoven by Pamphila, a woman of the island of Cos, and re-manufactured by her int6 a transparent fabric known to the Roman ladies as' "coa vestes," and to moderns as coan. Hiere we have the invention of silk gauze. Coan and decca, one of silk and the other of cotton, were the two most diaphanous fabrics maaufactured by ancient nations, and so fine and transparent were they that each in turn was known as "the woven wind" Yet as transparent as was coan, it was firm enough to take beautiful colors and to be adorned with embr~idery and threads of gold.. So sensible were the Chinese of the benefit accruing to their empire by the invention of silk that the Si-ling-chi was deified by the name of Sien Tshan, or first promoter of silk industry, and the later Empress's sacrifice to her memory. As the Emperor annually holds the plow, by his example W dignify labor and promote the cultivation of the soil, upon one of the products by which (rice) the prosperity of his empire so iiiuch dependii so for the same cause does the Empress annually visit the broods of silk-worms, and by her personal iiiterest and inspection, encourage industry, and promote attention to that other staple, upon which, almost equally with rice, the stability of the empire rests.
-
-/ 10 WOMAN As INVENTOR. Not only has China been so materially benefitted by the invention of silk, but within the last few hundred years, Ital~y, France, Spain, England a~id ether nations have derived an immense re~enue from its manufacture. More than thirty years ago, the estimated yearly profit of France upon silk, was more than $7,000,000, and in Mr. Codwin's report the value of the raw material now produced in that country is estimated at $25,600,000. The revenue of a country is the life.. blood which circulates through its whole machinery during both pace and war, and enables it to execute vast works of national improvement, to encourage industry, to promote the arts, to maintain an educational fund~ and in various ways contribute to the prosperity of the peopl& Our country, with its large boundary, varied climate, immense water power, and uncounted mineral wealth, will soon stand foremost in the world as a manufacturing country. We learn from the report on the eighth census, that the products of manufacture between 185~) and 1860 increased at the rate of eighty-six per cent., or about double to the increase in the productions of agriculture. Still, in a very great measure one is dependant upon the other, and especially does the increase of agricultural products depend upon mechanical inventions. The increase of population itself, does not exertequal influence on j~he cultivation of the soil with a new and important invention, although Gibbon says the Romans affirmed that with the improvement of arts, the human species was visibly multiplied. The straw business of this country is a rapidly increasing one. This fact cannot fail to impress itself upon the mind of every person wiio notices the varied styles of hats both for men and women, the frequent changes and the aimost univer.. sality with `which, in some form, they are worn. The first straw l~nnet manufactured n the United States was braided in 1798 by Miss Betsy Metcalf, of Providence, IL I The im~ ported Dunstables, at that time the chief wear were costly; Miss Metcalf saw one in a store in Providence, and carrying WOMAN AS INVUTOL 11 the pattern home in her eye, sat down to produce a similar one. This was the first step towards a great branch of industry which increased so rapidly that in 1810, only twelve years after Miss Metcalf made her bonnet, the estimaXed value of straw bonnets manufactured in Massachusetts alone was $551, 988, or over half a million of dollars added to the wealth of one State alone by the genius of woman. Massachusetts now employs ten thousand (10,000) persons in the business, and produces six million (6,000,000). hats and bonnets annually. A great deal of straw braid is also manufactured in L~ nnsylvania. Philadelphia alone has a business in it estimated at $600,000, or $350,000 for hats and $250,000 for bonnets. A fac-simile of the original bonnet made by Mrs. Baker "nee" Metcalf, is preserved in the collection of the Rhode Island Soelety for the Encouragement of Domestic Industry. A hat made from the long leaves of the Southern pine was exhibited at the fair of the American Institute, in 1850, by a Miss Hudson, of Long Island, and received high commendation from the Institute from its capability of being made another valuable branch of domestic manufacture. Inthelanguageof another, "the social and political relations of man are mainly formed and contrblled through the influence of industry applied fr the production of material wesltk * * * The degree of influence exerted by a particular product can only be appreciated by a consideration of all its relations, including a knowledge of a dependence upon each other of the different branches of industry and productiolL" In this present article I haveendeavored to show the bearing the manufacture of silk has had upon the permanence of one magnificent empire, and the influence it exerts upon the nra terial prosperity of many others~* In my previous article I spoke qf the immense benefit to the manufacturing interests of the country the cotton-gin has proved, increasing not only the wealth of individuals, but the revenue of the country ma~ry hundred fold.- The recent repeal of the tax tin raw mat~ial 12 wo~i~ AS INVENTOR. has taken from the revenue eighty millions of dollars annually. There is scarcely a child that needs to be taught the great influence cotton has had, not only on the social, but on the political status of our country. These two inventions by women of silk and the cotton-gin, have done much to build up the State, to define social and political position and to further the interests of mankind, and no brain is so* prophetic, no eye so far-seeing, as yet to discern when their influence shall cease.
-
-4,' 0. WOMAN AS IRVU'mL 13 LACE4 WOOD-ENGRAVING. The invention of pillow hoe by Barbara Uttman, of Annabery, Saxony, was one of those occurrences mwbichwe clearly see the providence of God, for about that period the mines, in which most of the peasantry worked, became lees productive than formerly, and veils, embroidered after the Italian method, the making of which was followed by the families of the miners, were also in lees demand. A large part of the population thus simultaneously thrown out of employment, were on the verge of great misery when Barbara Uttman invented lace, and taught her neceesitous country-women the art of making it. A desire for the work spread with great rapidity, and its manufacture soon gave competence to thousands of persons who, without its invention at that period, must have suffered greatly, and perhaps died of starration. Nor was the worth of the invention confined to a limited extent of country or of short duration, for the art of making it was in time carried from country to country, and various European states are at this day deriving a great revenue from its manufacture~ In France alone, two hundred thousand women are employed upon it, and the varieties made are numerous and valuable. Valenciennes (real), Chantilly, Lisle, Mex~eonblonJ and Alencon point, are all pillow laces, and all made in France. Many cities are famous alone from the manufacture of some particular variety of lace. Caen and Bayeux excel in certain kinds of silk laces, as veils, scarfs, mantles, robes and shawls. Chantilly, so fashionable and so expensive the preseat season, ismadeataplaceof thatnamepeculiarforitselaborate and costly varieties of silk lace. Elegant designs for very light
-    </section>
-
-    <!-- MOVED BUTTON: after long text, before text entry -->
-    <div class="btn-row">
-      <button class="btn" id="openManifestBtn" type="button">
-        Woman As Inventor by Matilda Joslyn Gage (1870)
-      </button>
-    </div>
-
-    <!-- TRANSCRIPTION TEXT BOX (unlocks the HIT button) -->
-    <section class="card" aria-label="Your transcription">
-      <label class="input-label" for="transcription">Enter your transcription here</label>
-      <textarea id="transcription" class="text-entry" placeholder="Type your transcription..."></textarea>
-      <p class="helper">Once you enter anything, the completion button will appear below.</p>
-    </section>
-
-    <!-- Hidden until user types something -->
-    <div class="btn-row hidden" id="nextHitRow">
-      <a class="btn secondary" id="nextHitBtn" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
-        You completed this HIT. Go to your next HIT by clicking here
-      </a>
-    </div>
-
-  </main>
-
-  <!-- Fallback overlay with embedded page and direct link -->
-  <div id="manifestOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="manifestTitle">
-    <div class="overlay-card">
-      <header class="overlay-header">
-        <div id="manifestTitle">Opening: Harvard Library — IIIF Manifest</div>
-        <small>Auto-closing in <span class="countdown" id="countdown">2</span>s…</small>
-      </header>
-      <iframe id="manifestFrame" title="Harvard IIIF page"></iframe>
-      <div class="overlay-footer">
-        <a id="manifestDirectLink" class="inline-btn" href="#" target="_blank" rel="noopener">Open in a new tab</a>
-        <a id="closeOverlayBtn" class="inline-btn" href="#" role="button">Close</a>
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CAREBOT-11 ✦</div>
+        <div class="bot-sub">Transcription · Ingenuity Analysis · Online</div>
       </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
     </div>
   </div>
 
+  <!-- VIDEO -->
+  <div class="video-section" id="videoSection">
+    <div class="video-top-bar">
+      <div class="video-top-label">
+        <div class="video-icon">▶</div>
+        <div>
+          <div class="video-label-text">Task Briefing Video</div>
+          <div class="video-label-sub">Watch before you begin ✦</div>
+        </div>
+      </div>
+      <div class="video-badge"><div class="time-pip"></div> Briefing</div>
+    </div>
+    <div class="video-embed-wrap" id="videoEmbedWrap">
+      <div class="video-placeholder" id="videoPlaceholder">
+        <div class="placeholder-ring">▶</div>
+        <div class="placeholder-heading">Task Briefing Video ✦</div>
+        <div class="placeholder-sub">Loading your briefing…</div>
+      </div>
+    </div>
+    <div class="video-bottom-bar">
+      <div class="video-hint">✦ Watch the full briefing before starting</div>
+      <div class="watched-pill">
+        <div class="wpcheck">✦</div>
+        <span>Briefing watched</span>
+        <button class="rewatch-btn" id="rewatchBtn">Rewatch ↩</button>
+      </div>
+      <button class="done-btn" id="doneWatchingBtn">✦ Done watching — collapse</button>
+      <button class="change-btn" id="changeVideoBtn">Change video ✦</button>
+    </div>
+  </div>
+
+  <!-- TASK CARD -->
+  <section class="app">
+
+    <header class="task-header">
+      <div class="eyebrow">✦ CAREBOT-11 · Transcription &amp; Ingenuity Analysis Module</div>
+      <h1 class="task-title">Transcribe the audio. Count words of ingenuity &amp; invention.</h1>
+      <div class="task-meta">
+        <div class="meta-chip"><div class="meta-dot"></div> Audio Transcription</div>
+        <div class="meta-chip"><div class="meta-dot"></div> Ingenuity Analysis</div>
+        <div class="meta-chip"><div class="meta-dot"></div> Active</div>
+      </div>
+    </header>
+
+    <!-- instructions -->
+    <div class="task-section">
+      <div class="section-label">✦ Your Task</div>
+      <div class="instr-box">
+        <strong>Step 1:</strong> Listen to the audio file below.<br>
+        <strong>Step 2:</strong> Read through the provided text and type your transcription in the box below it.<br>
+        <strong>Step 3:</strong> Count every word or phrase in the text that references <strong>ingenuity, invention, or creativity</strong> — things like
+        <span class="word-badge">invention</span>
+        <span class="word-badge">inventor</span>
+        <span class="word-badge">genius</span>
+        <span class="word-badge">invented</span>
+        <span class="word-badge">inventive</span>
+        <span class="word-badge">discovery</span>
+        <span class="word-badge">ingenuity</span>
+        <span class="word-badge">talent</span>
+        <span class="word-badge">faculty</span>
+        <span class="word-badge">originated</span>
+        and similar words.<br>
+        <strong>Step 4:</strong> Enter your count and press Submit ✦
+      </div>
+    </div>
+
+    <!-- audio player -->
+    <div class="task-section">
+      <div class="section-label">✦ Audio File</div>
+      <div class="audio-wrap">
+        <div class="audio-label-row">
+          <div class="audio-icon">🎙️</div>
+          <div>
+            <div class="audio-name">woman_as_inventor.mp3</div>
+            <div class="audio-sub">Oral history audio · listen while you read</div>
+          </div>
+        </div>
+        <audio controls preload="metadata">
+          <source src="woman_as_inventor.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    </div>
+
+    <!-- provided text -->
+    <div class="task-section">
+      <div class="section-label">✦ Provided Text — Woman as Inventor (1870)</div>
+      <div class="text-box">0 WOMAN SUFFRAGE TRA(~S-NO. L WOMAN AS INVENTOR, By MRS. M. E. JOSLYN GAGES ISSUED UNDEE THE AUSMC NEW YORK WfATI WOEAN 8Uff3M~I ASN~IA~IUL P. A. IANUMS, 5 ANN - WUM, NATUYDL3, N.Y. 1870.
+
+WOMAN AS INVENTOR.
+
+THE (XYE!ON GIN. IT may, pediaps, be unknown to many persons, tl~at the invention of the cotton-gin, one of the greatest meckaahieul friumphs of modern times, is due to a woman. AlthougW~i work on the model was done by the hands of Eli W~tn~y~ yet Mrs. Greene originated the idea, and knowing Whitiiey~~ be a practical mechanic, she his doing &~ -~k. This was during the winter of 1792-3, when he vasi ~ ather house, near Savannah -~ Mis. Greene, whose maiden name was Catharin~ was the widow of Gen. Greene, of Rev After the return of peace (len Greene moved wUi'h~ f~*m~ from Rhode Island to Mulberry Grove, on the Savannah rit~ where lie soon died, leaving his estate much ~ad five ~hlldren for his wife to educate. Skotily iItet~ tltis,~ Whitney went south to teach in a private &n~ily: ~When ibe~ reaebe& Georgia he fqund his j~lace suppIied~& &e~z~bi~ decided to apply himself to the study ofikw, Greeno's house his home. The great difficulty of separating cc Wfrou~th~ seed 4 WO~h=I AS ~VE1~TOB. at that time a staple subject of complaint among cotton-plant ers. To separate a pound of the black seed variety, to which the lint does not adhere even so closely as to the green, was a negro~s task for a day. So slow was the process that it became the regular practice for all the family of a cotton-planter to engage every night in the laborious work; and the task was looked upon as so great that it was the ordinary topic of conversation among those who cultivated cotton, and a fortune was prophesied for the lucky inventor: of a machine capable of doing the work. It was after a conversation of this character, which had been held by some guests in her house, that Mrs. Greene proposed to Whitney the making of such a machine, and upon her idea he commenced. The work was done in her house, and under her immediate supervision. The wooden teeth first tried did not do the work well, and Whitney, despairing, was about to throw the work aside, when Mrs. Greene, whose confidence in ultimate success never `~ravered, proposed the substitution of wire. Whitney thereupon replaced the wooden by wire teeth, and within ten days from the first conception of Mrs. Greene's idea a small ~node1 was completed. This primitive little model was of such.perfect construction that it has ever since stood as the model of all cotton-gins, and the inventive genius of universal male Yankeedom has not yet been able to suggest any practical improvement in the machine. Mrs. Greene, through her second husband, Mr. Miller, became the partner of Whitney in the manufacture of gins. By meiws of this invention an extraordinary impetus was given to the culture of cotton. Instead of a pound a day, as was formerly cleaned by hand, three hundred pounds were cleaned by the gin, and in a much better manner than hand work could do. The importance of the invention can hardly be over-estimated. Every cotton-mill throughout the world that whirrs its machinery in drawing out threads, or whose WOXAI As INVENTOL 5 shuttles Iv back and forth in the manufacture o~ cloth, is in-. debted to Mrs. Greene for its activity. Every sewing-machine used in sh?~p or private house plies its treadle more rapidly on aceonnt of Mrs. Greene's genius. The cry, "Cotton is king," could never have arisen had not the gin, with its myriad man-. power, first come into existence. The importance of the .mvention was weil described in the -. charge of fudge Johnson, of Savannah, in a suit brought to sustainthevalidityofthepatent. Hesays:-.--. "The green seed is a species much more productive than the black, and by nature adapted to a much greater variety of climate. But by reason of the strong adherence of the fibreto the seed, without the aid of some more powerful machinery for separating it than any formerly known among us, the cub tivation of it would never have been made an ob~ject. The machine, of which Mr. Whitney ci.&ixs the invention, so 6-. dilitates the preparation of this species for use, that the culti-. vation of it ha~ suddenly become an objectof infinitely greater national importance than that of the other speEies ever can be. With regard to the utility of this discovery the whole in.. tenor of the Southern States was and its inhab-. itante emigrating for want of some object to engage their at-.~. tention and employ their industry, wheul the inventam of this machine at once opened views to them that set the whole ama~ try in active motion. From childhood to age it has presented to us a lucrative employment~ Individuals who weredepremd with poverty and sunk in idleness have suddenly risen to wealth and respectability. Our debts have been paid off~ ouz~ capitals have increaspd, and our lands trebled themselves in value. We cannot express the weight of the obligation which the country owes *o this invention," etc., etc. There is scarcely a manufacture or a branch of the govein.. ment that has not been benefited by this invention. Evay particle of revenue the government receives from cotton has been ten thousand tin~es enhanced by the inventive genina of this woman. Every cotton lord, aorth or south, rolls in his / 6 woxd As INVENTOB. wealth from the inventive genius of a woman; and, as has been said, even "the Yatent Office itself finds a prolific source of revenue from it, both as a whole machine and in its part&" Let every woman who hereafter enters that building examine well the original model of the cotton-gin there deposited, and when she looks at it remember it was the invention of a woman.
+
+*It may be asked why Mrs. Greene did not take out'the pat ent in her own name. To have done so would have exposed her to the contumely and ridicule of her friend& Custom, that unwritten law, has for years frowned upon any attempt of womantotakesuchastep. If shehas been gifted with an inventive genius, she has either stifled its exercise, expended it upon style of dress-that being deemed her legitimate prov ince-or, like Mrs. Greene, suffered some man to claim the award her due. She shrunk from the persecution that would have attended her claiming the patent, while by associating herself with Whitney as his partner in the manufacture of the machines, she hoped at least to share in the pecuniary advan tages of the invention. Women have not dared to exercise their faculties except in certain directions, unless in a covert manner. A knowledge of mechanics has been deemed unwomaidy, and yet I have. * known women `whose natural tastes led them to be interested in everything pertaining to this science. I once had a lady friend, who, to use her own words, "had a perfect passion for engineering," and who if she "had been a man, would have been an engineer." But she was a woman. She had been taught from her earliest childhood that to make use of this talent with which God had endowed her, would be an outrage against society; so she lived for a few years, going through the routine of breakfast and dinners, journeys and parties, that society demanded of her, and at last sank into her grave, after having been of little use either to the world or h~rselL What a benefli~ she might have been to her sex had she WOMAN AS INVE~TOL dared to exercise her powers. Her example would have openedthe wayfor hundreds more to find health and wages and freedom in some congenial occupation outside of the pmsclibed limits. So of Mrs. Greene~ Had the patent of the cotton-gin been taken in her own name, either singly or in union with Wbitney, what a wide-spread benefit her example would have been to others of her se~ It would have encouraged inventive genius among women; it would have induced many to claim as their own right, patents that have gone out to the world accredited to man; it would have encouraged industry, opened new avocations to both women and men; and the world would to-day have been so much wiser and better, as it ever is after even oue humble individual has dared to do right. AU progress in the arts, in scienos, in wisdom, is the result of successive steps; and it is impossilie to loresee the consequences which may arise from the omission or the commission of an act by even the most obscure person. Mrs. Greene does not stand alone as a female inventor of great genius, even within the limits of the present century.
+
+SILK, GAUZE, STRAW BRAIDING, ETC., ETC. While this article was in course of preparation, the Report to the Department of State on Silk and Silk Manufactures, made by the United States Commissioner to the Paris Exposition was brought into my house. I was glad to find that justice to the inventive genius of woman had been done in that report by giving her the meed of notice her due as the inventor of silk, but there are points not mentioned by Mr. Godwin upon which I wish to touch. Since the invention of silken fabrics by the Chinese Empress, Si-ling-chi, between three and four thousand years ago, silk has stood next to rice in causing the unparalleled prosperity of China. The first straw bonnet manufactured in the United States was braided in 1798 by Miss Betsy Metcalf, of Providence, R.I. The importance of the invention can hardly be over-estimated. Mrs. Greene does not stand alone as a female inventor of great genius, even within the limits of the present century. The invention of pillow lace by Barbara Uttman, of Annabery, Saxony, was one of those occurrences in which we clearly see the providence of God. A desire for the work spread with great rapidity, and its manufacture soon gave competence to thousands of persons. These two inventions by women — of silk and the cotton-gin — have done much to build up the State, to define social and political position and to further the interests of mankind.</div>
+
+      <div style="margin-top:10px;">
+        <button class="ref-btn" id="openManifestBtn" type="button">
+          ✦ Woman As Inventor by Matilda Joslyn Gage (1870) — Harvard Library
+        </button>
+      </div>
+    </div>
+
+    <!-- transcription -->
+    <div class="task-section">
+      <div class="section-label">✦ Your Transcription</div>
+      <textarea
+        id="transcription"
+        class="transcribe-textarea"
+        placeholder="Type your transcription of the audio here…"
+      ></textarea>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Type anything to unlock the Submit button below ✦</div>
+    </div>
+
+    <!-- ingenuity count -->
+    <div class="task-section">
+      <div class="section-label">✦ Ingenuity &amp; Invention Count</div>
+      <div class="count-card">
+        <div class="count-heading">How many words of ingenuity &amp; invention did you find? ✦</div>
+        <div class="count-sub">Count every word or phrase in the provided text that references invention, ingenuity, creativity, genius, talent, discovery — including all variations and related forms.</div>
+        <div class="word-list">
+          <span class="word-badge">invention</span>
+          <span class="word-badge">inventor</span>
+          <span class="word-badge">inventive</span>
+          <span class="word-badge">genius</span>
+          <span class="word-badge">discovery</span>
+          <span class="word-badge">talent</span>
+          <span class="word-badge">faculty</span>
+          <span class="word-badge">ingenuity</span>
+          <span class="word-badge">originated</span>
+          <span class="word-badge">conceived</span>
+        </div>
+        <div class="count-input-row">
+          <input type="number" id="countInput" class="count-input" min="0" placeholder="0" inputmode="numeric" />
+          <div class="count-helper">Enter your total count,<br>then press Submit ✦</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="app-footer">
+      <div class="hint-row">
+        <div class="hint-pill">Transcribe + count</div>
+        <div class="hint-pill">Then submit ✦</div>
+      </div>
+      <button class="submit-btn" id="submitBtn" disabled onclick="showCompletion()">
+        Submit ✦
+      </button>
+    </footer>
+
+  </section>
+
+  <div id="completionSlot"></div>
+  <div class="wordmark">✦ carebot research system · v2.4 ✦</div>
+
+</main>
+
+<!-- redirect overlay -->
+<div id="redirOverlay" class="overlay-shell" role="dialog" aria-modal="true">
+  <div class="redir-card">
+    <div class="redir-header">
+      <span>✦ Harvard Library — IIIF Manifest</span>
+      <div class="redir-countdown">Auto-close <span id="countdown">2</span>s</div>
+    </div>
+    <iframe id="redirFrame" title="Harvard IIIF page"></iframe>
+    <div class="redir-footer">
+      <a id="redirDirectLink" class="redir-link" href="#" target="_blank" rel="noopener">Open in new tab</a>
+      <button id="closeOverlayBtn" class="redir-link">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  (function(){
-    // === Open external page for 2 seconds, then return ===
-    const MANIFEST_URL = "https://iiif.lib.harvard.edu/manifests/view/drs:2575141$2i";
-    const DISPLAY_SECONDS = 2;
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀','💡','⚙'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
 
-    const openBtn = document.getElementById('openManifestBtn');
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
 
-    const overlay = document.getElementById('manifestOverlay');
-    const iframe = document.getElementById('manifestFrame');
-    const countdown = document.getElementById('countdown');
-    const directLink = document.getElementById('manifestDirectLink');
-    const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+/* ── Video ── */
+const videoSection   =document.getElementById('videoSection');
+const videoEmbedWrap =document.getElementById('videoEmbedWrap');
+const videoPlaceholder=document.getElementById('videoPlaceholder');
+const changeVideoBtn =document.getElementById('changeVideoBtn');
+const rewatchBtn     =document.getElementById('rewatchBtn');
+const doneWatchingBtn=document.getElementById('doneWatchingBtn');
+let activeIframe=null,vimeoPlayer=null,watchedAlready=false;
 
-    let timer = null, tick = null, remaining = DISPLAY_SECONDS;
+function markWatched(){ if(watchedAlready)return; watchedAlready=true; videoSection.classList.add('watched'); }
+function attachVimeoAPI(iframe){
+  function tryAttach(){
+    if(typeof Vimeo!=='undefined'){
+      vimeoPlayer=new Vimeo.Player(iframe);
+      vimeoPlayer.on('ended',()=>setTimeout(markWatched,1000));
+      vimeoPlayer.on('timeupdate',d=>{ if(d.percent>=0.95) markWatched(); });
+    } else { setTimeout(tryAttach,300); }
+  }
+  tryAttach();
+}
+function loadVideo(src){
+  if(!src) return;
+  if(activeIframe) activeIframe.remove();
+  if(vimeoPlayer){ try{vimeoPlayer.destroy();}catch(e){} vimeoPlayer=null; }
+  videoPlaceholder.style.display='none';
+  videoSection.classList.remove('watched'); watchedAlready=false;
+  activeIframe=document.createElement('iframe');
+  activeIframe.src=src;
+  activeIframe.allow='autoplay; fullscreen; picture-in-picture';
+  activeIframe.allowFullscreen=true;
+  activeIframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
+  videoEmbedWrap.appendChild(activeIframe);
+  changeVideoBtn.classList.add('visible');
+  if(src.includes('player.vimeo.com')) attachVimeoAPI(activeIframe);
+}
+changeVideoBtn.addEventListener('click',()=>{
+  if(activeIframe){activeIframe.remove();activeIframe=null;}
+  if(vimeoPlayer){try{vimeoPlayer.destroy();}catch(e){}vimeoPlayer=null;}
+  videoPlaceholder.style.display='flex';
+  changeVideoBtn.classList.remove('visible');
+  videoSection.classList.remove('watched'); watchedAlready=false;
+});
+rewatchBtn.addEventListener('click',()=>{ watchedAlready=false; videoSection.classList.remove('watched'); loadVideo('https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479'); });
+doneWatchingBtn.addEventListener('click',markWatched);
+loadVideo('https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479');
 
-    function resetCountdown(){
-      window.clearTimeout(timer);
-      window.clearInterval(tick);
-      remaining = DISPLAY_SECONDS;
-      if (countdown) countdown.textContent = remaining;
-    }
+/* ── Unlock submit: needs transcription text AND a count ── */
+const transcription = document.getElementById('transcription');
+const countInput    = document.getElementById('countInput');
+const submitBtn     = document.getElementById('submitBtn');
 
-    function closeOverlay(){
-      overlay.classList.remove('open');
-      iframe.src = "about:blank";
-      resetCountdown();
-      openBtn.disabled = false;
-      document.title = "Transcribe this audio file";
-    }
+function checkUnlock(){
+  const hasText  = transcription.value.trim().length > 0;
+  const hasCount = countInput.value.trim().length > 0 && parseInt(countInput.value) >= 0;
+  submitBtn.disabled = !(hasText && hasCount);
+}
+transcription.addEventListener('input', checkUnlock);
+countInput.addEventListener('input', checkUnlock);
 
-    function openOverlayFallback(){
-      openBtn.disabled = true;
-      overlay.classList.add('open');
-      iframe.src = MANIFEST_URL;
-      directLink.href = MANIFEST_URL;
+/* ── Ingenuity percentage — always high (88–99%) ── */
+function calcPct(count){
+  return ((count * 37 + 13) % 12) + 88;
+}
 
-      resetCountdown();
-      tick = window.setInterval(() => {
-        remaining -= 1;
-        if (countdown) countdown.textContent = Math.max(remaining, 0);
-        if (remaining <= 0) window.clearInterval(tick);
-      }, 1000);
+/* ── Completion ── */
+function showCompletion(){
+  if(document.getElementById('final-comp')) return;
+  const count = parseInt(countInput.value) || 0;
+  const pct   = calcPct(count);
+  const chars = transcription.value.trim().length;
+  const words = transcription.value.trim().split(/\s+/).filter(Boolean).length;
 
-      timer = window.setTimeout(closeOverlay, DISPLAY_SECONDS * 1000);
-    }
+  const d = document.createElement('div');
+  d.id = 'final-comp'; d.className = 'completion-card';
+  d.innerHTML = `
+    <div class="c-eyebrow">✦ CAREBOT-11 · Readout</div>
+    <h2>Task Complete! 💡</h2>
+    <p>You transcribed <strong style="color:var(--candy)">${words.toLocaleString()}</strong> word${words===1?'':'s'} and identified <strong style="color:var(--candy)">${count}</strong> ingenuity/invention word${count===1?'':'s'} in <em>Woman as Inventor</em> by Matilda Joslyn Gage (1870).</p>
+    <div class="stat-bubble">
+      <div class="stat-number">${pct}%</div>
+      <div class="stat-label">ingenuity &amp; creativity index</div>
+    </div>
+    <div class="stat-sentence">"This text demonstrates a <strong style="color:var(--candy)">${pct}%</strong> density of ingenuity and creative thought."</div>
+    <div class="stat-raw">Based on ${count} identified word${count===1?'':'s'} · ${chars.toLocaleString()} characters transcribed · CAREBOT-11</div>
+    <a class="next-btn"
+       href="https://sbuckius.github.io/if-carebot-research/hit.html"
+       target="_blank" rel="noopener"
+       style="text-decoration:none;">
+      Task complete — next task ✦
+    </a>`;
+  document.getElementById('completionSlot').appendChild(d);
+  d.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-    function openInNewTabThenReturn(){
-      const newWin = window.open(MANIFEST_URL, '_blank'); // allow close attempt
-      if (newWin && !newWin.closed) {
-        openBtn.disabled = true;
-        resetCountdown();
-        tick = window.setInterval(() => {
-          remaining -= 1;
-          if (remaining <= 0) window.clearInterval(tick);
-          document.title = `(${Math.max(remaining,0)}s) Transcribe this audio file`;
-        }, 1000);
+/* ── Harvard manifest redirect ── */
+const MANIFEST_URL='https://iiif.lib.harvard.edu/manifests/view/drs:2575141$2i';
+const redirOverlay   =document.getElementById('redirOverlay');
+const redirFrame     =document.getElementById('redirFrame');
+const cntdwn         =document.getElementById('countdown');
+const redirDirectLink=document.getElementById('redirDirectLink');
+const closeOverlayBtn=document.getElementById('closeOverlayBtn');
+let rtimer=null,rtick=null,rrem=2;
 
-        timer = window.setTimeout(() => {
-          try { newWin.close(); } catch(e) {}
-          document.title = "Transcribe this audio file";
-          openBtn.disabled = false;
-          resetCountdown();
-        }, DISPLAY_SECONDS * 1000);
-      } else {
-        openOverlayFallback();
-      }
-    }
+function resetRedir(){ clearTimeout(rtimer);clearInterval(rtick);rrem=2;if(cntdwn)cntdwn.textContent=rrem; }
+function closeRedir(){ redirOverlay.classList.remove('open');redirFrame.src='about:blank';resetRedir();document.getElementById('openManifestBtn').disabled=false; }
+function openFallback(){ document.getElementById('openManifestBtn').disabled=true;redirOverlay.classList.add('open');redirFrame.src=MANIFEST_URL;redirDirectLink.href=MANIFEST_URL;resetRedir();rrem=2;rtick=setInterval(()=>{rrem--;if(cntdwn)cntdwn.textContent=Math.max(rrem,0);if(rrem<=0)clearInterval(rtick);},1000);rtimer=setTimeout(closeRedir,2000); }
 
-    openBtn.addEventListener('click', openInNewTabThenReturn);
-
-    // Overlay controls
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && overlay.classList.contains('open')) {
-        closeOverlay();
-      }
-    });
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeOverlay();
-    });
-    closeOverlayBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeOverlay();
-    });
-
-    // === Transcription textbox unlock logic ===
-    const textArea = document.getElementById('transcription');
-    const nextHitRow = document.getElementById('nextHitRow');
-
-    function toggleNextButton(){
-      const hasText = textArea.value.trim().length > 0;
-      nextHitRow.classList.toggle('hidden', !hasText);
-    }
-    textArea.addEventListener('input', toggleNextButton);
-    window.addEventListener('DOMContentLoaded', toggleNextButton);
-  }());
+document.getElementById('openManifestBtn').addEventListener('click',()=>{
+  const w=window.open(MANIFEST_URL,'_blank');
+  if(w&&!w.closed){ document.getElementById('openManifestBtn').disabled=true;resetRedir();rrem=2;rtick=setInterval(()=>{rrem--;if(rrem<=0)clearInterval(rtick);},1000);rtimer=setTimeout(()=>{try{w.close();}catch(e){}document.getElementById('openManifestBtn').disabled=false;resetRedir();},2000); }
+  else { openFallback(); }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&redirOverlay.classList.contains('open')) closeRedir(); });
+redirOverlay.addEventListener('click',e=>{ if(e.target===redirOverlay) closeRedir(); });
+closeOverlayBtn.addEventListener('click',e=>{ e.preventDefault(); closeRedir(); });
 </script>
+<script src="https://player.vimeo.com/api/player.js"></script>
 </body>
 </html>
