@@ -3,207 +3,431 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Technology Work</title>
+<title>✦ CAREBOT-07 ✦ Technology Work</title>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --rose:#ff5c8a; --hot:#ff335c; --candy:#ff7aa8; --bubble:#ffd2e6;
-    --berry:#8e004b; --crimson:#a1002b; --maroon:#5b001f; --wine:#6d0033;
-    --plum:#4c0038; --violet:#4c0044; --ink:#fff2f6;
-    --shadow:0 8px 28px rgba(255,64,128,.28); --border:var(--candy);
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #1a0012;
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 6px 44px rgba(255,45,107,.4), 0 0 80px rgba(255,30,128,.15);
+    --text-dim:  rgba(255,200,224,.55);
   }
 
-  html,body{
-    margin:0;
-    min-height:100%;
-    color:var(--ink);
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100%;
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream); background: var(--bg);
     -webkit-overflow-scrolling: touch;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",sans-serif;
+    -webkit-font-smoothing: antialiased;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  }
+
+  /* ── background ── */
+  .bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(1200px 1000px at -10% 0%, var(--rose) 0%, transparent 55%),
-      radial-gradient(1200px 900px at 110% 10%, var(--hot) 0%, transparent 55%),
-      radial-gradient(800px 800px at 50% 110%, var(--berry) 0%, transparent 60%),
-      linear-gradient(165deg, var(--maroon), var(--wine) 45%, var(--violet));
+      radial-gradient(ellipse 70% 55% at 18% 12%, rgba(200,0,80,.32)  0%, transparent 60%),
+      radial-gradient(ellipse 55% 65% at 82% 80%, rgba(140,0,70,.28)  0%, transparent 60%),
+      radial-gradient(ellipse 90% 40% at 50% 108%,rgba(110,0,50,.2)   0%, transparent 55%),
+      linear-gradient(160deg, #200015, #150010 50%, #0e000d);
   }
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(62px); }
+  .orb-1 { width:420px;height:420px;background:var(--hot);    opacity:.17; top:-100px; left:-80px;  animation:drift1 20s ease-in-out infinite; }
+  .orb-2 { width:340px;height:340px;background:var(--fuchsia);opacity:.15; bottom:-70px;right:-70px; animation:drift2 24s ease-in-out infinite; }
+  .orb-3 { width:200px;height:200px;background:var(--candy);  opacity:.1;  top:40%; left:58%;        animation:drift3 16s ease-in-out infinite; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,28px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-18px,14px)}66%{transform:translate(14px,-10px)}}
 
-  .wrap{
-    max-width:980px;
-    margin:clamp(16px,4vmin,32px) auto;
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.65}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+
+  /* ── layout ── */
+  .wrap {
+    position: relative; z-index: 2;
+    max-width: 980px; margin: 0 auto;
     padding:
-      max(0px, env(safe-area-inset-top))
+      max(20px, env(safe-area-inset-top))
       clamp(12px,3vmin,24px)
-      calc(56px + env(safe-area-inset-bottom))
+      calc(60px + env(safe-area-inset-bottom))
       clamp(12px,3vmin,24px);
+    display: grid; gap: 16px;
   }
 
-  .app{
-    border:1px solid var(--border);
-    background:color-mix(in oklab, rgba(255,255,255,.04) 20%, var(--maroon) 80%);
-    box-shadow:var(--shadow);border-radius:18px;
+  /* ── mascot bar ── */
+  .mascot-bar { display:flex;align-items:center;justify-content:space-between; }
+  .mascot { display:flex;align-items:center;gap:10px; }
+  .bot-face {
+    width:44px;height:44px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,60,.35));
+    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
   }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:11px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
 
-  .app-header,.app-footer{
+  /* ── VIDEO ── */
+  .video-section {
+    background: rgba(12,0,8,.78);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 24px;
+    box-shadow: var(--pop-glow), inset 0 1px 0 rgba(255,160,200,.07);
+    backdrop-filter: blur(20px) saturate(1.4);
+    overflow: hidden; position: relative;
+    transition: all 0.6s cubic-bezier(.4,0,.2,1);
+  }
+  .video-section::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 12px var(--candy);border-radius:999px;z-index:5;pointer-events:none;}
+  .video-top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,130,180,.12);}
+  .video-top-label{display:flex;align-items:center;gap:10px;}
+  .video-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(255,45,107,.3),rgba(200,0,90,.38));border:1.5px solid var(--card-border-bright);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 14px rgba(255,45,107,.3);animation:breathe 3s ease-in-out infinite;}
+  .video-label-text{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .video-label-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .video-badge{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:rgba(255,45,107,.1);border:1px solid rgba(255,100,160,.3);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);}
+  .video-embed-wrap{position:relative;width:100%;padding-bottom:56.25%;background:#080004;}
+  .video-embed-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;}
+  .video-placeholder{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:28px;background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(120,0,70,.35) 0%,rgba(8,0,4,.94) 100%);}
+  .placeholder-ring{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(255,45,107,.18),rgba(200,0,90,.22));border:1.5px solid var(--card-border-bright);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 28px rgba(255,45,107,.35);animation:wobble 3.5s ease-in-out infinite;}
+  .placeholder-heading{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(15px,2.5vw,20px);background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center;}
+  .placeholder-sub{font-size:12px;color:var(--text-dim);letter-spacing:.06em;text-align:center;}
+  .video-bottom-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 20px;border-top:1px solid rgba(255,130,180,.1);background:rgba(6,0,4,.4);}
+  .video-hint{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,160,200,.3);}
+  .change-btn{appearance:none;font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:6px 14px;border-radius:10px;border:1px solid rgba(255,130,180,.22);background:transparent;color:var(--text-dim);transition:all .2s;display:none;}
+  .change-btn:hover{border-color:var(--card-border-bright);color:var(--blush);background:rgba(255,45,107,.08);}
+  .change-btn.visible{display:inline-block;}
+  .video-section.watched .video-embed-wrap,.video-section.watched .video-top-bar,.video-section.watched::before{display:none;}
+  .video-section.watched .video-bottom-bar{border-top:none;background:transparent;padding:10px 16px;justify-content:center;}
+  .watched-pill{display:none;align-items:center;gap:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,160,200,.45);}
+  .watched-pill .wpcheck{width:20px;height:20px;border-radius:50%;background:rgba(255,45,107,.15);border:1px solid rgba(255,130,180,.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--candy);}
+  .video-section.watched .watched-pill{display:flex;}
+  .video-section.watched .video-hint,.video-section.watched .change-btn{display:none !important;}
+  .rewatch-btn{appearance:none;font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,130,180,.2);background:transparent;color:rgba(255,160,200,.4);transition:all .2s;margin-left:4px;}
+  .rewatch-btn:hover{border-color:var(--card-border-bright);color:var(--blush);background:rgba(255,45,107,.08);}
+  .done-btn{appearance:none;font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:6px 14px;border-radius:999px;border:1px solid rgba(255,130,180,.28);background:rgba(255,45,107,.08);color:rgba(255,160,200,.55);transition:all .2s;letter-spacing:.06em;}
+  .done-btn:hover{border-color:var(--card-border-bright);color:var(--blush);background:rgba(255,45,107,.15);}
+  .video-section.watched .done-btn{display:none;}
+
+  /* ── TASK CARD ── */
+  .app {
+    background: rgba(255,255,255,.035);
+    border: 1.5px solid var(--card-border);
+    border-radius: 24px;
+    box-shadow: var(--soft-glow);
+    backdrop-filter: blur(20px) saturate(1.5);
+    overflow: hidden; position: relative;
+  }
+  .app::before{content:'';position:absolute;top:0;left:16px;right:16px;height:1px;background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;pointer-events:none;z-index:1;}
+
+  .app-header{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:12px 14px;background:linear-gradient(180deg, rgba(25,8,18,.8), rgba(25,8,18,.35));
+    padding:16px 22px;
+    border-bottom:1px solid rgba(255,160,200,.1);
+    background:rgba(10,0,7,.5);
   }
-
-  .title{
-    font-weight:800;letter-spacing:.2px;line-height:1.25;
-    font-size:clamp(14px,2.4vw,18px);
-    background:linear-gradient(90deg, var(--hot), var(--rose) 40%, var(--candy));
+  .task-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;}
+  .task-title{
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(14px,2.4vw,20px);line-height:1.3;
+    background:linear-gradient(90deg,var(--cream) 20%,var(--blush) 55%,var(--fuchsia));
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .progress{font-size:clamp(12px,2vw,14px);opacity:.9;}
+  .task-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .meta-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:rgba(255,130,180,.08);border:1px solid rgba(255,130,180,.18);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+  .meta-dot{width:4px;height:4px;border-radius:50%;background:var(--candy);}
+  .progress{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--text-dim);white-space:nowrap;}
 
+  /* canvas */
   .canvas-shell{
     position:relative;width:100%;
     height: clamp(260px, 60svh, 520px);
-    background:#160012;
+    background:#12000a;
     touch-action: none;
+    border-bottom:1px solid rgba(255,160,200,.08);
   }
   canvas{display:block;width:100%;height:100%;}
+  .scroll-spacer{ height: 0; }
 
-  .scroll-spacer{ height: 32px; }
-
-  .app-footer{display:grid;grid-template-columns:1fr auto;gap:10px;}
-  .hints{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  /* footer */
+  .app-footer{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:14px 22px;flex-wrap:wrap;
+    background:rgba(10,0,7,.4);
+  }
+  .hints{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
   .pill{
-    background:color-mix(in oklab, var(--plum) 70%, #000 30%);
-    color:var(--bubble);padding:8px 10px;border-radius:999px;
-    border:1px solid var(--border);font-size:clamp(12px,2vw,14px);
+    padding:5px 11px;border-radius:999px;
+    background:rgba(255,130,180,.07);border:1px solid rgba(255,130,180,.18);
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);
   }
   .actions{display:flex;gap:8px;flex-wrap:wrap;}
 
   .btn{
-    appearance:none;border:1px solid var(--border);color:#fff;
-    background:linear-gradient(180deg, var(--hot), var(--crimson));
-    padding:12px 16px;border-radius:14px;font-weight:700;font-size:16px;
-    min-height:44px;cursor:pointer;box-shadow:var(--shadow);
-    -webkit-tap-highlight-color:transparent;text-decoration:none;
-    display:inline-flex;align-items:center;gap:10px;
+    appearance:none;font-family:'Nunito',sans-serif;font-weight:800;
+    font-size:13px;letter-spacing:.03em;
+    border:1.5px solid var(--card-border-bright);color:var(--cream);
+    background:linear-gradient(135deg,var(--hot),var(--berry),var(--maroon));
+    padding:10px 18px;border-radius:13px;
+    min-height:40px;cursor:pointer;
+    box-shadow:0 4px 18px rgba(255,45,107,.3),inset 0 1px 0 rgba(255,255,255,.1);
+    -webkit-tap-highlight-color:transparent;
+    text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:all .2s cubic-bezier(.34,1.56,.64,1);
+    position:relative;overflow:hidden;
   }
-  .btn.secondary{background:linear-gradient(180deg, var(--rose), var(--berry));}
-  .btn[disabled]{opacity:.6;cursor:not-allowed;filter:saturate(.7);}
-  .final-link-btn{display:inline-block;}
+  .btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%);pointer-events:none;}
+  .btn:hover:not([disabled]){transform:translateY(-2px) scale(1.04);box-shadow:0 8px 28px rgba(255,45,107,.5);}
+  .btn:active:not([disabled]){transform:translateY(0) scale(.97);}
+  .btn.secondary{background:linear-gradient(135deg,rgba(255,45,107,.4),rgba(150,0,70,.55));border-color:var(--card-border);}
+  .btn[disabled]{opacity:.3;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
 
-  .pop-msg{
-    position:fixed;left:50%;bottom:14px;transform:translateX(-50%);
-    background:#2a001d;color:var(--bubble);border:1px solid var(--border);
-    padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);
-    font-size:14px;display:none;z-index:9999;
+  /* completion card */
+  #completionSlot .completion-card{
+    background:rgba(20,0,14,.88);
+    border:1.5px solid var(--card-border-bright);
+    box-shadow:var(--pop-glow),inset 0 1px 0 rgba(255,160,200,.07);
+    border-radius:24px;padding:40px 28px;text-align:center;
+    position:relative;overflow:hidden;
+    backdrop-filter:blur(20px);
   }
+  #completionSlot .completion-card::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;}
+  .c-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+  #completionSlot .completion-card h2{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(24px,4vw,36px);background:linear-gradient(100deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px;}
+  #completionSlot .completion-card p{font-size:clamp(12px,1.9vw,15px);color:rgba(255,210,230,.7);line-height:1.85;margin-bottom:22px;max-width:560px;margin-left:auto;margin-right:auto;}
+  .stat-bubble{display:inline-flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(135deg,rgba(255,45,107,.15),rgba(200,0,90,.18));border:1.5px solid var(--card-border-bright);border-radius:20px;padding:18px 36px;margin-bottom:8px;box-shadow:0 4px 30px rgba(255,45,107,.25),inset 0 1px 0 rgba(255,255,255,.06);}
+  .stat-number{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(36px,6vw,58px);line-height:1;background:linear-gradient(135deg,var(--blush) 20%,var(--fuchsia) 55%,var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(255,45,107,.5));}
+  .stat-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
+  .stat-raw{font-size:11px;color:rgba(255,160,200,.35);letter-spacing:.04em;margin-bottom:26px;}
+  .next-btn{appearance:none;font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,2.5vw,17px);letter-spacing:.04em;color:var(--cream);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:clamp(13px,2vmin,17px) clamp(28px,5vmin,44px);border-radius:16px;border:1.5px solid var(--hot);background:linear-gradient(135deg,var(--hot) 0%,var(--berry) 55%,var(--maroon) 100%);box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.12);transition:all .22s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;animation:ctaPulse 2.8s ease-in-out infinite;}
+  .next-btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%);pointer-events:none;}
+  @keyframes ctaPulse{0%,100%{box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.12)}50%{box-shadow:0 10px 44px rgba(255,45,107,.62),0 0 60px rgba(255,30,128,.18),inset 0 1px 0 rgba(255,255,255,.12)}}
+  .next-btn:hover{transform:translateY(-3px) scale(1.04);animation:none;box-shadow:0 10px 40px rgba(255,45,107,.6);}
+
+  /* pop message */
+  .pop-msg{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:rgba(20,0,12,.95);color:var(--blush);border:1.5px solid var(--card-border-bright);padding:10px 18px;border-radius:14px;box-shadow:var(--soft-glow);font-size:13px;display:none;z-index:9999;font-family:'Nunito',sans-serif;font-weight:700;}
   .pop-msg.show{display:block;}
 
-  .overlay{
-    position:fixed;inset:0;
-    background:
-      radial-gradient(900px 900px at 50% -10%, rgba(255,77,141,.25), transparent 60%),
-      rgba(18,0,22,.85);
-    display:none;z-index:9999;backdrop-filter:blur(2px);
-  }
-  .overlay.open{display:grid;place-items:center;}
-  .overlay-card{
-    width:min(100vw - 40px,1000px);
-    height:min(100vh - 40px,720px);
-    background:#1b0018;border:1px solid var(--candy);border-radius:18px;overflow:hidden;
-    box-shadow:0 12px 50px rgba(0,0,0,.45),0 4px 20px rgba(255,77,141,.25) inset;
-    display:grid;grid-template-rows:auto 1fr auto;
-  }
-  .overlay-header{
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
-    padding:10px 14px;background:linear-gradient(180deg, var(--crimson), var(--berry));
-    color:var(--bubble);font-weight:700;
-  }
-  .countdown{font-variant-numeric:tabular-nums;background:#25001a;padding:6px 10px;border-radius:10px;border:1px solid var(--rose);}
-  .overlay iframe{width:100%;height:100%;border:0;background:#0f0011;}
-  .overlay-footer{padding:10px 14px;background:#230018;display:flex;justify-content:flex-end;gap:10px;}
-  .overlay a.inline-btn{
-    color:#fff;text-decoration:none;font-weight:700;
-    background:linear-gradient(180deg, var(--rose), var(--plum));
-    padding:10px 14px;border-radius:10px;border:1px solid var(--candy);
-  }
+  /* overlay */
+  .overlay-shell{position:fixed;inset:0;z-index:9000;background:rgba(8,0,5,.84);backdrop-filter:blur(14px);display:none;place-items:center;}
+  .overlay-shell.open{display:grid;}
+  .redir-card{width:min(100vw - 28px,1000px);height:min(100vh - 28px,720px);background:rgba(14,0,8,.95);border:1.5px solid var(--card-border);box-shadow:var(--soft-glow);border-radius:20px;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;}
+  .redir-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,130,180,.1);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+  .redir-countdown{background:rgba(255,45,107,.1);border:1px solid var(--card-border);border-radius:8px;padding:4px 10px;color:var(--rose);font-variant-numeric:tabular-nums;}
+  .redir-card iframe{width:100%;height:100%;border:0;background:#080004;}
+  .redir-footer{display:flex;justify-content:flex-end;gap:8px;padding:10px 18px;border-top:1px solid rgba(255,130,180,.1);}
+  .redir-link{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:var(--cream);text-decoration:none;padding:9px 18px;border-radius:12px;border:1.5px solid var(--card-border);background:rgba(255,45,107,.1);transition:all .2s;cursor:pointer;appearance:none;}
+  .redir-link:hover{border-color:var(--card-border-bright);background:rgba(255,45,107,.2);}
 
-  /* Completion card in the DOM (below canvas) */
-  #completionSlot .completion-card{
-    margin-top:24px;
-    background:color-mix(in oklab, rgba(255,255,255,.06) 20%, var(--maroon) 80%);
-    border:1px solid var(--candy);border-radius:18px;
-    padding:28px 24px;box-shadow:var(--shadow);
-    text-align:center;
-  }
-  #completionSlot .completion-card h2{
-    margin:0 0 12px;font-size:clamp(18px,3vw,24px);
-    background:linear-gradient(90deg, var(--hot), var(--rose) 40%, var(--candy));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    font-weight:800;
-  }
-  #completionSlot .completion-card p{
-    margin:0 0 20px;font-size:clamp(14px,2vw,16px);
-    color:var(--bubble);line-height:1.6;
-  }
-  #completionSlot .completion-card .area-stat{
-    display:inline-block;
-    background:linear-gradient(135deg, var(--plum), var(--wine));
-    border:1px solid var(--candy);border-radius:12px;
-    padding:10px 18px;margin:0 0 20px;
-    font-size:clamp(18px,3vw,26px);font-weight:800;
-    color:#fff;letter-spacing:.5px;
-  }
+  .wordmark{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,160,200,.18);text-align:center;}
 </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="app" aria-label="Tech Work Task">
-      <header class="app-header">
-        <div class="title">Draw a box around every person who is working with technology.</div>
-        <div class="progress" id="progress"></div>
-      </header>
 
-      <div class="canvas-shell">
-        <div id="canvasHolder" style="position:absolute;inset:0;"></div>
+<div class="bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<main class="wrap">
+
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CAREBOT-07 ✦</div>
+        <div class="bot-sub">Technology Work · Annotation · Online</div>
       </div>
-      <div class="scroll-spacer" aria-hidden="true"></div>
-
-      <footer class="app-footer">
-        <div class="hints">
-          <div class="pill">Drag to draw rectangles</div>
-          <div class="pill">Undo: <b>Z</b></div>
-          <div class="pill">Next: <b>N</b></div>
-        </div>
-        <div class="actions">
-          <button id="openCalcBtn" class="btn secondary" type="button">Human Computers</button>
-          <button id="undo" class="btn" type="button">Undo</button>
-          <button id="next" class="btn" type="button" disabled>Next</button>
-        </div>
-      </footer>
-    </section>
-
-    <div id="completionSlot"></div>
-  </main>
-
-  <div id="popupMsg" class="pop-msg">Couldn't open a temporary tab. Please allow pop-ups for this site.</div>
-
-  <div id="calcOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="calcTitle">
-    <div class="overlay-card">
-      <header class="overlay-header">
-        <div id="calcTitle">Opening: Computer History Museum — Calculators</div>
-        <small>Auto-closing in <span class="countdown" id="countdown">3</span>s…</small>
-      </header>
-      <iframe id="calcFrame" title="CHM page"></iframe>
-      <div class="overlay-footer">
-        <a id="calcDirectLink" class="inline-btn" href="#" target="_blank" rel="noopener">Open in a new tab</a>
-        <a id="closeOverlayBtn" class="inline-btn" href="#" role="button">Close</a>
-      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
     </div>
   </div>
 
+  <!-- VIDEO -->
+  <div class="video-section" id="videoSection">
+    <div class="video-top-bar">
+      <div class="video-top-label">
+        <div class="video-icon">▶</div>
+        <div>
+          <div class="video-label-text">Task Briefing Video</div>
+          <div class="video-label-sub">Watch before you begin ✦</div>
+        </div>
+      </div>
+      <div class="video-badge"><div class="time-pip"></div> Briefing</div>
+    </div>
+    <div class="video-embed-wrap" id="videoEmbedWrap">
+      <div class="video-placeholder" id="videoPlaceholder">
+        <div class="placeholder-ring">▶</div>
+        <div class="placeholder-heading">Task Briefing Video ✦</div>
+        <div class="placeholder-sub">Loading your briefing…</div>
+      </div>
+    </div>
+    <div class="video-bottom-bar">
+      <div class="video-hint">✦ Watch the full briefing before starting</div>
+      <div class="watched-pill">
+        <div class="wpcheck">✦</div>
+        <span>Briefing watched</span>
+        <button class="rewatch-btn" id="rewatchBtn">Rewatch ↩</button>
+      </div>
+      <button class="done-btn" id="doneWatchingBtn">✦ Done watching — collapse</button>
+      <button class="change-btn" id="changeVideoBtn">Change video ✦</button>
+    </div>
+  </div>
+
+  <!-- TASK CARD -->
+  <section class="app" aria-label="Tech Work Task">
+    <header class="app-header">
+      <div>
+        <div class="task-eyebrow">✦ CAREBOT-07 · Annotation Task</div>
+        <div class="task-title">Draw a box around every person who is working with technology.</div>
+        <div class="task-meta">
+          <div class="meta-chip"><div class="meta-dot"></div> Bounding Box</div>
+          <div class="meta-chip"><div class="meta-dot"></div> Human Computers</div>
+          <div class="meta-chip"><div class="meta-dot"></div> Active</div>
+        </div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </header>
+
+    <div class="canvas-shell">
+      <div id="canvasHolder" style="position:absolute;inset:0;"></div>
+    </div>
+    <div class="scroll-spacer" aria-hidden="true"></div>
+
+    <footer class="app-footer">
+      <div class="hints">
+        <div class="pill">Drag to draw boxes</div>
+        <div class="pill">Undo: Z</div>
+        <div class="pill">Next: N</div>
+      </div>
+      <div class="actions">
+        <button id="openCalcBtn" class="btn secondary" type="button">✦ Human Computers</button>
+        <button id="undo" class="btn secondary" type="button">↩ Undo</button>
+        <button id="next" class="btn" type="button" disabled>Next ✦</button>
+      </div>
+    </footer>
+  </section>
+
+  <div id="completionSlot"></div>
+  <div class="wordmark">✦ carebot research system · v2.4 ✦</div>
+
+</main>
+
+<div id="popupMsg" class="pop-msg">Couldn't open a new tab. Please allow pop-ups for this site.</div>
+
+<!-- redirect overlay -->
+<div id="calcOverlay" class="overlay-shell" role="dialog" aria-modal="true" aria-labelledby="calcTitle">
+  <div class="redir-card">
+    <div class="redir-header">
+      <span id="calcTitle">✦ Computer History Museum — Calculators</span>
+      <div class="redir-countdown">Auto-close <span id="countdown">3</span>s</div>
+    </div>
+    <iframe id="calcFrame" title="CHM page"></iframe>
+    <div class="redir-footer">
+      <a id="calcDirectLink" class="redir-link" href="#" target="_blank" rel="noopener">Open in new tab</a>
+      <button id="closeOverlayBtn" class="redir-link">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ========= Settings ========= */
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀','⬜','□'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000); updateClock();
+
+/* ── Video ── */
+const videoSection   =document.getElementById('videoSection');
+const videoEmbedWrap =document.getElementById('videoEmbedWrap');
+const videoPlaceholder=document.getElementById('videoPlaceholder');
+const changeVideoBtn =document.getElementById('changeVideoBtn');
+const rewatchBtn     =document.getElementById('rewatchBtn');
+const doneWatchingBtn=document.getElementById('doneWatchingBtn');
+let activeIframe=null,vimeoPlayer=null,watchedAlready=false;
+
+function markWatched(){ if(watchedAlready)return; watchedAlready=true; videoSection.classList.add('watched'); }
+function attachVimeoAPI(iframe){
+  function tryAttach(){
+    if(typeof Vimeo!=='undefined'){
+      vimeoPlayer=new Vimeo.Player(iframe);
+      vimeoPlayer.on('ended',()=>setTimeout(markWatched,1000));
+      vimeoPlayer.on('timeupdate',d=>{ if(d.percent>=0.95) markWatched(); });
+    } else { setTimeout(tryAttach,300); }
+  }
+  tryAttach();
+}
+function loadVideo(src){
+  if(!src) return;
+  if(activeIframe) activeIframe.remove();
+  if(vimeoPlayer){ try{vimeoPlayer.destroy();}catch(e){} vimeoPlayer=null; }
+  videoPlaceholder.style.display='none';
+  videoSection.classList.remove('watched'); watchedAlready=false;
+  activeIframe=document.createElement('iframe');
+  activeIframe.src=src;
+  activeIframe.allow='autoplay; fullscreen; picture-in-picture';
+  activeIframe.allowFullscreen=true;
+  activeIframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
+  videoEmbedWrap.appendChild(activeIframe);
+  changeVideoBtn.classList.add('visible');
+  if(src.includes('player.vimeo.com')) attachVimeoAPI(activeIframe);
+}
+changeVideoBtn.addEventListener('click',()=>{
+  if(activeIframe){activeIframe.remove();activeIframe=null;}
+  if(vimeoPlayer){try{vimeoPlayer.destroy();}catch(e){}vimeoPlayer=null;}
+  videoPlaceholder.style.display='flex';
+  changeVideoBtn.classList.remove('visible');
+  videoSection.classList.remove('watched'); watchedAlready=false;
+});
+rewatchBtn.addEventListener('click',()=>{ watchedAlready=false; videoSection.classList.remove('watched'); loadVideo('https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479'); });
+doneWatchingBtn.addEventListener('click',markWatched);
+loadVideo('https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479');
+
+/* ========= p5 Settings ========= */
 const FOLDER_PATH="images/";
 const FILE_PREFIX="techwork";
 const FILE_EXT=".png";
 const MAX_ATTEMPTS=500;
-
 const EXTERNAL_URL="https://www.computerhistory.org/revolution/calculators/1/65";
 const DISPLAY_SECONDS=3;
 
@@ -211,238 +435,181 @@ const DISPLAY_SECONDS=3;
 let imgs=[],imgMeta=[],current=0,dragging=false,dragStart=null,tempRect=null,scaleInfo=null,finished=false,canvas;
 let discovering=true;
 
-/* ========= Auto-discover images ========= */
+/* ========= Image discovery ========= */
 function loadImageAsync(p){return new Promise((res,rej)=>{const im=loadImage(p,()=>res(im),()=>rej(new Error("load-failed")));});}
 async function discoverImages(){let i=0;try{for(;i<MAX_ATTEMPTS;i++){const img=await loadImageAsync(`${FOLDER_PATH}${FILE_PREFIX}${i}${FILE_EXT}`);imgs.push(img);imgMeta.push({boxes:[]});}}catch(e){}finally{discovering=false;}}
 
 /* ========= Area calculation ========= */
 function calcTotalBoxArea(){
-  // Sum of all drawn box areas, in IMAGE pixels (not canvas pixels)
   let total=0;
-  for(let i=0;i<imgMeta.length;i++){
-    for(const r of imgMeta[i].boxes){
-      total += r.w * r.h;
-    }
-  }
+  for(let i=0;i<imgMeta.length;i++) for(const r of imgMeta[i].boxes) total+=r.w*r.h;
   return total;
 }
-
 function calcTotalImageArea(){
-  // Sum of pixel areas of all loaded images
   let total=0;
-  for(const img of imgs){
-    if(img) total += img.width * img.height;
-  }
+  for(const img of imgs) if(img) total+=img.width*img.height;
   return total;
 }
-
 function formatPercent(ratio){
-  // Express as a percentage with up to 2 decimal places, stripping trailing zeros
-  const pct = ratio * 100;
-  if(pct < 0.01) return "<0.01%";
-  return parseFloat(pct.toFixed(2)) + "%";
+  const pct=ratio*100;
+  if(pct<0.01) return "<0.01%";
+  return parseFloat(pct.toFixed(2))+"%";
 }
 
 /* ========= p5 ========= */
 function setup(){
   const holder=document.getElementById('canvasHolder');
   pixelDensity(window.devicePixelRatio||1);
-  canvas=createCanvas(holder.clientWidth, holder.clientHeight);
+  canvas=createCanvas(holder.clientWidth,holder.clientHeight);
   canvas.parent('canvasHolder');
   canvas.elt.oncontextmenu=e=>e.preventDefault();
   colorMode(HSB,360,100,100,1);
-
   new ResizeObserver(()=>{resizeCanvas(holder.clientWidth,holder.clientHeight);updateScaleInfo();}).observe(holder);
-
   document.getElementById('undo').onclick=undoLast;
   document.getElementById('next').onclick=nextImage;
   document.getElementById('openCalcBtn').addEventListener('click',openInNewTabThenReturn);
-
-  (async()=>{await discoverImages(); updateScaleInfo();})();
+  (async()=>{await discoverImages();updateScaleInfo();})();
 }
 
 function draw(){
   const t=millis()*0.001, base=335+15*sin(t*0.4);
-  const cTop=color(base,70,25), cMid=color((base+10)%360,80,40), cBot=color((base+20)%360,90,55);
+  const cTop=color(base,70,25),cMid=color((base+10)%360,80,40),cBot=color((base+20)%360,90,55);
   drawGrad(cTop,cMid,cBot);
-
   if(discovering) return drawMsg("Looking for images…");
   if(imgs.length===0) return drawMsg("No images found in images/");
   if(finished) return drawCompletion();
-
   const img=imgs[current]; if(!img) return drawMsg("Loading…");
   updateScaleInfo(); image(img,scaleInfo.x,scaleInfo.y,scaleInfo.w,scaleInfo.h);
-
   push(); noFill(); strokeWeight(Math.max(1,2*(width/1024)));
   for(const r of imgMeta[current].boxes){
     const {x,y,w,h}=imgRectToCanvas(r);
     stroke(330,60,95,.85); rect(x,y,w,h);
     stroke(330,15,100,1);  rect(x,y,w,h);
   } pop();
-
-  if(dragging && tempRect){
+  if(dragging&&tempRect){
     push(); noFill(); stroke(330,15,100,1); strokeWeight(3);
     rect(tempRect.x,tempRect.y,tempRect.w,tempRect.h); pop();
   }
-
-  document.getElementById('progress').textContent=`Image ${current+1} of ${imgs.length}`;
+  document.getElementById('progress').textContent=`${current+1} / ${imgs.length}`;
 }
 
-/* ========= helpers ========= */
 function drawGrad(a,b,c){
-  const ctx=drawingContext, g=ctx.createLinearGradient(0,0,0,height);
-  g.addColorStop(0, toRGBA(a)); g.addColorStop(.5, toRGBA(b)); g.addColorStop(1, toRGBA(c));
-  ctx.save(); ctx.fillStyle=g; ctx.fillRect(0,0,width,height); ctx.restore();
+  const ctx=drawingContext,g=ctx.createLinearGradient(0,0,0,height);
+  g.addColorStop(0,toRGBA(a));g.addColorStop(.5,toRGBA(b));g.addColorStop(1,toRGBA(c));
+  ctx.save();ctx.fillStyle=g;ctx.fillRect(0,0,width,height);ctx.restore();
 }
 function toRGBA(col){return `rgba(${red(col)|0},${green(col)|0},${blue(col)|0},${alpha(col)/255})`;}
-function drawMsg(m){ push(); fill(0,0,100); noStroke(); textAlign(CENTER,CENTER); textSize(16); text(m, width/2, height/2); pop(); }
+function drawMsg(m){push();fill(0,0,100);noStroke();textAlign(CENTER,CENTER);textSize(16);text(m,width/2,height/2);pop();}
 
-/* ========= completion (canvas layer — minimal) ========= */
+/* ========= canvas completion (minimal — DOM card does the heavy lifting) ========= */
 function drawCompletion(){
-  push(); noStroke(); fill(330,20,100); textAlign(CENTER,CENTER); textSize(20);
-  text("You have completed this HIT.", width/2, height/2 - 18);
-  textSize(16); text("See your results and next task below.", width/2, height/2 + 8); pop();
+  push();noStroke();fill(0,0,100,.7);textAlign(CENTER,CENTER);textSize(18);
+  text("Task complete! See your results below ✦",width/2,height/2);pop();
+  if(!document.getElementById('final-link')) injectCompletionCard();
+}
 
-  // Only inject the DOM card once
-  if(!document.getElementById('final-link')){
-    const totalBoxArea    = calcTotalBoxArea();
-    const totalImageArea  = calcTotalImageArea();
-    const ratio           = totalImageArea > 0 ? totalBoxArea / totalImageArea : 0;
-    const pctStr          = formatPercent(ratio);
+function injectCompletionCard(){
+  const totalBoxArea   = calcTotalBoxArea();
+  const totalImageArea = calcTotalImageArea();
+  const ratio          = totalImageArea>0 ? totalBoxArea/totalImageArea : 0;
+  const pctStr         = formatPercent(ratio);
+  const boxPx          = Math.round(totalBoxArea).toLocaleString();
+  const imgPx          = Math.round(totalImageArea).toLocaleString();
 
-    const d = document.createElement('div');
-    d.id = 'final-link';
-    d.className = 'completion-card';
-    d.innerHTML = `
-      <h2>Task Complete!</h2>
-      <p>
-        All of the boxes frame <strong>human computers</strong> — people who made complex
-        calculations before computer technology became advanced enough.
-        The total area of human computers in the images is:
-      </p>
-      <div class="area-stat">${pctStr} of all image area</div>
-      <p style="font-size:13px;opacity:.7;margin:0 0 20px;">
-        (${Math.round(totalBoxArea).toLocaleString()} px² of boxes &nbsp;÷&nbsp;
-         ${Math.round(totalImageArea).toLocaleString()} px² of images combined)
-      </p>
-      <a class="final-link-btn btn secondary"
-         href="https://sbuckius.github.io/if-carebot-research/hit.html"
-         target="_blank" rel="noopener">
-        You completed this HIT! Go to your next task →
-      </a>`;
-    document.getElementById('completionSlot').appendChild(d);
-  }
+  const d=document.createElement('div');
+  d.id='final-link'; d.className='completion-card';
+  d.innerHTML=`
+    <div class="c-eyebrow">✦ CAREBOT-07 · Readout</div>
+    <h2>Task Complete! 🌸</h2>
+    <p>
+      All of the boxes frame <strong style="color:var(--candy)">human computers</strong> —
+      people who performed complex calculations before electronic computers became advanced enough.
+    </p>
+    <div class="stat-bubble">
+      <div class="stat-number">${pctStr}</div>
+      <div class="stat-label">of all image area annotated</div>
+    </div>
+    <div class="stat-raw">${boxPx} px² of boxes &nbsp;÷&nbsp; ${imgPx} px² of images combined</div>
+    <a class="next-btn"
+       href="https://sbuckius.github.io/if-carebot-research/hit.html"
+       target="_blank" rel="noopener"
+       style="text-decoration:none;">
+      Task complete — next task ✦
+    </a>`;
+  document.getElementById('completionSlot').appendChild(d);
+  d.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 /* ========= interaction ========= */
 function mousePressed(){
-  if(finished) return;
-  if(!inside(mouseX,mouseY)) return;
-  dragging=true;
-  dragStart={x:mouseX,y:mouseY};
-  tempRect={x:mouseX,y:mouseY,w:0,h:0};
-  return false;
+  if(finished||!inside(mouseX,mouseY)) return;
+  dragging=true;dragStart={x:mouseX,y:mouseY};tempRect={x:mouseX,y:mouseY,w:0,h:0};return false;
 }
-function mouseDragged(){
-  if(!dragging) return;
-  tempRect.w=mouseX-dragStart.x;
-  tempRect.h=mouseY-dragStart.y;
-  return false;
-}
+function mouseDragged(){ if(!dragging) return; tempRect.w=mouseX-dragStart.x;tempRect.h=mouseY-dragStart.y;return false; }
 function mouseReleased(){
   if(!dragging) return;
   dragging=false;
-  const n=normalizeRect(tempRect); tempRect=null;
+  const n=normalizeRect(tempRect);tempRect=null;
   const clamped=clampRectToImage(n);
   const MIN=10; if(clamped.w<MIN||clamped.h<MIN) return;
   imgMeta[current].boxes.push(canvasRectToImg(clamped));
-  updateUI();
-  return false;
+  updateUI(); return false;
 }
 function touchStarted(){ return mousePressed(); }
 function touchMoved(){ return mouseDragged(); }
 function touchEnded(){ return mouseReleased(); }
-
 function keyPressed(){ if(key==='z'||key==='Z') undoLast(); if(key==='n'||key==='N') nextImage(); }
-function undoLast(){ if(finished) return; const b=imgMeta[current].boxes; if(b.length>0){ b.pop(); updateUI(); } }
+function undoLast(){ if(finished) return; const b=imgMeta[current].boxes; if(b.length>0){b.pop();updateUI();} }
 function nextImage(){
   if(finished) return;
   if(imgMeta[current].boxes.length===0) return;
-  if(current<imgs.length-1){
-    current++; updateScaleInfo(); updateUI();
-  } else {
-    finished=true;
-    document.getElementById('undo').disabled=true;
-    document.getElementById('next').disabled=true;
-  }
+  if(current<imgs.length-1){ current++;updateScaleInfo();updateUI(); }
+  else { finished=true;document.getElementById('undo').disabled=true;document.getElementById('next').disabled=true; }
 }
 function updateUI(){
-  const n=document.getElementById('next'), u=document.getElementById('undo');
-  if(finished){ n.disabled=true; u.disabled=true; }
-  else { const has=imgMeta[current].boxes.length>0; n.disabled=!has; u.disabled=!has; }
+  const n=document.getElementById('next'),u=document.getElementById('undo');
+  if(finished){n.disabled=true;u.disabled=true;}
+  else{const has=imgMeta[current].boxes.length>0;n.disabled=!has;u.disabled=!has;}
 }
 
 /* ========= geometry ========= */
 function updateScaleInfo(){
   const img=imgs[current]; if(!img) return;
-  const cw=width, ch=height, iw=img.width, ih=img.height;
-  const s=Math.min(cw/iw, ch/ih);
-  scaleInfo={ x:(cw - iw*s)/2, y:(ch - ih*s)/2, w:iw*s, h:ih*s, scale:s };
+  const cw=width,ch=height,iw=img.width,ih=img.height,s=Math.min(cw/iw,ch/ih);
+  scaleInfo={x:(cw-iw*s)/2,y:(ch-ih*s)/2,w:iw*s,h:ih*s,scale:s};
 }
-function inside(x,y){
-  return scaleInfo && x>=scaleInfo.x && x<=scaleInfo.x+scaleInfo.w &&
-         y>=scaleInfo.y && y<=scaleInfo.y+scaleInfo.h;
-}
-function normalizeRect(r){
-  const x=r.w<0? r.x+r.w : r.x;
-  const y=r.h<0? r.y+r.h : r.y;
-  return { x, y, w:Math.abs(r.w), h:Math.abs(r.h) };
-}
-function canvasToImgPoint(px,py){ return { x:(px-scaleInfo.x)/scaleInfo.scale, y:(py-scaleInfo.y)/scaleInfo.scale }; }
-function canvasRectToImg(r){
-  const p1=canvasToImgPoint(r.x, r.y);
-  const p2=canvasToImgPoint(r.x+r.w, r.y+r.h);
-  return { x:Math.min(p1.x,p2.x), y:Math.min(p1.y,p2.y), w:Math.abs(p2.x-p1.x), h:Math.abs(p2.y-p1.y) };
-}
-function clampRectToImage(r){
-  if(!scaleInfo) return r;
-  const ix=scaleInfo.x, iy=scaleInfo.y, iw=scaleInfo.w, ih=scaleInfo.h;
-  const x1=Math.max(ix, Math.min(ix+iw, r.x));
-  const y1=Math.max(iy, Math.min(iy+ih, r.y));
-  const x2=Math.max(ix, Math.min(ix+iw, r.x+r.w));
-  const y2=Math.max(iy, Math.min(iy+ih, r.y+r.h));
-  return { x:Math.min(x1,x2), y:Math.min(y1,y2), w:Math.abs(x2-x1), h:Math.abs(y2-y1) };
-}
-function imgRectToCanvas(r){
-  return { x:scaleInfo.x+r.x*scaleInfo.scale, y:scaleInfo.y+r.y*scaleInfo.scale, w:r.w*scaleInfo.scale, h:r.h*scaleInfo.scale };
-}
+function inside(x,y){ return scaleInfo&&x>=scaleInfo.x&&x<=scaleInfo.x+scaleInfo.w&&y>=scaleInfo.y&&y<=scaleInfo.y+scaleInfo.h; }
+function normalizeRect(r){ const x=r.w<0?r.x+r.w:r.x,y=r.h<0?r.y+r.h:r.y; return{x,y,w:Math.abs(r.w),h:Math.abs(r.h)}; }
+function canvasToImgPoint(px,py){ return{x:(px-scaleInfo.x)/scaleInfo.scale,y:(py-scaleInfo.y)/scaleInfo.scale}; }
+function canvasRectToImg(r){ const p1=canvasToImgPoint(r.x,r.y),p2=canvasToImgPoint(r.x+r.w,r.y+r.h); return{x:Math.min(p1.x,p2.x),y:Math.min(p1.y,p2.y),w:Math.abs(p2.x-p1.x),h:Math.abs(p2.y-p1.y)}; }
+function clampRectToImage(r){ if(!scaleInfo) return r; const ix=scaleInfo.x,iy=scaleInfo.y,iw=scaleInfo.w,ih=scaleInfo.h,x1=Math.max(ix,Math.min(ix+iw,r.x)),y1=Math.max(iy,Math.min(iy+ih,r.y)),x2=Math.max(ix,Math.min(ix+iw,r.x+r.w)),y2=Math.max(iy,Math.min(iy+ih,r.y+r.h)); return{x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1),h:Math.abs(y2-y1)}; }
+function imgRectToCanvas(r){ return{x:scaleInfo.x+r.x*scaleInfo.scale,y:scaleInfo.y+r.y*scaleInfo.scale,w:r.w*scaleInfo.scale,h:r.h*scaleInfo.scale}; }
 
-/* ========= Redirect ========= */
+/* ========= Redirect overlay ========= */
 const openBtn=document.getElementById('openCalcBtn'),
       overlay=document.getElementById('calcOverlay'),
-      iframe=document.getElementById('calcFrame'),
-      countdown=document.getElementById('countdown'),
+      calcFrame=document.getElementById('calcFrame'),
+      cntdwn=document.getElementById('countdown'),
       directLink=document.getElementById('calcDirectLink'),
       closeBtn=document.getElementById('closeOverlayBtn'),
       popup=document.getElementById('popupMsg');
 let timer=null,tick=null,remain=DISPLAY_SECONDS;
 
-function reset(){clearTimeout(timer);clearInterval(tick);remain=DISPLAY_SECONDS;if(countdown) countdown.textContent=remain;}
-function closeO(){overlay.classList.remove('open');iframe.src="about:blank";reset();openBtn.disabled=false;document.title="Tech Work";}
+function resetR(){clearTimeout(timer);clearInterval(tick);remain=DISPLAY_SECONDS;if(cntdwn)cntdwn.textContent=remain;}
+function closeO(){overlay.classList.remove('open');calcFrame.src="about:blank";resetR();openBtn.disabled=false;document.title="✦ CAREBOT-07 ✦";}
 function overlayFallback(){
-  openBtn.disabled=true;overlay.classList.add('open');iframe.src=EXTERNAL_URL;directLink.href=EXTERNAL_URL;
-  reset();tick=setInterval(()=>{remain--;if(countdown) countdown.textContent=Math.max(remain,0);if(remain<=0)clearInterval(tick);},1000);
+  openBtn.disabled=true;overlay.classList.add('open');calcFrame.src=EXTERNAL_URL;directLink.href=EXTERNAL_URL;
+  resetR();tick=setInterval(()=>{remain--;if(cntdwn)cntdwn.textContent=Math.max(remain,0);if(remain<=0)clearInterval(tick);},1000);
   timer=setTimeout(closeO,DISPLAY_SECONDS*1000);
 }
 function openInNewTabThenReturn(){
   const newWin=window.open(EXTERNAL_URL,'_blank');
   if(newWin&&!newWin.closed){
-    openBtn.disabled=true;reset();
-    tick=setInterval(()=>{remain--;if(remain<=0)clearInterval(tick);
-      document.title=`(${Math.max(remain,0)}s) Tech Work`;},1000);
-    timer=setTimeout(()=>{try{newWin.close();}catch(e){}document.title="Tech Work";openBtn.disabled=false;reset();},DISPLAY_SECONDS*1000);
+    openBtn.disabled=true;resetR();
+    tick=setInterval(()=>{remain--;if(remain<=0)clearInterval(tick);document.title=`(${Math.max(remain,0)}s) CAREBOT-07`;},1000);
+    timer=setTimeout(()=>{try{newWin.close();}catch(e){}document.title="✦ CAREBOT-07 ✦";openBtn.disabled=false;resetR();},DISPLAY_SECONDS*1000);
   } else {
-    popup.classList.add('show'); setTimeout(()=>popup.classList.remove('show'),3000);
+    popup.classList.add('show');setTimeout(()=>popup.classList.remove('show'),3000);
     overlayFallback();
   }
 }
@@ -450,5 +617,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.c
 overlay.addEventListener('click',e=>{if(e.target===overlay)closeO();});
 closeBtn.addEventListener('click',e=>{e.preventDefault();closeO();});
 </script>
+<script src="https://player.vimeo.com/api/player.js"></script>
 </body>
 </html>
