@@ -34,7 +34,7 @@ function resetBall() {
 }
 
 function draw() {
-  background(#12000a);
+  background('#12000a');
 
   if (win) {
     fill('pink');
