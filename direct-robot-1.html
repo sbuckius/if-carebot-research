@@ -6,86 +6,43 @@
 <title>✦ CAREBOT-04 ✦ Robot Picker</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-<script src="captions.js"></script>
 <style>
   :root {
-    --rose:    #ff5c8a;
-    --hot:     #ff2d6b;
-    --candy:   #ff85b3;
-    --blush:   #ffb3cf;
-    --cream:   #fff5f8;
-    --berry:   #c4005a;
-    --crimson: #8b0030;
-    --maroon:  #4a001a;
-    --fuchsia: #ff1f80;
-    --bg:      #0e0008;
-    --card-border: rgba(255,140,185,.25);
-    --card-border-bright: rgba(255,80,150,.6);
-    --soft-glow: 0 4px 30px rgba(255,45,107,.2);
-    --pop-glow:  0 8px 50px rgba(255,45,107,.45), 0 0 90px rgba(200,0,80,.15);
-    --text-dim:  rgba(255,190,220,.5);
+    --rose:#ff5c8a; --hot:#ff2d6b; --candy:#ff85b3; --blush:#ffb3cf;
+    --cream:#fff5f8; --berry:#c4005a; --crimson:#8b0030; --maroon:#4a001a;
+    --fuchsia:#ff1f80; --bg:#0e0008;
+    --card-border:rgba(255,140,185,.25);
+    --card-border-bright:rgba(255,80,150,.6);
+    --soft-glow:0 4px 30px rgba(255,45,107,.2);
+    --pop-glow:0 8px 50px rgba(255,45,107,.45),0 0 90px rgba(200,0,80,.15);
+    --text-dim:rgba(255,190,220,.5);
   }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    height: 100%; min-height: 100%;
-    font-family: 'Quicksand', sans-serif; font-weight: 600;
-    color: var(--cream);
-    background: var(--bg);
-    -webkit-overflow-scrolling: touch;
-    -webkit-font-smoothing: antialiased;
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{
+    height:100%;min-height:100%;
+    font-family:'Quicksand',sans-serif;font-weight:600;
+    color:var(--cream);background:var(--bg);
+    -webkit-overflow-scrolling:touch;-webkit-font-smoothing:antialiased;
+    cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10,default;
   }
-
-  /* ── background — berry/maroon/crimson palette ── */
-  .bg-layer {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(ellipse 75% 55% at 5% 90%,   rgba(180,0,60,.38)  0%, transparent 58%),
-      radial-gradient(ellipse 60% 65% at 95% 10%,   rgba(120,0,35,.32)  0%, transparent 58%),
-      radial-gradient(ellipse 50% 40% at 50% 50%,   rgba(255,30,100,.06) 0%, transparent 65%),
-      linear-gradient(155deg, #160008, #0e0005 50%, #080003);
-  }
-  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(65px); }
-  .orb-1 { width:380px;height:380px;background:var(--crimson); opacity:.2;  bottom:-80px; left:-70px;  animation:drift1 21s ease-in-out infinite; }
-  .orb-2 { width:300px;height:300px;background:var(--berry);   opacity:.18; top:-60px;    right:-60px; animation:drift2 25s ease-in-out infinite; }
-  .orb-3 { width:200px;height:200px;background:var(--hot);     opacity:.1;  top:42%; left:55%;         animation:drift3 17s ease-in-out infinite; }
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,30,100,.06) 0%,transparent 65%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
+  .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+  .orb-1{width:380px;height:380px;background:var(--crimson);opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
+  .orb-2{width:300px;height:300px;background:var(--berry);opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+  .orb-3{width:200px;height:200px;background:var(--hot);opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
   @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
   @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
   @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
-
-  .sparkles { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
-  .sp { position:absolute;opacity:0;animation:floatUp linear infinite; }
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
   @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
 
-  /* ── outer layout ── */
-  .screen {
-    position: relative; z-index: 2;
-    min-height: 100%;
-    display: flex; flex-direction: column;
-    align-items: center;
-    padding:
-      max(16px, env(safe-area-inset-top))
-      clamp(12px,4vmin,24px)
-      calc(32px + env(safe-area-inset-bottom))
-      clamp(12px,4vmin,24px);
-    gap: 14px;
-  }
+  .screen{position:relative;z-index:2;min-height:100%;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(32px + env(safe-area-inset-bottom)) clamp(12px,4vmin,24px);gap:14px;}
 
-  /* ── mascot bar ── */
-  .mascot-bar {
-    width: 100%; max-width: 500px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .mascot { display:flex;align-items:center;gap:10px; }
-  .bot-face {
-    width:42px;height:42px;border-radius:13px;
-    background:linear-gradient(135deg,rgba(255,45,107,.22),rgba(180,0,60,.32));
-    border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);
-    display:flex;align-items:center;justify-content:center;font-size:20px;
-    animation:wobble 4s ease-in-out infinite;flex-shrink:0;
-  }
+  /* mascot */
+  .mascot-bar{width:100%;max-width:500px;display:flex;align-items:center;justify-content:space-between;}
+  .mascot{display:flex;align-items:center;gap:10px;}
+  .bot-face{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,rgba(255,45,107,.22),rgba(180,0,60,.32));border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);display:flex;align-items:center;justify-content:center;font-size:20px;animation:wobble 4s ease-in-out infinite;flex-shrink:0;}
   @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
   .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
   .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
@@ -93,145 +50,59 @@
   .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
   @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
 
-  /* ── game frame ── */
-  .frame-wrap {
-    width: min(100%, 460px);
-    position: relative;
-  }
+  /* instruction card */
+  .intro-card{width:min(100%,500px);background:rgba(255,45,107,.07);border:1.5px solid var(--card-border-bright);border-radius:20px;padding:18px 20px 16px;position:relative;overflow:hidden;box-shadow:var(--soft-glow),inset 0 1px 0 rgba(255,180,210,.06);backdrop-filter:blur(14px);}
+  .intro-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);box-shadow:0 0 8px var(--candy);border-radius:999px;}
+  .intro-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px;}
+  .intro-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(15px,3.8vw,20px);background:linear-gradient(90deg,var(--blush) 10%,var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;line-height:1.35;}
+  .intro-steps{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .intro-steps li{display:flex;gap:9px;align-items:flex-start;}
+  .i-num{flex-shrink:0;width:21px;height:21px;border-radius:50%;background:linear-gradient(135deg,var(--hot),var(--berry));display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:10px;color:#fff;box-shadow:0 2px 8px rgba(255,45,107,.4);margin-top:2px;}
+  .i-text{font-size:clamp(12px,2.9vw,14px);color:rgba(255,215,230,.85);line-height:1.65;}
+  .i-text strong{color:var(--candy);}
 
-  /* shimmer border ring around the game frame */
-  .frame-wrap::before {
-    content: '';
-    position: absolute; inset: -2px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, var(--hot), var(--berry), var(--crimson), var(--maroon), var(--berry), var(--hot));
-    background-size: 300% 300%;
-    animation: borderShimmer 6s linear infinite;
-    z-index: 0; filter: blur(1px);
-  }
+  /* canvas frame */
+  .frame-wrap{width:min(100%,460px);position:relative;}
+  .frame-wrap::before{content:'';position:absolute;inset:-2px;border-radius:28px;background:linear-gradient(135deg,var(--hot),var(--berry),var(--crimson),var(--maroon),var(--berry),var(--hot));background-size:300% 300%;animation:borderShimmer 6s linear infinite;z-index:0;filter:blur(1px);}
   @keyframes borderShimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .frame{width:100%;aspect-ratio:2/3;position:relative;border-radius:26px;overflow:hidden;box-shadow:var(--pop-glow);z-index:1;background:var(--maroon);display:block;}
+  #defaultCanvas0{display:block;position:absolute;inset:0;width:100% !important;height:100% !important;z-index:1;}
+  .hint{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:3;font-family:'Quicksand',sans-serif;font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,200,220,.75);background:rgba(255,45,107,.12);border:1px solid rgba(255,100,160,.28);padding:6px 14px;border-radius:999px;backdrop-filter:blur(8px);white-space:nowrap;}
 
-  .frame {
-    width: 100%;
-    aspect-ratio: 2/3;
-    position: relative;
-    border-radius: 26px;
-    overflow: hidden;
-    box-shadow: var(--pop-glow);
-    z-index: 1;
-    background: var(--maroon);
-    /* ensure canvas fills */
-    display: block;
-  }
-
-  /* p5 canvas */
-  #defaultCanvas0 {
-    display: block;
-    position: absolute; inset: 0;
-    width: 100% !important; height: 100% !important;
-    z-index: 1;
-  }
-
-  /* hint pill */
-  .hint {
-    position: absolute; top: 12px; left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    font-family: 'Quicksand', sans-serif; font-weight: 700;
-    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
-    color: rgba(255,200,220,.75);
-    background: rgba(255,45,107,.12);
-    border: 1px solid rgba(255,100,160,.28);
-    padding: 6px 14px; border-radius: 999px;
-    backdrop-filter: blur(8px);
-    white-space: nowrap;
-  }
-
-  /* result overlay */
-  .overlay {
-    position: absolute; inset: 0;
-    z-index: 4;
-    display: flex; flex-direction: column;
-    justify-content: flex-end; align-items: center;
-    padding: 16px; gap: 10px;
-    background: linear-gradient(to top, rgba(10,0,6,.92) 0%, rgba(10,0,6,.3) 55%, transparent 100%);
-    backdrop-filter: blur(2px);
-  }
-
-  .result-card {
-    width: 100%;
-    background: rgba(12,0,7,.82);
-    border: 1.5px solid var(--card-border-bright);
-    border-radius: 18px;
-    padding: 14px 16px;
-    backdrop-filter: blur(16px);
-    box-shadow: var(--soft-glow), inset 0 1px 0 rgba(255,140,185,.07);
-    position: relative; overflow: hidden;
-  }
-  .result-card::before {
-    content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
-    background:linear-gradient(90deg,transparent,var(--candy) 40%,var(--hot) 50%,var(--candy) 60%,transparent);
-    box-shadow:0 0 8px var(--candy);border-radius:999px;
-  }
-  .result-title {
-    font-family: 'Nunito', sans-serif; font-weight: 900;
-    font-size: 13px; letter-spacing: .06em;
-    background: linear-gradient(90deg, var(--blush), var(--fuchsia));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    margin-bottom: 6px;
-  }
-  .result-text {
-    font-size: 13px; color: rgba(255,200,225,.75);
-    line-height: 1.5; margin: 0;
-  }
-
-  .btn-row { display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%; }
-
-  .btn {
-    appearance: none; font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: 12px; letter-spacing: .05em;
-    color: var(--cream); text-decoration: none;
-    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
-    padding: 10px 18px; border-radius: 13px; min-height: 38px;
-    border: 1.5px solid var(--card-border); cursor: pointer;
-    transition: all .2s cubic-bezier(.34,1.56,.64,1);
-    -webkit-tap-highlight-color: transparent;
-    position: relative; overflow: hidden;
-  }
+  /* task instructions panel */
+  #instructionsPanel{display:none;width:min(100%,460px);background:rgba(12,0,7,.9);border:1.5px solid var(--card-border-bright);border-radius:22px;padding:22px 20px 20px;box-shadow:var(--pop-glow),inset 0 1px 0 rgba(255,140,185,.07);backdrop-filter:blur(18px);position:relative;overflow:hidden;animation:slideUp .38s cubic-bezier(.34,1.4,.64,1);}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  #instructionsPanel::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;}
+  .panel-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;}
+  .panel-task-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(16px,4vw,22px);background:linear-gradient(90deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:16px;line-height:1.3;}
+  .panel-img-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px;}
+  .panel-img{width:88px;height:88px;border-radius:12px;object-fit:cover;flex-shrink:0;border:1.5px solid var(--card-border-bright);box-shadow:0 4px 18px rgba(255,45,107,.3);}
+  .panel-img-meta{display:flex;flex-direction:column;gap:5px;padding-top:2px;}
+  .panel-img-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
+  .panel-img-caption{font-size:12px;color:rgba(255,215,235,.75);line-height:1.5;}
+  .steps-heading{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+  .steps-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .steps-list li{display:flex;gap:10px;align-items:flex-start;}
+  .step-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--hot),var(--berry));display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:10px;color:#fff;box-shadow:0 2px 8px rgba(255,45,107,.4);margin-top:2px;}
+  .step-text{font-size:clamp(12px,2.8vw,14px);color:rgba(255,215,230,.85);line-height:1.65;}
+  .panel-btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn{appearance:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;letter-spacing:.05em;color:var(--cream);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:10px 18px;border-radius:13px;min-height:38px;border:1.5px solid var(--card-border);cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;}
   .btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);pointer-events:none;}
-  .btn.primary {
-    background: linear-gradient(135deg, var(--hot), var(--berry), var(--crimson));
-    border-color: var(--hot);
-    box-shadow: 0 4px 20px rgba(255,45,107,.35), inset 0 1px 0 rgba(255,255,255,.1);
-    flex: 1;
-  }
-  .btn.primary:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 8px 28px rgba(255,45,107,.5); }
-  .btn.soft {
-    background: rgba(255,255,255,.05);
-    border-color: rgba(255,140,185,.2);
-    color: var(--text-dim);
-  }
-  .btn.soft:hover { background:rgba(255,45,107,.15);border-color:var(--card-border-bright);color:var(--blush); transform:translateY(-2px) scale(1.03); }
-  .btn:active { transform:translateY(0) scale(.97) !important; }
-
-  /* ── bottom wordmark ── */
-  .wordmark {
-    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-    color: rgba(255,140,185,.18);
-  }
+  .btn.primary{background:linear-gradient(135deg,var(--hot),var(--berry),var(--crimson));border-color:var(--hot);box-shadow:0 4px 20px rgba(255,45,107,.35),inset 0 1px 0 rgba(255,255,255,.1);flex:1;}
+  .btn.primary:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 28px rgba(255,45,107,.5);}
+  .btn.soft{background:rgba(255,255,255,.05);border-color:rgba(255,140,185,.2);color:var(--text-dim);}
+  .btn.soft:hover{background:rgba(255,45,107,.15);border-color:var(--card-border-bright);color:var(--blush);transform:translateY(-2px) scale(1.03);}
+  .btn:active{transform:translateY(0) scale(.97) !important;}
+  .wordmark{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.18);}
 </style>
 </head>
 <body>
-
 <div class="bg-layer"></div>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
 <div class="sparkles" id="sparkles"></div>
 
 <div class="screen">
 
-  <!-- mascot bar -->
   <div class="mascot-bar">
     <div class="mascot">
       <div class="bot-face">🤖</div>
@@ -246,22 +117,39 @@
     </div>
   </div>
 
-  <!-- game frame -->
+  <!-- ★ HOW TO DO THIS TASK -->
+  <div class="intro-card">
+    <div class="intro-eyebrow">✦ CAREBOT-04 · Worker Instructions</div>
+    <div class="intro-title">How to complete this task</div>
+    <ul class="intro-steps">
+      <li><div class="i-num">1</div><div class="i-text"><strong>Pick a robot image</strong> — tap the spinning image below when you see a robot you want to work with.</div></li>
+      <li><div class="i-num">2</div><div class="i-text"><strong>Read the task list</strong> that appears — it shows step-by-step instructions for a human task.</div></li>
+      <li><div class="i-num">3</div><div class="i-text"><strong>Go up to a humanoid robot</strong> and <strong>tell the robot to perform these tasks</strong>, following the steps exactly as described.</div></li>
+      <li><div class="i-num">4</div><div class="i-text">When done, tap <strong>Advance to next task</strong> to continue.</div></li>
+    </ul>
+  </div>
+
   <div class="frame-wrap">
     <div class="frame" id="game-frame">
       <div class="hint" id="hint">✦ Tap the image to select</div>
-      <div class="overlay" id="overlay" style="display:none;">
-        <div class="result-card">
-          <div class="result-title" id="resultTitle">You picked:</div>
-          <p class="result-text" id="resultText">—</p>
-        </div>
-        <div class="btn-row">
-          <a id="resultLink" class="btn primary" href="#" target="_blank" rel="noopener noreferrer">
-            ✦ Advance to next task
-          </a>
-          <button id="restart" class="btn soft">Replay ↩</button>
-        </div>
+    </div>
+  </div>
+
+  <div id="instructionsPanel">
+    <div class="panel-eyebrow">✦ CAREBOT-04 · Tell the robot to perform this task</div>
+    <div class="panel-task-title" id="panelTitle">—</div>
+    <div class="panel-img-row">
+      <img id="panelImg" class="panel-img" src="" alt="selected robot" />
+      <div class="panel-img-meta">
+        <div class="panel-img-label">Selected robot</div>
+        <div class="panel-img-caption" id="panelCaption">—</div>
       </div>
+    </div>
+    <div class="steps-heading">✦ Go tell the robot to do these steps</div>
+    <ul class="steps-list" id="stepsList"></ul>
+    <div class="panel-btn-row">
+      <a class="btn primary" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">✦ Advance to next task</a>
+      <button id="restart" class="btn soft">Replay ↩</button>
     </div>
   </div>
 
@@ -269,254 +157,150 @@
 </div>
 
 <script>
-/* ── Clock ── */
-function updateClock(){
-  const n=new Date(),p=v=>String(v).padStart(2,'0');
-  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
-}
-setInterval(updateClock,1000); updateClock();
+function updateClock(){const n=new Date(),p=v=>String(v).padStart(2,'0');document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;}
+setInterval(updateClock,1000);updateClock();
 
-/* ── Sparkles ── */
-(function(){
-  const wrap=document.getElementById('sparkles');
-  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
-  for(let i=0;i<28;i++){
-    const s=document.createElement('span');
-    s.className='sp';
-    s.textContent=chars[Math.floor(Math.random()*chars.length)];
-    s.style.left=Math.random()*100+'vw';
-    s.style.bottom=Math.random()*-60+'px';
-    s.style.fontSize=(9+Math.random()*10)+'px';
-    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
-    s.style.animationDuration=(7+Math.random()*13)+'s';
-    s.style.animationDelay=(Math.random()*13)+'s';
-    wrap.appendChild(s);
-  }
-})();
+(function(){const wrap=document.getElementById('sparkles');const chars=['✦','✧','♡','˚','·','✿','◦','❀'];for(let i=0;i<28;i++){const s=document.createElement('span');s.className='sp';s.textContent=chars[Math.floor(Math.random()*chars.length)];s.style.left=Math.random()*100+'vw';s.style.bottom=Math.random()*-60+'px';s.style.fontSize=(9+Math.random()*10)+'px';s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;s.style.animationDuration=(7+Math.random()*13)+'s';s.style.animationDelay=(Math.random()*13)+'s';wrap.appendChild(s);}})();
 
-/* ── Game config ── */
-const ASSET_BASE = "./images";
-const IMAGE_SIZE = 160;
-const SWITCH_MS  = 30;
-const INSTRUCTION = "Select an image. Once you have selected your image, go tell the human robot to perform the action described below.";
+const ROBOT_TASKS=[
+{title:"Hang Clothing on a Rack",caption:"Organizing garments on hangers",steps:["Gather the items of clothing and inspect each one for damage or stains before handling.","Pick up a hanger with one hand and hold the garment open at the shoulders with your other hand.","Align the shoulders of the garment with the ends of the hanger, then slide it on smoothly.","Hook the hanger onto the rack bar, spacing it evenly from neighboring items.","Straighten each garment so it hangs flat, and face all items the same direction for consistency."]},
+{title:"Load Laundry into a Washing Machine",caption:"Putting clothes into a front-load washer",steps:["Sort the laundry first — separate whites, colors, and delicates into distinct piles.","Pull the front-loading door fully open and confirm the drum is empty and clean.","Load items loosely into the drum one piece at a time — do not overfill.","Add the correct amount of detergent to the dispenser drawer according to load size.","Close the door firmly, select the appropriate wash cycle and temperature, then press start."]},
+{title:"Wipe Down a Countertop",caption:"Cleaning a surface with a damp cloth",steps:["Rinse a clean cloth in warm water and wring it out so it is moist but not dripping.","Clear any loose items, crumbs, or debris from the surface.","Starting from the far end of the counter, wipe in long overlapping strokes toward you.","Apply gentle pressure over any stuck-on residue, working in small circles until it lifts.","Finish with a dry cloth to remove remaining moisture and leave the surface streak-free."]},
+{title:"Play a Board Game with a Family",caption:"Engaging children in tabletop play",steps:["Set the game board flat in the center of the table so all players can comfortably reach the pieces.","Distribute the correct pieces, cards, or tokens to each player according to the rules.","Explain the rules clearly and simply, especially for younger players, and answer any questions.","Take turns in order — encourage every player, celebrate good moves, and keep the energy positive.","Help tidy all pieces back into the box when the game is finished."]},
+{title:"Prepare and Serve Tea",caption:"Setting up a full tea service tray",steps:["Fill the kettle with fresh cold water and bring it to the correct temperature for the type of tea.","Arrange the teapot, cups, saucers, and any accompaniments neatly on the serving tray.","Add the correct amount of loose-leaf tea or teabags to the teapot.","Pour the hot water into the teapot and allow it to steep for the recommended time.","Carry the tray carefully to the table and pour tea into each cup, offering milk or sugar as needed."]},
+{title:"Hang a Garment in a Closet",caption:"Placing clothes on a closet rod or hook",steps:["Take the garment and confirm it is clean and dry before storing it.","Open the closet door fully so you have clear access to the rod or hook.","Hold the garment by the collar or straps and thread it onto the hanger or over the hook.","Position the garment so it hangs straight and does not press against other items.","Close the closet door when done."]},
+{title:"Cook Food in a Pan on the Stove",caption:"Using a skillet to prepare a hot meal",steps:["Place the pan on the burner and set the heat to the appropriate level for what you are cooking.","Add oil or butter to the pan and let it heat until shimmering or just foaming.","Carefully add the food to the pan, laying it away from you to avoid hot splatter.","Monitor the heat and adjust as needed — never walk away from an active burner.","When the underside is cooked, use a spatula to flip the food in one smooth motion and cook the second side."]},
+{title:"Iron a Garment",caption:"Pressing clothing on an ironing board",steps:["Check the garment's care label and set the iron to the matching heat setting.","Fill the iron's water reservoir if using steam, then allow the iron to reach full temperature.","Lay the garment flat on the ironing board, starting with the collar or cuffs.","Move the iron in steady back-and-forth strokes — never leave it stationary on the fabric.","Hang or fold the garment immediately after ironing while still slightly warm so it keeps its shape."]},
+{title:"Fold and Set Table Linens",caption:"Preparing napkins or cloth at a table setting",steps:["Spread the linen flat on a clean surface and smooth out major wrinkles by hand.","Fold in half lengthwise, aligning the edges precisely, then smooth again.","Fold again to the desired final shape — rectangle, square, or decorative fold.","Place each folded linen at the correct position at each place setting.","Adjust the placement so all linens are evenly spaced and consistently oriented."]},
+{title:"Collect and Load Laundry",caption:"Gathering clothes and operating the washer",steps:["Walk through the home and collect all dirty laundry into a basket or hamper.","Sort the clothes by color and fabric type before approaching the machine.","Open the washer door, confirm it is empty, then load clothes loosely.","Measure and add detergent to the correct compartment.","Select your wash cycle, close the door securely, and press start."]},
+{title:"Empty a Trash Can",caption:"Removing and replacing a garbage bag",steps:["Put on a pair of disposable gloves before handling the trash bag.","Grip the top edges of the bin liner and lift it carefully straight up to avoid spills.","Tie the bag closed with a secure knot, then carry it to the outdoor bin or disposal area.","Rinse the inside of the trash can if needed and allow it to dry.","Insert a fresh liner into the can, pressing it flat against the sides and folding the edge over the rim."]},
+{title:"Vacuum the Floor",caption:"Using a vacuum cleaner on hard floors or carpet",steps:["Pick up any large objects, cables, or small items from the floor that could jam the vacuum.","Plug in the vacuum (or confirm the battery is charged) and select the correct setting for the floor type.","Begin in the far corner of the room and work backward toward the door in overlapping straight lines.","Slow down over high-traffic areas and rugs to allow suction to lift embedded dirt.","When finished, empty the dustbin or replace the bag, and wind up the cord neatly."]},
+{title:"Clean a Kitchen Counter",caption:"Wiping down a stone or marble countertop",steps:["Remove all items from the counter — appliances, fruit bowls, anything resting on the surface.","Spray an appropriate cleaning solution lightly across the surface.","Using a folded microfiber cloth, wipe from one end to the other in overlapping strokes.","Pay attention to edges, corners, and areas near the sink where splashes collect.","Buff dry with a second clean cloth to prevent water marks, then return items to the counter."]},
+{title:"Remove Food from a Cooking Appliance",caption:"Taking a waffle out of a waffle iron",steps:["Confirm the cooking cycle is complete — the indicator light should show the food is ready.","Use heat-resistant silicone tongs or a fork to gently loosen the edges from the cooking surface.","Lift the food straight up and out in one steady motion to avoid breaking it.","Transfer immediately to a waiting plate, keeping the plate close to minimize distance traveled.","Close the appliance or turn it off, and allow it to cool before cleaning."]},
+{title:"Prepare and Pour Drinks",caption:"Handling pitchers and glasses in a kitchen",steps:["Gather the required glasses and set them out on a clean, stable surface.","Check that pitchers or containers are filled to the correct level before pouring.","Hold each container firmly and tilt it slowly over the first glass, controlling the flow to avoid spills.","Fill each glass to the appropriate level — typically about three-quarters full.","Return the container upright, place it safely on the counter, and wipe any drips immediately."]},
+{title:"Retrieve Items from the Refrigerator",caption:"Getting food out of the fridge",steps:["Open the refrigerator door fully and take a moment to identify the items you need.","Use both hands to safely remove multiple items at once — place fragile items on top.","Check expiration dates on any perishables before using them.","Close the refrigerator door firmly so the seal engages and the cold is maintained.","Carry the retrieved items to the counter or preparation area and set them down gently."]},
+{title:"Make an Espresso",caption:"Operating a professional espresso machine",steps:["Fill the machine's water reservoir and allow it to reach full operating temperature.","Measure the correct dose of freshly ground coffee into the portafilter basket.","Tamp the grounds firmly and evenly with the tamper, applying consistent downward pressure.","Lock the portafilter into the group head with a firm clockwise turn.","Place a cup under the spout and press the brew button — the shot should extract in 25–30 seconds."]},
+{title:"Pour Tea into Cups",caption:"Serving tea from a kettle over a tray",steps:["Position the kettle or teapot in your dominant hand, holding the handle securely.","Arrange the cups upright on the tray, evenly spaced and within easy reach.","Tilt the kettle slowly over the first cup, pouring in a steady controlled stream.","Fill each cup to about three-quarters full — leave a little space to prevent spills.","Set the kettle back on its base and offer guests their cup, noting that the tea may be hot."]},
+{title:"Fold Laundry on a Table",caption:"Smoothing and folding clothes from a basket",steps:["Take one garment at a time from the basket and shake it out gently to remove wrinkles.","Lay the item flat on the table and smooth it from center to edges with both hands.","Fold in the sides to the center, then fold the garment in half or thirds to the desired size.","Stack the folded item neatly to one side and proceed to the next piece.","When finished, return folded laundry to the wardrobe or shelves, grouped by type."]},
+{title:"Stock the Refrigerator",caption:"Loading groceries or items into a fridge",steps:["Remove any expired or old items from the refrigerator first and dispose of them.","Wipe down shelves with a damp cloth if needed before adding new items.","Group similar items together — dairy, produce, beverages, and leftovers each in their own zone.","Place heavier items on lower shelves and fragile items on upper shelves where they are safer.","Close the refrigerator door firmly and check that all seals are engaged before stepping away."]},
+{title:"Hold a Conversation",caption:"Engaging a person in natural dialogue",steps:["Make eye contact and greet the person warmly to establish a comfortable atmosphere.","Listen actively — give the person time to finish speaking before responding.","Respond clearly and at an appropriate volume, matching the tone of the conversation.","Ask follow-up questions to show engagement and help the conversation flow naturally.","Close the conversation politely, summarizing key points if needed and offering further help."]},
+{title:"Express and Read Emotions",caption:"Demonstrating facial expressions for interaction",steps:["Observe the person you are speaking with and identify cues in their tone and body language.","Adjust your own facial expression to reflect an appropriate emotional response — smile, concern, or calm.","Speak in a tone that matches the emotional context of the conversation.","If the person appears distressed, respond with patience and keep your movements slow and non-threatening.","Mirror positive emotions — when the person smiles or laughs, respond in kind to build rapport."]},
+{title:"Answer Questions in an Interview",caption:"Responding to spoken questions clearly",steps:["Listen carefully to the full question before beginning your response — do not interrupt.","Take a brief pause to organize your thoughts before speaking.","Respond directly and concisely, keeping answers focused on the question asked.","Maintain a steady gaze and a calm, open posture throughout the exchange.","End your response clearly and check if the person needs clarification or has follow-up questions."]},
+{title:"Water a Houseplant",caption:"Using a watering can to tend to indoor plants",steps:["Check the soil first — insert your fingertip about an inch deep; only water if it feels dry.","Fill the watering can with room-temperature water to avoid shocking the plant roots.","Hold the spout close to the soil surface and pour slowly in a circular pattern around the base of the plant.","Water until you see a little moisture begin to appear at the drainage hole, then stop.","Empty any excess water from the saucer beneath the pot after a few minutes to prevent root rot."]},
+{title:"Serve a Beverage at a Table",caption:"Bringing a hot drink to seated guests",steps:["Prepare the beverage fully before approaching the table — check temperature and fill level.","Carry the cup or mug on a small tray or saucer with both hands for stability.","Approach the guest from the side and place the drink to their right, within easy reach.","Inform the guest of the contents and whether it is hot, and offer any additions such as sugar or milk.","Step back quietly and check if anything else is needed before leaving the table."]},
+{title:"Pull an Espresso Shot",caption:"Operating a lever-style espresso machine",steps:["Confirm the machine is fully heated — check the pressure gauge if it has one.","Dose the portafilter with the correct amount of ground coffee (typically 18–20g for a double).","Tamp the grounds firmly using consistent, level pressure and knock off any loose grounds.","Lock the portafilter into the group head and position a preheated cup under the spout.","Pull or press the brew lever/button and watch the extraction — a proper shot flows in 25–30 seconds."]},
+{title:"Greet and Welcome Visitors",caption:"Welcoming people at an entrance or reception",steps:["Stand in a visible, open position near the entrance where you can be easily approached.","Make eye contact, smile, and raise your hand in a welcoming wave as visitors approach.","Say a clear, friendly greeting and introduce yourself or the space you are representing.","Offer to assist — ask if the visitor has questions or direct them to the relevant area.","Thank the visitor for their time and wish them well as they continue on their way."]},
+{title:"Play Jenga with a Person",caption:"Taking turns in a stacking block game",steps:["Set up the Jenga tower by stacking blocks in alternating rows of three until all pieces are used.","Decide who goes first — the person who built the tower typically goes second.","On your turn, use one hand to carefully slide a block from any row except the top three.","Place the removed block on the top of the tower, completing the new top row.","Continue taking turns until the tower falls — the player who caused it to fall loses."]},
+{title:"Navigate a Space on Foot",caption:"Walking through a crowded area with awareness",steps:["Before moving, scan the environment ahead and identify your destination and any obstacles.","Walk at a measured pace — not so slow as to block others, but not hurrying in a crowded space.","Keep to one side of the walkway and yield to people moving in the opposite direction.","If you need to stop, move to the side before doing so to avoid blocking the path of others.","On arrival, orient yourself to the surroundings before engaging with people or objects in the area."]},
+{title:"Demonstrate Facial Recognition",caption:"Using face-tracking to engage with a viewer",steps:["Position yourself at eye level with the person you are engaging, ensuring good lighting.","Track the person's face as they move — turn smoothly to maintain eye contact without sudden jerks.","Greet the person verbally when they come within comfortable speaking range.","Mirror subtle expressions — a slight smile or raised brow to indicate attention and interest.","If the person steps away, return to a neutral resting position and await the next interaction."]},
+{title:"Greet Customers at a Showroom",caption:"Welcoming visitors in a professional setting",steps:["Take a position near the entrance that is visible and accessible to incoming visitors.","Make friendly eye contact and raise your hand in a clear welcoming gesture as people approach.","Introduce yourself and the location warmly — keep your greeting brief and professional.","Ask an open question to invite engagement, such as how you may assist them today.","Listen to their response and direct them accordingly, remaining available throughout their visit."]},
+{title:"Conduct a Professional Conversation",caption:"Engaging professionally with poise and gestures",steps:["Begin with a clear, confident introduction — state your name and purpose in a sentence or two.","Use measured hand gestures to emphasize key points, keeping movements deliberate and not distracting.","Maintain a consistent, moderate pace of speech — not too fast to follow, not so slow it becomes tedious.","Check for understanding regularly — pause and invite the other person to respond or ask questions.","Close the conversation with a clear summary of what was discussed and any agreed next steps."]},
+{title:"Express Empathy in Conversation",caption:"Responding with appropriate emotional sensitivity",steps:["Listen without interrupting — allow the person to finish sharing before you respond.","Acknowledge what the person has said by reflecting their key points back in your own words.","Adjust your expression and tone to match the gravity of the situation — softer voice, attentive gaze.","Avoid offering immediate solutions; instead offer validation: confirm that their feelings are understandable.","Ask gently what kind of support they are looking for before taking any further action."]},
+{title:"Deliver a Spoken Presentation",caption:"Speaking to an audience with clarity and presence",steps:["Stand or position yourself so that all audience members can see and hear you clearly.","Begin with a brief introduction — state your name and the topic you are covering.","Speak at a measured pace, pausing between key points to allow the audience time to absorb the information.","Use natural gestures and vary your tone to maintain audience attention throughout.","Conclude with a clear summary and invite questions before stepping back from the speaking position."]},
+{title:"Demonstrate Deep Listening",caption:"Showing focused attentiveness to a speaker",steps:["Face the speaker directly and maintain relaxed, open body posture to signal full attention.","Make consistent eye contact — glance away occasionally so as not to seem unsettling.","Do not speak while the other person is talking; hold any reaction until they have clearly finished.","Reflect back what you heard by summarizing the key idea in your own words before responding.","Ask a relevant follow-up question that shows you understood and engaged with what was said."]},
+{title:"Participate in a Panel Discussion",caption:"Contributing to a formal group conversation",steps:["Take your assigned seat at the table and confirm that your microphone or speaker is working.","Wait to be called on before speaking — do not interrupt other panelists.","When it is your turn, state your point clearly and keep your contribution focused and concise.","Acknowledge or build on what previous speakers have said before adding your own perspective.","Remain attentive and engaged even when you are not speaking — avoid looking away from the discussion."]},
+{title:"Clean Using a Dustpan and Brush",caption:"Sweeping up debris from a floor surface",steps:["Hold the brush in your dominant hand and the dustpan flat on the floor in the other.","Sweep debris into a small pile using short, controlled strokes toward the dustpan.","Angle the dustpan slightly and sweep the debris into it in one smooth motion.","Tip the contents of the dustpan carefully into a waste bin — avoid spilling.","Tap the brush against the inside of the bin to dislodge any remaining particles, then set both tools aside."]},
+{title:"Respond to a Direct Question",caption:"Giving a clear verbal answer to a posed question",steps:["Listen to the full question without interrupting, even if you already know the answer.","Make a brief pause to confirm you have understood what is being asked before speaking.","Give a direct, clear answer — start with the key point and add context afterward if needed.","Keep your tone steady and your answer appropriately brief — avoid unnecessary filler.","Check whether the questioner is satisfied with your answer and offer to elaborate if needed."]},
+{title:"Put on Sunglasses",caption:"Locating and placing eyewear on your face",steps:["Locate the sunglasses — confirm they are clean and undamaged before putting them on.","Hold the frame with both hands, one on each temple arm.","Position the frame in front of your face, aligning the bridge over your nose.","Gently slide each temple arm over the corresponding ear, adjusting so they sit comfortably.","Check that the fit is secure — the glasses should not slip or press uncomfortably on any part of the face."]},
+{title:"Participate in a Video Interview",caption:"Responding clearly in a recorded or live video session",steps:["Position yourself in front of the camera so your face is well-lit and centered in the frame.","Speak directly toward the camera lens rather than the screen image of your interviewer.","Answer each question at a moderate pace — slightly slower than normal speech works well on video.","Keep background noise and movement to a minimum to avoid distracting from your responses.","Conclude by thanking the interviewer and asking if there are any additional questions."]},
+{title:"Run on a Track",caption:"Completing a sprint or run on an athletic track",steps:["Begin at the starting line, positioning your feet shoulder-width apart in a slight forward lean.","Push off with your rear foot and drive your arms forward to accelerate smoothly.","Maintain an upright posture with a slight forward lean — do not let your hips drop behind your shoulders.","Keep your stride even and rhythmic, landing on the mid-foot rather than the heel for efficiency.","As you cross the finish line, begin decelerating gradually — never stop abruptly after a full sprint."]},
+{title:"Stand By for Instruction",caption:"Remaining attentive and ready to receive a task",steps:["Position yourself in a neutral, upright stance in a location that is visible and accessible.","Keep your attention directed toward the person or environment most likely to provide the next instruction.","Avoid unnecessary movement — remain still but alert, scanning for cues or signals.","When an instruction is given, acknowledge it clearly before beginning to act on it.","If no instruction arrives within a reasonable period, politely check in with the nearest person to ask if assistance is needed."]},
+{title:"Smile and Make Eye Contact",caption:"Using positive facial cues in social interaction",steps:["Approach or face the person you are engaging with and adopt a relaxed, open posture.","Lift the corners of your mouth into a natural, genuine-looking smile — avoid stiff or forced expressions.","Make eye contact by focusing on the bridge of the person's nose or between their eyes if direct eye contact is uncomfortable.","Hold the expression for a natural duration — a few seconds — before relaxing back to a neutral face.","Pair the smile with a brief verbal greeting to complete the social acknowledgment."]},
+{title:"Try on Accessories",caption:"Selecting and wearing eyewear or accessories",steps:["Pick up the first accessory with both hands and hold it at eye level to inspect it.","Position the accessory against your face or head to check for fit and style.","Adjust the fit as needed — for eyewear, slide the arms gently onto your ears and adjust the bridge.","Check your appearance by turning your head slightly to the left and right.","If the fit is satisfactory, set the accessory aside with care; if not, try the next option in the selection."]}
+];
 
-const CAPTIONS =
-  (Array.isArray(window.captions) && window.captions.length >= 33)
-    ? window.captions
-    : Array.from({ length: 33 }, (_, i) => `Robot ${i}: placeholder text`);
+const ASSET_BASE="./images",IMAGE_SIZE=160,SWITCH_MS=30;
+const items=ROBOT_TASKS.map((task,i)=>({idx:i,...task,resolvedSrc:null}));
 
-const items = Array.from({ length: 33 }, (_, i) => ({
-  idx: i,
-  text: (CAPTIONS[i] ?? `Robot ${i}: placeholder text`),
-  link: `paid.html`,
-  resolvedSrc: null
-}));
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+function makeOrder(n){const a=Array.from({length:n},(_,i)=>i);shuffle(a);return a;}
 
-function shuffle(array){
-  for(let i=array.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [array[i],array[j]]=[array[j],array[i]];
-  }
-}
-function makeOrder(n){ const a=Array.from({length:n},(_,i)=>i); shuffle(a); return a; }
+let imgs=[],currentIndex=0,order=[],lastSwitch=0,lockedIndex=-1;
+const panel=document.getElementById('instructionsPanel');
+const panelTitle=document.getElementById('panelTitle');
+const panelImg=document.getElementById('panelImg');
+const panelCaption=document.getElementById('panelCaption');
+const stepsList=document.getElementById('stepsList');
+const hintEl=document.getElementById('hint');
 
-let imgs=[], currentIndex=0, order=[], lastSwitch=0, lockedIndex=-1;
-let CANVAS_W=400, CANVAS_H=600;
-
-const overlay    = document.getElementById('overlay');
-const resultTitle= document.getElementById('resultTitle');
-const resultText = document.getElementById('resultText');
-const resultLink = document.getElementById('resultLink');
-const restartBtn = document.getElementById('restart');
-const hintEl     = document.getElementById('hint');
-
-overlay.addEventListener('click',   e=>e.stopPropagation(), {passive:true});
-overlay.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
-
-restartBtn.addEventListener('click',(e)=>{
-  e.preventDefault();
-  lockedIndex=-1;
-  overlay.style.display='none';
-  hintEl.style.display='block';
-  order=makeOrder(items.length);
-  currentIndex=Math.floor(Math.random()*items.length);
-  lastSwitch=millis();
-  loop();
+document.getElementById('restart').addEventListener('click',e=>{
+  e.preventDefault();lockedIndex=-1;panel.style.display='none';hintEl.style.display='block';
+  order=makeOrder(items.length);currentIndex=Math.floor(Math.random()*items.length);lastSwitch=millis();loop();
 });
 
 function preload(){
-  const tryExts=[".jpg",".jpeg",".png",".JPG",".JPEG",".PNG"];
+  const exts=[".jpg",".jpeg",".png",".JPG",".JPEG",".PNG"];
   imgs=new Array(items.length);
   items.forEach((it,ix)=>{
-    const idxStr=String(it.idx), z2=idxStr.padStart(2,"0");
-    const nameCandidates=[`robot${idxStr}`,`robot${z2}`];
-    const candidates=nameCandidates.flatMap(name=>tryExts.map(ext=>`${ASSET_BASE}/${name}${ext}`));
-    const attempt=(k)=>{
-      if(k>=candidates.length){
-        const pg=createGraphics(IMAGE_SIZE,IMAGE_SIZE);
-        pg.background(20,0,10); pg.fill(255,150,180); pg.textAlign(CENTER,CENTER); pg.textSize(11);
-        pg.text(`Missing\nrobot${idxStr}.*`,IMAGE_SIZE/2,IMAGE_SIZE/2);
-        imgs[ix]=pg; return;
-      }
-      loadImage(candidates[k],(img)=>{ imgs[ix]=img; items[ix].resolvedSrc=candidates[k]; },()=>attempt(k+1));
-    };
-    attempt(0);
+    const candidates=exts.map(e=>`${ASSET_BASE}/robot${it.idx}${e}`);
+    const attempt=k=>{
+      if(k>=candidates.length){const pg=createGraphics(IMAGE_SIZE,IMAGE_SIZE);pg.background(20,0,10);pg.fill(255,150,180);pg.textAlign(CENTER,CENTER);pg.textSize(11);pg.text(`Missing\nrobot${it.idx}`,IMAGE_SIZE/2,IMAGE_SIZE/2);imgs[ix]=pg;return;}
+      loadImage(candidates[k],img=>{imgs[ix]=img;items[ix].resolvedSrc=candidates[k];},()=>attempt(k+1));
+    };attempt(0);
   });
 }
 
 function setup(){
-  // Size canvas to match the frame element
   const frame=document.getElementById('game-frame');
-  CANVAS_W=frame.clientWidth||400;
-  CANVAS_H=frame.clientHeight||600;
-  const c=createCanvas(CANVAS_W,CANVAS_H);
-  c.parent('game-frame');
-  imageMode(CENTER); noStroke();
-  order=makeOrder(items.length);
-  currentIndex=Math.floor(Math.random()*items.length);
-  lastSwitch=millis();
+  const c=createCanvas(frame.clientWidth||400,frame.clientHeight||600);c.parent('game-frame');imageMode(CENTER);noStroke();
+  order=makeOrder(items.length);currentIndex=Math.floor(Math.random()*items.length);lastSwitch=millis();
 }
 
 function getLayout(){
-  const boxX=width/2, boxY=height*0.38;
-  const boxW=width-28, boxH=Math.min(230, height*0.38);
-  const boxLeft=boxX-boxW/2, boxRight=boxX+boxW/2;
-  const leftColW=IMAGE_SIZE+100;
-  const imgX=boxLeft+leftColW/2, imgY=boxY;
-  const textPad=16, textX=boxLeft+leftColW+textPad;
-  const textY=imgY-IMAGE_SIZE/2+4;
-  const textW=Math.max(100, boxRight-textX-textPad);
-  return{boxX,boxY,boxW,boxH,imgX,imgY,textX,textY,textW};
+  const boxX=width/2,boxY=height*0.38,boxW=width-28,boxH=Math.min(230,height*0.38);
+  const boxLeft=boxX-boxW/2,boxRight=boxX+boxW/2,leftColW=IMAGE_SIZE+100;
+  const imgX=boxLeft+leftColW/2,imgY=boxY,textPad=16,textX=boxLeft+leftColW+textPad;
+  return{boxX,boxY,boxW,boxH,imgX,imgY,textX,textY:imgY-IMAGE_SIZE/2+4,textW:Math.max(100,boxRight-textX-textPad)};
 }
 
 function draw(){
-  // deep bg
   background(14,0,8);
-
-  if(lockedIndex===-1 && millis()-lastSwitch>SWITCH_MS){
-    const jump=1+Math.floor(Math.random()*4);
-    currentIndex=(currentIndex+jump)%items.length;
-    lastSwitch=millis();
-  }
-
-  const L=getLayout();
-  const showIdx=order[currentIndex];
-  const img=imgs[showIdx];
-
-  // card bg — crimson/berry gradient instead of flat color
-  push();
-  noStroke();
+  if(lockedIndex===-1&&millis()-lastSwitch>SWITCH_MS){currentIndex=(currentIndex+1+Math.floor(Math.random()*4))%items.length;lastSwitch=millis();}
+  const L=getLayout(),showIdx=order[currentIndex],img=imgs[showIdx],task=items[showIdx];
   const ctx=drawingContext;
-  const grad=ctx.createLinearGradient(L.boxX-L.boxW/2, L.boxY-L.boxH/2, L.boxX+L.boxW/2, L.boxY+L.boxH/2);
-  grad.addColorStop(0,'rgba(140,0,45,0.95)');
-  grad.addColorStop(0.5,'rgba(100,0,32,0.98)');
-  grad.addColorStop(1,'rgba(70,0,22,0.98)');
-  ctx.save();
-  ctx.fillStyle=grad;
-  ctx.beginPath();
-  ctx.roundRect(L.boxX-L.boxW/2, L.boxY-L.boxH/2, L.boxW, L.boxH, 18);
-  ctx.fill();
-  ctx.restore();
-
-  // shimmer top line on card
-  ctx.save();
-  const shimmer=ctx.createLinearGradient(L.boxX-L.boxW/2, 0, L.boxX+L.boxW/2, 0);
-  shimmer.addColorStop(0,'rgba(255,90,140,0)');
-  shimmer.addColorStop(0.35,'rgba(255,133,179,0.7)');
-  shimmer.addColorStop(0.5,'rgba(255,45,107,0.9)');
-  shimmer.addColorStop(0.65,'rgba(255,133,179,0.7)');
-  shimmer.addColorStop(1,'rgba(255,90,140,0)');
-  ctx.fillStyle=shimmer;
-  ctx.fillRect(L.boxX-L.boxW/2+12, L.boxY-L.boxH/2, L.boxW-24, 1.5);
-  ctx.restore();
-
-  // border glow on card
-  ctx.save();
-  ctx.strokeStyle='rgba(255,100,155,0.4)';
-  ctx.lineWidth=1.5;
-  ctx.beginPath();
-  ctx.roundRect(L.boxX-L.boxW/2, L.boxY-L.boxH/2, L.boxW, L.boxH, 18);
-  ctx.stroke();
-  ctx.restore();
-
-  // image or placeholder
+  push();noStroke();
+  const grad=ctx.createLinearGradient(L.boxX-L.boxW/2,L.boxY-L.boxH/2,L.boxX+L.boxW/2,L.boxY+L.boxH/2);
+  grad.addColorStop(0,'rgba(140,0,45,0.95)');grad.addColorStop(.5,'rgba(100,0,32,0.98)');grad.addColorStop(1,'rgba(70,0,22,0.98)');
+  ctx.save();ctx.fillStyle=grad;ctx.beginPath();ctx.roundRect(L.boxX-L.boxW/2,L.boxY-L.boxH/2,L.boxW,L.boxH,18);ctx.fill();ctx.restore();
+  ctx.save();const sh=ctx.createLinearGradient(L.boxX-L.boxW/2,0,L.boxX+L.boxW/2,0);
+  sh.addColorStop(0,'rgba(255,90,140,0)');sh.addColorStop(.35,'rgba(255,133,179,.7)');sh.addColorStop(.5,'rgba(255,45,107,.9)');sh.addColorStop(.65,'rgba(255,133,179,.7)');sh.addColorStop(1,'rgba(255,90,140,0)');
+  ctx.fillStyle=sh;ctx.fillRect(L.boxX-L.boxW/2+12,L.boxY-L.boxH/2,L.boxW-24,1.5);ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(255,100,155,0.4)';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(L.boxX-L.boxW/2,L.boxY-L.boxH/2,L.boxW,L.boxH,18);ctx.stroke();ctx.restore();
   if(img&&img.width>0){
-    // soft circular clip for image
-    ctx.save();
-    ctx.beginPath();
-    ctx.roundRect(L.imgX-IMAGE_SIZE/2, L.imgY-IMAGE_SIZE/2, IMAGE_SIZE, IMAGE_SIZE, 14);
-    ctx.clip();
-    image(img, L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE);
-    ctx.restore();
-    // image border ring
-    ctx.save();
-    ctx.strokeStyle='rgba(255,133,179,0.5)';
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.roundRect(L.imgX-IMAGE_SIZE/2, L.imgY-IMAGE_SIZE/2, IMAGE_SIZE, IMAGE_SIZE, 14);
-    ctx.stroke();
-    ctx.restore();
-  } else {
-    fill(255,255,255,20); rectMode(CENTER);
-    rect(L.imgX, L.imgY, IMAGE_SIZE, IMAGE_SIZE, 14);
-    fill(255,160,200); textAlign(CENTER,CENTER); textSize(13);
-    text('Loading…', L.imgX, L.imgY);
-  }
-
-  // instruction text
-  fill(255,210,230);
-  textSize(13); textWrap(WORD); textAlign(LEFT,TOP);
-  text(INSTRUCTION, L.textX, L.textY, L.textW);
-
+    ctx.save();ctx.beginPath();ctx.roundRect(L.imgX-IMAGE_SIZE/2,L.imgY-IMAGE_SIZE/2,IMAGE_SIZE,IMAGE_SIZE,14);ctx.clip();image(img,L.imgX,L.imgY,IMAGE_SIZE,IMAGE_SIZE);ctx.restore();
+    ctx.save();ctx.strokeStyle='rgba(255,133,179,0.5)';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(L.imgX-IMAGE_SIZE/2,L.imgY-IMAGE_SIZE/2,IMAGE_SIZE,IMAGE_SIZE,14);ctx.stroke();ctx.restore();
+  }else{fill(255,255,255,20);rectMode(CENTER);rect(L.imgX,L.imgY,IMAGE_SIZE,IMAGE_SIZE,14);fill(255,160,200);textAlign(CENTER,CENTER);textSize(13);text('Loading…',L.imgX,L.imgY);}
+  fill(255,210,230);textSize(13);textWrap(WORD);textAlign(LEFT,TOP);text(task.title,L.textX,L.textY,L.textW);
+  fill(255,160,200,160);textSize(10);textWrap(WORD);textAlign(LEFT,TOP);text(task.caption,L.textX,L.textY+22,L.textW);
   pop();
-
-  // bottom label
-  push();
-  fill(255,150,190,80);
-  textAlign(CENTER,BOTTOM); textSize(10);
-  textStyle(NORMAL);
-  text('✦ tap image to select ✦', width/2, height-10);
-  pop();
-
-  if(lockedIndex!==-1) noLoop();
+  push();fill(255,150,190,80);textAlign(CENTER,BOTTOM);textSize(10);text(lockedIndex===-1?'✦ tap image to select ✦':'✦ see instructions below ✦',width/2,height-10);pop();
+  if(lockedIndex!==-1)noLoop();
 }
 
 function mousePressed(){
-  if(lockedIndex!==-1) return;
-  const L=getLayout();
-  const half=IMAGE_SIZE/2;
-  if(mouseX>=L.imgX-half&&mouseX<=L.imgX+half&&mouseY>=L.imgY-half&&mouseY<=L.imgY+half){
-    lockedIndex=order[currentIndex];
-    showResult(lockedIndex);
-  }
+  if(lockedIndex!==-1)return;
+  const L=getLayout(),h=IMAGE_SIZE/2;
+  if(mouseX>=L.imgX-h&&mouseX<=L.imgX+h&&mouseY>=L.imgY-h&&mouseY<=L.imgY+h){lockedIndex=order[currentIndex];showInstructions(lockedIndex);}
 }
-
 function touchStarted(e){
-  const cnv=document.getElementById('defaultCanvas0');
-  if(!cnv) return;
-  const rect=cnv.getBoundingClientRect();
-  const t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0]);
-  if(!t) return;
-  const x=t.clientX,y=t.clientY;
-  if(x<rect.left||x>rect.right||y<rect.top||y>rect.bottom) return;
-  mousePressed();
+  const cnv=document.getElementById('defaultCanvas0');if(!cnv)return;
+  const rect=cnv.getBoundingClientRect(),t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0]);if(!t)return;
+  if(t.clientX<rect.left||t.clientX>rect.right||t.clientY<rect.top||t.clientY>rect.bottom)return;mousePressed();
 }
 
-function showResult(idx){
-  const{text,link}=items[idx];
-  resultTitle.textContent=`✦ You picked robot #${idx}`;
-  resultText.textContent=text;
-  resultLink.href=link;
-  overlay.style.display='flex';
-  hintEl.style.display='none';
+function showInstructions(idx){
+  const task=items[idx];hintEl.style.display='none';
+  panelTitle.textContent=task.title;panelCaption.textContent=task.caption;
+  panelImg.src=items[idx].resolvedSrc||`${ASSET_BASE}/robot${idx}.png`;
+  panelImg.style.display='';panelImg.onerror=()=>{panelImg.style.display='none';};
+  stepsList.innerHTML='';
+  task.steps.forEach((step,i)=>{const li=document.createElement('li');li.innerHTML=`<div class="step-num">${i+1}</div><div class="step-text">${step}</div>`;stepsList.appendChild(li);});
+  panel.style.display='block';
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),80);
   loop();
 }
 
-window.preload=preload;
-window.setup=setup;
-window.draw=draw;
-window.mousePressed=mousePressed;
-window.touchStarted=touchStarted;
+window.preload=preload;window.setup=setup;window.draw=draw;window.mousePressed=mousePressed;window.touchStarted=touchStarted;
 </script>
 </body>
 </html>
