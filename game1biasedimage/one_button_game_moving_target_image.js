@@ -79,8 +79,9 @@ function handlePress(px, py) {
   }
 
   // Check for image click
-  if (dist(px, py, x, y) <= HIT_RADIUS) {
+if (dist(px, py, x, y) <= HIT_RADIUS) {
     win = true;
+    window.parent.postMessage('imageClicked', '*');
   }
 }
 
