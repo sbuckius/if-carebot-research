@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>✦ Patent Language · Gender Word Sorter</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --hot:#ff2d6b;--candy:#ff85b3;--blush:#ffb3cf;--cream:#fff5f8;
+  --fuchsia:#ff1f80;--bg:#1a0012;
+  --border:rgba(255,160,200,.22);--border-bright:rgba(255,100,160,.55);
+  --soft-glow:0 4px 30px rgba(255,45,107,.2),0 1px 0 rgba(255,160,200,.12) inset;
+  --pop-glow:0 6px 40px rgba(255,45,107,.4),0 0 80px rgba(255,30,128,.15);
+  --text-dim:rgba(255,200,224,.55);--text-faint:rgba(255,200,224,.28);
+  --fem-bg:rgba(80,50,200,.22);--fem-border:rgba(140,110,255,.5);--fem-text:#c8b8ff;--fem-solid:#9b87f5;
+  --masc-bg:rgba(180,60,0,.28);--masc-border:rgba(255,120,60,.45);--masc-text:#ffb09a;--masc-solid:#f97316;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:'Lato',sans-serif;color:var(--cream);background:var(--bg)}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 55% at 18% 12%,rgba(200,0,80,.32) 0%,transparent 60%),radial-gradient(ellipse 55% 65% at 82% 80%,rgba(140,0,70,.28) 0%,transparent 60%),linear-gradient(160deg,#200015,#150010 50%,#0e000d)}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(60px);opacity:.18}
+.orb-1{width:400px;height:400px;background:var(--hot);top:-100px;left:-80px;animation:drift1 18s ease-in-out infinite}
+.orb-2{width:320px;height:320px;background:var(--fuchsia);bottom:-60px;right:-60px;animation:drift2 22s ease-in-out infinite}
+.orb-3{width:200px;height:200px;background:var(--candy);top:40%;left:60%;animation:drift3 14s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-20px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-20px,15px)}66%{transform:translate(15px,-10px)}}
+.sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sp{position:absolute;opacity:0;animation:floatUp linear infinite}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.7}85%{opacity:.4}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+
+.wrap{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) clamp(14px,4vmin,32px) calc(60px + env(safe-area-inset-bottom));display:grid;gap:16px}
+
+/* masthead */
+.masthead{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(200,0,90,.35));border:1.5px solid var(--border-bright);box-shadow:var(--soft-glow);display:flex;align-items:center;justify-content:center;font-size:22px;animation:wobble 4s ease-in-out infinite;flex-shrink:0}
+@keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+.brand-name{font-family:'Playfair Display',serif;font-weight:900;font-size:18px;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand-sub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-top:2px}
+.time-badge{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:11px;letter-spacing:.1em;color:var(--text-dim)}
+.pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+/* video */
+.video-section{background:rgba(12,0,10,.75);border:1.5px solid var(--border-bright);border-radius:24px;box-shadow:var(--pop-glow),inset 0 1px 0 rgba(255,160,200,.07);backdrop-filter:blur(20px) saturate(1.4);overflow:hidden;position:relative;transition:all .6s cubic-bezier(.4,0,.2,1)}
+.video-section::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 12px var(--candy);border-radius:999px;z-index:5;pointer-events:none}
+.v-top{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,130,180,.12)}
+.v-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(255,45,107,.3),rgba(200,0,90,.38));border:1.5px solid var(--border-bright);display:flex;align-items:center;justify-content:center;font-size:16px;animation:breathe 3s ease-in-out infinite}
+.v-label{font-family:'Playfair Display',serif;font-weight:700;font-size:15px;background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent}
+.v-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:1px}
+.v-badge{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:rgba(255,45,107,.1);border:1px solid rgba(255,100,160,.3);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--candy)}
+.v-embed{position:relative;width:100%;padding-bottom:56.25%;background:#080004}
+.v-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1}
+.v-placeholder{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:28px;background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(120,0,70,.35) 0%,rgba(8,0,4,.94) 100%)}
+.ph-ring{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(255,45,107,.18),rgba(200,0,90,.22));border:1.5px solid var(--border-bright);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 28px rgba(255,45,107,.35);animation:wobble 3.5s ease-in-out infinite}
+.ph-head{font-family:'Playfair Display',serif;font-size:clamp(14px,2.5vw,19px);background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center}
+.url-row{display:flex;gap:8px;width:min(100%,460px)}
+.url-input{flex:1;font-family:'Lato',sans-serif;font-size:13px;background:rgba(255,45,107,.07);border:1.5px solid rgba(255,130,180,.22);color:var(--cream);padding:10px 14px;border-radius:12px;outline:none;transition:border-color .2s}
+.url-input:focus{border-color:var(--candy)}
+.url-input::placeholder{color:rgba(255,160,200,.3)}
+.load-btn{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;padding:10px 18px;border-radius:12px;border:1.5px solid var(--candy);background:linear-gradient(135deg,rgba(255,45,107,.35),rgba(180,0,90,.4));color:var(--cream);transition:all .2s}
+.load-btn:hover{box-shadow:0 4px 18px rgba(255,45,107,.4);transform:translateY(-1px)}
+.hint-micro{font-size:10px;color:rgba(255,160,200,.3)}
+.v-bot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 20px;border-top:1px solid rgba(255,130,180,.1);background:rgba(8,0,6,.4)}
+.v-hint{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,160,200,.28)}
+.ghost-btn{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:5px 13px;border-radius:999px;border:1px solid rgba(255,130,180,.26);background:rgba(255,45,107,.07);color:rgba(255,160,200,.55);transition:all .2s}
+.ghost-btn:hover{border-color:var(--border-bright);color:var(--blush)}
+.change-btn{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:5px 12px;border-radius:10px;border:1px solid rgba(255,130,180,.2);background:transparent;color:var(--text-dim);transition:all .2s;display:none}
+.change-btn:hover{border-color:var(--border-bright);color:var(--blush)}
+.change-btn.vis{display:inline-block}
+.video-section.watched{background:rgba(255,45,107,.05);border-color:rgba(255,130,180,.15);box-shadow:none}
+.video-section.watched .v-embed,.video-section.watched .v-top,.video-section.watched::before{display:none}
+.video-section.watched .v-bot{border-top:none;background:transparent;padding:10px 16px;justify-content:center}
+.watched-pill{display:none;align-items:center;gap:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,160,200,.45)}
+.watched-pill .wcheck{width:20px;height:20px;border-radius:50%;background:rgba(255,45,107,.15);border:1px solid rgba(255,130,180,.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--candy)}
+.video-section.watched .watched-pill{display:flex}
+.video-section.watched .v-hint,.video-section.watched #doneWatchingBtn{display:none!important}
+.rewatch-btn{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,130,180,.18);background:transparent;color:rgba(255,160,200,.38);transition:all .2s;margin-left:4px}
+.rewatch-btn:hover{border-color:var(--border-bright);color:var(--blush)}
+
+/* disclaimer */
+.disclaimer{background:rgba(255,45,107,.07);border:1px solid rgba(255,100,160,.22);border-radius:14px;padding:11px 16px;display:flex;align-items:flex-start;gap:9px}
+.disc-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.disc-text{font-size:11px;color:rgba(255,200,224,.6);line-height:1.6;font-weight:300}
+.disc-text strong{color:var(--candy);font-weight:700}
+
+/* picker */
+.picker-card{background:rgba(255,255,255,.045);border:1.5px solid var(--border);border-radius:24px;box-shadow:var(--soft-glow);backdrop-filter:blur(20px);overflow:hidden;position:relative}
+.picker-card::before{content:'';position:absolute;top:0;left:16px;right:16px;height:1px;background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;pointer-events:none}
+.picker-header{padding:20px 24px 16px;border-bottom:1px solid rgba(255,160,200,.1)}
+.picker-title{font-family:'Playfair Display',serif;font-size:clamp(15px,2.2vw,20px);font-weight:700;color:var(--cream);margin-bottom:5px}
+.picker-sub{font-size:12px;color:var(--text-dim);line-height:1.6}
+.picker-controls{padding:12px 24px;border-bottom:1px solid rgba(255,160,200,.08);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.p-search{font-family:'Lato',sans-serif;font-size:12.5px;padding:7px 12px;border-radius:10px;border:1px solid rgba(255,130,180,.22);background:rgba(255,45,107,.06);color:var(--cream);outline:none;transition:border-color .2s;flex:1;min-width:150px}
+.p-search::placeholder{color:var(--text-faint)}
+.p-search:focus{border-color:var(--candy)}
+.p-select{font-family:'Lato',sans-serif;font-size:12px;padding:7px 10px;border-radius:10px;border:1px solid rgba(255,130,180,.22);background:rgba(255,45,107,.06);color:var(--cream);outline:none;cursor:pointer}
+.p-select option{background:#2a001a;color:var(--cream)}
+.p-count{font-size:11px;color:var(--text-faint);white-space:nowrap}
+.picker-body{padding:12px 16px 4px;max-height:440px;overflow-y:auto}
+.picker-body::-webkit-scrollbar{width:4px}
+.picker-body::-webkit-scrollbar-thumb{background:rgba(255,100,160,.25);border-radius:999px}
+.ppb{appearance:none;width:100%;font-family:'Lato',sans-serif;text-align:left;padding:11px 14px;border-radius:12px;border:1.5px solid rgba(255,130,180,.14);background:rgba(255,255,255,.025);color:var(--cream);cursor:pointer;transition:all .2s;display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:10px;margin-bottom:6px}
+.ppb:last-child{margin-bottom:0}
+.ppb:hover{border-color:rgba(255,130,180,.38);background:rgba(255,45,107,.07);transform:translateX(3px)}
+.ppb.done{border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.04)}
+.ppb-left{display:grid;gap:1px;text-align:center}
+.ppb-year{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim)}
+.ppb-id{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--text-faint)}
+.ppb-mid{display:grid;gap:2px}
+.ppb-title{font-size:12.5px;font-weight:700}
+.ppb.done .ppb-title{color:rgba(255,255,255,.45)}
+.ppb-inv{font-size:11px;color:var(--text-dim)}
+.ppb-badge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;justify-self:end;align-self:start}
+.done-badge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;white-space:nowrap;justify-self:end;align-self:start;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);color:#86efac}
+.cat-computer{background:rgba(12,68,124,.5);color:#B5D4F4;border:1px solid rgba(50,120,200,.3)}
+.cat-typewriter{background:rgba(60,52,137,.5);color:#CECBF6;border:1px solid rgba(120,110,240,.3)}
+.cat-loom{background:rgba(39,80,10,.5);color:#C0DD97;border:1px solid rgba(80,160,30,.3)}
+.cat-sewing{background:rgba(113,43,19,.5);color:#F5C4B3;border:1px solid rgba(200,80,40,.3)}
+.cat-clothing{background:rgba(114,36,62,.5);color:#F4C0D1;border:1px solid rgba(200,60,100,.3)}
+.cat-textile{background:rgba(68,68,65,.5);color:#D3D1C7;border:1px solid rgba(120,120,110,.3)}
+.no-results-p{padding:24px;text-align:center;font-size:13px;color:var(--text-faint);font-style:italic}
+.picker-footer{padding:12px 24px 16px;border-top:1px solid rgba(255,160,200,.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.done-count{font-size:11px;color:var(--text-dim)}
+.done-count span{color:var(--candy);font-weight:700}
+.see-results-btn{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:12px;cursor:pointer;padding:8px 20px;border-radius:12px;border:1.5px solid var(--hot);background:linear-gradient(135deg,rgba(255,45,107,.55),rgba(180,0,80,.6));color:var(--cream);box-shadow:0 4px 18px rgba(255,45,107,.22);transition:all .2s}
+.see-results-btn:hover:not(:disabled){box-shadow:0 6px 28px rgba(255,45,107,.42);transform:translateY(-2px) scale(1.02)}
+.see-results-btn:disabled{opacity:.22;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* quiz card */
+.quiz-card{background:rgba(255,255,255,.045);border:1.5px solid var(--border);border-radius:24px;box-shadow:var(--soft-glow);backdrop-filter:blur(20px);overflow:hidden;position:relative;display:none}
+.quiz-card.active{display:block;animation:fadeUp .4s cubic-bezier(.4,0,.2,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.quiz-card::before{content:'';position:absolute;top:0;left:16px;right:16px;height:1px;background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;pointer-events:none}
+.qc-header{padding:20px 24px 16px;border-bottom:1px solid rgba(255,160,200,.1)}
+.qc-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.qc-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim)}
+.qc-year{font-size:10px;padding:2px 8px;border-radius:6px;background:rgba(255,45,107,.12);border:1px solid rgba(255,100,160,.22);color:var(--candy)}
+.qc-cat{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.qc-title{font-family:'Playfair Display',serif;font-size:clamp(16px,2.5vw,22px);font-weight:700;color:var(--cream);line-height:1.3;margin-bottom:4px}
+.qc-inv{font-size:12px;color:var(--text-dim)}
+.qc-inv strong{color:rgba(255,200,220,.8);font-weight:700}
+.qc-back{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:11px;cursor:pointer;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,130,180,.2);background:transparent;color:var(--text-dim);transition:all .2s;float:right;margin-top:2px}
+.qc-back:hover{border-color:var(--border-bright);color:var(--blush)}
+.qc-instruction{padding:13px 24px;border-bottom:1px solid rgba(255,160,200,.08);background:rgba(255,255,255,.02)}
+.qc-instruction p{font-size:12.5px;color:rgba(255,210,230,.65);line-height:1.6}
+.legend{display:flex;gap:14px;margin-top:7px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-dim)}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.ld-neutral{background:rgba(255,255,255,.15);border:1px solid rgba(255,160,200,.2)}
+.ld-fem{background:var(--fem-solid);opacity:.75}
+.ld-masc{background:var(--masc-solid);opacity:.75}
+.word-cloud-wrap{padding:20px 24px}
+.wc-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:12px}
+.word-cloud{display:flex;flex-wrap:wrap;gap:9px}
+.design-note{font-size:12px;color:var(--text-faint);font-style:italic;padding:20px 24px}
+
+/* tags */
+.w-tag{appearance:none;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:11px;font-family:'Lato',sans-serif;font-size:13px;font-weight:600;cursor:pointer;user-select:none;border:1.5px solid rgba(255,160,200,.2);background:rgba(255,255,255,.06);color:rgba(255,220,235,.8);transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,background .18s,border-color .18s,color .18s}
+.w-tag:hover{transform:translateY(-3px) scale(1.06);border-color:rgba(255,160,200,.42);box-shadow:0 4px 16px rgba(255,45,107,.18)}
+.w-tag:active{transform:scale(.96)}
+.w-tag.fem{background:var(--fem-bg);border-color:var(--fem-border);color:var(--fem-text)}
+.w-tag.masc{background:var(--masc-bg);border-color:var(--masc-border);color:var(--masc-text)}
+.w-tag .t-icon{font-size:12px;flex-shrink:0}
+.w-tag.locked{cursor:default;pointer-events:none}
+.w-tag.reveal-correct{animation:popRight .4s cubic-bezier(.34,1.56,.64,1) forwards}
+.w-tag.reveal-wrong{animation:popWrong .35s ease forwards}
+.w-tag.reveal-skipped{opacity:.4}
+@keyframes popRight{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1);outline:2px solid #4ade80;outline-offset:2px}}
+@keyframes popWrong{0%{transform:scale(1)}25%{transform:scale(1.1) rotate(-3deg)}60%{transform:scale(.93) rotate(2deg)}100%{transform:scale(1);outline:2px solid #f87171;outline-offset:2px}}
+.w-tag.result-correct{outline:2px solid #4ade80;outline-offset:2px}
+.w-tag.result-wrong{outline:2px solid #f87171;outline-offset:2px}
+
+/* answer key */
+.answer-key{display:none;margin:0 24px 18px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,160,200,.12)}
+.answer-key.show{display:block;animation:fadeUp .3s ease}
+.ak-cols{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:500px){.ak-cols{grid-template-columns:1fr}}
+.ak-col{padding:13px 14px}
+.ak-col.fem-col{background:rgba(80,50,200,.1);border-right:1px solid rgba(140,110,255,.18)}
+.ak-col.masc-col{background:rgba(180,60,0,.1)}
+.ak-head{font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.ak-col.fem-col .ak-head{color:var(--fem-text)}
+.ak-col.masc-col .ak-head{color:var(--masc-text)}
+.ak-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ak-tag{padding:3px 9px;border-radius:7px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px}
+.ak-tag.fem{background:var(--fem-bg);border:1px solid var(--fem-border);color:var(--fem-text)}
+.ak-tag.masc{background:var(--masc-bg);border:1px solid var(--masc-border);color:var(--masc-text)}
+.ak-hit{color:#4ade80;font-size:9px}.ak-miss{color:#f87171;font-size:9px}
+
+/* qc bar */
+.qc-bar{padding:13px 24px;border-top:1px solid rgba(255,160,200,.1);background:rgba(8,0,6,.35);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.score-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:999px;border:1px solid rgba(255,160,200,.18);background:rgba(255,255,255,.03);font-size:12px;color:var(--text-dim)}
+.sp-num{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--cream)}
+.sp-num.good{color:#4ade80}.sp-num.ok{color:var(--candy)}.sp-num.meh{color:#fbbf24}
+.flex1{flex:1}
+.act-btn{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;padding:9px 22px;border-radius:12px;border:1.5px solid rgba(255,130,180,.28);background:rgba(255,45,107,.1);color:var(--blush);transition:all .2s;white-space:nowrap}
+.act-btn:hover:not(:disabled){border-color:var(--border-bright);background:rgba(255,45,107,.18);transform:translateY(-1px)}
+.act-btn.primary{border-color:var(--hot);background:linear-gradient(135deg,rgba(255,45,107,.55),rgba(180,0,80,.6));color:var(--cream);box-shadow:0 4px 18px rgba(255,45,107,.28)}
+.act-btn.primary:hover:not(:disabled){box-shadow:0 6px 28px rgba(255,45,107,.45);transform:translateY(-2px) scale(1.02)}
+.act-btn:disabled{opacity:.25;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.hidden{display:none!important}
+
+/* progress requirement bar */
+.progress-req{margin-top:12px;display:flex;align-items:center;gap:10px}
+.req-track{flex:1;height:5px;border-radius:999px;background:rgba(255,160,200,.1);overflow:hidden}
+.req-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--hot),var(--candy));transition:width .5s cubic-bezier(.4,0,.2,1)}
+.req-label{font-size:11px;color:var(--text-dim);white-space:nowrap;min-width:120px;text-align:right}
+.req-label.done{color:#4ade80;font-weight:700}
+
+/* ephemeral patent link */
+.patent-link-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .4s ease,margin .4s ease;margin-top:0}
+.patent-link-wrap.visible{max-height:36px;opacity:1;margin-top:6px}
+.patent-ext-link{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,160,200,.45);text-decoration:none;padding:3px 10px;border-radius:8px;border:1px solid rgba(255,130,180,.16);transition:color .2s,border-color .2s}
+.patent-ext-link:hover{color:var(--blush);border-color:rgba(255,130,180,.38)}
+.link-timer{font-size:9px;color:rgba(255,160,200,.28);margin-left:6px;font-family:'Lato',sans-serif;font-style:italic}
+
+/* completion */
+.completion{display:none;background:rgba(20,0,14,.9);border:1.5px solid var(--border-bright);border-radius:24px;box-shadow:var(--pop-glow),inset 0 1px 0 rgba(255,160,200,.07);backdrop-filter:blur(20px);overflow:hidden;position:relative}
+.completion.show{display:block;animation:fadeUp .5s cubic-bezier(.4,0,.2,1)}
+.completion::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px}
+.comp-top{padding:38px 28px 26px;text-align:center;border-bottom:1px solid rgba(255,160,200,.1)}
+.comp-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.comp-top h2{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(22px,4vw,34px);background:linear-gradient(100deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px;line-height:1.2}
+.comp-top p{font-size:13px;color:rgba(255,210,230,.6);line-height:1.7;max-width:500px;margin:0 auto 22px}
+.score-bubbles{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.s-bubble{display:flex;flex-direction:column;align-items:center;gap:3px;background:linear-gradient(135deg,rgba(255,45,107,.12),rgba(200,0,90,.15));border:1.5px solid var(--border-bright);border-radius:16px;padding:14px 24px;box-shadow:0 4px 22px rgba(255,45,107,.18)}
+.s-big{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(28px,5vw,44px);line-height:1;background:linear-gradient(135deg,var(--blush),var(--fuchsia),var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent}
+.s-lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.comp-breakdown{padding:22px 28px}
+.bd-title{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.bd-title::after{content:'';flex:1;height:1px;background:rgba(255,160,200,.1)}
+.p-row{background:rgba(255,255,255,.03);border:1px solid rgba(255,160,200,.1);border-radius:14px;padding:13px 16px;margin-bottom:8px;display:grid;gap:7px}
+.p-row:last-child{margin-bottom:0}
+.pr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pr-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--cream)}
+.pr-meta{font-size:10px;color:var(--text-dim);margin-top:1px}
+.pr-score{font-size:11px;color:var(--candy);white-space:nowrap;font-weight:700}
+.mix-bar-row{display:flex;align-items:center;gap:8px}
+.mix-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);white-space:nowrap}
+.mix-bar{flex:1;height:7px;border-radius:999px;overflow:hidden;background:rgba(255,160,200,.08);display:flex}
+.mb-fem{height:100%;background:var(--fem-solid);opacity:.75;transition:width .7s .2s}
+.mb-masc{height:100%;background:var(--masc-solid);opacity:.75;transition:width .7s .3s}
+.mix-counts{display:flex;gap:12px;font-size:10.5px;flex-wrap:wrap}
+.mc-f{color:var(--fem-text)}.mc-m{color:var(--masc-text)}
+/* ── ABSURDITY SECTION ── */
+.absurd-section{padding:0 28px 4px}
+.absurd-box{background:rgba(255,200,50,.05);border:1.5px solid rgba(255,200,80,.22);border-radius:18px;overflow:hidden}
+.absurd-header{padding:16px 20px 12px;border-bottom:1px solid rgba(255,200,80,.12);display:flex;align-items:flex-start;gap:12px}
+.absurd-emoji{font-size:22px;flex-shrink:0;margin-top:2px}
+.absurd-header-text{}
+.absurd-title{font-family:'Playfair Display',serif;font-weight:700;font-size:15px;color:rgba(255,230,140,.9);margin-bottom:4px}
+.absurd-subtitle{font-size:11.5px;color:rgba(255,220,120,.5);line-height:1.55}
+.absurd-examples{padding:14px 20px 16px;display:grid;gap:8px}
+.absurd-item{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:start;padding:10px 14px;border-radius:12px;background:rgba(255,200,50,.04);border:1px solid rgba(255,200,80,.1)}
+.ai-verdict{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:7px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.ai-verdict.fem{background:var(--fem-bg);border:1px solid var(--fem-border);color:var(--fem-text)}
+.ai-verdict.masc{background:var(--masc-bg);border:1px solid var(--masc-border);color:var(--masc-text)}
+.absurd-word{font-family:'DM Mono',monospace;font-size:13px;color:var(--cream);font-weight:500;margin-bottom:3px}
+.absurd-comment{font-size:11px;color:rgba(255,220,120,.55);line-height:1.55;font-style:italic}
+.absurd-comment strong{color:rgba(255,230,150,.75);font-style:normal}
+
+/* ── CRITIQUE SECTION ── */
+.critique-section{padding:0 28px 4px}
+.critique-box{background:rgba(180,80,255,.05);border:1.5px solid rgba(180,100,255,.2);border-radius:18px;overflow:hidden}
+.critique-header{padding:16px 20px 12px;border-bottom:1px solid rgba(180,100,255,.1);display:flex;align-items:flex-start;gap:12px}
+.critique-emoji{font-size:22px;flex-shrink:0;margin-top:2px}
+.critique-title{font-family:'Playfair Display',serif;font-weight:700;font-size:15px;color:rgba(210,170,255,.9);margin-bottom:4px}
+.critique-subtitle{font-size:11.5px;color:rgba(200,160,255,.5);line-height:1.55}
+.critique-body{padding:16px 20px;display:grid;gap:14px}
+.crit-point{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start}
+.crit-num{width:24px;height:24px;border-radius:50%;background:rgba(180,100,255,.15);border:1px solid rgba(180,100,255,.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(210,170,255,.7);flex-shrink:0;margin-top:1px}
+.crit-text{font-size:12px;color:rgba(210,185,255,.6);line-height:1.65}
+.crit-text strong{color:rgba(220,200,255,.85);font-weight:700}
+.crit-text em{font-style:italic;color:rgba(255,200,255,.5)}
+
+.punchline{margin:0 28px 24px;background:linear-gradient(135deg,rgba(255,45,107,.09),rgba(120,0,80,.14));border:1.5px solid rgba(255,100,160,.3);border-radius:18px;padding:24px;text-align:center;position:relative;overflow:hidden}
+.punchline::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 100%,rgba(255,45,107,.1),transparent);pointer-events:none}
+.pl-eyebrow{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+.pl-text{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(14px,2.2vw,20px);color:var(--cream);line-height:1.45;margin-bottom:10px}
+.pl-text em{font-style:italic;color:var(--candy)}
+.pl-sub{font-size:12px;color:rgba(255,210,230,.52);line-height:1.7}
+.comp-foot{padding:16px 28px 28px;display:flex;justify-content:center}
+.proceed-btn{appearance:none;font-family:'Lato',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;cursor:pointer;padding:12px 32px;border-radius:16px;border:1.5px solid var(--hot);background:linear-gradient(135deg,rgba(255,45,107,.6),rgba(180,0,80,.65));color:var(--cream);box-shadow:0 4px 20px rgba(255,45,107,.3),inset 0 1px 0 rgba(255,255,255,.12);transition:all .2s cubic-bezier(.34,1.56,.64,1);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.proceed-btn:hover{box-shadow:0 8px 32px rgba(255,45,107,.45);transform:translateY(-3px) scale(1.03)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<main class="wrap">
+
+  <div class="masthead">
+    <div class="brand">
+      <div class="brand-icon">📜</div>
+      <div>
+        <div class="brand-name">Patent Language · Gender Word Sorter ✦</div>
+        <div class="brand-sub">Can you guess which words AI calls masculine or feminine?</div>
+      </div>
+    </div>
+    <div class="time-badge"><div class="pip"></div><span id="clock">--:--:--</span></div>
+  </div>
+
+  <div class="video-section" id="videoSection">
+    <div class="v-top">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="v-icon">🌸</div>
+        <div><div class="v-label">Task Briefing Video</div><div class="v-sub">Watch before you begin ✦</div></div>
+      </div>
+      <div class="v-badge"><div class="pip"></div> Briefing</div>
+    </div>
+    <div class="v-embed" id="vEmbed">
+      <div class="v-placeholder" id="vPlaceholder">
+        <div class="ph-ring">▶</div>
+        <div class="ph-head">Paste your intro video URL ✦</div>
+        <div class="url-row">
+          <input class="url-input" id="vInput" type="text" placeholder="https://youtube.com/watch?v=…"/>
+          <button class="load-btn" id="loadBtn">Load ✦</button>
+        </div>
+        <div class="hint-micro">Supports youtube.com · youtu.be · vimeo.com</div>
+      </div>
+    </div>
+    <div class="v-bot">
+      <div class="v-hint">✦ Watch the full briefing before starting</div>
+      <div class="watched-pill"><div class="wcheck">✦</div><span>Briefing watched</span><button class="rewatch-btn" id="rewatchBtn">Rewatch ↩</button></div>
+      <button class="ghost-btn" id="doneWatchingBtn">✦ Done watching — collapse</button>
+      <button class="change-btn" id="changeBtn">Change video ✦</button>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <div class="disc-icon">⚠️</div>
+    <div class="disc-text"><strong>AI Disclaimer:</strong> The "correct" answers are <strong>what AI says are gendered words</strong> — which is probably mangled but somehow connects to gendered language research (e.g. Gaucher et al. 2011). These labels are not definitive and should be interpreted critically.</div>
+  </div>
+
+  <div class="picker-card" id="pickerCard">
+    <div class="picker-header">
+      <div class="picker-title">Choose a patent to sort ✦</div>
+      <div class="picker-sub">All 80 patents are listed below. Pick any five — sort their words into feminine or masculine and check your answers. Complete <strong style="color:var(--candy)">5 patents</strong> to unlock your results.</div>
+      <div class="progress-req" id="progressReq">
+        <div class="req-track"><div class="req-fill" id="reqFill" style="width:0%"></div></div>
+        <div class="req-label" id="reqLabel">0 of 5 completed</div>
+      </div>
+    </div>
+    <div class="picker-controls">
+      <input class="p-search" id="pickerSearch" type="text" placeholder="Search title, inventor, patent number…" oninput="buildPicker()">
+      <select class="p-select" id="pickerCat" onchange="buildPicker()">
+        <option value="">All categories</option>
+        <option value="Computer">Computer</option>
+        <option value="Typewriter">Typewriter</option>
+        <option value="Loom">Loom</option>
+        <option value="Sewing machine">Sewing machine</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Textile design">Textile design</option>
+      </select>
+      <select class="p-select" id="pickerStatus" onchange="buildPicker()">
+        <option value="">All</option>
+        <option value="done">Completed</option>
+        <option value="todo">Not yet done</option>
+      </select>
+      <span class="p-count" id="pickerCount"></span>
+    </div>
+    <div class="picker-body" id="pickerBody"></div>
+    <div class="picker-footer">
+      <div class="done-count">Completed: <span id="doneCount">0</span> / 5 required</div>
+      <button class="see-results-btn" id="seeResultsBtn" disabled onclick="showCompletion()">See my results ✦</button>
+    </div>
+  </div>
+
+  <div id="quizSlot"></div>
+
+  <div class="completion" id="completionCard">
+    <div class="comp-top">
+      <div class="comp-eyebrow">✦ Patent Language Sorter · Results</div>
+      <h2>Here's what you found 🌸</h2>
+      <p id="compSubtitle"></p>
+      <div class="score-bubbles">
+        <div class="s-bubble"><div class="s-big" id="finalCorrect">—</div><div class="s-lbl">correct</div></div>
+        <div class="s-bubble"><div class="s-big" id="finalAttempted">—</div><div class="s-lbl">words sorted</div></div>
+        <div class="s-bubble"><div class="s-big" id="finalPct">—</div><div class="s-lbl">accuracy</div></div>
+      </div>
+    </div>
+    <div class="comp-breakdown" id="compBreakdown"></div>
+    <!-- ABSURDITY SECTION -->
+    <div class="absurd-section">
+      <div class="absurd-box">
+        <div class="absurd-header">
+          <div class="absurd-emoji">🤨</div>
+          <div class="absurd-header-text">
+            <div class="absurd-title">Wait… some of these codings are a bit absurd</div>
+            <div class="absurd-subtitle">A few examples of what AI actually flagged — and why you might raise an eyebrow</div>
+          </div>
+        </div>
+        <div class="absurd-examples" id="absurdExamples"></div>
+      </div>
+    </div>
+
+    <!-- CRITIQUE SECTION -->
+    <div class="critique-section">
+      <div class="critique-box">
+        <div class="critique-header">
+          <div class="critique-emoji">🤖</div>
+          <div>
+            <div class="critique-title">So… can we trust these results?</div>
+            <div class="critique-subtitle">On AI, rules, and the lure of false precision</div>
+          </div>
+        </div>
+        <div class="critique-body">
+          <div class="crit-point">
+            <div class="crit-num">1</div>
+            <div class="crit-text"><strong>AI doesn't read context — it matches patterns.</strong> When it labels "secured" as masculine-coded, it's not reasoning about a 19th-century sewing patent. It's firing a rule learned from job ad research where words like "competitive" and "dominant" correlated with male applicants. That research is real. Whether it applies to an 1882 spool case description is… less clear.</div>
+          </div>
+          <div class="crit-point">
+            <div class="crit-num">2</div>
+            <div class="crit-text"><strong>The original research wasn't about patents.</strong> Gaucher et al. (2011) studied job advertisements and how certain word choices affected who applied. It found real, measurable effects. But AI has abstracted those findings into a general rule — <em>"simple = feminine, mechanism = masculine"</em> — and applied it universally, including to technical patent text that was never part of the original study.</div>
+          </div>
+          <div class="crit-point">
+            <div class="crit-num">3</div>
+            <div class="crit-text"><strong>The labels can reinforce the biases they claim to identify.</strong> Calling "comfortable" feminine and "actuated" masculine sounds like analysis — but it's also a description of what we already expect gender to look like. It can make those expectations feel objective, scientific, confirmed. That's the lure of translating messy social reality into tidy rules.</div>
+          </div>
+          <div class="crit-point">
+            <div class="crit-num">4</div>
+            <div class="crit-text"><strong>And yet — something real is happening here.</strong> Even with all these caveats, the pattern holds: every patent in this dataset uses language from both columns. The women who wrote these patents weren't writing in the "feminine" register that gender expectations might predict. That finding doesn't need AI to be true. The words are right there in the original documents.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="punchline">
+      <div class="pl-eyebrow">✦ The finding — despite all of the above</div>
+      <div class="pl-text">Every single patent by a woman used <em>both</em> masculine-coded and feminine-coded language.</div>
+      <div class="pl-sub">AI's classifications are flawed, context-blind, and sometimes absurd. But even by its own imperfect rules, these women's patents refuse to be sorted into a single gender register. The language did whatever the invention needed. The rules couldn't keep up.</div>
+    </div>
+    <div class="comp-foot">
+      <a class="proceed-btn" href="https://sbuckius.github.io/if-carebot-research/hit.html">Proceed to next task ✦</a>
+    </div>
+  </div>
+
+</main>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+const CAT_CLASS={"Computer":"cat-computer","Typewriter":"cat-typewriter","Loom":"cat-loom","Sewing machine":"cat-sewing","Clothing":"cat-clothing","Textile design":"cat-textile"};
+
+/* ══════════════════════════════════════════════════════════
+   ALL 80 PATENTS — words hardcoded, labeled f=feminine m=masculine
+   Design-only patents have empty word arrays.
+══════════════════════════════════════════════════════════ */
+const PATENTS = [
+  // ── SEWING MACHINE ──────────────────────────────────────
+  {id:"US141987",year:1873,title:"Improvement in sewing-machines",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"form a stitch",t:"f"},{w:"facilitate withdrawal",t:"f"},{w:"fine work",t:"f"},{w:"adapted",t:"f"},{w:"simple operation",t:"f"},
+          {w:"lever",t:"m"},{w:"pawl",t:"m"},{w:"ratchet",t:"m"},{w:"cam",t:"m"},{w:"oscillating",t:"m"},{w:"reciprocating",t:"m"}]},
+  {id:"US169451",year:1875,title:"Improvement in elastic seams for garments",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"elastic",t:"f"},{w:"comfortable",t:"f"},{w:"adapted for garments",t:"f"},{w:"light materials",t:"f"},
+          {w:"tension",t:"m"},{w:"rubber thread",t:"m"},{w:"interlacing",t:"m"},{w:"mechanism",t:"m"},{w:"reinforced",t:"m"}]},
+  {id:"US169605",year:1875,title:"Improvement in elastic goring for shoes",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"comfortable",t:"f"},{w:"suitable",t:"f"},{w:"flexible",t:"f"},{w:"durable",t:"f"},
+          {w:"rows of stitches",t:"m"},{w:"longitudinal",t:"m"},{w:"reinforced",t:"m"},{w:"secured",t:"m"}]},
+  {id:"US176905",year:1876,title:"Improvement in welted and covered seams",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"flat",t:"f"},{w:"neat",t:"f"},{w:"protect",t:"f"},{w:"prevent wearing",t:"f"},
+          {w:"welt",t:"m"},{w:"piping",t:"m"},{w:"exposed seam thread",t:"m"},{w:"chafing protection",t:"m"}]},
+  {id:"US265614",year:1882,title:"Hollow sewing needle",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"facilitate threading",t:"f"},{w:"avoid loss of time",t:"f"},{w:"simplify",t:"f"},
+          {w:"hollow bore",t:"m"},{w:"coil",t:"m"},{w:"bobbin",t:"m"},{w:"flexible core",t:"m"},{w:"withdrawal",t:"m"}]},
+  {id:"US283255",year:1883,title:"Spool case",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"protect",t:"f"},{w:"prevent unwinding",t:"f"},{w:"prevent entangling",t:"f"},{w:"workbasket",t:"f"},{w:"simple",t:"f"},
+          {w:"cover",t:"m"},{w:"fitted",t:"m"},{w:"attached",t:"m"},{w:"secured",t:"m"}]},
+  {id:"US498415",year:1893,title:"Method of securing reeds to edges of material",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"facilitate",t:"f"},{w:"neat",t:"f"},{w:"adapted",t:"f"},{w:"edge finishing",t:"f"},
+          {w:"folded",t:"m"},{w:"stitched",t:"m"},{w:"reed",t:"m"},{w:"cord",t:"m"},{w:"margin",t:"m"}]},
+  {id:"US500556",year:1893,title:"Sewing needle",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"facilitate threading",t:"f"},{w:"one-handed",t:"f"},{w:"simple",t:"f"},{w:"applicable to surgical use",t:"f"},
+          {w:"laterally movable latch",t:"m"},{w:"notch",t:"m"},{w:"recess",t:"m"},{w:"shank",t:"m"},{w:"spring",t:"m"}]},
+  {id:"US512726",year:1894,title:"Surgical needle",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"minimal resistance",t:"f"},{w:"less pain",t:"f"},{w:"facilitate withdrawal",t:"f"},
+          {w:"lancet point",t:"m"},{w:"notch",t:"m"},{w:"pierce skin",t:"m"},{w:"backside groove",t:"m"}]},
+  {id:"US612011",year:1898,title:"Improvements to sewing needles and machines",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"efficient",t:"f"},{w:"simplify",t:"f"},{w:"facilitate sewing motion",t:"f"},
+          {w:"slot open at one side",t:"m"},{w:"spring",t:"m"},{w:"shank",t:"m"},{w:"presser-foot",t:"m"},{w:"tapering",t:"m"}]},
+  {id:"US659999",year:1900,title:"Sewing-machine needle",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"adapted to perforate goods",t:"f"},{w:"carry thread",t:"f"},{w:"cast off",t:"f"},
+          {w:"notch obliquely cut",t:"m"},{w:"partly-concealed loops",t:"m"},{w:"gradual section",t:"m"},{w:"shuttle",t:"m"}]},
+  {id:"US683900",year:1901,title:"Hat-sewing machine",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"facilitate",t:"f"},{w:"uniform",t:"f"},{w:"adapted",t:"f"},
+          {w:"oscillating needle-bar",t:"m"},{w:"cam",t:"m"},{w:"reed",t:"m"},{w:"sweatband",t:"m"},{w:"mechanism",t:"m"}]},
+  {id:"US683901",year:1901,title:"Overseaming sewing-machine",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"flexibly united",t:"f"},{w:"prevent irregular edges",t:"f"},{w:"knitted goods",t:"f"},
+          {w:"overedging",t:"m"},{w:"cam",t:"m"},{w:"thread-guide",t:"m"},{w:"trimmer knife",t:"m"},{w:"concatenating",t:"m"}]},
+  {id:"US683902",year:1901,title:"Seam for sewed articles",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"flexible seam",t:"f"},{w:"comfortable",t:"f"},{w:"neat",t:"f"},{w:"durable",t:"f"},
+          {w:"overedging",t:"m"},{w:"interlocked loops",t:"m"},{w:"elastic union",t:"m"}]},
+  {id:"US684176",year:1901,title:"Hat and applying sweatbands thereto",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"comfortable",t:"f"},{w:"neat",t:"f"},{w:"secure fitting",t:"f"},
+          {w:"sweatband",t:"m"},{w:"securing reeds",t:"m"},{w:"stitching mechanism",t:"m"},{w:"band",t:"m"}]},
+  {id:"US887586",year:1907,title:"Crochet attachment for sewing machines",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"simple attachment",t:"f"},{w:"readily applied",t:"f"},{w:"decorative",t:"f"},{w:"ornamental",t:"f"},
+          {w:"reciprocating needle",t:"m"},{w:"hook",t:"m"},{w:"attachment arm",t:"m"},{w:"loop",t:"m"},{w:"mechanism",t:"m"}]},
+  {id:"US1012856",year:1910,title:"Sewing machine",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"adapted",t:"f"},{w:"facilitate",t:"f"},{w:"uniform stitching",t:"f"},
+          {w:"needle-bar oscillation",t:"m"},{w:"cam",t:"m"},{w:"looper",t:"m"},{w:"feed mechanism",t:"m"},{w:"presser-foot",t:"m"}]},
+  {id:"US1022185",year:1910,title:"Sewing needle (split needle)",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"facilitate threading",t:"f"},{w:"simple",t:"f"},{w:"easy",t:"f"},
+          {w:"split shank",t:"m"},{w:"spring",t:"m"},{w:"notch",t:"m"},{w:"aperture",t:"m"},{w:"lancet",t:"m"}]},
+  {id:"US1089816",year:1912,title:"Sewing machine",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"uniform",t:"f"},{w:"adapted",t:"f"},{w:"facilitate",t:"f"},
+          {w:"cam",t:"m"},{w:"oscillating frame",t:"m"},{w:"needle-bar",t:"m"},{w:"looper",t:"m"},{w:"trimmer knife",t:"m"}]},
+  {id:"US1091672",year:1912,title:"Split needle",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"facilitate threading",t:"f"},{w:"convenient",t:"f"},{w:"simple",t:"f"},
+          {w:"split shank",t:"m"},{w:"spring catch",t:"m"},{w:"groove",t:"m"},{w:"thread-guiding",t:"m"}]},
+  {id:"US1368820",year:1921,title:"Sewing machine",inventor:"Helen A. Blanchard",cat:"Sewing machine",
+   words:[{w:"adapted",t:"f"},{w:"facilitate",t:"f"},{w:"uniform",t:"f"},
+          {w:"differential feeding",t:"m"},{w:"presser-foot",t:"m"},{w:"cam",t:"m"},{w:"oscillating",t:"m"},{w:"needle-bar",t:"m"}]},
+  {id:"US258580",year:1882,title:"Sewing-machine attachment",inventor:"Sarah Lambert Bailey",cat:"Sewing machine",
+   words:[{w:"prevent soiling",t:"f"},{w:"protect",t:"f"},{w:"utility",t:"f"},{w:"compactly folded",t:"f"},{w:"convenient",t:"f"},
+          {w:"attachment",t:"m"},{w:"secured",t:"m"},{w:"spring",t:"m"},{w:"presser-bar",t:"m"}]},
+  {id:"US815647",year:1906,title:"Work attachment for sewing machines",inventor:"Sarah Lambert Bailey",cat:"Sewing machine",
+   words:[{w:"prevent soiling",t:"f"},{w:"prevent injuring",t:"f"},{w:"utility",t:"f"},{w:"compactly folded",t:"f"},
+          {w:"presser-bar",t:"m"},{w:"attachment bracket",t:"m"},{w:"secured",t:"m"},{w:"slot",t:"m"}]},
+  {id:"US921208",year:1909,title:"Sewing-machine apron",inventor:"Lillian C. Mattell",cat:"Sewing machine",
+   words:[{w:"worn",t:"f"},{w:"apron",t:"f"},{w:"supporting the work",t:"f"},{w:"simple arrangement",t:"f"},{w:"protecting the lap",t:"f"},
+          {w:"fastened",t:"m"},{w:"presser-bar",t:"m"},{w:"clip",t:"m"},{w:"bracket",t:"m"}]},
+  {id:"US1012034",year:1911,title:"Combined table and work-box for sewing-machines",inventor:"Mary E. Irving",cat:"Sewing machine",
+   words:[{w:"combined",t:"f"},{w:"convenient",t:"f"},{w:"neatly stored",t:"f"},{w:"household",t:"f"},{w:"attractive",t:"f"},
+          {w:"hinged",t:"m"},{w:"secured",t:"m"},{w:"bracket",t:"m"},{w:"extended",t:"m"}]},
+  // ── COMPUTER ────────────────────────────────────────────
+  {id:"US265613",year:1882,title:"Adding-machine",inventor:"Winter & Crary",cat:"Computer",
+   words:[{w:"convenient",t:"f"},{w:"adapted",t:"f"},{w:"operator",t:"f"},
+          {w:"impulse",t:"m"},{w:"forward movement",t:"m"},{w:"acts upon",t:"m"},{w:"strikes",t:"m"},{w:"ratchet",t:"m"},{w:"pawl",t:"m"}]},
+  {id:"US326278",year:1885,title:"Draftsman's instrument",inventor:"Hertha Ayrton",cat:"Computer",
+   words:[{w:"simple",t:"f"},{w:"easy of manipulation",t:"f"},{w:"reliable",t:"f"},{w:"requiring no calculation",t:"f"},
+          {w:"friction-tight",t:"m"},{w:"force applied",t:"m"},{w:"graduated",t:"m"},{w:"resistance",t:"m"},{w:"fixed",t:"m"}]},
+  {id:"US644118",year:1900,title:"Computing attachment",inventor:"Margaret A. Wise",cat:"Computer",
+   words:[{w:"simple",t:"f"},{w:"complete mechanism",t:"f"},{w:"overcome this defect",t:"f"},
+          {w:"rotative",t:"m"},{w:"controlled by position",t:"m"},{w:"cumulates",t:"m"},{w:"intermediate mechanisms",t:"m"}]},
+  {id:"US738688",year:1903,title:"Calculator",inventor:"Emily C. Duncan",cat:"Computer",
+   words:[{w:"exceedingly simple",t:"f"},{w:"readily understood",t:"f"},{w:"quickly made",t:"f"},
+          {w:"computations",t:"m"},{w:"rotatably mounted",t:"m"},{w:"vertical standard",t:"m"},{w:"finder-bar",t:"m"}]},
+  {id:"US749851",year:1904,title:"Calculator (time calculator)",inventor:"Emily C. Duncan",cat:"Computer",
+   words:[{w:"exceedingly simple",t:"f"},{w:"inexpensive",t:"f"},{w:"great strength and durability",t:"f"},{w:"quickly arranged",t:"f"},
+          {w:"rotary ring",t:"m"},{w:"annular recess",t:"m"},{w:"projecting flange",t:"m"},{w:"graduations",t:"m"},{w:"disk",t:"m"}]},
+  {id:"US1088811",year:1914,title:"Novelty device",inventor:"Elizabeth C. Swinnerton",cat:"Computer",
+   words:[{w:"simple",t:"f"},{w:"attractive",t:"f"},{w:"educational",t:"f"},{w:"pleasing",t:"f"},{w:"amusing",t:"f"},{w:"babies and children",t:"f"},
+          {w:"arranged",t:"m"},{w:"series",t:"m"},{w:"parallel spaced",t:"m"},{w:"mechanism",t:"m"}]},
+  {id:"US1552113",year:1925,title:"Calculator (electrical transmission line)",inventor:"Edith Clarke",cat:"Computer",
+   words:[{w:"simply",t:"f"},{w:"easily performed",t:"f"},{w:"understood",t:"f"},
+          {w:"evaluations",t:"m"},{w:"infinite series",t:"m"},{w:"distributed inductance",t:"m"},{w:"angular displacement",t:"m"},{w:"investigating",t:"m"}]},
+  {id:"US1699642",year:1929,title:"Number-learning device",inventor:"Elizabeth Janneson",cat:"Computer",
+   words:[{w:"aiding children",t:"f"},{w:"comparatively easy",t:"f"},{w:"well known to the child",t:"f"},{w:"becomes subconscious",t:"f"},
+          {w:"slidably mounted",t:"m"},{w:"rigid",t:"m"},{w:"removable",t:"m"},{w:"indicator",t:"m"}]},
+  {id:"US2977057",year:1961,title:"Electronic calculator control",inventor:"Evelyn Berezin",cat:"Computer",
+   words:[{w:"control means",t:"m"},{w:"zone register",t:"m"},{w:"record sensing",t:"m"},{w:"electronic calculator",t:"m"},{w:"circuitry",t:"m"},{w:"actuating",t:"m"}]},
+  {id:"USD164150",year:1951,title:"Tax computer",inventor:"Sarah Ann Ayres",cat:"Computer",words:[]},
+  // ── TYPEWRITER ──────────────────────────────────────────
+  {id:"US498129",year:1893,title:"Scale for typewriters",inventor:"Lizzie J. Magie",cat:"Typewriter",
+   words:[{w:"convenience",t:"f"},{w:"suitable",t:"f"},{w:"adapt",t:"f"},{w:"readily",t:"f"},
+          {w:"secure",t:"m"},{w:"graduated",t:"m"},{w:"fixed",t:"m"},{w:"scale divisions",t:"m"}]},
+  {id:"US838513",year:1906,title:"Type-writing machine improvement",inventor:"McArthur & Rosmann",cat:"Typewriter",
+   words:[{w:"economize space",t:"f"},{w:"convenient",t:"f"},{w:"without removal of either hand",t:"f"},
+          {w:"treadle",t:"m"},{w:"actuated",t:"m"},{w:"simultaneously",t:"m"},{w:"carriage shift",t:"m"},{w:"mechanism",t:"m"}]},
+  {id:"US1182406",year:1916,title:"Cushioning-support for typewriters",inventor:"Emma Sherwood",cat:"Typewriter",
+   words:[{w:"cushioning",t:"f"},{w:"comfort",t:"f"},{w:"resting",t:"f"},
+          {w:"helical coil",t:"m"},{w:"threaded eye",t:"m"},{w:"rectangular bar",t:"m"},{w:"axial",t:"m"},{w:"resilient",t:"m"}]},
+  {id:"US2638854",year:1953,title:"Typist's desk",inventor:"Mary M. Smith",cat:"Typewriter",
+   words:[{w:"convenient quarter turn",t:"f"},{w:"within arm's reach",t:"f"},{w:"facing the typist",t:"f"},{w:"accommodation",t:"f"},
+          {w:"parallel motion mechanism",t:"m"},{w:"floatingly",t:"m"},{w:"baseboard",t:"m"},{w:"elevated exposed position",t:"m"}]},
+  {id:"US2881699",year:1959,title:"Copying attachment for typewriters",inventor:"Beulah Louise Henry",cat:"Typewriter",
+   words:[{w:"simple",t:"f"},{w:"readily attached",t:"f"},{w:"extremely simple",t:"f"},
+          {w:"auxiliary ribbon",t:"m"},{w:"imprint",t:"m"},{w:"mechanism",t:"m"},{w:"field of type bars",t:"m"}]},
+  {id:"US3147846",year:1964,title:"Supplemental ribbon attachment",inventor:"Beulah Louise Henry",cat:"Typewriter",
+   words:[{w:"conveniently removed",t:"f"},{w:"out of the way",t:"f"},{w:"releasably mounting",t:"f"},
+          {w:"expeditiously attached",t:"m"},{w:"longitudinal relation",t:"m"},{w:"operative position",t:"m"},{w:"taut condition",t:"m"}]},
+  {id:"US3303916",year:1967,title:"Anti-slip glove for typists",inventor:"Beulah M. Robbins",cat:"Typewriter",
+   words:[{w:"protective",t:"f"},{w:"comfortable",t:"f"},{w:"worn",t:"f"},{w:"fingers",t:"f"},{w:"hand",t:"f"},
+          {w:"coated",t:"m"},{w:"open weave",t:"m"},{w:"latex",t:"m"},{w:"dipping method",t:"m"}]},
+  // ── LOOM ────────────────────────────────────────────────
+  {id:"US828929",year:1906,title:"Loom",inventor:"Mary P.C. Hooper",cat:"Loom",
+   words:[{w:"convenient",t:"f"},{w:"cheapness",t:"f"},{w:"lightness in weight",t:"f"},{w:"toy",t:"f"},{w:"child",t:"f"},
+          {w:"prevent displacement",t:"m"},{w:"inclined",t:"m"},{w:"adjustable",t:"m"},{w:"shed",t:"m"}]},
+  {id:"US952481",year:1910,title:"Loom",inventor:"Boydston & Cowden",cat:"Loom",
+   words:[{w:"exceedingly simple",t:"f"},{w:"inexpensive",t:"f"},{w:"removed with facility",t:"f"},{w:"hand bag",t:"f"},{w:"purse",t:"f"},
+          {w:"serrated",t:"m"},{w:"combinations of parts",t:"m"},{w:"embodied",t:"m"},{w:"peripheral",t:"m"}]},
+  {id:"USD52697",year:1918,title:"Loom-frame (design)",inventor:"Elna M. de Neergaard",cat:"Loom",words:[]},
+  {id:"US1337757",year:1920,title:"Loom",inventor:"Elna M. de Neergaard",cat:"Loom",
+   words:[{w:"convalescents",t:"f"},{w:"without unduly exerting",t:"f"},{w:"conveniently arranged",t:"f"},{w:"even texture",t:"f"},
+          {w:"vertically adjustable",t:"m"},{w:"superposed section",t:"m"},{w:"actuated",t:"m"},{w:"uniform sharp blow",t:"m"}]},
+  {id:"US1527627",year:1925,title:"Loom for hand weaving",inventor:"Josephine Marie Weil",cat:"Loom",
+   words:[{w:"comfortable",t:"f"},{w:"portable",t:"f"},{w:"light and compact",t:"f"},{w:"without discomfort",t:"f"},{w:"economical",t:"f"},
+          {w:"vertically spaced",t:"m"},{w:"co-act",t:"m"},{w:"radially extending",t:"m"},{w:"adjusting and retaining",t:"m"}]},
+  // ── CLOTHING ────────────────────────────────────────────
+  {id:"US149280",year:1874,title:"Skirt protector",inventor:"McDonald",cat:"Clothing",
+   words:[{w:"protect",t:"f"},{w:"worn",t:"f"},{w:"ladies",t:"f"},{w:"suitable",t:"f"},{w:"prevent soiling",t:"f"},
+          {w:"secured",t:"m"},{w:"attached",t:"m"},{w:"clasp",t:"m"},{w:"band",t:"m"}]},
+  {id:"US215743",year:1879,title:"Dress reform garment",inventor:"Sawyer",cat:"Clothing",
+   words:[{w:"comfortable",t:"f"},{w:"hygienic",t:"f"},{w:"wearer",t:"f"},{w:"ladies",t:"f"},{w:"health",t:"f"},{w:"reform",t:"f"},
+          {w:"secured",t:"m"},{w:"attached",t:"m"},{w:"band",t:"m"},{w:"buckle",t:"m"}]},
+  {id:"US561153",year:1896,title:"Cycling-skirt",inventor:"Bygrave",cat:"Clothing",
+   words:[{w:"proper for wear",t:"f"},{w:"lady cyclist",t:"f"},{w:"appearance",t:"f"},{w:"wearer",t:"f"},{w:"decorum",t:"f"},
+          {w:"fastened",t:"m"},{w:"buttoned",t:"m"},{w:"attached",t:"m"},{w:"mechanism",t:"m"}]},
+  {id:"US604428",year:1898,title:"Cycling-skirt",inventor:"Hoey",cat:"Clothing",
+   words:[{w:"proper for wear",t:"f"},{w:"lady cyclist",t:"f"},{w:"appearance",t:"f"},{w:"wearer",t:"f"},
+          {w:"clasp",t:"m"},{w:"secured",t:"m"},{w:"spring",t:"m"},{w:"fastening",t:"m"}]},
+  {id:"US644606",year:1900,title:"Garment",inventor:"Laura H. Johnson",cat:"Clothing",
+   words:[{w:"comfortable",t:"f"},{w:"suitable",t:"f"},{w:"worn",t:"f"},{w:"wearer",t:"f"},{w:"attractive",t:"f"},{w:"neat",t:"f"},
+          {w:"secured",t:"m"},{w:"fastened",t:"m"},{w:"attached",t:"m"}]},
+  {id:"US971680",year:1910,title:"Catamenial skirt-protector",inventor:"Mabel Marie Kline",cat:"Clothing",
+   words:[{w:"protect",t:"f"},{w:"comfort",t:"f"},{w:"hygienic",t:"f"},{w:"worn",t:"f"},{w:"ladies",t:"f"},{w:"absorbent",t:"f"},{w:"neat",t:"f"},
+          {w:"secured",t:"m"},{w:"attached",t:"m"},{w:"clasp",t:"m"},{w:"band",t:"m"}]},
+  {id:"US1115674",year:1914,title:"Brassiere",inventor:"Mary Phelps Jacob",cat:"Clothing",
+   words:[{w:"ease and comfort",t:"f"},{w:"fit snugly",t:"f"},{w:"accommodate movements",t:"f"},{w:"without discomfort",t:"f"},
+          {w:"bias",t:"m"},{w:"draft",t:"m"},{w:"tension",t:"m"},{w:"transmitted",t:"m"},{w:"diagonal",t:"m"}]},
+  {id:"US1137452",year:1915,title:"Garment fastener",inventor:"Bienstock",cat:"Clothing",
+   words:[{w:"convenient",t:"f"},{w:"suitable",t:"f"},{w:"worn",t:"f"},{w:"easily",t:"f"},{w:"neat",t:"f"},{w:"simple",t:"f"},
+          {w:"spring",t:"m"},{w:"clasp",t:"m"},{w:"tension",t:"m"},{w:"secured",t:"m"}]},
+  {id:"US1223854",year:1916,title:"Nurse's cap",inventor:"Unknown inventor",cat:"Clothing",
+   words:[{w:"worn",t:"f"},{w:"comfortable",t:"f"},{w:"neat",t:"f"},{w:"attractive",t:"f"},{w:"suitable",t:"f"},{w:"wearer",t:"f"},
+          {w:"secured",t:"m"},{w:"attached",t:"m"},{w:"wire",t:"m"},{w:"stiffener",t:"m"}]},
+  {id:"US1348754",year:1922,title:"Dress-shield supporter",inventor:"Unknown inventor",cat:"Clothing",
+   words:[{w:"protect",t:"f"},{w:"comfortable",t:"f"},{w:"worn",t:"f"},{w:"wearer",t:"f"},{w:"hygienic",t:"f"},{w:"prevent soiling",t:"f"},
+          {w:"attached",t:"m"},{w:"clasp",t:"m"},{w:"band",t:"m"},{w:"secured",t:"m"}]},
+  {id:"US1475018",year:1924,title:"Dress shield",inventor:"Lassen",cat:"Clothing",
+   words:[{w:"protect",t:"f"},{w:"comfortable",t:"f"},{w:"worn",t:"f"},{w:"wearer",t:"f"},{w:"hygienic",t:"f"},{w:"absorbent",t:"f"},
+          {w:"attached",t:"m"},{w:"clasp",t:"m"},{w:"band",t:"m"}]},
+  {id:"US1669476",year:1928,title:"Undergarment",inventor:"Unknown inventor",cat:"Clothing",
+   words:[{w:"comfortable",t:"f"},{w:"worn",t:"f"},{w:"wearer",t:"f"},{w:"suitable",t:"f"},{w:"neat",t:"f"},{w:"figure-conforming",t:"f"},
+          {w:"elastic",t:"m"},{w:"secured",t:"m"},{w:"attached",t:"m"}]},
+  {id:"US2108403",year:1938,title:"Foundation garment",inventor:"Unknown inventor",cat:"Clothing",
+   words:[{w:"comfortable",t:"f"},{w:"worn",t:"f"},{w:"wearer",t:"f"},{w:"suitable",t:"f"},{w:"figure-conforming",t:"f"},{w:"support",t:"f"},{w:"flattering",t:"f"},
+          {w:"boning",t:"m"},{w:"elastic",t:"m"},{w:"secured",t:"m"},{w:"reinforced",t:"m"}]},
+  // ── TEXTILE DESIGN (all design-only, empty words) ───────
+  {id:"USD18641",year:1888,title:"Textile design",inventor:"Fenner",cat:"Textile design",words:[]},
+  {id:"USD25049",year:1895,title:"Textile design",inventor:"Thyng",cat:"Textile design",words:[]},
+  {id:"USD27443",year:1897,title:"Textile design",inventor:"Whitcomb",cat:"Textile design",words:[]},
+  {id:"USD33012",year:1900,title:"Textile design",inventor:"Johnstone",cat:"Textile design",words:[]},
+  {id:"USD35929",year:1903,title:"Textile design",inventor:"Doughty",cat:"Textile design",words:[]},
+  {id:"USD37224",year:1905,title:"Textile design",inventor:"Crownfield",cat:"Textile design",words:[]},
+  {id:"USD39842",year:1908,title:"Textile design",inventor:"Fowler",cat:"Textile design",words:[]},
+  {id:"USD43117",year:1912,title:"Textile design",inventor:"Olsson",cat:"Textile design",words:[]},
+  {id:"USD47328",year:1915,title:"Textile design",inventor:"Katz",cat:"Textile design",words:[]},
+  {id:"USD51602",year:1918,title:"Textile design",inventor:"Sarton",cat:"Textile design",words:[]},
+  {id:"USD56019",year:1920,title:"Textile design",inventor:"Leonhardt",cat:"Textile design",words:[]},
+  {id:"USD63847",year:1922,title:"Textile design",inventor:"Weitz",cat:"Textile design",words:[]},
+  {id:"USD70234",year:1925,title:"Textile design",inventor:"Swanson",cat:"Textile design",words:[]},
+  {id:"USD73991",year:1927,title:"Textile design",inventor:"Smith",cat:"Textile design",words:[]},
+  {id:"USD79446",year:1929,title:"Textile design",inventor:"Schmidt",cat:"Textile design",words:[]},
+  {id:"USD83872",year:1931,title:"Textile design",inventor:"Jolles",cat:"Textile design",words:[]},
+  {id:"USD91204",year:1934,title:"Textile design",inventor:"Multiple inventors",cat:"Textile design",words:[]},
+  {id:"USD110478",year:1938,title:"Textile design",inventor:"Multiple inventors",cat:"Textile design",words:[]},
+  {id:"USD132567",year:1942,title:"Textile design",inventor:"Multiple inventors",cat:"Textile design",words:[]},
+];
+
+// per-patent runtime state
+const STATE = {};
+PATENTS.forEach(p=>{ STATE[p.id]={choices:[],revealed:false,correct:0,attempted:0}; });
+
+/* ── SPARKLES ── */
+(function(){
+  const wrap=document.getElementById('sparkles'),chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<24;i++){const s=document.createElement('span');s.className='sp';s.textContent=chars[~~(Math.random()*chars.length)];s.style.left=Math.random()*100+'vw';s.style.bottom='-10px';s.style.fontSize=(9+Math.random()*9)+'px';s.style.color=`hsl(${318+Math.random()*44},80%,${68+Math.random()*22}%)`;s.style.animationDuration=(7+Math.random()*12)+'s';s.style.animationDelay=(Math.random()*14)+'s';wrap.appendChild(s);}
+})();
+
+/* ── CLOCK ── */
+setInterval(()=>{const n=new Date(),p=v=>String(v).padStart(2,'0');document.getElementById('clock').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;},1000);
+
+/* ── VIDEO ── */
+const VS=document.getElementById('videoSection');let vIF=null,vPL=null,vW=false;
+function toEmbed(r){r=r.trim();let m=r.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_\-]{11})/);if(m)return`https://www.youtube.com/embed/${m[1]}?rel=0`;m=r.match(/vimeo\.com\/(\d+)(?:\/([a-f0-9]+))?/);if(m)return`https://player.vimeo.com/video/${m[1]}?h=${m[2]||''}&badge=0&autopause=0&player_id=0&app_id=58479`;if(r.startsWith('https://player.vimeo.com/')||r.startsWith('https://www.youtube.com/embed/'))return r;return null;}
+function markW(){if(vW)return;vW=true;VS.classList.add('watched');}
+function attachV(f){function t(){if(typeof Vimeo!=='undefined'){vPL=new Vimeo.Player(f);vPL.on('ended',()=>setTimeout(markW,800));vPL.on('timeupdate',d=>{if(d.percent>=0.95)markW();});}else setTimeout(t,300);}t();}
+function loadVideo(){const src=toEmbed(document.getElementById('vInput').value);if(!src){document.getElementById('vInput').style.borderColor='var(--hot)';return;}document.getElementById('vInput').style.borderColor='';if(vIF)vIF.remove();if(vPL){try{vPL.destroy();}catch(e){}vPL=null;}document.getElementById('vPlaceholder').style.display='none';VS.classList.remove('watched');vW=false;vIF=document.createElement('iframe');vIF.src=src;vIF.allow='autoplay; fullscreen; picture-in-picture';vIF.allowFullscreen=true;vIF.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';document.getElementById('vEmbed').appendChild(vIF);document.getElementById('changeBtn').classList.add('vis');if(src.includes('player.vimeo.com'))attachV(vIF);}
+document.getElementById('loadBtn').addEventListener('click',loadVideo);
+document.getElementById('vInput').addEventListener('keydown',e=>{if(e.key==='Enter')loadVideo();});
+document.getElementById('changeBtn').addEventListener('click',()=>{if(vIF){vIF.remove();vIF=null;}if(vPL){try{vPL.destroy();}catch(e){}vPL=null;}document.getElementById('vPlaceholder').style.display='flex';document.getElementById('vInput').value='';document.getElementById('changeBtn').classList.remove('vis');VS.classList.remove('watched');vW=false;});
+document.getElementById('rewatchBtn').addEventListener('click',()=>{vW=false;VS.classList.remove('watched');document.getElementById('vInput').value='https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479';loadVideo();});
+document.getElementById('doneWatchingBtn').addEventListener('click',markW);
+document.getElementById('vInput').value='https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479';
+loadVideo();
+
+/* ══ PICKER ══ */
+function buildPicker(){
+  const q=(document.getElementById('pickerSearch').value||'').toLowerCase();
+  const cat=document.getElementById('pickerCat').value;
+  const status=document.getElementById('pickerStatus').value;
+  const body=document.getElementById('pickerBody');
+  body.innerHTML='';
+  const filtered=PATENTS.filter(p=>{
+    if(cat&&p.cat!==cat)return false;
+    const done=STATE[p.id].revealed;
+    if(status==='done'&&!done)return false;
+    if(status==='todo'&&done)return false;
+    if(q&&!`${p.id} ${p.title} ${p.inventor} ${p.year}`.toLowerCase().includes(q))return false;
+    return true;
+  });
+  document.getElementById('pickerCount').textContent=`${filtered.length} shown`;
+  document.getElementById('totalCount') && (document.getElementById('totalCount').textContent=PATENTS.length);
+  const dc=PATENTS.filter(p=>STATE[p.id].revealed).length;
+  document.getElementById('doneCount').textContent=dc;
+  const needed=5;
+  const pct=Math.min(100,Math.round((dc/needed)*100));
+  const fillEl=document.getElementById('reqFill');
+  const labelEl=document.getElementById('reqLabel');
+  if(fillEl)fillEl.style.width=pct+'%';
+  if(labelEl){
+    labelEl.textContent=dc>=needed?`✓ ${dc} completed — results unlocked!`:`${dc} of ${needed} completed`;
+    labelEl.className='req-label'+(dc>=needed?' done':'');
+  }
+  document.getElementById('seeResultsBtn').disabled=dc<needed;
+  if(!filtered.length){body.innerHTML='<div class="no-results-p">No patents match your filters.</div>';return;}
+  filtered.forEach(p=>{
+    const done=STATE[p.id].revealed;
+    const isDesign=p.words.length===0;
+    const btn=document.createElement('button');
+    btn.className='ppb'+(done?' done':'');
+    btn.onclick=()=>openPatent(p.id);
+    btn.innerHTML=`
+      <div class="ppb-left"><div class="ppb-year">${p.year}</div><div class="ppb-id">${p.id}</div></div>
+      <div class="ppb-mid">
+        <div class="ppb-title">${done?'✓ ':''}${p.title}${isDesign?' <span style="font-size:9px;opacity:.5">(design)</span>':''}</div>
+        <div class="ppb-inv">${p.inventor}</div>
+      </div>
+      ${done?`<span class="done-badge">Done ✓</span>`:`<span class="ppb-badge ${CAT_CLASS[p.cat]||''}">${p.cat}</span>`}
+    `;
+    body.appendChild(btn);
+  });
+}
+
+/* ══ OPEN PATENT ══ */
+function openPatent(id){
+  const patent=PATENTS.find(p=>p.id===id);
+  const st=STATE[id];
+  const slot=document.getElementById('quizSlot');
+  const old=slot.querySelector('.quiz-card');
+  if(old){old.style.transition='opacity .2s,transform .2s';old.style.opacity='0';old.style.transform='translateY(-10px)';setTimeout(()=>old.remove(),220);}
+  setTimeout(()=>{
+    const isDesign=patent.words.length===0;
+    const card=document.createElement('div');
+    card.className='quiz-card active';
+    card.id='qc-'+id;
+    if(!st.choices.length&&!isDesign)st.choices=new Array(patent.words.length).fill(null);
+    // shuffle words
+    const shuffled=isDesign?[]:[...patent.words.map((w,i)=>({...w,oi:i}))].sort(()=>Math.random()-.5);
+    card.innerHTML=`
+      <div class="qc-header">
+        <button class="qc-back" onclick="closeQuiz()">← Back to list</button>
+        <div class="qc-eyebrow">
+          <span class="qc-num">${patent.id}</span>
+          <span class="qc-year">${patent.year}</span>
+          <span class="qc-cat ${CAT_CLASS[patent.cat]||''}">${patent.cat}</span>
+        </div>
+        <div class="qc-title">${patent.title}</div>
+        <div class="qc-inv">Inventor: <strong>${patent.inventor}</strong></div>
+        <div class="patent-link-wrap" id="plw-${id}">
+          <a class="patent-ext-link" href="https://patents.google.com/patent/${id}" target="_blank" rel="noopener">
+            ↗ View patent ${id} on Google Patents<span class="link-timer" id="plt-${id}">· disappears in 3s</span>
+          </a>
+        </div>
+      </div>
+      ${isDesign?`<div class="design-note">This is a design patent — it has no textual claims, so there are no words to sort. Visual form only.</div>`:`
+      <div class="qc-instruction">
+        <p><strong>Click each word to label it.</strong> First click = <span style="color:var(--fem-text)">♀ Feminine</span>, second click = <span style="color:var(--masc-text)">♂ Masculine</span>, third click = back to unsorted. Label as many as you like, then check your answers.</p>
+        <div class="legend">
+          <div class="leg"><div class="leg-dot ld-neutral"></div>Unsorted</div>
+          <div class="leg"><div class="leg-dot ld-fem"></div>Feminine-coded</div>
+          <div class="leg"><div class="leg-dot ld-masc"></div>Masculine-coded</div>
+        </div>
+      </div>
+      <div class="word-cloud-wrap">
+        <div class="wc-label">Words from this patent — sort them ✦</div>
+        <div class="word-cloud" id="wc-${id}">
+          ${shuffled.map(w=>{
+            const cur=st.choices[w.oi];
+            const locked=st.revealed?' locked':'';
+            const icon=cur==='f'?'♀':cur==='m'?'♂':'○';
+            return`<button class="w-tag${cur?' '+(cur==='f'?'fem':'masc'):''}${locked}" id="wt-${id}-${w.oi}" onclick="cycleTag('${id}',${w.oi},this)"><span class="t-icon">${icon}</span><span>${w.w}</span></button>`;
+          }).join('')}
+        </div>
+        <div class="answer-key${st.revealed?' show':''}" id="ak-${id}">
+          <div class="ak-cols">
+            <div class="ak-col fem-col"><div class="ak-head">♀ Feminine-coded (AI says)</div><div class="ak-tags" id="akf-${id}"></div></div>
+            <div class="ak-col masc-col"><div class="ak-head">♂ Masculine-coded (AI says)</div><div class="ak-tags" id="akm-${id}"></div></div>
+          </div>
+        </div>
+      </div>`}
+      <div class="qc-bar">
+        <div class="score-pill"><span class="sp-num${st.revealed?(()=>{const p=st.attempted>0?st.correct/st.attempted:0;return p>=0.7?' good':p>=0.4?' ok':' meh';})():''}\" id="spn-${id}">${st.revealed?`${st.correct}/${st.attempted}`:'—'}</span>&nbsp;correct</div>
+        <div class="flex1"></div>
+        ${isDesign
+          ?`<button class="act-btn primary" onclick="closeQuiz()">Back to list ✦</button>`
+          :`<button class="act-btn${st.revealed?' hidden':''}" id="chk-${id}" onclick="checkAnswers('${id}')" ${st.choices.some(c=>c)?'':'disabled'}>Check answers ✦</button>
+            <button class="act-btn primary${st.revealed?'':' hidden'}" id="dnb-${id}" onclick="closeQuiz()">Back to list ✦</button>`
+        }
+      </div>
+    `;
+    slot.appendChild(card);
+    if(st.revealed&&!isDesign)rebuildAK(id);
+    card.scrollIntoView({behavior:'smooth',block:'start'});
+
+    // ephemeral patent link — show for 3 seconds then fade out
+    const plw=document.getElementById(`plw-${id}`);
+    const plt=document.getElementById(`plt-${id}`);
+    if(plw){
+      // small delay so CSS transition fires after paint
+      setTimeout(()=>plw.classList.add('visible'),80);
+      let secs=3;
+      const tick=setInterval(()=>{
+        secs--;
+        if(plt)plt.textContent=`· disappears in ${secs}s`;
+        if(secs<=0){
+          clearInterval(tick);
+          plw.classList.remove('visible');
+        }
+      },1000);
+    }
+  },old?240:0);
+}
+
+/* ══ CYCLE TAG ══ */
+function cycleTag(id,wi,el){
+  const st=STATE[id];if(st.revealed)return;
+  const cur=st.choices[wi];
+  const next=cur===null?'f':cur==='f'?'m':null;
+  st.choices[wi]=next;
+  el.className='w-tag'+(next?(' '+(next==='f'?'fem':'masc')):'');
+  el.querySelector('.t-icon').textContent=next==='f'?'♀':next==='m'?'♂':'○';
+  const any=st.choices.some(c=>c!==null);
+  const chk=document.getElementById(`chk-${id}`);if(chk)chk.disabled=!any;
+}
+
+/* ══ CHECK ══ */
+function checkAnswers(id){
+  const patent=PATENTS.find(p=>p.id===id);
+  const st=STATE[id];st.revealed=true;
+  let correct=0,attempted=0;
+  patent.words.forEach((w,i)=>{
+    const c=st.choices[i];
+    const el=document.getElementById(`wt-${id}-${i}`);if(!el)return;
+    el.classList.add('locked');
+    if(c!==null){attempted++;const ok=c===w.t;if(ok)correct++;el.classList.add(ok?'reveal-correct':'reveal-wrong');setTimeout(()=>el.classList.add(ok?'result-correct':'result-wrong'),400);}
+    else el.classList.add('reveal-skipped');
+  });
+  st.correct=correct;st.attempted=attempted;
+  const num=document.getElementById(`spn-${id}`);
+  if(num){const pct=attempted>0?correct/attempted:0;num.textContent=`${correct}/${attempted}`;num.className='sp-num '+(pct>=0.7?'good':pct>=0.4?'ok':'meh');}
+  rebuildAK(id);
+  document.getElementById(`ak-${id}`)?.classList.add('show');
+  document.getElementById(`chk-${id}`)?.classList.add('hidden');
+  document.getElementById(`dnb-${id}`)?.classList.remove('hidden');
+  buildPicker();
+}
+
+function rebuildAK(id){
+  const patent=PATENTS.find(p=>p.id===id);const st=STATE[id];
+  const fEl=document.getElementById(`akf-${id}`),mEl=document.getElementById(`akm-${id}`);
+  if(!fEl||!mEl)return;fEl.innerHTML='';mEl.innerHTML='';
+  patent.words.forEach((w,i)=>{
+    const c=st.choices[i],hit=c===w.t;
+    const span=document.createElement('span');span.className=`ak-tag ${w.t==='f'?'fem':'masc'}`;
+    span.innerHTML=`${c!==null?`<span class="${hit?'ak-hit':'ak-miss'}">${hit?'✓':'✗'}</span> `:''}${w.w}`;
+    (w.t==='f'?fEl:mEl).appendChild(span);
+  });
+}
+
+/* ══ CLOSE ══ */
+function closeQuiz(){
+  const slot=document.getElementById('quizSlot'),card=slot.querySelector('.quiz-card');
+  if(card){card.style.transition='opacity .22s,transform .22s';card.style.opacity='0';card.style.transform='translateY(-10px)';setTimeout(()=>card.remove(),230);}
+  buildPicker();
+  setTimeout(()=>document.getElementById('pickerCard').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+/* ══ COMPLETION ══ */
+function showCompletion(){
+  const done=PATENTS.filter(p=>STATE[p.id].revealed&&p.words.length>0);
+  if(!done.length)return;
+  const tc=done.reduce((a,p)=>a+STATE[p.id].correct,0);
+  const ta=done.reduce((a,p)=>a+STATE[p.id].attempted,0);
+  const pct=ta>0?Math.round((tc/ta)*100):0;
+  document.getElementById('finalCorrect').textContent=tc;
+  document.getElementById('finalAttempted').textContent=ta;
+  document.getElementById('finalPct').textContent=pct+'%';
+  document.getElementById('compSubtitle').textContent=
+    pct>=75?`Impressive — you matched AI's labels ${pct}% of the time. Now look at what you found in every single patent.`
+    :pct>=50?`You matched AI's labels ${pct}% of the time. Tricky, right? Look at what every result has in common.`
+    :`These are genuinely hard to predict — you matched ${pct}% of the time. But look at what every patent reveals anyway.`;
+  const bd=document.getElementById('compBreakdown');
+  bd.innerHTML=`<div class="bd-title">Patent-by-patent word mix ✦</div>`;
+  done.forEach(p=>{
+    const fc=p.words.filter(w=>w.t==='f').length,mc=p.words.filter(w=>w.t==='m').length,tot=p.words.length||1;
+    const fp=Math.round((fc/tot)*100);
+    const st=STATE[p.id];
+    const row=document.createElement('div');row.className='p-row';
+    row.innerHTML=`
+      <div class="pr-top"><div><div class="pr-title">${p.title}</div><div class="pr-meta">${p.inventor} · ${p.year} · ${p.id}</div></div><div class="pr-score">${st.correct}/${st.attempted} correct</div></div>
+      <div class="mix-bar-row"><div class="mix-lbl">Word mix</div><div class="mix-bar"><div class="mb-fem" style="width:${fp}%"></div><div class="mb-masc" style="width:${100-fp}%"></div></div></div>
+      <div class="mix-counts"><span class="mc-f">♀ ${fc} feminine-coded</span><span class="mc-m">♂ ${mc} masculine-coded</span></div>`;
+    bd.appendChild(row);
+  });
+  // ── ABSURDITY EXAMPLES ──
+  // Curated set of genuinely odd or thought-provoking codings
+  const ABSURD = [
+    {word:"secured",verdict:"m",patent:"US283255",comment:"\"Secured\" is masculine-coded — apparently because asserting structural integrity is gendered. In this 1883 spool case patent, it just means the lid stays on."},
+    {word:"comfortable",verdict:"f",patent:"US1115674",comment:"AI flags \"comfortable\" as feminine-coded in Mary Phelps Jacob's brassiere patent. But comfort as a design goal is also central to chairs, shoes, helmets, and car seats — nobody codes those masculine?"},
+    {word:"simple",verdict:"f",patent:"US326278",comment:"Hertha Ayrton — the first woman admitted to the Institution of Electrical Engineers — describes her draftsman's instrument as \"simple.\" AI reads that as feminine. Ayrton held eight patents in electrical arc lamp technology."},
+    {word:"mechanism",verdict:"m",patent:"US887586",comment:"Helen Blanchard invented her crochet attachment mechanism. AI marks \"mechanism\" masculine. The mechanism was hers."},
+    {word:"worn",verdict:"f",patent:"US3303916",comment:"The anti-slip typist's glove is described as \"worn\" — feminine-coded. By this logic, any wearable is feminine. Gloves, helmets, hazmat suits, surgical gear — all presumably writing in the feminine register."},
+    {word:"ladies",verdict:"f",patent:"US561153",comment:"A 1896 cycling skirt patent uses the word \"ladies.\" AI codes this feminine. This one is… accurate. It's also a reminder that the context of these patents is the reality of women's lives in 1896, not just a language pattern."},
+    {word:"actuating",verdict:"m",patent:"US2977057",comment:"Evelyn Berezin, who built the first word processor in 1969, writes \"actuating\" in her electronic calculator patent. Masculine-coded. Her actual contribution to computing history is not something a rule can measure."},
+    {word:"inexpensive",verdict:"f",patent:"US952481",comment:"Describing a loom as \"inexpensive\" is coded feminine. Being cost-conscious in a patent — framing your invention as economical — apparently signals something about gender. Or it signals good engineering."},
+    {word:"protect",verdict:"f",patent:"US149280",comment:"\"Protect\" is feminine-coded. In this 1874 skirt protector patent, that makes contextual sense. But \"protect\" also appears in armor, firewall, and weapons patents. Those presumably read differently to the algorithm."},
+    {word:"force applied",verdict:"m",patent:"US326278",comment:"Hertha Ayrton describes the physical \"force applied\" in her instrument — masculine-coded. This is literally a physics term describing how the device works. The algorithm cannot tell the difference between a gendered register and Newtonian mechanics."},
+  ];
+
+  // pick a sample — prefer examples from patents the user actually completed, then fill from all
+  const completedIds=new Set(done.map(p=>p.id));
+  const preferred=ABSURD.filter(a=>completedIds.has(a.patent));
+  const others=ABSURD.filter(a=>!completedIds.has(a.patent));
+  const sample=[...preferred,...others].slice(0,5);
+
+  const absurdEl=document.getElementById('absurdExamples');
+  if(absurdEl){
+    absurdEl.innerHTML='';
+    sample.forEach(a=>{
+      const item=document.createElement('div');item.className='absurd-item';
+      item.innerHTML=`
+        <span class="ai-verdict ${a.verdict==='f'?'fem':'masc'}">${a.verdict==='f'?'♀ feminine':'♂ masculine'}</span>
+        <div>
+          <div class="absurd-word">"${a.word}"</div>
+          <div class="absurd-comment">${a.comment}</div>
+        </div>`;
+      absurdEl.appendChild(item);
+    });
+  }
+
+  document.getElementById('pickerCard').style.display='none';
+  document.getElementById('quizSlot').innerHTML='';
+  document.getElementById('completionCard').classList.add('show');
+  document.getElementById('completionCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+buildPicker();
+</script>
+</body>
+</html>
