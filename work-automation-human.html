@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ CAREtech · HIT Survey</title>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, onSnapshot, collection, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyC3g3xIJ7408oAY4Cdfm9ZdERrWB8cn06o",
+    authDomain: "automation-human-tasks.firebaseapp.com",
+    projectId: "automation-human-tasks",
+    storageBucket: "automation-human-tasks.firebasestorage.app",
+    messagingSenderId: "724157436401",
+    appId: "1:724157436401:web:e45bc71ebe0e3e5669f450",
+    measurementId: "G-FXRZZ09P6K"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+  window.db = db;
+  window.fsSetDoc = setDoc;
+  window.fsDoc = doc;
+  window.fsOnSnapshot = onSnapshot;
+  window.fsCollection = collection;
+  window.fsGetDocs = getDocs;
+  window.fsWriteBatch = writeBatch;
+  window.dispatchEvent(new Event("firebase-ready"));
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose:#ff5c8a; --hot:#ff2d6b; --candy:#ff85b3; --blush:#ffb3cf;
+  --cream:#fff5f8; --berry:#c4005a; --crimson:#8b0030; --maroon:#4a001a;
+  --fuchsia:#ff1f80; --bg:#160008;
+  --lavender:#2d1040; --lilac:#3a1550; --petal:#2a0820; --mist:#220a18;
+  --surface:rgba(36,4,20,.97); --surface2:rgba(46,6,26,.98); --surface3:rgba(54,8,32,1);
+  --border:rgba(255,100,160,.18); --border2:rgba(255,60,130,.45);
+  --yes:#ff5c8a; --no:#8b1a3a; --neu:#9060a0;
+  --text:#fce8f2; --muted:rgba(255,160,200,.45); --muted2:rgba(255,185,218,.68);
+  --radius:18px;
+  --fh:'Nunito',sans-serif; --fb:'Quicksand',sans-serif;
+  --soft-glow:0 4px 30px rgba(255,45,107,.22);
+  --pop-glow:0 8px 50px rgba(255,45,107,.38),0 0 80px rgba(200,0,80,.16);
+  --card-shadow:0 2px 24px rgba(0,0,0,.4),0 1px 6px rgba(0,0,0,.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:var(--fb);font-weight:600;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;}
+body{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10,default;
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:rgba(255,200,220,.1)}
+::-webkit-scrollbar-thumb{background:var(--candy);border-radius:10px}
+
+/* ── BG LAYER ── */
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 45% at 0% 0%,rgba(180,0,80,.28) 0%,transparent 60%),
+    radial-gradient(ellipse 55% 50% at 100% 100%,rgba(100,0,160,.22) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 35% at 50% 50%,rgba(140,0,60,.12) 0%,transparent 70%),
+    linear-gradient(155deg,#1e0012,#160008 50%,#110005);}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+.orb-1{width:420px;height:420px;background:var(--crimson);opacity:.28;top:-100px;left:-100px;animation:drift1 21s ease-in-out infinite;}
+.orb-2{width:340px;height:340px;background:#4a0070;opacity:.3;bottom:-80px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+.orb-3{width:220px;height:220px;background:var(--hot);opacity:.14;top:40%;right:15%;animation:drift3 17s ease-in-out infinite;}
+.orb-4{width:180px;height:180px;background:#3a0058;opacity:.25;bottom:20%;left:10%;animation:drift2 19s ease-in-out infinite reverse;}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
+.sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6)}15%{opacity:.5}85%{opacity:.3}100%{opacity:0;transform:translateY(-120px) scale(1.1)}}
+
+/* ── HEADER ── */
+.app-header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(14,0,8,.92);backdrop-filter:blur(18px);
+  border-bottom:1.5px solid var(--border);
+  padding:.75rem 1.5rem;display:flex;align-items:center;gap:.9rem;
+  box-shadow:0 1px 18px rgba(0,0,0,.4);
+}
+.app-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);
+  opacity:.7;}
+.header-logo{
+  font-family:var(--fh);font-size:1.3rem;font-weight:900;letter-spacing:-.02em;margin-right:auto;
+  background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.progress-pill{
+  display:flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:800;
+  color:var(--hot);letter-spacing:.08em;text-transform:uppercase;
+  background:rgba(255,45,107,.07);border:1px solid rgba(255,45,107,.2);
+  border-radius:999px;padding:.3rem .9rem;
+}
+.progress-num{color:var(--crimson);font-family:var(--fh);font-weight:900;}
+
+/* ── HERO ── */
+.hero{
+  position:relative;z-index:2;
+  padding:2.8rem 1.5rem 1.5rem;
+  text-align:center;max-width:780px;margin:0 auto;
+}
+.hero-eyebrow{
+  display:inline-block;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--candy);font-weight:800;margin-bottom:.7rem;
+  background:rgba(255,45,107,.12);border:1px solid rgba(255,45,107,.25);
+  border-radius:999px;padding:.28rem .9rem;
+}
+.hero-title{
+  font-family:var(--fh);font-size:2.6rem;font-weight:900;letter-spacing:-.045em;
+  line-height:1.12;margin-bottom:.9rem;
+  background:linear-gradient(135deg,var(--blush) 10%,var(--hot) 45%,var(--candy) 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-sub{
+  font-size:.95rem;color:var(--muted2);line-height:1.75;max-width:580px;margin:0 auto 1.5rem;font-weight:600;
+}
+
+/* ── VIDEO CONTAINER ── */
+.video-wrap{
+  position:relative;z-index:2;max-width:760px;margin:0 auto 1rem;padding:0 1.5rem;
+}
+.video-card{
+  background:var(--surface);border:2px solid var(--border2);border-radius:22px;
+  overflow:hidden;box-shadow:var(--pop-glow);position:relative;
+}
+.video-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  box-shadow:0 0 12px var(--candy);z-index:10;}
+.video-card video,.video-card iframe{width:100%;display:block;aspect-ratio:16/9;border:none;}
+.video-label{
+  padding:.65rem 1.1rem;background:linear-gradient(90deg,rgba(255,230,240,.9),rgba(245,220,255,.9));
+  font-size:.75rem;font-weight:800;color:var(--berry);letter-spacing:.06em;
+  display:flex;align-items:center;gap:.4rem;border-top:1px solid var(--border);
+}
+
+/* ── INSTRUCTIONS ── */
+.instructions{
+  position:relative;z-index:2;max-width:760px;margin:0 auto 2rem;padding:0 1.5rem;
+}
+.instr-card{
+  background:linear-gradient(135deg,rgba(50,8,30,.95),rgba(40,5,55,.92));
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:1.4rem 1.7rem;box-shadow:var(--card-shadow);
+  position:relative;overflow:hidden;
+}
+.instr-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--candy) 50%,transparent);}
+.instr-title{font-family:var(--fh);font-size:1rem;font-weight:900;color:var(--candy);margin-bottom:.7rem;}
+.instr-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.instr-list li{display:flex;align-items:flex-start;gap:.6rem;font-size:.85rem;color:var(--muted2);line-height:1.55;}
+.instr-dot{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--hot),var(--candy));flex-shrink:0;margin-top:.38rem;}
+
+/* ── SECTIONS ── */
+.sections{
+  position:relative;z-index:2;max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;
+  display:flex;flex-direction:column;gap:2.5rem;
+}
+.section-block{
+  background:var(--surface);border:1.5px solid var(--border);border-radius:22px;
+  padding:1.8rem 2rem;box-shadow:var(--card-shadow);position:relative;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+}
+.section-block:hover{border-color:var(--border2);box-shadow:var(--soft-glow);}
+.section-block::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  opacity:.5;}
+.section-hd{display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;}
+.section-icon{font-size:1.1rem;flex-shrink:0;letter-spacing:-.05em;}
+.section-title{font-family:var(--fh);font-size:1.25rem;font-weight:900;
+  background:linear-gradient(90deg,var(--blush),var(--candy));
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.section-badge{
+  margin-left:auto;font-size:.63rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(255,45,107,.1);border:1px solid rgba(255,45,107,.22);
+  color:var(--candy);border-radius:999px;padding:.2rem .65rem;flex-shrink:0;
+}
+.section-badge.done{background:rgba(255,45,107,.22);border-color:var(--candy);color:var(--blush);}
+.section-sub{font-size:.82rem;color:var(--muted2);margin-bottom:1.5rem;line-height:1.6;}
+
+/* ── QUESTIONS ── */
+.q-list{display:flex;flex-direction:column;gap:1rem;}
+.qcard{
+  background:linear-gradient(135deg,rgba(50,6,28,.95),rgba(44,5,55,.92));
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:1.1rem 1.3rem;transition:border-color .18s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.qcard::after{content:'';position:absolute;top:0;left:0;right:0;height:.8px;
+  background:linear-gradient(90deg,transparent,rgba(255,133,179,.2) 50%,transparent);}
+.qcard.answered{border-color:rgba(255,92,138,.35);background:linear-gradient(135deg,rgba(60,8,35,.97),rgba(50,6,62,.95));}
+.qcard-row{display:flex;align-items:flex-start;gap:.8rem;}
+.qnum-badge{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-top:1px;
+  background:linear-gradient(135deg,var(--hot),var(--crimson));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-size:.6rem;font-weight:900;color:white;
+}
+.qtext{flex:1;font-size:.88rem;font-weight:600;line-height:1.6;color:rgba(255,215,235,.88);}
+.vbtns{display:flex;gap:.45rem;margin-top:.9rem;flex-wrap:wrap;}
+.vbtn{
+  flex:1;min-width:70px;padding:.5rem .4rem;border-radius:10px;border:1.5px solid transparent;
+  font-family:var(--fh);font-size:.72rem;font-weight:800;cursor:pointer;
+  letter-spacing:.04em;transition:all .18s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;line-height:1.25;
+}
+.vbtn.yb{background:rgba(255,92,138,.08);border-color:rgba(255,92,138,.28);color:var(--candy)}
+.vbtn.yb:hover{background:rgba(255,92,138,.18);border-color:var(--candy);transform:translateY(-2px)}
+.vbtn.yb.voted{background:linear-gradient(135deg,var(--hot),var(--berry));color:white;border-color:var(--hot);box-shadow:0 4px 16px rgba(255,45,107,.35)}
+.vbtn.nb{background:rgba(139,26,58,.1);border-color:rgba(139,26,58,.32);color:#e08090}
+.vbtn.nb:hover{background:rgba(139,26,58,.2);border-color:#c0395e;transform:translateY(-2px)}
+.vbtn.nb.voted{background:linear-gradient(135deg,#4a0a1e,#8b1a3a);color:white;border-color:#8b1a3a;box-shadow:0 4px 16px rgba(139,26,58,.35)}
+.vbtn.neub{background:rgba(144,96,160,.08);border-color:rgba(144,96,160,.28);color:#c090e0}
+.vbtn.neub:hover{background:rgba(144,96,160,.18);border-color:#9060a0;transform:translateY(-2px)}
+.vbtn.neub.voted{background:linear-gradient(135deg,#3a1848,#6b3080);color:white;border-color:#6b3080;box-shadow:0 4px 16px rgba(107,48,128,.35)}
+.vbtn:active{transform:scale(.96)!important}
+
+/* answer indicator */
+.answer-tag{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-size:.65rem;font-weight:800;letter-spacing:.05em;
+  padding:.15rem .5rem;border-radius:999px;margin-left:auto;flex-shrink:0;
+  margin-top:3px;
+}
+.answer-tag.y{background:rgba(255,92,138,.15);color:var(--crimson);border:1px solid rgba(255,92,138,.3)}
+.answer-tag.n{background:rgba(139,26,58,.15);color:#8b1a3a;border:1px solid rgba(139,26,58,.3)}
+.answer-tag.neu{background:rgba(144,96,160,.15);color:#6b3080;border:1px solid rgba(144,96,160,.3)}
+
+/* ── REVEAL SECTION ── */
+#reveal-section{display:none;position:relative;z-index:2;max-width:760px;margin:0 auto 4rem;padding:0 1.5rem;}
+#reveal-section.show{display:block;animation:revealIn .7s cubic-bezier(.34,1.4,.64,1);}
+@keyframes revealIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.reveal-card{
+  background:linear-gradient(135deg,rgba(139,0,48,.95),rgba(74,0,26,.98),rgba(40,0,60,.98));
+  border:2px solid var(--border2);border-radius:26px;
+  padding:2.5rem 2.5rem;
+  box-shadow:0 12px 60px rgba(255,45,107,.3),0 0 100px rgba(150,0,60,.15);
+  position:relative;overflow:hidden;text-align:center;
+}
+.reveal-card::before{content:'';position:absolute;top:0;left:6%;right:6%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  box-shadow:0 0 20px var(--hot);}
+.reveal-eyebrow{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--candy);margin-bottom:.7rem;font-weight:800;}
+.reveal-title{
+  font-family:var(--fh);font-size:2rem;font-weight:900;letter-spacing:-.035em;
+  background:linear-gradient(90deg,var(--blush) 10%,white 50%,var(--candy) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:1.5rem;line-height:1.2;
+}
+.irony-blocks{display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;text-align:left;}
+.irony-block{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,133,179,.25);
+  border-radius:14px;padding:1.2rem 1.4rem;
+  border-left:4px solid var(--candy);
+}
+.irony-block.alt{border-left-color:var(--lilac);}
+.irony-block.alt3{border-left-color:#ff9fcc;}
+.irony-head{font-family:var(--fh);font-size:.88rem;font-weight:900;color:var(--candy);margin-bottom:.35rem;}
+.irony-block.alt .irony-head{color:#d4a8ff;}
+.irony-block.alt3 .irony-head{color:#ff9fcc;}
+.irony-body{font-size:.82rem;color:rgba(255,225,240,.8);line-height:1.7;font-weight:600;}
+
+.stat-row{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.8rem;}
+.stat-pill{
+  background:rgba(255,255,255,.07);border:1.5px solid rgba(255,133,179,.3);
+  border-radius:14px;padding:.9rem 1.2rem;min-width:110px;text-align:center;
+  backdrop-filter:blur(4px);
+}
+.stat-num{font-family:var(--fh);font-size:1.7rem;font-weight:900;color:var(--candy);line-height:1;}
+.stat-lbl{font-size:.62rem;color:rgba(255,180,210,.65);margin-top:.25rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
+
+.btn-advance{
+  display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+  background:linear-gradient(135deg,var(--hot),var(--berry),var(--crimson));
+  color:white;border:none;border-radius:16px;padding:1rem 2.2rem;
+  font-family:var(--fh);font-size:1rem;font-weight:900;cursor:pointer;
+  letter-spacing:.06em;transition:all .22s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 6px 28px rgba(255,45,107,.45);text-decoration:none;
+}
+.btn-advance:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 12px 40px rgba(255,45,107,.6)}
+.btn-advance:active{transform:scale(.97)}
+
+/* ── YOUR ANSWERS SUMMARY ── */
+.answers-grid{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.4rem;}
+.ans-chip{
+  font-size:.7rem;font-weight:700;padding:.3rem .75rem;border-radius:999px;
+  border:1px solid rgba(255,133,179,.3);color:rgba(255,220,235,.7);
+  background:rgba(255,255,255,.05);
+}
+.ans-chip.y{background:rgba(255,92,138,.2);border-color:rgba(255,92,138,.4);color:var(--candy);}
+.ans-chip.n{background:rgba(139,26,58,.2);border-color:rgba(139,26,58,.4);color:#ff9fcc;}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:1.7rem;right:1.7rem;z-index:9000;
+  background:rgba(30,4,18,.97);border:1.5px solid var(--border2);
+  border-radius:12px;padding:.65rem 1.1rem;font-size:.82rem;font-weight:700;
+  opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;
+  pointer-events:none;color:var(--candy);box-shadow:var(--card-shadow);
+}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* ── PROGRESS BAR ── */
+.prog-bar-wrap{
+  position:sticky;top:58px;z-index:190;
+  background:rgba(12,0,7,.9);backdrop-filter:blur(10px);
+  padding:.5rem 1.5rem;border-bottom:1px solid var(--border);
+}
+.prog-bar-track{height:5px;background:rgba(255,133,179,.1);border-radius:999px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--hot),var(--candy),var(--fuchsia));
+  border-radius:999px;transition:width .4s cubic-bezier(.4,0,.2,1);width:0%;}
+.prog-label{font-size:.65rem;font-weight:800;color:var(--muted);letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:.3rem;display:flex;justify-content:space-between;}
+.prog-label span{color:var(--candy);}
+
+/* section progress tag */
+.sec-prog{
+  display:flex;align-items:center;gap:.35rem;
+  font-size:.65rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin-top:-.3rem;margin-bottom:1.2rem;
+}
+.sec-prog-dots{display:flex;gap:3px;}
+.sdot{width:7px;height:7px;border-radius:50%;background:rgba(255,133,179,.2);border:1px solid var(--border);transition:all .25s;}
+.sdot.done{background:linear-gradient(135deg,var(--hot),var(--candy));border-color:var(--candy);}
+
+@media(max-width:580px){
+  .hero-title{font-size:1.9rem}
+  .section-block{padding:1.3rem 1.2rem}
+  .reveal-card{padding:1.8rem 1.3rem}
+  .reveal-title{font-size:1.5rem}
+  .stat-row{gap:.5rem}
+  .stat-pill{min-width:90px;padding:.7rem .9rem}
+  .stat-num{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div><div class="orb orb-4"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-logo">CARE<span style="color:var(--hot)">tech</span> ✦ HIT</div>
+  <div class="progress-pill">
+    <span>Progress</span>
+    <span class="progress-num" id="hdr-prog">0 / 0</span>
+  </div>
+</header>
+
+<!-- PROGRESS BAR -->
+<div class="prog-bar-wrap">
+  <div class="prog-label"><span>Survey Completion</span><span id="prog-pct">0%</span></div>
+  <div class="prog-bar-track"><div class="prog-bar-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- HERO -->
+<div class="hero" style="position:relative;z-index:2;">
+  <div class="hero-eyebrow">✦ Human Intelligence Task · CAREtech Research</div>
+  <h1 class="hero-title">Who Does the Work?<br>Who Gets the Credit?</h1>
+  <p class="hero-sub">Watch the short video below, then answer each question. Your responses help us understand the relationship between human labor, gender, and the rise of automation — and reveal a striking irony hiding in plain sight.</p>
+</div>
+
+<!-- VIDEO -->
+<div class="video-wrap">
+  <div class="video-card">
+    <iframe
+      src="https://www.youtube.com/embed/Qj5Z2VhFMRQ"
+      title="CAREtech HIT Survey Video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+    <div class="video-label">
+      <span>▶</span>
+      <span>Watch before answering · CAREtech Research Video</span>
+    </div>
+  </div>
+</div>
+
+<!-- INSTRUCTIONS -->
+<div class="instructions">
+  <div class="instr-card">
+    <div class="instr-title">✦ How to complete this HIT</div>
+    <ul class="instr-list">
+      <li><div class="instr-dot"></div><span>Answer <strong>all questions</strong> in each section below — your answers are saved automatically.</span></li>
+      <li><div class="instr-dot"></div><span>Be honest — there are no wrong answers. This is research, not a test.</span></li>
+      <li><div class="instr-dot"></div><span>After you complete all sections, a <strong>reveal button</strong> will appear showing the key finding.</span></li>
+      <li><div class="instr-dot"></div><span>You can use <strong>N/A</strong> if a question truly does not apply to you.</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- QUESTION SECTIONS -->
+<div class="sections" id="sections"></div>
+
+<!-- REVEAL -->
+<div id="reveal-section">
+  <div class="reveal-card">
+    <div class="reveal-eyebrow">✦ The Research Reveals</div>
+    <div class="reveal-title">The Work Was Always There.<br>Just Never Valued.</div>
+
+    <div class="stat-row" id="reveal-stats"></div>
+
+    <div class="irony-blocks">
+      <div class="irony-block">
+        <div class="irony-head">🤖 Tasks "Only Humans Can Do"</div>
+        <div class="irony-body">Empathy, caregiving, emotional support, mentoring, teaching, social work, moral judgment, physical adaptability — experts consistently say these are the tasks where humans are irreplaceable and AI will never fully succeed.</div>
+      </div>
+      <div class="irony-block alt">
+        <div class="irony-head">👩🏿👩🏽👩🏻👩🏾👩🏼 Who Actually Does Those Tasks?</div>
+        <div class="irony-body">According to U.S. Bureau of Labor Statistics data: nursing is <strong style="color:#d4a8ff">88% female</strong>. Social work is <strong style="color:#d4a8ff">83% female</strong>. Teaching is <strong style="color:#d4a8ff">73% female</strong>. Childcare is <strong style="color:#d4a8ff">over 90% female</strong>. Women also perform 4hrs 25min of unpaid care work per day — versus 1hr 23min for men.</div>
+      </div>
+      <div class="irony-block alt3">
+        <div class="irony-head">💸 So Why Is AI Being Built for These Tasks?</div>
+        <div class="irony-body">Society historically underpaid and undervalued these roles precisely because women did them — framing care as "natural," not skilled. Now that automating them is profitable, billions flow into AI caregiving, AI therapy, AI teaching. The labor was never truly valued. When it became <em>monetizable to replace</em>, investment flooded in.</div>
+      </div>
+      <div class="irony-block" style="border-left-color:#ffcc00;background:rgba(255,200,0,.05)">
+        <div class="irony-head" style="color:#ffd060;">⚡ The Double Displacement Risk</div>
+        <div class="irony-body">Researchers project that by 2030, <strong style="color:#ffd060">40–160 million women</strong> will need to transition jobs as automation targets the sectors where they are most concentrated — sectors that were never compensated fairly to begin with. Women face losing jobs that were never fully counted as valuable work.</div>
+      </div>
+    </div>
+
+    <div class="answers-grid" id="answer-chips"></div>
+
+    <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">
+      ✦ Advance to Next Task
+    </a>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── SPARKLES ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❋','⁎'];
+  for(let i=0;i<30;i++){
+    const s=document.createElement('span');s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(7+Math.random()*10)+'px';
+    s.style.color=`hsl(${300+Math.random()*60},60%,${55+Math.random()*30}%)`;
+    s.style.animationDuration=(9+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── FIREBASE STATE ── */
+let db, fsSetDoc, fsDoc, fsOnSnapshot, fsCollection, fsGetDocs, fsWriteBatch;
+let fbReady = false;
+const unsubs = [];
+
+window.addEventListener('firebase-ready', () => {
+  db = window.db;
+  fsSetDoc = window.fsSetDoc;
+  fsDoc = window.fsDoc;
+  fsOnSnapshot = window.fsOnSnapshot;
+  fsCollection = window.fsCollection;
+  fsGetDocs = window.fsGetDocs;
+  fsWriteBatch = window.fsWriteBatch;
+  fbReady = true;
+});
+
+function getDocId(secId, qi) { return `hit_${secId}_q${qi}`; }
+
+async function saveVoteToFirebase(secId, qi, optIdx) {
+  if (!fbReady || !db) return;
+  const docId = getDocId(secId, qi);
+  try {
+    await fsSetDoc(fsDoc(db, 'hit_responses', docId),
+      { [`votes.${optIdx}`]: true, secId, qi, updatedAt: Date.now() },
+      { merge: true }
+    );
+  } catch(e) { console.warn('Firebase sync error:', e); }
+}
+
+/* ── SURVEY DATA ── */
+const SECTIONS = [
+  {
+    id:'human',
+    icon:'🧠',
+    title:'Human vs. Machine',
+    subtitle:'For each task below, tell us whether you think it is best done by humans, can be automated, or somewhere in between.',
+    questions:[
+      {text:'Providing emotional support and empathy to someone in distress', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Diagnosing a complex medical condition requiring intuition and experience', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Teaching a young child to read with patience and encouragement', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Detecting and responding to someone\'s unspoken emotional needs', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Sorting and organizing data in a spreadsheet', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Counseling someone through grief or trauma', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Driving a truck on a fixed highway route', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Caring for an elderly person\'s physical and emotional daily needs', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Making a moral or ethical judgment in an ambiguous situation', opts:['Best by humans','Can be automated','Both / Unsure']},
+      {text:'Answering customer service questions from a FAQ', opts:['Best by humans','Can be automated','Both / Unsure']},
+    ]
+  },
+  {
+    id:'automation',
+    icon:'🤖',
+    title:'What\'s Being Automated',
+    subtitle:'Do you think AI or robots are currently being developed or deployed for each of the following tasks? Answer honestly based on what you know.',
+    questions:[
+      {text:'AI therapy chatbots and emotional support apps', opts:['Yes, it\'s happening','No','Not sure']},
+      {text:'AI tutoring and personalized teaching systems', opts:['Yes, it\'s happening','No','Not sure']},
+      {text:'Robot caregivers for the elderly in nursing homes', opts:['Yes, it\'s happening','No','Not sure']},
+      {text:'AI systems for childcare monitoring and support', opts:['Yes, it\'s happening','No','Not sure']},
+      {text:'AI social workers and case management tools', opts:['Yes, it\'s happening','No','Not sure']},
+      {text:'AI hiring tools that evaluate job candidates', opts:['Yes, it\'s happening','No','Not sure']},
+      {text:'AI systems that diagnose illness or recommend treatment', opts:['Yes, it\'s happening','No','Not sure']},
+      {text:'Automated domestic cleaning robots for homes', opts:['Yes, it\'s happening','No','Not sure']},
+    ]
+  },
+  {
+    id:'gender',
+    icon:'👩🏿 👩🏽 👩🏻 👩🏾 👩🏼',
+    title:'Who Does This Work?',
+    subtitle:'Think about who, in your experience and knowledge, most often performs each of the following types of work — paid or unpaid.',
+    questions:[
+      {text:'Providing unpaid caregiving for children at home', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Nursing and bedside patient care in hospitals', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Teaching in primary and elementary schools', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Social work and community counseling services', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Domestic cleaning and household management', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Emotional labor at work (managing team morale, comfort)', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Caring for elderly parents or relatives at home', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Early childhood education and daycare', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Founding AI or robotics companies', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Leading the design and development of AI systems', opts:['Mostly women','Mostly men','Equal / Mixed']},
+    ]
+  },
+  {
+    id:'value',
+    icon:'💰',
+    title:'How Society Values This Work',
+    subtitle:'Share your perceptions about how society recognizes and compensates different kinds of work.',
+    questions:[
+      {text:'Caregiving work (nursing, teaching, social work) is fairly compensated for the skill it requires', opts:['Agree','Disagree','Unsure']},
+      {text:'Unpaid care work done at home (childcare, elder care) is recognized as economically valuable', opts:['Agree','Disagree','Unsure']},
+      {text:'Society invests heavily in AI to automate tasks that are already highly paid and valued', opts:['Agree','Disagree','Unsure']},
+      {text:'If AI replaces care workers, those workers will be adequately supported in transitioning to new jobs', opts:['Agree','Disagree','Unsure']},
+      {text:'The people most impacted by AI automation are being included in decisions about how AI is designed', opts:['Agree','Disagree','Unsure']},
+      {text:'The development of AI caregiving tools is primarily motivated by improving care quality, not reducing costs', opts:['Agree','Disagree','Unsure']},
+    ]
+  }
+];
+
+const totalQ = SECTIONS.reduce((a,s)=>a+s.questions.length,0);
+let answers = {};  // answers[sectionId][qi] = optionIndex
+
+SECTIONS.forEach(s=>{answers[s.id]={};});
+
+function answeredCount(){
+  return SECTIONS.reduce((a,s)=>a+Object.keys(answers[s.id]).length,0);
+}
+
+function buildSections(){
+  const cont=document.getElementById('sections');
+  SECTIONS.forEach((sec,si)=>{
+    const block=document.createElement('div');
+    block.className='section-block';
+    block.id=`sec-${sec.id}`;
+
+    const dots=sec.questions.map((_,qi)=>`<div class="sdot" id="dot-${sec.id}-${qi}"></div>`).join('');
+
+    block.innerHTML=`
+      <div class="section-hd">
+        <span class="section-icon">${sec.icon}</span>
+        <span class="section-title">${sec.title}</span>
+        <span class="section-badge" id="badge-${sec.id}">0 / ${sec.questions.length}</span>
+      </div>
+      <div class="sec-prog">
+        <div class="sec-prog-dots" id="dots-${sec.id}">${dots}</div>
+      </div>
+      <p class="section-sub">${sec.subtitle}</p>
+      <div class="q-list" id="ql-${sec.id}"></div>
+    `;
+    cont.appendChild(block);
+
+    const ql=document.getElementById(`ql-${sec.id}`);
+    sec.questions.forEach((q,qi)=>{
+      const card=document.createElement('div');
+      card.className='qcard';
+      card.id=`qc-${sec.id}-${qi}`;
+
+      const btnClass=['yb','nb','neub'];
+      const btns=q.opts.map((o,oi)=>`<button class="vbtn ${btnClass[oi]}" onclick="castVote('${sec.id}',${qi},${oi})">${o}</button>`).join('');
+
+      card.innerHTML=`
+        <div class="qcard-row">
+          <div class="qnum-badge">${qi+1}</div>
+          <div class="qtext">${q.text}</div>
+        </div>
+        <div class="vbtns">${btns}</div>
+      `;
+      ql.appendChild(card);
+    });
+  });
+  updateProgress();
+}
+
+function castVote(secId,qi,optIdx){
+  answers[secId][qi]=optIdx;
+  saveVoteToFirebase(secId, qi, optIdx);
+  const sec=SECTIONS.find(s=>s.id===secId);
+  const card=document.getElementById(`qc-${secId}-${qi}`);
+  if(!card)return;
+  card.classList.add('answered');
+
+  // refresh buttons
+  const btns=card.querySelectorAll('.vbtn');
+  btns.forEach((b,i)=>{
+    b.classList.remove('voted');
+    if(i===optIdx)b.classList.add('voted');
+  });
+
+  // dot
+  const dot=document.getElementById(`dot-${secId}-${qi}`);
+  if(dot)dot.classList.add('done');
+
+  // badge
+  const done=Object.keys(answers[secId]).length;
+  const badge=document.getElementById(`badge-${secId}`);
+  if(badge){
+    badge.textContent=`${done} / ${sec.questions.length}`;
+    if(done===sec.questions.length)badge.classList.add('done');
+  }
+
+  updateProgress();
+  checkComplete();
+}
+
+function updateProgress(){
+  const done=answeredCount();
+  const pct=Math.round(done/totalQ*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('hdr-prog').textContent=`${done} / ${totalQ}`;
+}
+
+function checkComplete(){
+  if(answeredCount()<totalQ)return;
+  const rev=document.getElementById('reveal-section');
+  if(rev.classList.contains('show'))return;
+  buildReveal();
+  rev.classList.add('show');
+  setTimeout(()=>rev.scrollIntoView({behavior:'smooth',block:'start'}),200);
+  showToast('✦ All questions answered — your reveal is ready!');
+}
+
+function buildReveal(){
+  // Stats
+  const humanQ=SECTIONS.find(s=>s.id==='human');
+  const genderQ=SECTIONS.find(s=>s.id==='gender');
+  const autoQ=SECTIONS.find(s=>s.id==='automation');
+
+  // Count "best by humans" in human section
+  const humanBest=Object.values(answers['human']).filter(v=>v===0).length;
+  // Count "mostly women" in gender section
+  const womenCount=Object.values(answers['gender']).filter(v=>v===0).length;
+  // Count "yes happening" in automation
+  const autoYes=Object.values(answers['automation']).filter(v=>v===0).length;
+  // Disagree on fair pay
+  const unfairPay=Object.values(answers['value']).filter(v=>v===1).length;
+
+  document.getElementById('reveal-stats').innerHTML=`
+    <div class="stat-pill"><div class="stat-num">${humanBest}</div><div class="stat-lbl">Tasks you said<br>need humans</div></div>
+    <div class="stat-pill"><div class="stat-num">${womenCount}</div><div class="stat-lbl">Tasks done<br>mostly by women</div></div>
+    <div class="stat-pill"><div class="stat-num">${autoYes}</div><div class="stat-lbl">Being<br>automated now</div></div>
+    <div class="stat-pill"><div class="stat-num">${unfairPay}</div><div class="stat-lbl">Times you said<br>work is unfair</div></div>
+  `;
+
+  // Answer chips
+  const chips=[];
+  SECTIONS.forEach(sec=>{
+    sec.questions.forEach((q,qi)=>{
+      const ai=answers[sec.id][qi];
+      if(ai!==undefined){
+        const cls=ai===0?'y':ai===1?'n':'';
+        const short=q.text.length>38?q.text.substring(0,35)+'…':q.text;
+        chips.push(`<span class="ans-chip ${cls}">${short}</span>`);
+      }
+    });
+  });
+  document.getElementById('answer-chips').innerHTML=chips.slice(0,12).join('');
+}
+
+let _tt;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3400);
+}
+
+// INIT
+buildSections();
+document.getElementById('hdr-prog').textContent=`0 / ${totalQ}`;
+</script>
+</body>
+</html>
