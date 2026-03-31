@@ -389,19 +389,34 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   <div class="hero-eyebrow">✦ Visible Labor · Interactive Survey</div>
   <h1 class="hero-title">Presentation<br>Labor</h1>
   <div class="hero-quote">"Visible_Effort == 0 — This was the requirement. This is the work."</div>
-  <p class="hero-sub">You are about to watch a reenactment of the 1969 Neiman-Marcus Kitchen Computer advertisement. This survey will help make visible the complex, undervalued work performed in that image. Answer each question across six modules — results update live as others respond.</p>
+  <p class="hero-sub">You are looking at the 1969 Neiman-Marcus Kitchen Computer advertisement. This survey makes visible the complex, undervalued work encoded in this image. Answer each question across six modules as you study it — results update live as others respond.</p>
 </div>
 
-<!-- VIDEO -->
+<!-- IMAGE -->
 <div class="video-wrap">
   <div class="video-card">
-    <iframe
-      src="https://www.youtube.com/embed/Qj5Z2VhFMRQ"
-      title="Presentation Labor — Survey Video"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen>
-    </iframe>
-    <div class="video-label"><span>▶</span><span>Watch before responding · Presentation Labor Research Video</span></div>
+    <img
+      src="presentation-labor-kitchen-computer.png"
+      alt="1969 Neiman-Marcus Kitchen Computer advertisement — Honeywell H316"
+      style="width:100%;display:block;object-fit:contain;max-height:560px;background:#080004;"
+    >
+    <div class="video-label" style="justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+      <span style="display:flex;align-items:center;gap:.4rem;"><span>◈</span><span>1969 Neiman-Marcus Kitchen Computer · Honeywell H316</span></span>
+      <span style="display:flex;align-items:center;gap:1rem;flex-shrink:0;">
+        <a
+          href="presentation-labor-kitchen-computer.png"
+          target="_blank"
+          rel="noopener"
+          style="font-family:var(--fh);font-style:italic;font-size:.78rem;color:var(--deep);text-decoration:underline;text-underline-offset:3px;white-space:nowrap;"
+        >Open full image ↗</a>
+        <a
+          href="https://www.computerhistory.org/revolution/minicomputers/11/362"
+          target="_blank"
+          rel="noopener"
+          style="font-family:var(--fh);font-style:italic;font-size:.78rem;color:var(--deep);text-decoration:underline;text-underline-offset:3px;white-space:nowrap;"
+        >Computer History Museum ↗</a>
+      </span>
+    </div>
   </div>
 </div>
 
@@ -410,8 +425,8 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   <div class="instr-card">
     <div class="instr-title">✦ How to complete this survey</div>
     <ul class="instr-list">
-      <li><div class="instr-dot"></div><span>Watch the video above before answering. It shows the performance being analysed.</span></li>
-      <li><div class="instr-dot"></div><span>Answer <strong>all questions</strong> in each of the six modules below. Your responses are saved automatically.</span></li>
+      <li><div class="instr-dot"></div><span>Study the image above carefully before answering — <strong>look closely at the figure, the body, the framing</strong> as you respond.</span></li>
+      <li><div class="instr-dot"></div><span>Answer <strong>all questions</strong> in each of the six modules below as you observe. Your responses are saved automatically.</span></li>
       <li><div class="instr-dot"></div><span>There are no wrong answers — this is research about perception, not a test.</span></li>
       <li><div class="instr-dot"></div><span>After completing all modules, a <strong>reveal</strong> will appear with live aggregate results.</span></li>
     </ul>
@@ -562,13 +577,13 @@ function enterApp(){
 /* ══ SURVEY DATA ══ */
 const SURVEY=[
   {theme:"The Body as Argument",icon:"◈",slug:"body",
-    intro:`The woman in this image appears effortless. But effortlessness is itself a performance — one that requires continuous, invisible effort. The position of every limb, the angle of every joint, communicates a carefully calibrated message. Consider what you just watched.`,
+    intro:`The woman in this image appears effortless. But effortlessness is itself a performance — one that requires continuous, invisible effort. The position of every limb, the angle of every joint, communicates a carefully calibrated message. Watch carefully.`,
     questions:[
-      {text:"Did the performer appear to be working hard?",context:"The documentation lists over 40 simultaneous physical and cognitive systems running at once — posture, expression, breath, weight distribution, garment management — all designed to read as zero effort."},
-      {text:"Could you see the effort it took to hold that position?",context:"\"Visible_Effort == 0 — This was the requirement. This is the work.\" The entire labor is designed to be invisible."},
-      {text:"Would you consider this kind of physical work demanding?",context:"Extended holds, heeled footwear, multiple garment layers, studio heat, repeated takes — all while maintaining a consistent smile calibrated to ±5% intensity."},
-      {text:"Did the image seem natural, as if the person just happened to be standing there?",context:"\"The naturalness of the image is a product of the precision of the direction and the precision of her execution of that direction and her ability to make that execution look like no execution at all.\""},
-      {text:"After watching the performance, do you think the labor was visible in the original 1969 advertisement?",context:"The original ad does not list her name, her pay, or her labor. It lists the computer at $10,600 and the apron at $28."}
+      {text:"Does the performer appear to be working hard?",context:"The documentation lists over 40 simultaneous physical and cognitive systems running at once — posture, expression, breath, weight distribution, garment management — all designed to read as zero effort."},
+      {text:"Can you see the effort it takes to hold that position?",context:"\"Visible_Effort == 0 — This was the requirement. This is the work.\" The entire labor is designed to be invisible."},
+      {text:"Is this kind of physical work demanding?",context:"Extended holds, heeled footwear, multiple garment layers, studio heat, repeated takes — all while maintaining a consistent smile calibrated to ±5% intensity."},
+      {text:"Does the image look natural, as if the person just happens to be standing there?",context:"\"The naturalness of the image is a product of the precision of the direction and the precision of her execution of that direction and her ability to make that execution look like no execution at all.\""},
+      {text:"Is the labor visible in the original 1969 advertisement?",context:"The original ad does not list her name, her pay, or her labor. It lists the computer at $10,600 and the apron at $28."}
     ]},
   {theme:"The Smile as Labor",icon:"◉",slug:"smile",
     intro:`The documentation breaks the smile into named facial muscles — zygomaticus major, orbicularis oculi, risorius — each requiring specific percentage activation. A smile held for a 60-minute shoot involves approximately 720 recalibration cycles. This is precision emotional labor.`,
@@ -576,45 +591,45 @@ const SURVEY=[
       {text:"Is maintaining a calibrated smile for an hour of work physically demanding?",context:"\"This is not about happiness. This is about calibration.\" The smile must sit between 0.65 and 0.75 on a scale of 0.0 to 1.0 — never too much, never too little."},
       {text:"Is this kind of emotional management — converting real feelings into performed ones — a form of labor?",context:"The emotion conversion matrix converts: fatigue → elegance, heat → warm glow, anxiety → calm competence, frustration → refreshed engagement."},
       {text:"Should this kind of labor be recognized and compensated?",context:"The original advertisement credits the computer, the cookbook, the apron. It does not credit the person performing."},
-      {text:"Have you ever had to manage your emotions at work — to appear calm, cheerful, or untroubled — when you were not?",context:"Emotional labor: the management of feeling to create a publicly observable facial and bodily display. First described by sociologist Arlie Hochschild, 1983."},
-      {text:"Do you think this kind of work — emotional presentation — is more often expected of women than men?",context:"In 1969, the year of this advertisement, the women's liberation movement was at its height. This image is a specific ideological response to that moment."}
+      {text:"Do you ever have to manage your emotions at work — appearing calm, cheerful, or untroubled when you are not?",context:"Emotional labor: the management of feeling to create a publicly observable facial and bodily display. First described by sociologist Arlie Hochschild, 1983."},
+      {text:"Is this kind of work — emotional presentation — more often expected of women than men?",context:"In 1969, the year of this advertisement, the women's liberation movement was at its height. This image is a specific ideological response to that moment."}
     ]},
   {theme:"Cognitive & Invisible Labor",icon:"◎",slug:"cognitive",
     intro:`The documentation's Module 18 is titled "The Invisible Calculation." While the advertisement promises the computer will help her calculate, she is already calculating — continuously, without the computer, without recognition.`,
     questions:[
       {text:"Is continuous cognitive monitoring of one's own body — posture, expression, breath, gaze — a form of work?",context:"Active calculations include: spatial, social, bodily, temporal, and strategic — all running simultaneously, all invisible in the image."},
-      {text:"Do you think this kind of cognitive self-monitoring is harder to automate than, say, data entry?",context:"The machine could compute menus. Could it perform the 40 simultaneous systems of presentation labor? This question is about what AI and automation can and cannot replace."},
-      {text:"Is it meaningful that the ad copy says the computer will help her with tasks, while she is already doing complex invisible tasks to make the ad work?",context:"\"The advertisement promises the computer will help her calculate. She is already calculating. Continuously. Without the computer.\""},
-      {text:"Do you think 'invisible labor' — work that is essential but unrecognized — is a real economic and social problem?",context:"Unpaid domestic labor, care work, and emotional management have been estimated to account for trillions of dollars of uncounted economic value globally."},
-      {text:"Is it harder to automate work that involves embodied, relational, and emotional intelligence?",context:"Researchers in AI and labor economics distinguish between routine cognitive tasks (more automatable) and non-routine interpersonal and physical tasks (less automatable). Where does presentation labor fall?"}
+      {text:"Is this kind of cognitive self-monitoring harder to automate than, say, data entry?",context:"The machine can compute menus. Can it perform the 40 simultaneous systems of presentation labor? This is the question of what AI and automation can and cannot replace."},
+      {text:"Is it meaningful that the ad promises the computer will help her with tasks, while she is already performing complex invisible tasks to make the ad work?",context:"\"The advertisement promises the computer will help her calculate. She is already calculating. Continuously. Without the computer.\""},
+      {text:"Is 'invisible labor' — work that is essential but unrecognized — a real economic and social problem?",context:"Unpaid domestic labor, care work, and emotional management have been estimated to account for trillions of dollars of uncounted economic value globally."},
+      {text:"Is work that involves embodied, relational, and emotional intelligence harder to automate?",context:"Researchers in AI and labor economics distinguish between routine cognitive tasks (more automatable) and non-routine interpersonal and physical tasks (less automatable). Where does presentation labor fall?"}
     ]},
   {theme:"Women in Technology",icon:"◆",slug:"women-tech",
     intro:`The 1969 Kitchen Computer advertisement places a woman in a kitchen, adjacent to technology — not creating it. But women have always created technology. This module asks you to think about representation, access, and historical erasure.`,
     questions:[
-      {text:"Before this survey, were you aware that women served as human computers — performing complex calculations by hand — before electronic computers were developed?",context:"Women computers at NASA, at Los Alamos, at Bletchley Park performed the mathematical labor that made space travel, nuclear physics, and code-breaking possible. Many were uncredited."},
-      {text:"Did you know that women wrote much of the early programming for electronic computers?",context:"Ada Lovelace wrote the first algorithm (1843). Grace Hopper invented the compiler and COBOL. The ENIAC programmers — Kay McNulty, Betty Jennings, Frances Bilas, Elizabeth Snyder, Ruth Lichterman, Marilyn Wescoff — are rarely mentioned alongside the machine they programmed."},
-      {text:"Do you think the image of a woman decoratively adjacent to a computer — rather than building or programming it — has had a lasting effect on how we imagine who belongs in technology?",context:"Representation in advertising shapes who sees themselves as a potential inventor, designer, or engineer. The image of the kitchen computer positions women as users and aesthetic context — not authors."},
-      {text:"Do you think the technology industry today adequately recognizes and includes women's contributions?",context:"As of recent surveys, women hold approximately 26% of computing jobs in the US, down from 37% in 1995. The pipeline and retention problems are well-documented."},
-      {text:"Do you think technology would be designed differently if it were designed by a more diverse group of people?",context:"Voice recognition trained primarily on male voices, crash-test dummies sized for male bodies, medical AI trained on male patient data — these are documented examples of design that failed to account for diverse users."},
-      {text:"Should the labor of women who have contributed to technology — as human computers, programmers, and inventors — be better taught and recognized?",context:"\"The work that was not listed was the most essential work.\" This is true both of the woman in the advertisement and of the women who built the technological world we inhabit."}
+      {text:"Are you aware that women served as human computers — performing complex calculations by hand — before electronic computers existed?",context:"Women computers at NASA, at Los Alamos, at Bletchley Park performed the mathematical labor that made space travel, nuclear physics, and code-breaking possible. Many were uncredited."},
+      {text:"Do you know that women wrote much of the early programming for electronic computers?",context:"Ada Lovelace wrote the first algorithm (1843). Grace Hopper invented the compiler and COBOL. The ENIAC programmers — Kay McNulty, Betty Jennings, Frances Bilas, Elizabeth Snyder, Ruth Lichterman, Marilyn Wescoff — are rarely mentioned alongside the machine they programmed."},
+      {text:"Does the image of a woman decoratively adjacent to a computer — rather than building or programming it — shape how we imagine who belongs in technology?",context:"Representation in advertising shapes who sees themselves as a potential inventor, designer, or engineer. The image of the kitchen computer positions women as users and aesthetic context — not authors."},
+      {text:"Does the technology industry today adequately recognize and include women's contributions?",context:"As of recent surveys, women hold approximately 26% of computing jobs in the US, down from 37% in 1995. The pipeline and retention problems are well-documented."},
+      {text:"Would technology be designed differently if it were designed by a more diverse group of people?",context:"Voice recognition trained primarily on male voices, crash-test dummies sized for male bodies, medical AI trained on male patient data — these are documented examples of design that failed to account for diverse users."},
+      {text:"Should the labor of women who contributed to technology — as human computers, programmers, and inventors — be better taught and recognized?",context:"\"The work that was not listed was the most essential work.\" This is true both of the woman in the advertisement and of the women who built the technological world we inhabit."}
     ]},
   {theme:"The Advertisement's Argument",icon:"◇",slug:"advertising",
     intro:`Every advertisement makes an argument. This one's argument — made through her body, her posture, her smile, her relationship to the machine — is about what femininity, technology, and domestic life should look like.`,
     questions:[
       {text:"Does the image suggest that this computer is a tool for liberation — freeing her from domestic drudgery?",context:"The ad copy promises: meal planning, menu calculation, checkbook balancing. But the woman is already performing immense labor to make the ad work. The computer is positioned as solution; her labor is the invisible problem it claims to solve."},
-      {text:"Does the fact that she is in a kitchen — not a laboratory, office, or engineering space — limit what the image says about women and technology?",context:"The documentation notes: \"She is not a competitor to the machine. She is its context. Without her, the computer is a machine. With her, the computer is an upgrade to a life.\""},
+      {text:"Does placing her in a kitchen — not a laboratory, office, or engineering space — limit what the image says about women and technology?",context:"The documentation notes: \"She is not a competitor to the machine. She is its context. Without her, the computer is a machine. With her, the computer is an upgrade to a life.\""},
       {text:"Is it significant that the headline reads 'If she can only cook as well as Honeywell can compute' — comparing a woman's skill to a machine's performance?",context:"This comparison positions the machine as the benchmark and the woman as the aspirant. The documentation calls this \"one of the most complex emotional requirements in the image\" — she must smile at her own instrumentalization."},
-      {text:"Could you imagine a version of this advertisement where the woman is designing or programming the computer, rather than using it in a kitchen?",context:"In 1969, women were already programming computers professionally. The choice to place the computer in the kitchen was an ideological choice."},
-      {text:"Do you think contemporary advertising has moved past this kind of gendered framing of technology?",context:"Think about recent advertisements for phones, laptops, smart home devices, AI assistants. Who is shown using them? Who is shown building them? Who is the assumed subject?"}
+      {text:"Can you imagine a version of this advertisement where the woman is designing or programming the computer, rather than using it in a kitchen?",context:"In 1969, women were already programming computers professionally. The choice to place the computer in the kitchen was an ideological choice."},
+      {text:"Has contemporary advertising moved past this kind of gendered framing of technology?",context:"Think about current advertisements for phones, laptops, smart home devices, AI assistants. Who is shown using them? Who is shown building them? Who is the assumed subject?"}
     ]},
   {theme:"Automation & What Cannot Be Automated",icon:"○",slug:"automation",
     intro:`The Honeywell H316 Kitchen Computer was meant to automate meal planning. It could compute menus. It could not perform the presentation labor that sold it. This module asks what machines can and cannot do — and what that means for the labor that remains.`,
     questions:[
-      {text:"Do you think presentation labor — managing one's appearance, expression, and emotional display professionally — can be automated?",context:"\"40 systems running simultaneously. Visible systems: zero.\" This is not the kind of work that a computer can perform on a human body."},
-      {text:"Do you think the types of work that are hardest to automate tend to be undervalued?",context:"Care work, domestic labor, emotional labor, and relational work are consistently harder to automate and consistently less well-compensated than routine cognitive tasks that can be programmed."},
-      {text:"Is there something important — something worth preserving — in work that requires human presence, embodiment, and emotional intelligence?",context:"The performance you watched could not be done by a machine. Does that make it more valuable, less valuable, or differently valuable than machine-executable work?"},
-      {text:"Do you think society adequately compensates work that requires emotional and relational intelligence?",context:"Nursing, teaching, caregiving, social work — these professions require significant emotional and relational labor. Are they paid accordingly?"},
-      {text:"After watching this performance, has your understanding of what counts as 'skilled work' changed at all?",context:"\"The computer cost $10,600. The woman cost the labor of making herself legible, aspirational, non-threatening, capable, feminine, domestic, graceful, and smiling. The cost of this labor was not listed.\""}
+      {text:"Can presentation labor — managing one's appearance, expression, and emotional display professionally — be automated?",context:"\"40 systems running simultaneously. Visible systems: zero.\" This is not the kind of work that a computer can perform on a human body."},
+      {text:"Do the types of work that are hardest to automate tend to be the most undervalued?",context:"Care work, domestic labor, emotional labor, and relational work are consistently harder to automate and consistently less well-compensated than routine cognitive tasks that can be programmed."},
+      {text:"Is there something important — something worth preserving — in work that requires human presence, embodiment, and emotional intelligence?",context:"The performance in front of you cannot be done by a machine. Does that make it more valuable, less valuable, or differently valuable than machine-executable work?"},
+      {text:"Does society adequately compensate work that requires emotional and relational intelligence?",context:"Nursing, teaching, caregiving, social work — these professions require significant emotional and relational labor. Are they paid accordingly?"},
+      {text:"Does watching this performance change your understanding of what counts as 'skilled work'?",context:"\"The computer cost $10,600. The woman cost the labor of making herself legible, aspirational, non-threatening, capable, feminine, domestic, graceful, and smiling. The cost of this labor was not listed.\""}
     ]}
 ];
 
