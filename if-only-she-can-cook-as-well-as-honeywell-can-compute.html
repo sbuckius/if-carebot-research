@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ Kitchen Computer · Advertisement Survey</title>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, onSnapshot, writeBatch, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCp6KuYcPo2YHmYqErGV4O5r5CFeZk36mc",
+
+  authDomain: "if-only-she-can-cook-image.firebaseapp.com",
+
+  projectId: "if-only-she-can-cook-image",
+
+  storageBucket: "if-only-she-can-cook-image.firebasestorage.app",
+
+  messagingSenderId: "374169693050",
+
+  appId: "1:374169693050:web:c364fabe6120da0f6344c3",
+
+  measurementId: "G-MCX52DS2CD"
+
+};
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.db = db;
+    window.fsSetDoc = setDoc;
+    window.fsDoc = doc;
+    window.fsOnSnapshot = onSnapshot;
+    window.fsWriteBatch = writeBatch;
+    window.fsGetDocs = getDocs;
+    window.fsCollection = collection;
+  } catch(e) { console.warn('Firebase init failed:', e); }
+  window.dispatchEvent(new Event("firebase-ready"));
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Jost:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --rouge:#c0234f;    --deep:#8b0030;     --crimson:#5a0020;
+  --blush:#f0a0b8;    --petal:#e8c0cc;    --powder:#f8e8ee;
+  --hot:#e83060;      --candy:#ff6090;    --berry:#9a1840;
+  --fuchsia:#d82060;  --mauve:#6a2040;    --ink:#1a0008;
+  --bg:#100008;
+  --surface:rgba(22,0,12,.95);
+  --border:rgba(200,100,130,.18);
+  --border2:rgba(220,80,120,.42);
+  --text:#f5e0e8;
+  --muted:rgba(240,180,200,.45);
+  --muted2:rgba(240,200,215,.68);
+  --radius:18px;
+  --fh:'Cormorant Garamond',serif;
+  --fb:'Jost',sans-serif;
+  --glow:0 4px 28px rgba(200,35,80,.22);
+  --glow2:0 8px 52px rgba(200,35,80,.38),0 0 80px rgba(140,0,40,.12);
+  --card-shadow:0 2px 24px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:var(--fb);font-weight:400;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;}
+body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='3.5' fill='%23d84070' opacity='.9'/%3E%3Ccircle cx='9' cy='9' r='6.5' stroke='%23f0a0b8' stroke-width='1.2' fill='none' opacity='.5'/%3E%3C/svg%3E") 9 9,default;}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+
+/* BG */
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 8% 92%,rgba(160,0,50,.32) 0%,transparent 55%),
+    radial-gradient(ellipse 55% 60% at 92% 8%,rgba(100,0,30,.26) 0%,transparent 55%),
+    linear-gradient(150deg,#1c0010,#100008 50%,#070003);}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(70px);}
+.orb-1{width:400px;height:400px;background:var(--crimson);opacity:.16;bottom:-90px;left:-80px;animation:d1 22s ease-in-out infinite;}
+.orb-2{width:280px;height:280px;background:var(--berry);opacity:.14;top:-70px;right:-70px;animation:d2 27s ease-in-out infinite;}
+.orb-3{width:180px;height:180px;background:var(--hot);opacity:.08;top:45%;left:58%;animation:d3 18s ease-in-out infinite;}
+@keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(36px,22px)}}
+@keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-26px,-18px)}}
+@keyframes d3{0%,100%{transform:translate(0,0)}33%{transform:translate(-14px,10px)}66%{transform:translate(10px,-8px)}}
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.pt{position:absolute;opacity:0;animation:rise linear infinite;}
+@keyframes rise{0%{opacity:0;transform:translateY(0) scale(.5)}15%{opacity:.5}85%{opacity:.25}100%{opacity:0;transform:translateY(-100px) scale(1.2)}}
+
+/* ── HEADER ── */
+.app-header{position:sticky;top:0;z-index:200;background:rgba(12,0,7,.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;align-items:center;gap:.9rem;box-shadow:0 1px 18px rgba(0,0,0,.45);}
+.app-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 28%,var(--rouge) 50%,var(--blush) 72%,transparent);opacity:.5;}
+.header-logo{font-family:var(--fh);font-size:1.5rem;font-weight:700;font-style:italic;letter-spacing:.01em;margin-right:auto;background:linear-gradient(90deg,var(--petal),var(--fuchsia) 55%,var(--blush));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.progress-pill{display:flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:700;color:var(--rouge);letter-spacing:.1em;text-transform:uppercase;background:rgba(192,35,80,.07);border:1px solid rgba(192,35,80,.22);border-radius:999px;padding:.28rem .9rem;}
+.progress-num{color:var(--berry);font-family:var(--fh);font-weight:700;font-style:italic;}
+.live-pill{display:flex;align-items:center;gap:.38rem;font-size:.6rem;font-weight:700;color:var(--blush);letter-spacing:.12em;text-transform:uppercase;background:rgba(200,50,90,.1);border:1px solid rgba(200,50,90,.28);border-radius:999px;padding:.25rem .75rem;}
+.live-dot{width:5px;height:5px;background:var(--hot);border-radius:50%;box-shadow:0 0 6px var(--hot);animation:breathe 1.8s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.5)}}
+.btn-hdr{display:flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,rgba(192,35,80,.2),rgba(100,0,30,.3));color:var(--blush);border:1px solid var(--border2);border-radius:9px;padding:.4rem .85rem;font-family:var(--fb);font-size:.68rem;font-weight:700;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;flex-shrink:0;white-space:nowrap;}
+.btn-hdr:hover{background:rgba(192,35,80,.32);transform:translateY(-2px);box-shadow:0 4px 16px rgba(192,35,80,.3);}
+.btn-hdr:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.btn-hdr.reset-btn{background:linear-gradient(135deg,rgba(50,0,15,.5),rgba(80,0,20,.4));color:rgba(240,130,160,.65);}
+.btn-hdr.reset-btn:hover{background:rgba(100,0,30,.4);color:var(--blush);}
+.user-badge{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:999px;padding:.28rem .8rem .28rem .32rem;font-size:.78rem;flex-shrink:0;}
+.user-avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--rouge),var(--crimson));display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--powder);flex-shrink:0;}
+
+/* PROGRESS BAR */
+.prog-bar-wrap{position:sticky;top:54px;z-index:190;background:rgba(10,0,6,.92);backdrop-filter:blur(10px);padding:.45rem 1.5rem;border-bottom:1px solid var(--border);}
+.prog-bar-track{height:4px;background:rgba(200,100,130,.1);border-radius:999px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--rouge),var(--candy),var(--fuchsia));border-radius:999px;transition:width .4s cubic-bezier(.4,0,.2,1);width:0%;}
+.prog-label{font-size:.6rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;display:flex;justify-content:space-between;}
+.prog-label span{color:var(--blush);}
+
+/* HERO */
+.hero{position:relative;z-index:2;padding:3rem 1.5rem 1.5rem;text-align:center;max-width:760px;margin:0 auto;}
+.hero-eyebrow{display:inline-block;font-family:var(--fb);font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:.8rem;background:rgba(192,35,80,.09);border:1px solid rgba(192,35,80,.22);border-radius:999px;padding:.28rem .9rem;}
+.hero-title{font-family:var(--fh);font-size:3.2rem;font-weight:700;font-style:italic;letter-spacing:-.01em;line-height:1.08;margin-bottom:.7rem;background:linear-gradient(135deg,var(--petal) 10%,var(--candy) 48%,var(--blush) 85%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-quote{font-family:var(--fh);font-style:italic;font-size:1rem;color:rgba(240,180,200,.52);border-left:2px solid var(--rouge);padding-left:.9rem;text-align:left;margin:1.1rem auto;line-height:1.65;max-width:500px;}
+.hero-sub{font-size:.88rem;color:var(--muted2);line-height:1.75;max-width:560px;margin:0 auto 1.5rem;font-weight:400;}
+
+/* VIDEO */
+.video-wrap{position:relative;z-index:2;max-width:760px;margin:0 auto 1rem;padding:0 1.5rem;}
+.video-card{background:var(--surface);border:1.5px solid var(--border2);border-radius:20px;overflow:hidden;box-shadow:var(--glow2);position:relative;}
+.video-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 35%,var(--rouge) 50%,var(--blush) 65%,transparent);box-shadow:0 0 12px rgba(192,35,80,.5);z-index:10;}
+.video-card iframe{width:100%;display:block;aspect-ratio:16/9;border:none;}
+.video-label{padding:.6rem 1rem;background:linear-gradient(90deg,rgba(248,232,238,.92),rgba(240,220,228,.88));font-size:.7rem;font-weight:700;color:var(--deep);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;border-top:1px solid var(--border);}
+
+/* INSTRUCTIONS */
+.instructions{position:relative;z-index:2;max-width:760px;margin:0 auto 2rem;padding:0 1.5rem;}
+.instr-card{background:rgba(30,0,16,.96);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem 1.6rem;position:relative;overflow:hidden;}
+.instr-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 50%,transparent);}
+.instr-title{font-family:var(--fh);font-size:1.1rem;font-weight:600;font-style:italic;color:var(--blush);margin-bottom:.65rem;}
+.instr-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;}
+.instr-list li{display:flex;align-items:flex-start;gap:.55rem;font-size:.82rem;color:var(--muted2);line-height:1.55;font-weight:400;}
+.instr-dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--rouge),var(--blush));flex-shrink:0;margin-top:.38rem;}
+
+/* SECTIONS */
+.sections{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;display:flex;flex-direction:column;gap:2.5rem;}
+.section-block{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:1.8rem 2rem;box-shadow:var(--card-shadow);position:relative;overflow:hidden;transition:border-color .2s,box-shadow .2s;}
+.section-block:hover{border-color:var(--border2);box-shadow:var(--glow);}
+.section-block::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 35%,var(--rouge) 50%,var(--blush) 65%,transparent);opacity:.45;}
+.section-hd{display:flex;align-items:center;gap:.7rem;margin-bottom:.35rem;}
+.section-icon{font-size:1rem;flex-shrink:0;}
+.section-title{font-family:var(--fh);font-size:1.3rem;font-weight:700;font-style:italic;background:linear-gradient(90deg,var(--petal),var(--blush));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.section-num{font-family:var(--fb);font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(192,35,80,.55);margin-top:.1rem;}
+.section-badge{margin-left:auto;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(192,35,80,.1);border:1px solid rgba(192,35,80,.22);color:var(--blush);border-radius:999px;padding:.18rem .6rem;flex-shrink:0;}
+.section-badge.done{background:rgba(192,35,80,.22);border-color:var(--blush);}
+.section-intro{font-family:var(--fh);font-style:italic;font-size:.88rem;color:rgba(240,180,200,.58);border-left:2px solid rgba(192,35,80,.3);padding-left:.85rem;margin-bottom:1.4rem;line-height:1.7;}
+
+/* SEC PROGRESS DOTS */
+.sec-prog{display:flex;align-items:center;gap:.35rem;margin-top:-.1rem;margin-bottom:1.1rem;}
+.sec-prog-dots{display:flex;gap:3px;flex-wrap:wrap;}
+.sdot{width:6px;height:6px;border-radius:50%;background:rgba(200,100,130,.18);border:1px solid var(--border);transition:all .25s;}
+.sdot.done{background:linear-gradient(135deg,var(--rouge),var(--blush));border-color:var(--blush);}
+
+/* QUESTION CARDS */
+.q-list{display:flex;flex-direction:column;gap:1.1rem;}
+.qcard{background:linear-gradient(135deg,rgba(30,2,15,.96),rgba(26,2,40,.92));border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.4rem;transition:border-color .18s;position:relative;overflow:hidden;}
+.qcard::after{content:'';position:absolute;top:0;left:0;right:0;height:.7px;background:linear-gradient(90deg,transparent,rgba(200,100,130,.2) 50%,transparent);}
+.qcard.answered{border-color:rgba(192,35,80,.3);}
+.qcard-code{font-family:var(--fb);font-size:.52rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,100,130,.4);margin-bottom:.45rem;}
+.qcard-top{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:.7rem;}
+.qnum-badge{width:26px;height:26px;border-radius:50%;flex-shrink:0;margin-top:2px;background:linear-gradient(135deg,var(--rouge),var(--crimson));display:flex;align-items:center;justify-content:center;font-family:var(--fb);font-size:.55rem;font-weight:700;color:var(--powder);}
+.qtext{font-family:var(--fh);font-size:1.08rem;font-weight:600;font-style:italic;line-height:1.55;color:rgba(248,225,235,.92);}
+.qcontext{font-size:.75rem;color:rgba(220,170,190,.55);line-height:1.65;margin-bottom:.85rem;padding:.5rem .75rem;background:rgba(180,30,60,.05);border-left:2px solid rgba(192,35,80,.2);border-radius:0 6px 6px 0;font-family:var(--fh);font-style:italic;}
+
+/* VOTE BUTTONS */
+.vbtns{display:flex;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap;}
+.vbtn{flex:1;min-width:75px;padding:.48rem .3rem;border-radius:9px;border:1px solid transparent;font-family:var(--fb);font-size:.68rem;font-weight:700;cursor:pointer;letter-spacing:.07em;text-transform:uppercase;transition:all .18s cubic-bezier(.34,1.56,.64,1);text-align:center;line-height:1.2;}
+.vbtn.yb{background:rgba(192,35,80,.07);border-color:rgba(192,35,80,.25);color:var(--blush)}
+.vbtn.yb:hover{background:rgba(192,35,80,.16);border-color:var(--blush);transform:translateY(-2px)}
+.vbtn.yb.voted{background:linear-gradient(135deg,var(--rouge),var(--deep));color:var(--powder);border-color:var(--rouge);box-shadow:0 4px 18px rgba(180,30,60,.32)}
+.vbtn.nb{background:rgba(90,0,28,.1);border-color:rgba(90,0,28,.3);color:#c07090}
+.vbtn.nb:hover{background:rgba(90,0,28,.2);border-color:#a05070;transform:translateY(-2px)}
+.vbtn.nb.voted{background:linear-gradient(135deg,#3a0818,#7a1a35);color:var(--powder);border-color:#7a1a35;box-shadow:0 4px 16px rgba(90,0,28,.32)}
+.vbtn.neub{background:rgba(106,32,64,.08);border-color:rgba(106,32,64,.28);color:#b07590}
+.vbtn.neub:hover{background:rgba(106,32,64,.18);border-color:#9a5070;transform:translateY(-2px)}
+.vbtn.neub.voted{background:linear-gradient(135deg,#2e0f20,#6a2840);color:var(--powder);border-color:#6a2840;box-shadow:0 4px 14px rgba(90,30,55,.3)}
+.vbtn:active{transform:scale(.95)!important}
+.vote-lbl{font-size:.6rem;color:var(--muted);display:block;margin-bottom:.32rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+
+/* BAR CHARTS */
+.bar-area{display:flex;flex-direction:column;gap:.38rem;}
+.brow{display:flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:600;}
+.blbl{width:28px;text-align:right;flex-shrink:0;font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;font-weight:700;}
+.blbl.y{color:var(--blush)}.blbl.n{color:#b05070}.blbl.neu{color:#9a6080}
+.btrack{flex:1;height:6px;background:rgba(255,255,255,.04);border-radius:999px;overflow:hidden;border:1px solid var(--border);}
+.bfill{height:100%;border-radius:999px;transition:width .55s cubic-bezier(.4,0,.2,1);}
+.bfill.y{background:linear-gradient(90deg,var(--crimson),var(--blush))}
+.bfill.n{background:linear-gradient(90deg,#200410,#7a1a35)}
+.bfill.neu{background:linear-gradient(90deg,#1e0812,#7a4060)}
+.bcnt{width:20px;font-size:.62rem;color:var(--muted);flex-shrink:0;font-weight:600;}
+.qtot{font-size:.6rem;color:var(--muted);margin-top:.18rem;font-family:var(--fh);font-style:italic;}
+
+/* LIVE RESULTS */
+.results-section{position:relative;z-index:2;max-width:760px;margin:0 auto 2rem;padding:0 1.5rem;display:none;}
+.results-section.show{display:block;animation:revealIn .65s cubic-bezier(.34,1.4,.64,1);}
+@keyframes revealIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.results-card{background:var(--surface);border:1.5px solid var(--border2);border-radius:22px;padding:1.8rem 2rem;box-shadow:var(--glow);position:relative;overflow:hidden;}
+.results-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;background:linear-gradient(90deg,transparent,var(--blush) 35%,var(--rouge) 50%,var(--blush) 65%,transparent);box-shadow:0 0 10px rgba(192,35,80,.5);}
+.results-hd{display:flex;align-items:center;gap:.65rem;margin-bottom:.3rem;}
+.results-title{font-family:var(--fh);font-size:1.25rem;font-weight:700;font-style:italic;background:linear-gradient(90deg,var(--petal),var(--blush));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.results-sub{font-size:.78rem;color:var(--muted2);margin-bottom:1.3rem;line-height:1.6;font-weight:400;}
+.results-sub strong{color:var(--blush);}
+.res-stat-row{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1.4rem;}
+.res-stat{flex:1;min-width:75px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:.75rem;text-align:center;}
+.res-stat-num{font-family:var(--fh);font-size:1.6rem;font-weight:700;color:var(--blush);line-height:1;}
+.res-stat-num.y{color:var(--candy)}.res-stat-num.n{color:#b05070}.res-stat-num.neu{color:#9a6080}
+.res-stat-lbl{font-size:.55rem;color:var(--muted);margin-top:.18rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;}
+.chart-h260{height:260px;position:relative;margin-bottom:1.4rem;}
+.chart-h150{height:150px;position:relative;margin-bottom:.8rem;}
+.sec-results-grid{display:flex;flex-direction:column;gap:1rem;margin-top:1.1rem;}
+.sec-res-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;}
+.sec-res-hd{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;}
+.sec-res-icon{font-size:.9rem;}
+.sec-res-title{font-family:var(--fh);font-size:.95rem;font-weight:600;font-style:italic;color:var(--petal);}
+.sec-res-tot{font-size:.58rem;color:var(--muted);margin-left:auto;background:rgba(255,255,255,.04);padding:.08rem .38rem;border-radius:6px;border:1px solid var(--border);}
+.btn-export{display:flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,rgba(100,20,50,.5),rgba(140,0,50,.4));color:var(--petal);border:1px solid rgba(200,80,130,.3);border-radius:11px;padding:.55rem 1rem;font-family:var(--fb);font-size:.75rem;font-weight:700;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;margin-top:1.1rem;box-shadow:0 3px 14px rgba(140,0,50,.12);}
+.btn-export:hover{background:rgba(140,20,60,.4);color:var(--blush);transform:translateY(-2px);}
+.btn-export:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+
+/* REVEAL */
+#reveal-section{display:none;position:relative;z-index:2;max-width:760px;margin:0 auto 4rem;padding:0 1.5rem;}
+#reveal-section.show{display:block;animation:revealIn .7s cubic-bezier(.34,1.4,.64,1);}
+.reveal-card{background:linear-gradient(135deg,rgba(110,0,35,.95),rgba(60,0,20,.98),rgba(36,0,50,.97));border:1.5px solid var(--border2);border-radius:26px;padding:2.4rem 2.5rem;box-shadow:0 12px 60px rgba(192,35,80,.28);position:relative;overflow:hidden;text-align:center;}
+.reveal-card::before{content:'';position:absolute;top:0;left:6%;right:6%;height:1.5px;background:linear-gradient(90deg,transparent,var(--blush) 35%,var(--rouge) 50%,var(--blush) 65%,transparent);box-shadow:0 0 18px rgba(192,35,80,.55);}
+.reveal-eyebrow{font-family:var(--fb);font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;font-weight:700;}
+.reveal-title{font-family:var(--fh);font-size:2.1rem;font-weight:700;font-style:italic;letter-spacing:-.01em;background:linear-gradient(90deg,var(--petal) 10%,white 50%,var(--blush) 90%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:1.4rem;line-height:1.18;}
+.irony-blocks{display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.8rem;text-align:left;}
+.irony-block{background:rgba(255,255,255,.05);border:1px solid rgba(200,100,130,.22);border-radius:13px;padding:1.1rem 1.3rem;border-left:3px solid var(--blush);}
+.irony-block.alt{border-left-color:var(--rouge);}
+.irony-block.alt2{border-left-color:#d4a8ff;}
+.irony-head{font-family:var(--fh);font-size:.92rem;font-weight:600;color:var(--blush);margin-bottom:.32rem;font-style:italic;}
+.irony-block.alt .irony-head{color:var(--candy);}
+.irony-block.alt2 .irony-head{color:#d4a8ff;}
+.irony-body{font-size:.8rem;color:rgba(240,215,228,.75);line-height:1.7;font-weight:400;}
+.reveal-stats{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.7rem;}
+.stat-pill{background:rgba(255,255,255,.06);border:1px solid rgba(200,100,130,.28);border-radius:13px;padding:.85rem 1.1rem;min-width:100px;text-align:center;}
+.stat-num{font-family:var(--fh);font-size:1.65rem;font-weight:700;color:var(--blush);line-height:1;}
+.stat-lbl{font-size:.58rem;color:rgba(240,180,200,.6);margin-top:.22rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;}
+.answer-chips{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.4rem;}
+.ans-chip{font-size:.67rem;font-weight:600;padding:.28rem .7rem;border-radius:999px;border:1px solid rgba(200,100,130,.25);color:rgba(240,210,225,.6);background:rgba(255,255,255,.04);}
+.ans-chip.y{background:rgba(192,35,80,.18);border-color:rgba(192,35,80,.38);color:var(--blush);}
+.ans-chip.n{background:rgba(90,0,28,.18);border-color:rgba(90,0,28,.38);color:#d08090;}
+.btn-advance{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;background:linear-gradient(135deg,var(--rouge),var(--deep),var(--crimson));color:var(--powder);border:none;border-radius:14px;padding:.95rem 2rem;font-family:var(--fb);font-size:.82rem;font-weight:700;cursor:pointer;letter-spacing:.09em;text-transform:uppercase;transition:all .22s cubic-bezier(.34,1.56,.64,1);box-shadow:0 5px 24px rgba(180,30,60,.38);text-decoration:none;}
+.btn-advance:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 10px 36px rgba(192,35,80,.52)}
+
+/* LOGIN */
+#login-screen{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:2rem;}
+.login-card{background:rgba(16,0,9,.97);border:1px solid var(--border2);border-radius:26px;padding:2.8rem 3.2rem;width:100%;max-width:460px;text-align:center;box-shadow:var(--glow2);position:relative;overflow:hidden;}
+.login-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 30%,var(--rouge) 50%,var(--blush) 70%,transparent);box-shadow:0 0 14px rgba(200,50,90,.5);}
+.login-eyebrow{font-family:var(--fb);font-size:.6rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:.65rem;}
+.login-title{font-family:var(--fh);font-size:2.7rem;font-weight:700;font-style:italic;letter-spacing:-.01em;line-height:1.1;margin-bottom:.3rem;background:linear-gradient(135deg,var(--petal) 15%,var(--candy) 52%,var(--blush));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.login-quote{font-family:var(--fh);font-style:italic;font-size:.9rem;color:rgba(240,180,200,.52);border-left:2px solid var(--rouge);padding-left:.85rem;text-align:left;margin:1.1rem 0 1.5rem;line-height:1.6;}
+.disclaimer{background:rgba(200,160,0,.05);border:1px solid rgba(200,160,0,.2);border-radius:12px;padding:.95rem 1.1rem;margin-bottom:1.3rem;text-align:left;}
+.disclaimer-title{font-family:var(--fb);font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d4a030;margin-bottom:.38rem;}
+.disclaimer-body{font-size:.73rem;color:rgba(230,200,160,.65);line-height:1.65;font-weight:400;}
+.field-label{display:block;text-align:left;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.42rem;}
+.login-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:11px;padding:.78rem 1rem;color:var(--text);font-family:var(--fb);font-size:.95rem;font-weight:400;outline:none;transition:border-color .2s;margin-bottom:.6rem;}
+.login-input:focus{border-color:var(--blush);box-shadow:0 0 0 3px rgba(200,80,120,.1)}
+.login-input::placeholder{color:var(--muted)}
+.avatar-row{display:flex;gap:.5rem;margin-bottom:1.2rem;align-items:center;}
+.avatar-preview{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:11px;padding:.72rem 1rem;color:var(--blush);font-family:var(--fh);font-size:.95rem;font-weight:700;font-style:italic;text-align:left;min-height:46px;display:flex;align-items:center;}
+.btn-gen{background:linear-gradient(135deg,rgba(192,35,80,.15),rgba(100,0,30,.2));border:1px solid var(--border2);border-radius:11px;padding:.72rem .88rem;color:var(--blush);font-size:1rem;cursor:pointer;transition:all .18s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.btn-gen:hover{background:rgba(192,35,80,.25);transform:rotate(20deg) scale(1.08);}
+.avatar-hint{font-size:.65rem;color:var(--muted);margin-bottom:1.1rem;text-align:left;line-height:1.5;}
+.gender-select-wrap{margin-bottom:1.2rem;text-align:left;}
+.gender-chips{display:flex;flex-wrap:wrap;gap:.38rem;margin-top:.45rem;}
+.gender-chip{font-family:var(--fb);font-size:.72rem;font-weight:600;padding:.36rem .75rem;border-radius:999px;border:1px solid rgba(200,100,130,.2);background:rgba(255,255,255,.03);color:var(--muted2);cursor:pointer;transition:all .18s;}
+.gender-chip:hover{border-color:var(--blush);background:rgba(192,35,80,.1);color:var(--blush);}
+.gender-chip.selected{background:linear-gradient(135deg,rgba(192,35,80,.28),rgba(110,0,30,.32));border-color:var(--rouge);color:var(--powder);box-shadow:0 0 10px rgba(192,35,80,.22);}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--rouge),var(--deep),var(--crimson));color:var(--powder);border:none;border-radius:11px;padding:.88rem 1.5rem;font-family:var(--fb);font-size:.88rem;font-weight:700;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 22px rgba(180,30,60,.32);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(192,35,80,.46)}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.6rem;right:1.6rem;z-index:9000;background:rgba(18,0,10,.97);border:1px solid var(--border2);border-radius:11px;padding:.6rem 1rem;font-size:.78rem;font-weight:500;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;pointer-events:none;color:var(--blush);font-family:var(--fh);font-style:italic;}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* PDF OVERLAY */
+#pdf-ov{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,0,6,.9);backdrop-filter:blur(10px);align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+#pdf-ov.show{display:flex;}
+.pdf-spin{width:44px;height:44px;border:2.5px solid var(--border2);border-top-color:var(--rouge);border-radius:50%;animation:spin .85s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pdf-msg{font-family:var(--fh);font-size:1.1rem;font-weight:600;font-style:italic;color:var(--blush);}
+
+/* RESET MODAL */
+#reset-modal{display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);align-items:center;justify-content:center;}
+#reset-modal.show{display:flex;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reset-card{background:rgba(16,0,9,.98);border:1px solid var(--border2);border-radius:22px;padding:2rem 2.2rem;max-width:380px;width:90%;position:relative;box-shadow:var(--glow2);overflow:hidden;}
+.reset-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 30%,var(--rouge) 50%,var(--blush) 70%,transparent);}
+.reset-title{font-family:var(--fh);font-size:1.2rem;font-weight:700;font-style:italic;color:var(--petal);margin-bottom:.3rem;}
+.reset-body{font-size:.78rem;color:var(--muted2);line-height:1.65;margin-bottom:1.2rem;font-weight:400;}
+.reset-body strong{color:var(--blush);}
+.reset-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:.72rem .95rem;color:var(--text);font-family:var(--fb);font-size:.9rem;font-weight:400;outline:none;margin-bottom:.38rem;transition:border-color .2s;}
+.reset-input:focus{border-color:var(--blush);}
+.reset-input::placeholder{color:var(--muted);}
+.reset-err{font-size:.7rem;color:#f08080;min-height:1rem;margin-bottom:.85rem;display:none;}
+.reset-btns{display:flex;gap:.65rem;}
+.btn-cancel{flex:1;padding:.72rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;color:var(--muted2);font-family:var(--fb);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.07em;text-transform:uppercase;}
+.btn-cancel:hover{background:rgba(255,255,255,.09);}
+.btn-confirm-reset{flex:1;padding:.72rem;background:linear-gradient(135deg,var(--rouge),var(--deep));border:none;border-radius:10px;color:var(--powder);font-family:var(--fb);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px rgba(180,30,60,.28);letter-spacing:.07em;text-transform:uppercase;}
+.btn-confirm-reset:hover{transform:translateY(-2px);}
+.btn-confirm-reset:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+#app{display:none;}
+
+@media(max-width:580px){
+  .hero-title{font-size:2.2rem}
+  .section-block{padding:1.3rem 1.1rem}
+  .reveal-card{padding:1.8rem 1.2rem}
+  .reveal-title{font-size:1.6rem}
+  .login-card{padding:2rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="particles" id="particles"></div>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-eyebrow">✦ Visible Labor · Advertisement Analysis</div>
+    <div class="login-title">"If only she<br>can cook…"</div>
+    <div class="login-quote">"The computer cost $10,600. The apron cost $28. Her name was not listed."</div>
+
+    <div class="disclaimer">
+      <div class="disclaimer-title">⚠ Data &amp; Privacy Notice</div>
+      <div class="disclaimer-body">This survey collects anonymous responses for academic research on invisible labor, gender, and technology. <strong style="color:#d4a030">Your real identity is never required.</strong> No personal data (email, location, device info) is collected. By continuing you consent to your anonymous responses being used for research and educational purposes.</div>
+    </div>
+
+    <label class="field-label">Your anonymous avatar name</label>
+    <div class="avatar-row">
+      <div class="avatar-preview" id="avatar-display">…generating</div>
+      <button class="btn-gen" onclick="generateAvatar()" title="Generate new name">🔀</button>
+    </div>
+    <p class="avatar-hint">✦ This random name groups your responses anonymously. Hit 🔀 for a new one, or type your own below.</p>
+
+    <label class="field-label" for="uname">Or enter your own name / alias (optional)</label>
+    <input type="text" class="login-input" id="uname" placeholder="e.g. Observer 1, Maya, Anonymous…" maxlength="40" autocomplete="off">
+
+    <div class="gender-select-wrap">
+      <label class="field-label">Gender identity (optional — for demographic data)</label>
+      <div class="gender-chips" id="gender-chips">
+        <div class="gender-chip" onclick="selectGender(this,'Woman')">Woman</div>
+        <div class="gender-chip" onclick="selectGender(this,'Man')">Man</div>
+        <div class="gender-chip" onclick="selectGender(this,'Non-binary')">Non-binary</div>
+        <div class="gender-chip" onclick="selectGender(this,'Genderqueer/fluid')">Genderqueer/fluid</div>
+        <div class="gender-chip" onclick="selectGender(this,'Agender')">Agender</div>
+        <div class="gender-chip" onclick="selectGender(this,'Two-Spirit')">Two-Spirit</div>
+        <div class="gender-chip" onclick="selectGender(this,'Gender non-conforming')">Gender non-conforming</div>
+        <div class="gender-chip" onclick="selectGender(this,'Prefer not to say')">Prefer not to say</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="enterApp()">Enter the Survey →</button>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+
+<header class="app-header">
+  <div class="header-logo">Kitchen Computer · 1969</div>
+  <div class="progress-pill">Progress <span class="progress-num" id="hdr-prog">0 / 0</span></div>
+  <div class="live-pill"><div class="live-dot"></div>Live</div>
+  <button class="btn-hdr" id="pdf-btn" onclick="exportPDF()">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Save PDF
+  </button>
+  <button class="btn-hdr" id="csv-btn" onclick="downloadCSV()">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Save CSV
+  </button>
+  <button class="btn-hdr reset-btn" onclick="showResetModal()">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.45"/></svg>
+    Reset
+  </button>
+  <div class="user-badge" id="user-badge" style="display:none">
+    <div class="user-avatar" id="u-init">?</div>
+    <span id="u-name">—</span>
+  </div>
+</header>
+
+<div class="prog-bar-wrap">
+  <div class="prog-label"><span>Survey Completion</span><span id="prog-pct">0%</span></div>
+  <div class="prog-bar-track"><div class="prog-bar-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">✦ Visible Labor · Advertisement Analysis</div>
+  <h1 class="hero-title">"If only she can cook<br>as well as Honeywell<br>can compute"</h1>
+  <div class="hero-quote">"The computer cost $10,600. The apron cost $28. Her name was not listed."</div>
+  <p class="hero-sub">Look closely at this 1969 Neiman-Marcus advertisement. The woman in the image is performing complex, skilled, invisible work. This survey asks you to see it. Answer each question across six modules as you study the image — results update live as others respond.</p>
+</div>
+
+<!-- IMAGE -->
+<div class="video-wrap">
+  <div class="video-card">
+    <img
+      src="presentation-labor-kitchen-computer.png"
+      alt="1969 Neiman-Marcus Kitchen Computer advertisement — Honeywell H316"
+      style="width:100%;display:block;object-fit:contain;max-height:560px;background:#080004;"
+    >
+    <div class="video-label" style="justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+      <span style="display:flex;align-items:center;gap:.4rem;"><span>◈</span><span>1969 Neiman-Marcus Kitchen Computer · Honeywell H316</span></span>
+      <span style="display:flex;align-items:center;gap:1rem;flex-shrink:0;">
+        <a
+          href="presentation-labor-kitchen-computer.png"
+          target="_blank"
+          rel="noopener"
+          style="font-family:var(--fh);font-style:italic;font-size:.78rem;color:var(--deep);text-decoration:underline;text-underline-offset:3px;white-space:nowrap;"
+        >Open full image ↗</a>
+        <a
+          href="https://www.computerhistory.org/revolution/minicomputers/11/362"
+          target="_blank"
+          rel="noopener"
+          style="font-family:var(--fh);font-style:italic;font-size:.78rem;color:var(--deep);text-decoration:underline;text-underline-offset:3px;white-space:nowrap;"
+        >Computer History Museum ↗</a>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- INSTRUCTIONS -->
+<div class="instructions">
+  <div class="instr-card">
+    <div class="instr-title">✦ How to complete this survey</div>
+    <ul class="instr-list">
+      <li><div class="instr-dot"></div><span>Study the image above carefully — <strong>look at the figure, her body, her expression, her relationship to the machine</strong> before answering.</span></li>
+      <li><div class="instr-dot"></div><span>Answer <strong>all questions</strong> in each of the six modules below. Your responses are saved automatically.</span></li>
+      <li><div class="instr-dot"></div><span>There are no wrong answers — this is research about perception, not a test.</span></li>
+      <li><div class="instr-dot"></div><span>After completing all modules, a <strong>reveal</strong> will appear with live aggregate results.</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTIONS -->
+<div class="sections" id="sections"></div>
+
+<!-- LIVE RESULTS -->
+<div class="results-section" id="results-section">
+  <div class="results-card">
+    <div class="results-hd">
+      <span style="font-size:1.2rem">◈</span>
+      <span class="results-title">Live Results · All Respondents</span>
+      <div class="live-pill" style="margin-left:auto"><div class="live-dot"></div>Live</div>
+    </div>
+    <p class="results-sub">Results update in real time as more participants respond. Each chart shows how <strong>all respondents</strong> answered — not just you.</p>
+    <div class="res-stat-row" id="overall-stats"></div>
+    <div class="chart-h260"><canvas id="chart-overall"></canvas></div>
+    <div class="sec-results-grid" id="sec-results-grid"></div>
+    <button class="btn-export" id="export-btn" onclick="exportPDF()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export Charts + My Responses as PDF
+    </button>
+  </div>
+</div>
+
+<!-- PDF OVERLAY -->
+<div id="pdf-ov"><div class="pdf-spin"></div><div class="pdf-msg" id="pdf-msg">Composing report…</div></div>
+
+<!-- REVEAL -->
+<div id="reveal-section">
+  <div class="reveal-card">
+    <div class="reveal-eyebrow">✦ The Advertisement Reveals</div>
+    <div class="reveal-title">The Work Was in the Image.<br>It Was Never Listed.</div>
+
+    <div class="reveal-stats" id="reveal-stats"></div>
+
+    <div class="irony-blocks">
+      <div class="irony-block">
+        <div class="irony-head">◉ The Invisible Calculation</div>
+        <div class="irony-body">The advertisement promises the computer will help her calculate. She is already calculating — continuously, without the computer, without recognition. Posture, expression, breath, weight, gaze: each held to specification, all invisible in the final image.</div>
+      </div>
+      <div class="irony-block alt">
+        <div class="irony-head">◈ The Cost That Was Not Listed</div>
+        <div class="irony-body">The computer cost $10,600. The apron cost $28. The labor of appearing effortless — the calibrated smile, the held posture, the emotional conversion from discomfort to ease — was not listed. It was the most essential work in the image.</div>
+      </div>
+      <div class="irony-block alt2">
+        <div class="irony-head">◆ What Machines Cannot Do</div>
+        <div class="irony-body">The Honeywell H316 could compute menus. It could not produce the image that sold it. The work that is hardest to automate — embodied, relational, emotional — remains the work that is least compensated and least recognized, in 1969 and now.</div>
+      </div>
+    </div>
+
+    <div class="answer-chips" id="answer-chips"></div>
+
+    <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">
+      ✦ Advance to Next Task
+    </a>
+  </div>
+</div>
+
+<!-- RESET MODAL -->
+<div id="reset-modal">
+  <div class="reset-card">
+    <div class="reset-title">Admin Reset</div>
+    <div class="reset-body">This will permanently delete <strong>all votes</strong> from Firestore across every module and question. This cannot be undone. Enter the admin password to continue.</div>
+    <input type="password" class="reset-input" id="reset-pw" placeholder="Admin password…" onkeydown="if(event.key==='Enter')confirmReset()">
+    <div class="reset-err" id="reset-err">✗ Incorrect password. Try again.</div>
+    <div class="reset-btns">
+      <button class="btn-cancel" onclick="closeResetModal()">Cancel</button>
+      <button class="btn-confirm-reset" id="btn-confirm-reset" onclick="confirmReset()">Reset All Data</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+/* ══ PARTICLES ══ */
+(function(){
+  const wrap=document.getElementById('particles');
+  const chars=['✦','·','◦','✿','◇','—','∘','˚','◈'];
+  for(let i=0;i<22;i++){
+    const s=document.createElement('span');s.className='pt';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-50+'px';
+    s.style.fontSize=(7+Math.random()*9)+'px';
+    s.style.color=`hsl(${330+Math.random()*35},${50+Math.random()*30}%,${55+Math.random()*28}%)`;
+    s.style.animationDuration=(10+Math.random()*16)+'s';
+    s.style.animationDelay=(Math.random()*16)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ══ AVATAR ══ */
+const AVT_ADJ=['Velvet','Crimson','Petal','Ivory','Garnet','Scarlet','Dusk','Onyx','Silver','Amber','Carmine','Blush','Russet','Sable','Lilac','Muted','Hollow','Faded','Woven','Gilded'];
+const AVT_NOUN=['Measure','Archive','Witness','Record','Labor','Gesture','Ledger','Margin','Cipher','Register','Thread','Absence','Notation','Remnant','Catalog','Silence','Gloss','Trace','Figure','Index'];
+let currentAvatar='';
+function generateAvatar(){
+  const adj=AVT_ADJ[Math.floor(Math.random()*AVT_ADJ.length)];
+  const noun=AVT_NOUN[Math.floor(Math.random()*AVT_NOUN.length)];
+  currentAvatar=`${adj}${noun}${100+Math.floor(Math.random()*900)}`;
+  const el=document.getElementById('avatar-display');
+  if(el){el.textContent=currentAvatar;}
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  generateAvatar();
+  const i=document.getElementById('uname');
+  if(i)i.addEventListener('keydown',e=>{if(e.key==='Enter')enterApp();});
+});
+
+/* ══ GENDER ══ */
+let selectedGender='';
+function selectGender(el,val){
+  document.querySelectorAll('.gender-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedGender=val;
+}
+
+/* ══ FIREBASE ══ */
+let db, fsSetDoc, fsDoc, fsOnSnapshot, fsWriteBatch, fsGetDocs, fsCollection;
+let fbReady=false, isDemo=false;
+let username='';
+
+window.addEventListener('firebase-ready',()=>{
+  db=window.db;
+  if(db){ fsSetDoc=window.fsSetDoc;fsDoc=window.fsDoc;fsOnSnapshot=window.fsOnSnapshot;fsWriteBatch=window.fsWriteBatch;fsGetDocs=window.fsGetDocs;fsCollection=window.fsCollection;fbReady=true; }
+  else { fbReady=true;isDemo=true; }
+});
+
+function sk(n){return n.replace(/[^a-zA-Z0-9_-]/g,'_').substring(0,40);}
+
+function enterApp(){
+  const custom=document.getElementById('uname').value.trim();
+  username=custom||currentAvatar||'Anonymous';
+  document.getElementById('u-name').textContent=username;
+  document.getElementById('u-init').textContent=username[0].toUpperCase();
+  document.getElementById('user-badge').style.display='flex';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  if(fbReady){initSurvey();}else{window.addEventListener('firebase-ready',()=>initSurvey());}
+}
+
+/* ══ SURVEY DATA ══ */
+const SURVEY=[
+  {theme:"The Body as Argument",icon:"◈",slug:"body",
+    intro:`The woman in this advertisement appears effortless. But effortlessness is itself a construction — one that requires meticulous, invisible work. The position of every limb, the angle of every joint, the tilt of her head: all of it communicates a carefully calibrated message. Look closely at what the image asks her body to do.`,
+    questions:[
+      {text:"Does the woman in this image appear to be working hard?",context:"Achieving this pose requires over 40 simultaneous physical adjustments — posture, expression, breath, weight distribution, garment management — all calibrated to read as zero effort."},
+      {text:"Can you see the effort it takes to hold this position?",context:"\"Visible_Effort == 0 — This was the requirement. This is the work.\" The entire labor of the image is designed to be invisible to the viewer."},
+      {text:"Is the physical work required to pose like this demanding?",context:"Extended holds, heeled footwear, multiple garment layers, studio heat, and repeated takes — all while maintaining a consistent smile calibrated to ±5% intensity."},
+      {text:"Does the image look natural, as if the woman just happens to be standing there?",context:"\"The naturalness of the image is a product of the precision of the direction and the precision of her execution of that direction and her ability to make that execution look like no execution at all.\""},
+      {text:"Is the labor visible in this advertisement?",context:"The ad does not list her name, her pay, or her labor. It lists the computer at $10,600 and the apron at $28."}
+    ]},
+  {theme:"The Smile as Labor",icon:"◉",slug:"smile",
+    intro:`Look at her smile. It is not an expression of happiness — it is a precisely held position. Research into advertising photography documents the smile in terms of named facial muscles: zygomaticus major, orbicularis oculi, risorius — each requiring specific percentage activation. A smile held across a shoot involves hundreds of recalibration cycles. This is precision emotional labor.`,
+    questions:[
+      {text:"Is maintaining a smile like this across an entire photoshoot physically demanding?",context:"\"This is not about happiness. This is about calibration.\" The smile in an advertisement must sit within a precise emotional range — never too much, never too little."},
+      {text:"Is this kind of emotional management — converting real feelings into performed ones for the camera — a form of labor?",context:"The emotion conversion required includes: fatigue → elegance, discomfort → ease, anxiety → calm competence. This is not passive. It is continuous active work."},
+      {text:"Should this kind of labor be recognized and compensated?",context:"This advertisement credits the computer, the cookbook, and the apron. It does not credit the woman whose body and expression make the entire image work."},
+      {text:"Do you ever have to manage your emotions at work — appearing calm, cheerful, or untroubled when you are not?",context:"Emotional labor: the management of feeling to create a publicly observable facial and bodily display. First described by sociologist Arlie Hochschild, 1983."},
+      {text:"Is this kind of work — emotional presentation — more often expected of women than men?",context:"In 1969, the year of this advertisement, the women's liberation movement was at its height. This image is a specific ideological response to that moment."}
+    ]},
+  {theme:"Cognitive & Invisible Labor",icon:"◎",slug:"cognitive",
+    intro:`While the advertisement promises the computer will help her calculate, she is already calculating — continuously, without the computer, without recognition. Every second in front of the camera requires active spatial, social, bodily, and strategic calculation. The machine is in the frame. So is she. Only one of them is doing invisible cognitive work.`,
+    questions:[
+      {text:"Is continuous cognitive monitoring of one's own body — posture, expression, breath, gaze — a form of work?",context:"Active calculations required in this image include: spatial (where is the frame?), social (what does this communicate?), bodily (is the posture held?), temporal (how long has it been?), and strategic (what is the message?). All running simultaneously."},
+      {text:"Is this kind of cognitive self-monitoring harder to automate than, say, data entry?",context:"The Honeywell H316 can compute menus. Can it perform the 40 simultaneous cognitive and physical systems required to make this image? This is the question at the heart of what AI can and cannot replace."},
+      {text:"Is it meaningful that the ad promises the computer will help her with tasks, while she is already performing complex invisible tasks to make the ad work?",context:"\"The advertisement promises the computer will help her calculate. She is already calculating. Continuously. Without the computer.\""},
+      {text:"Is 'invisible labor' — work that is essential but unrecognized — a real economic and social problem?",context:"Unpaid domestic labor, care work, and emotional management have been estimated to account for trillions of dollars of uncounted economic value globally."},
+      {text:"Is work that involves embodied, relational, and emotional intelligence harder to automate?",context:"Researchers in AI and labor economics distinguish between routine cognitive tasks (more automatable) and non-routine interpersonal and physical tasks (less automatable). Where does the work in this image fall?"}
+    ]},
+  {theme:"Women in Technology",icon:"◆",slug:"women-tech",
+    intro:`This advertisement places a woman in a kitchen, adjacent to technology — not creating it. She is the context that makes the machine legible and desirable. But women have always created technology. This module asks you to consider what this image erases, and what it encodes about who belongs in technology.`,
+    questions:[
+      {text:"Are you aware that women served as human computers — performing complex calculations by hand — before electronic computers existed?",context:"Women computers at NASA, at Los Alamos, at Bletchley Park performed the mathematical labor that made space travel, nuclear physics, and code-breaking possible. Many were uncredited."},
+      {text:"Do you know that women wrote much of the early programming for electronic computers?",context:"Ada Lovelace wrote the first algorithm (1843). Grace Hopper invented the compiler and COBOL. The ENIAC programmers — Kay McNulty, Betty Jennings, Frances Bilas, Elizabeth Snyder, Ruth Lichterman, Marilyn Wescoff — are rarely mentioned alongside the machine they programmed."},
+      {text:"Does placing a woman decoratively next to a computer — rather than showing her building or programming it — shape how we imagine who belongs in technology?",context:"Representation in advertising shapes who sees themselves as a potential inventor, designer, or engineer. This image positions women as users and aesthetic context — not authors."},
+      {text:"Does the technology industry today adequately recognize and include women's contributions?",context:"As of recent surveys, women hold approximately 26% of computing jobs in the US, down from 37% in 1995. The pipeline and retention problems are well-documented."},
+      {text:"Would technology be designed differently if it were designed by a more diverse group of people?",context:"Voice recognition trained primarily on male voices, crash-test dummies sized for male bodies, medical AI trained on male patient data — these are documented examples of design that failed to account for diverse users."},
+      {text:"Should the labor of women who contributed to technology — as human computers, programmers, and inventors — be better taught and recognized?",context:"\"The work that was not listed was the most essential work.\" This is true both of the woman in this advertisement and of the women who built the technological world we inhabit."}
+    ]},
+  {theme:"The Advertisement's Argument",icon:"◇",slug:"advertising",
+    intro:`Every advertisement makes an argument. This one's argument — made through her body, her posture, her smile, her spatial relationship to the machine — is about what femininity, technology, and domestic life should look like in 1969. Study the image as a rhetorical object. What is it saying, and how is it saying it?`,
+    questions:[
+      {text:"Does this image suggest that the computer is a tool for liberation — freeing the woman from domestic drudgery?",context:"The ad copy promises: meal planning, menu calculation, checkbook balancing. But she is already performing immense labor to make the ad work. The computer is positioned as solution; her invisible labor is the problem it claims to solve."},
+      {text:"Does placing her in a kitchen — not a laboratory, office, or engineering space — limit what the image says about women and technology?",context:"\"She is not a competitor to the machine. She is its context. Without her, the computer is a machine. With her, the computer is an upgrade to a life.\""},
+      {text:"Is it significant that the headline reads 'If she can only cook as well as Honeywell can compute' — comparing a woman's skill to a machine's performance?",context:"This comparison positions the machine as the benchmark and the woman as the aspirant — evaluated against a standard she did not set. She must smile at her own instrumentalization."},
+      {text:"Can you imagine a version of this advertisement where the woman is designing or programming the computer, rather than using it in a kitchen?",context:"In 1969, women were already programming computers professionally. The choice to place the computer in the kitchen and cast the woman as a domestic user was an ideological choice, not a practical one."},
+      {text:"Has contemporary advertising moved past this kind of gendered framing of technology?",context:"Think about current advertisements for phones, laptops, smart home devices, AI assistants. Who is shown using them? Who is shown building them? Who is the assumed subject?"}
+    ]},
+  {theme:"Automation & What Cannot Be Automated",icon:"○",slug:"automation",
+    intro:`The Honeywell H316 was meant to automate meal planning. It could compute menus. It could not produce the image that sold it. The woman's labor — physical, cognitive, emotional — was required to make the machine legible and desirable. This module asks what can be automated, what cannot, and what that asymmetry reveals about how we value work.`,
+    questions:[
+      {text:"Can the kind of work visible in this image — managing one's appearance, expression, and emotional display for the camera — be automated?",context:"Achieving what this image shows requires posture, calibrated expression, garment management, breath control, and continuous emotional adjustment. These are not tasks a machine can perform on a human body."},
+      {text:"Do the types of work that are hardest to automate tend to be the most undervalued?",context:"Care work, domestic labor, emotional labor, and relational work are consistently harder to automate and consistently less well-compensated than routine cognitive tasks that can be programmed."},
+      {text:"Is there something important — something worth preserving — in work that requires human presence, embodiment, and emotional intelligence?",context:"The work encoded in this image cannot be done by a machine. Does that make it more valuable, less valuable, or differently valuable than machine-executable work?"},
+      {text:"Does society adequately compensate work that requires emotional and relational intelligence?",context:"Nursing, teaching, caregiving, social work — these professions require significant emotional and relational labor. Are they paid accordingly?"},
+      {text:"Does looking at this image change your understanding of what counts as 'skilled work'?",context:"\"The computer cost $10,600. The woman cost the labor of making herself legible, aspirational, non-threatening, capable, feminine, domestic, graceful, and smiling. The cost of this labor was not listed.\""}
+    ]}
+];
+
+const totalQ=SURVEY.reduce((a,t)=>a+t.questions.length,0);
+
+/* ══ STATE ══ */
+let votes={}, myVotes={}, liveCharts={}, unsubs=[];
+SURVEY.forEach((_,ti)=>{votes[ti]={};myVotes[ti]={};SURVEY[ti].questions.forEach((_,qi)=>{votes[ti][qi]={yes:0,no:0,neutral:0};});});
+
+function answeredCount(){return SURVEY.reduce((a,_,ti)=>a+SURVEY[ti].questions.filter((_,qi)=>myVotes[ti][qi]).length,0);}
+
+/* ══ INIT ══ */
+function initSurvey(){
+  isDemo=!db;
+  buildSections();
+  subscribeAll();
+  document.getElementById('hdr-prog').textContent=`0 / ${totalQ}`;
+}
+
+/* ══ FIREBASE SUBSCRIBE ══ */
+function subscribeAll(){
+  if(isDemo)return;
+  unsubs.forEach(u=>u());unsubs=[];
+  SURVEY.forEach((_,ti)=>SURVEY[ti].questions.forEach((_,qi)=>{
+    const u=fsOnSnapshot(fsDoc(db,'kc_responses',`t${ti}_q${qi}`),snap=>{
+      if(snap.exists()){const d=snap.data();votes[ti][qi]={yes:d.yes||0,no:d.no||0,neutral:d.neutral||0};}
+      else{votes[ti][qi]={yes:0,no:0,neutral:0};}
+      updateBar(ti,qi);
+      if(document.getElementById('results-section').classList.contains('show'))refreshAllCharts();
+    });
+    unsubs.push(u);
+  }));
+}
+
+/* ══ BUILD SECTIONS ══ */
+function buildSections(){
+  const cont=document.getElementById('sections');
+  cont.innerHTML='';
+  SURVEY.forEach((t,ti)=>{
+    const block=document.createElement('div');
+    block.className='section-block';
+    block.id=`sec-${ti}`;
+    const dots=t.questions.map((_,qi)=>`<div class="sdot" id="dot-${ti}-${qi}"></div>`).join('');
+    block.innerHTML=`
+      <div class="section-num">Module ${ti+1} of ${SURVEY.length}</div>
+      <div class="section-hd">
+        <span class="section-icon">${t.icon}</span>
+        <span class="section-title">${t.theme}</span>
+        <span class="section-badge" id="badge-${ti}">0 / ${t.questions.length}</span>
+      </div>
+      <div class="sec-prog"><div class="sec-prog-dots" id="dots-${ti}">${dots}</div></div>
+      ${t.intro?`<div class="section-intro">${t.intro}</div>`:''}
+      <div class="q-list" id="ql-${ti}"></div>
+    `;
+    cont.appendChild(block);
+    const ql=document.getElementById(`ql-${ti}`);
+    t.questions.forEach((q,qi)=>{
+      const card=document.createElement('div');
+      card.className='qcard';card.id=`qc-${ti}-${qi}`;
+      card.innerHTML=`
+        <div class="qcard-code">Module ${ti+1} · Question ${qi+1}</div>
+        <div class="qcard-top">
+          <div class="qnum-badge">${qi+1}</div>
+          <div class="qtext">${q.text}</div>
+        </div>
+        ${q.context?`<div class="qcontext">${q.context}</div>`:''}
+        <span class="vote-lbl">Your response</span>
+        <div class="vbtns">
+          <button class="vbtn yb" id="vby-${ti}-${qi}" onclick="castVote(${ti},${qi},'yes')">✓ Yes</button>
+          <button class="vbtn nb" id="vbn-${ti}-${qi}" onclick="castVote(${ti},${qi},'no')">✗ No</button>
+          <button class="vbtn neub" id="vbne-${ti}-${qi}" onclick="castVote(${ti},${qi},'neutral')">— Unsure</button>
+        </div>
+        <div class="bar-area">
+          <div class="brow"><div class="blbl y">Yes</div><div class="btrack"><div class="bfill y" id="by-${ti}-${qi}" style="width:0%"></div></div><div class="bcnt" id="cy-${ti}-${qi}">0</div></div>
+          <div class="brow"><div class="blbl n">No</div><div class="btrack"><div class="bfill n" id="bn-${ti}-${qi}" style="width:0%"></div></div><div class="bcnt" id="cn-${ti}-${qi}">0</div></div>
+          <div class="brow"><div class="blbl neu">?</div><div class="btrack"><div class="bfill neu" id="bne-${ti}-${qi}" style="width:0%"></div></div><div class="bcnt" id="cne-${ti}-${qi}">0</div></div>
+          <div class="qtot" id="qt-${ti}-${qi}">0 responses</div>
+        </div>`;
+      ql.appendChild(card);
+    });
+  });
+  updateProgress();
+}
+
+/* ══ CAST VOTE ══ */
+async function castVote(ti,qi,choice){
+  const prev=myVotes[ti][qi];
+  if(prev===choice)return;
+  const v=votes[ti][qi];
+  if(prev)v[prev]=Math.max(0,v[prev]-1);
+  v[choice]++;
+  myVotes[ti][qi]=choice;
+
+  // refresh buttons
+  ['yes','no','neutral'].forEach(c=>{
+    const map={yes:`vby-${ti}-${qi}`,no:`vbn-${ti}-${qi}`,neutral:`vbne-${ti}-${qi}`};
+    const btn=document.getElementById(map[c]);
+    if(btn){btn.classList.remove('voted');if(c===choice)btn.classList.add('voted');}
+  });
+
+  const card=document.getElementById(`qc-${ti}-${qi}`);
+  if(card)card.classList.add('answered');
+
+  // dot
+  const dot=document.getElementById(`dot-${ti}-${qi}`);
+  if(dot)dot.classList.add('done');
+
+  // badge
+  const secDone=SURVEY[ti].questions.filter((_,q)=>myVotes[ti][q]).length;
+  const badge=document.getElementById(`badge-${ti}`);
+  if(badge){badge.textContent=`${secDone} / ${SURVEY[ti].questions.length}`;if(secDone===SURVEY[ti].questions.length)badge.classList.add('done');}
+
+  updateBar(ti,qi);
+  updateProgress();
+  checkComplete();
+
+  if(document.getElementById('results-section').classList.contains('show'))refreshAllCharts();
+
+  if(isDemo){showToast('Demo mode — add Firebase config to enable live sync');return;}
+  try{
+    await fsSetDoc(fsDoc(db,'kc_responses',`t${ti}_q${qi}`),
+      {[`users.${sk(username)}`]:choice,yes:v.yes,no:v.no,neutral:v.neutral},{merge:true});
+  }catch(e){console.error(e);}
+}
+
+/* ══ UPDATE BAR ══ */
+function updateBar(ti,qi){
+  const v=votes[ti][qi];
+  const tot=v.yes+v.no+v.neutral;
+  const pct=(n)=>tot?Math.round(n/tot*100):0;
+  const sw=(id,val)=>{const e=document.getElementById(id);if(e)e.style.width=val+'%';};
+  const st=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
+  sw(`by-${ti}-${qi}`,pct(v.yes));sw(`bn-${ti}-${qi}`,pct(v.no));sw(`bne-${ti}-${qi}`,pct(v.neutral));
+  st(`cy-${ti}-${qi}`,v.yes);st(`cn-${ti}-${qi}`,v.no);st(`cne-${ti}-${qi}`,v.neutral);
+  st(`qt-${ti}-${qi}`,tot===1?'1 response':tot+' responses');
+}
+
+/* ══ PROGRESS ══ */
+function updateProgress(){
+  const done=answeredCount();
+  const pct=Math.round(done/totalQ*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('hdr-prog').textContent=`${done} / ${totalQ}`;
+}
+
+/* ══ CHECK COMPLETE ══ */
+function checkComplete(){
+  if(answeredCount()<totalQ)return;
+  const revEl=document.getElementById('reveal-section');
+  if(revEl.classList.contains('show'))return;
+  buildResultsPanel();
+  buildReveal();
+  revEl.classList.add('show');
+  setTimeout(()=>document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}),200);
+  showToast('✦ All questions answered — results & reveal below');
+}
+
+/* ══ RESULTS PANEL ══ */
+function totals(){
+  let ty=0,tn=0,tne=0;
+  SURVEY.forEach((_,ti)=>SURVEY[ti].questions.forEach((_,qi)=>{ty+=votes[ti][qi].yes;tn+=votes[ti][qi].no;tne+=votes[ti][qi].neutral;}));
+  return{ty,tn,tne,tt:ty+tn+tne};
+}
+
+function buildResultsPanel(){
+  const{ty,tn,tne,tt}=totals();
+  document.getElementById('overall-stats').innerHTML=`
+    <div class="res-stat"><div class="res-stat-num y">${ty}</div><div class="res-stat-lbl">Total Yes</div></div>
+    <div class="res-stat"><div class="res-stat-num n">${tn}</div><div class="res-stat-lbl">Total No</div></div>
+    <div class="res-stat"><div class="res-stat-num neu">${tne}</div><div class="res-stat-lbl">Unsure</div></div>
+    <div class="res-stat"><div class="res-stat-num">${tt}</div><div class="res-stat-lbl">Responses</div></div>
+    <div class="res-stat"><div class="res-stat-num">${tt?Math.round(ty/tt*100):0}%</div><div class="res-stat-lbl">Yes Rate</div></div>
+  `;
+  buildOverallChart();
+  buildSectionCharts();
+  document.getElementById('results-section').classList.add('show');
+}
+
+function buildOverallChart(){
+  const ctx=document.getElementById('chart-overall').getContext('2d');
+  if(liveCharts['overall']){try{liveCharts['overall'].destroy();}catch(e){}}
+  liveCharts['overall']=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:SURVEY.map(t=>t.theme.length>18?t.theme.substring(0,16)+'…':t.theme),
+      datasets:[
+        {label:'Yes',data:SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].yes,0)),backgroundColor:'rgba(192,35,80,.72)',borderColor:'#c02350',borderWidth:1.5,borderRadius:4},
+        {label:'No', data:SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].no,0)), backgroundColor:'rgba(90,0,28,.75)', borderColor:'#640a20',borderWidth:1.5,borderRadius:4},
+        {label:'Unsure',data:SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].neutral,0)),backgroundColor:'rgba(106,32,64,.65)',borderColor:'#6a2040',borderWidth:1.5,borderRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'rgba(240,200,215,.65)',font:{family:"'Jost',sans-serif",size:11,weight:'500'}}}},
+      scales:{
+        x:{ticks:{color:'rgba(220,170,190,.45)',font:{size:9},maxRotation:30},grid:{color:'rgba(180,30,60,.05)'}},
+        y:{ticks:{color:'rgba(220,170,190,.45)',font:{size:10}},grid:{color:'rgba(180,30,60,.05)'},beginAtZero:true}
+      }}
+  });
+}
+
+function buildSectionCharts(){
+  const grid=document.getElementById('sec-results-grid');
+  grid.innerHTML='';
+  SURVEY.forEach((t,ti)=>{
+    const tot=t.questions.reduce((s,_,qi)=>s+votes[ti][qi].yes+votes[ti][qi].no+votes[ti][qi].neutral,0);
+    const card=document.createElement('div');card.className='sec-res-card';card.id=`src-${ti}`;
+    card.innerHTML=`<div class="sec-res-hd"><span class="sec-res-icon">${t.icon}</span><span class="sec-res-title">${t.theme}</span><span class="sec-res-tot" id="srt-${ti}">${tot} response${tot!==1?'s':''}</span></div><div class="chart-h150"><canvas id="chart-sec-${ti}"></canvas></div>`;
+    grid.appendChild(card);
+    const tips=t.questions.map(q=>q.text.length>62?q.text.substring(0,59)+'…':q.text);
+    const ctx=document.getElementById(`chart-sec-${ti}`).getContext('2d');
+    liveCharts[`sec-${ti}`]=new Chart(ctx,{
+      type:'bar',
+      data:{labels:t.questions.map((_,i)=>`Q${i+1}`),
+        datasets:[
+          {label:'Yes',data:t.questions.map((_,qi)=>votes[ti][qi].yes),backgroundColor:'rgba(192,35,80,.72)',borderColor:'#c02350',borderWidth:1,borderRadius:3,stack:'s'},
+          {label:'No', data:t.questions.map((_,qi)=>votes[ti][qi].no), backgroundColor:'rgba(90,0,28,.75)',borderColor:'#640a20',borderWidth:1,borderRadius:3,stack:'s'},
+          {label:'?',  data:t.questions.map((_,qi)=>votes[ti][qi].neutral),backgroundColor:'rgba(106,32,64,.62)',borderColor:'#6a2040',borderWidth:1,borderRadius:3,stack:'s'}
+        ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{title:i=>`Q${i[0].dataIndex+1}: ${tips[i[0].dataIndex]}`,label:i=>`${i.dataset.label}: ${i.raw}`}}},
+        scales:{x:{stacked:true,ticks:{color:'rgba(220,170,190,.45)',font:{size:8}},grid:{color:'rgba(180,30,60,.04)'}},y:{stacked:true,ticks:{color:'rgba(220,170,190,.45)',font:{size:9}},grid:{color:'rgba(180,30,60,.04)'},beginAtZero:true}}}
+    });
+  });
+}
+
+function refreshAllCharts(){
+  const{ty,tn,tne,tt}=totals();
+  const os=document.getElementById('overall-stats');
+  if(os)os.innerHTML=`
+    <div class="res-stat"><div class="res-stat-num y">${ty}</div><div class="res-stat-lbl">Total Yes</div></div>
+    <div class="res-stat"><div class="res-stat-num n">${tn}</div><div class="res-stat-lbl">Total No</div></div>
+    <div class="res-stat"><div class="res-stat-num neu">${tne}</div><div class="res-stat-lbl">Unsure</div></div>
+    <div class="res-stat"><div class="res-stat-num">${tt}</div><div class="res-stat-lbl">Responses</div></div>
+    <div class="res-stat"><div class="res-stat-num">${tt?Math.round(ty/tt*100):0}%</div><div class="res-stat-lbl">Yes Rate</div></div>`;
+  const oc=liveCharts['overall'];
+  if(oc){oc.data.datasets[0].data=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].yes,0));oc.data.datasets[1].data=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].no,0));oc.data.datasets[2].data=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].neutral,0));oc.update('none');}
+  SURVEY.forEach((t,ti)=>{
+    const sc=liveCharts[`sec-${ti}`];
+    if(sc){sc.data.datasets[0].data=t.questions.map((_,qi)=>votes[ti][qi].yes);sc.data.datasets[1].data=t.questions.map((_,qi)=>votes[ti][qi].no);sc.data.datasets[2].data=t.questions.map((_,qi)=>votes[ti][qi].neutral);sc.update('none');}
+    const tot=t.questions.reduce((s,_,qi)=>s+votes[ti][qi].yes+votes[ti][qi].no+votes[ti][qi].neutral,0);
+    const el=document.getElementById(`srt-${ti}`);if(el)el.textContent=`${tot} response${tot!==1?'s':''}`;
+  });
+}
+
+/* ══ REVEAL ══ */
+function buildReveal(){
+  const{ty,tn,tne,tt}=totals();
+  const yRate=tt?Math.round(ty/tt*100):0;
+  document.getElementById('reveal-stats').innerHTML=`
+    <div class="stat-pill"><div class="stat-num">${ty}</div><div class="stat-lbl">Total Yes</div></div>
+    <div class="stat-pill"><div class="stat-num">${yRate}%</div><div class="stat-lbl">Yes Rate</div></div>
+    <div class="stat-pill"><div class="stat-num">${tt}</div><div class="stat-lbl">Responses</div></div>
+    <div class="stat-pill"><div class="stat-num">${selectedGender||'—'}</div><div class="stat-lbl">Your Gender Identity</div></div>
+  `;
+  const chips=[];
+  SURVEY.forEach((t,ti)=>t.questions.forEach((q,qi)=>{
+    const mv=myVotes[ti][qi];
+    if(mv){
+      const short=q.text.length>35?q.text.substring(0,32)+'…':q.text;
+      chips.push(`<span class="ans-chip ${mv==='yes'?'y':mv==='no'?'n':''}">${short}</span>`);
+    }
+  }));
+  document.getElementById('answer-chips').innerHTML=chips.slice(0,14).join('');
+}
+
+/* ══ CSV EXPORT ══ */
+function downloadCSV(){
+  const rows=[['Participant','GenderIdentity','Module','ModuleTheme','QuestionNum','QuestionText','YourResponse','YesCount','NoCount','UnsureCount','TotalResponses','Timestamp']];
+  const ts=new Date().toISOString();
+  SURVEY.forEach((t,ti)=>t.questions.forEach((q,qi)=>{
+    const mv=myVotes[ti][qi]||'';
+    const v=votes[ti][qi];
+    rows.push([`"${username}"`,`"${selectedGender||'not provided'}"`,ti+1,`"${t.theme}"`,qi+1,`"${q.text.replace(/"/g,'""')}"`,mv,v.yes,v.no,v.neutral,v.yes+v.no+v.neutral,mv?ts:'']);
+  }));
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`kitchen-computer-${sk(username)}-${Date.now()}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  showToast('✦ Responses saved as CSV');
+}
+
+/* ══ PDF EXPORT ══ */
+async function exportPDF(){
+  const btn=document.getElementById('pdf-btn');btn.disabled=true;
+  const exportBtn=document.getElementById('export-btn');if(exportBtn)exportBtn.disabled=true;
+  const ov=document.getElementById('pdf-ov');const msg=document.getElementById('pdf-msg');ov.classList.add('show');
+  const{jsPDF}=window.jspdf;
+  const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const PW=210,PH=297,M=14,CW=PW-M*2;
+  const sf=(sz,style='normal',r=240,g=200,b=215)=>{pdf.setFontSize(sz);pdf.setFont('helvetica',style);pdf.setTextColor(r,g,b);};
+  const fr=(x,y,w,h,rad,R,G,B)=>{pdf.setFillColor(R,G,B);pdf.roundedRect(x,y,w,h,rad,rad,'F');};
+  const frect=(x,y,w,h,R,G,B)=>{pdf.setFillColor(R,G,B);pdf.rect(x,y,w,h,'F');};
+  const newPage=()=>{pdf.addPage();frect(0,0,PW,PH,16,0,5,3);};
+  const topBar=()=>{frect(0,0,PW,3,192,35,80);};
+
+  // Cover
+  msg.textContent='Building cover…';
+  frect(0,0,PW,PH,16,0,5,3);topBar();
+  sf(26,'bold',240,160,190);pdf.text('Presentation Labor',M,50);
+  sf(11,'normal',192,35,80);pdf.text('Interactive Survey — Results Report',M,60);
+  sf(8,'italic',170,120,150);pdf.text('"Visible_Effort == 0 — This was the requirement. This is the work."',M,72);
+  sf(7.5,'normal',140,80,110);
+  pdf.text(`Respondent: ${username}`,M,84);
+  pdf.text(`Gender Identity: ${selectedGender||'not provided'}`,M,90);
+  pdf.text(`Generated: ${new Date().toLocaleString()}`,M,96);
+  pdf.text(`Total responses: ${answeredCount()} / ${totalQ}`,M,102);
+  const{ty,tn,tne,tt}=totals();
+  fr(M,114,CW,40,3,22,4,14);
+  const cols=[{v:tt,l:'Responses'},{v:ty,l:'Yes',R:192,G:35,B:80},{v:tn,l:'No',R:90,G:0,B:28},{v:tne,l:'Unsure',R:106,G:32,B:64},{v:`${tt?Math.round(ty/tt*100):0}%`,l:'Yes Rate',R:240,G:180,B:210}];
+  cols.forEach((c,i)=>{
+    const bw=CW/5,bx=M+i*bw;
+    sf(13,'bold',c.R||240,c.G||200,c.B||215);pdf.text(String(c.v),bx+bw/2,130,{align:'center'});
+    sf(5.5,'normal',130,60,90);pdf.text(c.l,bx+bw/2,138,{align:'center'});
+  });
+
+  // My responses
+  msg.textContent='Writing your responses…';
+  newPage();topBar();
+  sf(12,'bold',240,160,190);pdf.text('✦ My Responses',M,14);
+  let y=24;
+  SURVEY.forEach((t,ti)=>{
+    if(y>PH-24){newPage();topBar();y=14;}
+    fr(M,y,CW,8,2,45,8,25);sf(8,'bold',240,160,190);pdf.text(`${t.icon}  ${t.theme}`,M+3,y+5.5);y+=12;
+    t.questions.forEach((q,qi)=>{
+      const mv=myVotes[ti][qi];const v=votes[ti][qi];
+      const cardH=15;if(y+cardH>PH-10){newPage();topBar();y=14;}
+      fr(M,y,CW,cardH,2,28,5,18);
+      fr(M+2,y+2.5,8,10,2,70,15,40);sf(6,'bold',192,35,80);pdf.text(`Q${qi+1}`,M+6,y+8.5,{align:'center'});
+      sf(6.5,'normal',215,175,200);const qtxt=q.text.length>72?q.text.substring(0,69)+'…':q.text;pdf.text(qtxt,M+13,y+7,{maxWidth:CW*0.58});
+      const rlbl=mv==='yes'?'YES':mv==='no'?'NO':mv==='neutral'?'UNSURE':'—';
+      const[rR,rG,rB]=mv==='yes'?[192,35,80]:mv==='no'?[90,0,28]:[106,32,64];
+      fr(M+CW-32,y+3.5,30,7,2,rR,rG,rB);sf(6,'bold',240,200,215);pdf.text(rlbl,M+CW-17,y+8.5,{align:'center'});
+      sf(5,'normal',120,55,85);pdf.text(`Y:${v.yes} N:${v.no} ?:${v.neutral}`,M+CW-32,y+13);
+      y+=cardH+2;
+    });y+=3;
+  });
+
+  // Charts
+  msg.textContent='Capturing charts…';
+  const oc=document.getElementById('chart-overall');
+  if(oc){newPage();topBar();sf(11,'bold',240,160,190);pdf.text('◈  Overall Results — All Respondents',M,13);
+    try{const imgData=oc.toDataURL('image/png',1);const ch=CW*(oc.height/oc.width);pdf.addImage(imgData,'PNG',M,20,CW,Math.min(ch,90));}catch(e){}}
+
+  for(const ti of SURVEY.keys()){
+    msg.textContent=`Capturing module ${ti+1} chart…`;
+    const c=document.getElementById(`chart-sec-${ti}`);if(!c)continue;
+    newPage();topBar();sf(10,'bold',240,160,190);
+    pdf.text(`${SURVEY[ti].icon}  ${SURVEY[ti].theme}`,M,13);
+    sf(7,'normal',140,80,110);pdf.text(`Module ${ti+1} · ${SURVEY[ti].questions.length} questions`,M,19);
+    const tips=SURVEY[ti].questions.map((q,qi)=>`Q${qi+1}: ${q.text.substring(0,70)}`);
+    let ky=25;tips.forEach(t=>{if(ky<55){sf(5.5,'normal',150,80,120);pdf.text(t,M,ky,{maxWidth:CW});ky+=4.5;}});
+    try{const imgData=c.toDataURL('image/png',1);const imgY=Math.max(ky+4,28);const ch=CW*(c.height/c.width);pdf.addImage(imgData,'PNG',M,imgY,CW,Math.min(ch,PH-imgY-12));}catch(e){}
+  }
+
+  msg.textContent='Saving…';
+  pdf.save(`kitchen-computer-${sk(username)}-${Date.now()}.pdf`);
+  ov.classList.remove('show');
+  btn.disabled=false;if(exportBtn)exportBtn.disabled=false;
+  showToast('✦ PDF saved');
+}
+
+/* ══ ADMIN RESET ══ */
+const ADMIN_PASSWORD='laborvisible2025';
+function showResetModal(){document.getElementById('reset-modal').classList.add('show');document.getElementById('reset-pw').value='';document.getElementById('reset-err').style.display='none';document.getElementById('btn-confirm-reset').textContent='Reset All Data';document.getElementById('btn-confirm-reset').disabled=false;setTimeout(()=>document.getElementById('reset-pw').focus(),120);}
+function closeResetModal(){document.getElementById('reset-modal').classList.remove('show');}
+async function confirmReset(){
+  const pw=document.getElementById('reset-pw').value;
+  const errEl=document.getElementById('reset-err');
+  if(pw!==ADMIN_PASSWORD){errEl.style.display='block';document.getElementById('reset-pw').value='';document.getElementById('reset-pw').focus();return;}
+  errEl.style.display='none';
+  const btn=document.getElementById('btn-confirm-reset');btn.textContent='Resetting…';btn.disabled=true;
+  if(!isDemo&&db){
+    try{
+      const snap=await fsGetDocs(fsCollection(db,'kc_responses'));
+      let batch=fsWriteBatch(db);let count=0;
+      for(const d of snap.docs){batch.delete(d.ref);count++;if(count===490){await batch.commit();batch=fsWriteBatch(db);count=0;}}
+      if(count>0)await batch.commit();
+      showToast('✦ All votes cleared from Firestore');
+    }catch(e){console.error(e);showToast('⚠ Error: '+e.message);btn.textContent='Reset All Data';btn.disabled=false;return;}
+  }
+  SURVEY.forEach((_,ti)=>{myVotes[ti]={};SURVEY[ti].questions.forEach((_,qi)=>{votes[ti][qi]={yes:0,no:0,neutral:0};});});
+  Object.values(liveCharts).forEach(c=>{try{c.destroy();}catch(e){}});liveCharts={};
+  document.getElementById('results-section').classList.remove('show');
+  document.getElementById('reveal-section').classList.remove('show');
+  buildSections();
+  closeResetModal();
+  showToast('✦ Survey reset complete');
+}
+document.addEventListener('click',e=>{if(e.target===document.getElementById('reset-modal'))closeResetModal();});
+
+/* ══ TOAST ══ */
+let _tt;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3200);}
+</script>
+</body>
+</html>
