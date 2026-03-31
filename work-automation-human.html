@@ -30,6 +30,10 @@
   window.dispatchEvent(new Event("firebase-ready"));
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -219,7 +223,9 @@ body{
 .vbtn.neub{background:rgba(144,96,160,.08);border-color:rgba(144,96,160,.28);color:#c090e0}
 .vbtn.neub:hover{background:rgba(144,96,160,.18);border-color:#9060a0;transform:translateY(-2px)}
 .vbtn.neub.voted{background:linear-gradient(135deg,#3a1848,#6b3080);color:white;border-color:#6b3080;box-shadow:0 4px 16px rgba(107,48,128,.35)}
-.vbtn:active{transform:scale(.96)!important}
+.vbtn.rejb{background:rgba(255,200,0,.06);border-color:rgba(255,200,0,.22);color:#d4a800}
+.vbtn.rejb:hover{background:rgba(255,200,0,.14);border-color:#c4a000;transform:translateY(-2px)}
+.vbtn.rejb.voted{background:linear-gradient(135deg,#3a2e00,#7a6000);color:white;border-color:#c4a000;box-shadow:0 4px 16px rgba(200,160,0,.3)}
 
 /* answer indicator */
 .answer-tag{
@@ -339,6 +345,229 @@ body{
   .stat-pill{min-width:90px;padding:.7rem .9rem}
   .stat-num{font-size:1.4rem}
 }
+
+/* ── LOGIN ── */
+#login-screen{
+  position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;
+  justify-content:center;flex-direction:column;padding:2rem;
+}
+.login-card{
+  background:rgba(22,0,12,.97);border:1.5px solid var(--border2);border-radius:24px;
+  padding:2.5rem 3rem;width:100%;max-width:480px;text-align:center;
+  box-shadow:var(--pop-glow);backdrop-filter:blur(20px);position:relative;overflow:hidden;
+}
+.login-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  box-shadow:0 0 12px var(--candy);border-radius:999px;}
+.login-logo{font-family:var(--fh);font-size:2.4rem;font-weight:900;letter-spacing:-.04em;margin-bottom:.2rem;
+  background:linear-gradient(90deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.login-sub{color:var(--muted2);font-size:.85rem;margin-bottom:1.6rem;font-weight:600;line-height:1.6;}
+.field-label{display:block;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.login-input{
+  width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--border);
+  border-radius:12px;padding:.85rem 1.1rem;color:var(--text);font-family:var(--fb);
+  font-size:1rem;font-weight:600;outline:none;transition:border-color .2s,box-shadow .2s;
+  margin-bottom:.6rem;
+}
+.login-input:focus{border-color:var(--candy);box-shadow:0 0 0 3px rgba(255,133,179,.12)}
+.login-input::placeholder{color:var(--muted)}
+
+/* avatar generator row */
+.avatar-row{display:flex;gap:.5rem;margin-bottom:1.4rem;align-items:center;}
+.avatar-preview{
+  flex:1;background:rgba(255,255,255,.05);border:1.5px solid var(--border);
+  border-radius:12px;padding:.75rem 1rem;color:var(--candy);font-family:var(--fh);
+  font-size:.9rem;font-weight:800;text-align:left;min-height:48px;
+  display:flex;align-items:center;letter-spacing:.02em;
+}
+.btn-gen{
+  background:linear-gradient(135deg,rgba(255,45,107,.15),rgba(140,0,60,.2));
+  border:1.5px solid var(--border2);border-radius:12px;padding:.75rem .9rem;
+  color:var(--candy);font-size:1.1rem;cursor:pointer;transition:all .18s;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.btn-gen:hover{background:rgba(255,45,107,.25);transform:rotate(20deg) scale(1.08);}
+.avatar-hint{font-size:.68rem;color:var(--muted);margin-bottom:1.2rem;text-align:left;line-height:1.5;}
+
+/* disclaimer box */
+.disclaimer{
+  background:rgba(255,200,0,.05);border:1px solid rgba(255,200,0,.2);
+  border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.4rem;text-align:left;
+}
+.disclaimer-title{font-size:.7rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+  color:#ffd060;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;}
+.disclaimer-body{font-size:.75rem;color:rgba(255,230,180,.7);line-height:1.65;font-weight:600;}
+.disclaimer-body a{color:#ffd080;text-decoration:underline;}
+
+.btn-login{
+  width:100%;background:linear-gradient(135deg,var(--hot),var(--berry),var(--crimson));
+  color:white;border:none;border-radius:12px;padding:.9rem 1.5rem;
+  font-family:var(--fh);font-size:1rem;font-weight:800;cursor:pointer;letter-spacing:.03em;
+  transition:transform .15s,box-shadow .15s;box-shadow:0 4px 20px rgba(255,45,107,.35);
+}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(255,45,107,.5)}
+
+/* ── APP WRAPPER ── */
+#app{display:none;}
+.user-badge{
+  display:flex;align-items:center;gap:.45rem;
+  background:rgba(255,255,255,.05);border:1.5px solid var(--border);
+  border-radius:999px;padding:.3rem .85rem .3rem .35rem;font-size:.78rem;flex-shrink:0;
+  color:var(--muted2);
+}
+.user-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--hot),var(--crimson));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:900;color:white;flex-shrink:0;
+}
+/* download button */
+.btn-dl{
+  display:flex;align-items:center;gap:.4rem;
+  background:linear-gradient(135deg,rgba(255,45,107,.15),rgba(100,0,40,.25));
+  color:var(--candy);border:1.5px solid var(--border2);border-radius:10px;
+  padding:.42rem .9rem;font-family:var(--fh);font-size:.72rem;font-weight:800;
+  cursor:pointer;letter-spacing:.04em;transition:all .2s;flex-shrink:0;white-space:nowrap;
+}
+.btn-dl:hover{background:rgba(255,45,107,.28);transform:translateY(-2px);box-shadow:0 4px 16px rgba(255,45,107,.3);}
+.btn-dl:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+@keyframes avatarPop{from{opacity:.4;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+
+/* ── LIVE RESULTS PANEL ── */
+.results-section{
+  position:relative;z-index:2;max-width:760px;margin:0 auto 2rem;padding:0 1.5rem;
+  display:none;
+}
+.results-section.show{display:block;animation:revealIn .6s cubic-bezier(.34,1.4,.64,1);}
+.results-card{
+  background:var(--surface);border:1.5px solid var(--border2);border-radius:22px;
+  padding:1.8rem 2rem;box-shadow:var(--soft-glow);position:relative;overflow:hidden;
+}
+.results-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  box-shadow:0 0 10px var(--candy);}
+.results-hd{display:flex;align-items:center;gap:.7rem;margin-bottom:.3rem;}
+.results-title{font-family:var(--fh);font-size:1.2rem;font-weight:900;
+  background:linear-gradient(90deg,var(--blush),var(--candy));
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.live-pill{display:flex;align-items:center;gap:.35rem;font-size:.65rem;font-weight:800;
+  color:var(--candy);letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(255,85,140,.1);border:1px solid rgba(255,85,140,.3);
+  border-radius:999px;padding:.22rem .7rem;margin-left:auto;}
+.live-dot{width:6px;height:6px;background:var(--hot);border-radius:50%;
+  box-shadow:0 0 6px var(--hot);animation:breathe 1.8s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+.results-sub{font-size:.78rem;color:var(--muted2);margin-bottom:1.4rem;line-height:1.6;}
+.results-sub strong{color:var(--candy);}
+
+/* overall stats bar */
+.res-stat-row{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.res-stat{
+  flex:1;min-width:80px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:12px;padding:.8rem .8rem;text-align:center;
+}
+.res-stat-num{font-family:var(--fh);font-size:1.5rem;font-weight:900;color:var(--candy);line-height:1;}
+.res-stat-num.opt0{color:var(--candy);}
+.res-stat-num.opt1{color:#e05080;}
+.res-stat-num.opt2{color:#9060c0;}
+.res-stat-num.tot{color:var(--blush);}
+.res-stat-lbl{font-size:.58rem;color:var(--muted);margin-top:.2rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;}
+
+/* chart containers */
+.chart-h260{height:260px;position:relative;margin-bottom:1.5rem;}
+.chart-h150{height:150px;position:relative;}
+
+/* per-section mini cards */
+.sec-results-grid{display:flex;flex-direction:column;gap:1rem;margin-top:1.2rem;}
+.sec-res-card{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:14px;padding:1rem 1.2rem;
+}
+.sec-res-hd{display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;}
+.sec-res-icon{font-size:.95rem;}
+.sec-res-title{font-family:var(--fh);font-size:.85rem;font-weight:900;color:var(--blush);}
+.sec-res-tot{font-size:.62rem;color:var(--muted);margin-left:auto;
+  background:rgba(255,255,255,.05);padding:.1rem .4rem;border-radius:6px;border:1px solid var(--border);}
+
+/* ── EXPORT CHARTS BUTTON ── */
+.btn-export{
+  display:flex;align-items:center;gap:.5rem;
+  background:linear-gradient(135deg,rgba(80,40,120,.5),rgba(120,0,60,.4));
+  color:#d4a8ff;border:1.5px solid rgba(180,100,255,.35);border-radius:12px;
+  padding:.6rem 1.1rem;font-family:var(--fh);font-size:.8rem;font-weight:800;
+  cursor:pointer;letter-spacing:.04em;transition:all .2s;margin-top:1.2rem;
+  box-shadow:0 3px 16px rgba(140,0,200,.15);
+}
+.btn-export:hover{background:rgba(140,60,200,.35);border-color:rgba(200,130,255,.5);
+  color:#e8c8ff;transform:translateY(-2px);box-shadow:0 6px 22px rgba(140,0,200,.25);}
+.btn-export:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+
+/* ── PDF OVERLAY ── */
+#pdf-ov{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(10,0,6,.93);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;
+}
+#pdf-ov.show{display:flex;}
+.pdf-spin{width:46px;height:46px;border:3px solid var(--border2);
+  border-top-color:var(--hot);border-radius:50%;animation:spin .85s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pdf-msg{font-family:var(--fh);font-size:.95rem;font-weight:700;color:var(--blush);
+  letter-spacing:.04em;}
+.btn-reset{
+  display:flex;align-items:center;gap:.4rem;
+  background:linear-gradient(135deg,rgba(60,0,20,.6),rgba(100,0,30,.4));
+  color:rgba(255,120,150,.7);border:1.5px solid rgba(255,60,100,.2);border-radius:10px;
+  padding:.42rem .9rem;font-family:var(--fh);font-size:.72rem;font-weight:800;
+  cursor:pointer;letter-spacing:.04em;transition:all .2s;flex-shrink:0;white-space:nowrap;
+}
+.btn-reset:hover{background:rgba(180,0,40,.3);border-color:rgba(255,60,100,.45);color:var(--candy);transform:translateY(-2px);}
+
+/* ── RESET MODAL ── */
+#reset-modal{
+  display:none;position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,.82);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;
+}
+#reset-modal.show{display:flex;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reset-card{
+  background:rgba(18,0,10,.98);border:1.5px solid var(--border2);border-radius:22px;
+  padding:2rem 2.2rem;max-width:390px;width:90%;position:relative;
+  box-shadow:var(--pop-glow);overflow:hidden;
+}
+.reset-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+  box-shadow:0 0 12px var(--candy);border-radius:999px;}
+.reset-icon{font-size:1.8rem;margin-bottom:.4rem;}
+.reset-title{font-family:var(--fh);font-size:1.1rem;font-weight:900;color:var(--blush);margin-bottom:.35rem;}
+.reset-body{font-size:.82rem;color:var(--muted2);line-height:1.65;margin-bottom:1.3rem;}
+.reset-body strong{color:var(--candy);}
+.reset-pw-wrap{margin-bottom:.4rem;}
+.reset-input{
+  width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--border);
+  border-radius:11px;padding:.75rem 1rem;color:var(--text);font-family:var(--fb);
+  font-size:.95rem;font-weight:600;outline:none;transition:border-color .2s;
+}
+.reset-input:focus{border-color:var(--candy);}
+.reset-input::placeholder{color:var(--muted);}
+.reset-err{font-size:.72rem;color:#ff6b6b;min-height:1.1rem;margin-bottom:.9rem;display:none;}
+.reset-btns{display:flex;gap:.7rem;}
+.btn-cancel{
+  flex:1;padding:.75rem;background:rgba(255,255,255,.04);border:1.5px solid var(--border);
+  border-radius:11px;color:var(--muted2);font-family:var(--fh);font-size:.82rem;font-weight:800;
+  cursor:pointer;transition:all .15s;
+}
+.btn-cancel:hover{background:rgba(255,255,255,.09);}
+.btn-confirm-reset{
+  flex:1;padding:.75rem;background:linear-gradient(135deg,var(--hot),var(--berry));
+  border:none;border-radius:11px;color:white;font-family:var(--fh);font-size:.82rem;
+  font-weight:800;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px rgba(255,45,107,.3);
+}
+.btn-confirm-reset:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(255,45,107,.45);}
+.btn-confirm-reset:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 </style>
 </head>
 <body>
@@ -347,12 +576,55 @@ body{
 <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div><div class="orb orb-4"></div>
 <div class="sparkles" id="sparkles"></div>
 
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">CARE<span style="color:var(--hot)">tech</span> ✦</div>
+    <p class="login-sub">Human Intelligence Task · Research Survey<br>Answer questions about human labor, gender &amp; automation.</p>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer">
+      <div class="disclaimer-title">⚠ Data &amp; Privacy Notice</div>
+      <div class="disclaimer-body">This survey collects your responses for academic research on gender, labor, and automation. <strong style="color:#ffd080">Your real identity is never required.</strong> You may use the anonymous avatar name generated below, or enter your own. No personal data (email, location, device info) is collected. By continuing, you consent to your anonymous responses being used for research purposes.</div>
+    </div>
+
+    <!-- AVATAR GENERATOR -->
+    <label class="field-label">Your anonymous avatar name</label>
+    <div class="avatar-row">
+      <div class="avatar-preview" id="avatar-display">…generating</div>
+      <button class="btn-gen" onclick="generateAvatar()" title="Generate new name">🔀</button>
+    </div>
+    <p class="avatar-hint">✦ This random name keeps your responses grouped without revealing who you are. Hit 🔀 for a new one, or type your own below.</p>
+
+    <!-- OWN NAME OPTION -->
+    <label class="field-label" for="uname">Or enter your own name / ID (optional)</label>
+    <input type="text" class="login-input" id="uname" placeholder="Leave blank to use avatar name above…" maxlength="40" autocomplete="off">
+
+    <button class="btn-login" id="btn-enter" onclick="enterApp()">Begin Survey →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
 <!-- HEADER -->
 <header class="app-header">
   <div class="header-logo">CARE<span style="color:var(--hot)">tech</span> ✦ HIT</div>
   <div class="progress-pill">
     <span>Progress</span>
     <span class="progress-num" id="hdr-prog">0 / 0</span>
+  </div>
+  <button class="btn-dl" id="dl-btn" onclick="downloadCSV()" title="Download your responses as CSV">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Save Data
+  </button>
+  <button class="btn-reset" onclick="showResetModal()" title="Admin: reset all data">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.45"/></svg>
+    Reset
+  </button>
+  <div class="user-badge" id="user-badge" style="display:none;">
+    <div class="user-avatar" id="u-init">?</div>
+    <span id="u-name">—</span>
   </div>
 </header>
 
@@ -401,6 +673,36 @@ body{
 <!-- QUESTION SECTIONS -->
 <div class="sections" id="sections"></div>
 
+<!-- LIVE RESULTS (shown after completion) -->
+<div class="results-section" id="results-section">
+  <div class="results-card">
+    <div class="results-hd">
+      <span style="font-size:1.3rem;">📊</span>
+      <span class="results-title">Live Results · All Respondents</span>
+      <div class="live-pill"><div class="live-dot"></div>Live</div>
+    </div>
+    <p class="results-sub">Results update in real time as more participants complete the survey. Each chart shows how <strong>all respondents</strong> answered — not just you.</p>
+
+    <!-- Overall totals -->
+    <div class="res-stat-row" id="overall-stats"></div>
+
+    <!-- Overall bar chart across all sections -->
+    <div class="chart-h260"><canvas id="chart-overall"></canvas></div>
+
+    <!-- Per-section mini charts -->
+    <div class="sec-results-grid" id="sec-results-grid"></div>
+
+    <!-- Export button -->
+    <button class="btn-export" id="export-btn" onclick="exportChartsPDF()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export Charts + My Answers as PDF
+    </button>
+  </div>
+</div>
+
+<!-- PDF LOADING OVERLAY -->
+<div id="pdf-ov"><div class="pdf-spin"></div><div class="pdf-msg" id="pdf-msg">Building PDF…</div></div>
+
 <!-- REVEAL -->
 <div id="reveal-section">
   <div class="reveal-card">
@@ -436,6 +738,25 @@ body{
   </div>
 </div>
 
+<!-- RESET MODAL -->
+<div id="reset-modal">
+  <div class="reset-card">
+    <div class="reset-icon">⚠️</div>
+    <div class="reset-title">Admin Reset</div>
+    <div class="reset-body">This will permanently delete <strong>all votes and participant records</strong> from Firestore across every section and question. This cannot be undone. Enter the admin password to continue.</div>
+    <div class="reset-pw-wrap">
+      <input type="password" class="reset-input" id="reset-pw" placeholder="Admin password…" onkeydown="if(event.key==='Enter')confirmReset()">
+    </div>
+    <div class="reset-err" id="reset-err">✗ Incorrect password. Try again.</div>
+    <div class="reset-btns">
+      <button class="btn-cancel" onclick="closeResetModal()">Cancel</button>
+      <button class="btn-confirm-reset" id="btn-confirm-reset" onclick="confirmReset()">Reset All Data</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
 <div id="toast"></div>
 
 <script>
@@ -456,9 +777,25 @@ body{
   }
 })();
 
+/* ── AVATAR GENERATOR ── */
+const AVT_ADJ = ['Cosmic','Silver','Golden','Velvet','Crimson','Aurora','Midnight','Stellar','Vivid','Lunar','Jade','Ember','Frost','Sage','Coral','Indigo','Russet','Teal','Amber','Ivory'];
+const AVT_NOUN = ['Sparrow','Comet','Willow','Phoenix','River','Moth','Lantern','Anchor','Cedar','Prism','Falcon','Jasper','Harbor','Thistle','Solstice','Dusk','Tide','Fern','Lark','Crater'];
+const AVT_NUM = () => Math.floor(100+Math.random()*900);
+let currentAvatar = '';
+
+function generateAvatar(){
+  const adj = AVT_ADJ[Math.floor(Math.random()*AVT_ADJ.length)];
+  const noun = AVT_NOUN[Math.floor(Math.random()*AVT_NOUN.length)];
+  currentAvatar = `${adj}${noun}${AVT_NUM()}`;
+  const el = document.getElementById('avatar-display');
+  if(el){ el.textContent = currentAvatar; el.style.animation='none'; void el.offsetWidth; el.style.animation='avatarPop .3s cubic-bezier(.34,1.56,.64,1)'; }
+}
+
 /* ── FIREBASE STATE ── */
 let db, fsSetDoc, fsDoc, fsOnSnapshot, fsCollection, fsGetDocs, fsWriteBatch;
 let fbReady = false;
+let username = '';
+let userId = '';
 const unsubs = [];
 
 window.addEventListener('firebase-ready', () => {
@@ -470,23 +807,357 @@ window.addEventListener('firebase-ready', () => {
   fsGetDocs = window.fsGetDocs;
   fsWriteBatch = window.fsWriteBatch;
   fbReady = true;
+  initAggData();
 });
+
+function sanitizeKey(n){ return n.replace(/[^a-zA-Z0-9_-]/g,'_').substring(0,40); }
+
+function enterApp(){
+  const custom = document.getElementById('uname').value.trim();
+  // Use custom name if provided, otherwise use the generated avatar
+  username = custom || currentAvatar || 'Anonymous';
+  userId = sanitizeKey(username) + '_' + Date.now();
+
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('u-name').textContent = username;
+  document.getElementById('u-init').textContent = username[0].toUpperCase();
+  document.getElementById('user-badge').style.display = 'flex';
+
+  saveParticipantStart();
+  initAggData();
+  // Subscribe after a short delay to ensure Firebase is fully ready
+  setTimeout(subscribeToAggregates, 500);
+  buildSections();
+  document.getElementById('hdr-prog').textContent = `0 / ${totalQ}`;
+}
+
+async function saveParticipantStart(){
+  if(!fbReady || !db) return;
+  try {
+    await fsSetDoc(fsDoc(db, 'hit_participants', userId), {
+      username,
+      userId,
+      startedAt: Date.now(),
+      completedAt: null,
+      totalAnswered: 0,
+      totalQuestions: totalQ,
+      answers: {}
+    });
+  } catch(e){ console.warn('Firebase participant start error:', e); }
+}
 
 function getDocId(secId, qi) { return `hit_${secId}_q${qi}`; }
 
 async function saveVoteToFirebase(secId, qi, optIdx) {
   if (!fbReady || !db) return;
   const docId = getDocId(secId, qi);
+  const sec = SECTIONS.find(s => s.id === secId);
+  const optLabel = sec ? sec.questions[qi].opts[optIdx] : String(optIdx);
   try {
-    await fsSetDoc(fsDoc(db, 'hit_responses', docId),
-      { [`votes.${optIdx}`]: true, secId, qi, updatedAt: Date.now() },
-      { merge: true }
-    );
+    // Save to aggregate responses (one doc per question, all users)
+    await fsSetDoc(fsDoc(db, 'hit_responses', docId), {
+      [`users.${sanitizeKey(username)}`]: { optIdx, optLabel, userId, answeredAt: Date.now() },
+      secId, qi,
+      [`tally.opt${optIdx}`]: incrementField(optIdx, secId, qi)
+    }, { merge: true });
+
+    // Save to per-participant record
+    const totalDone = answeredCount();
+    await fsSetDoc(fsDoc(db, 'hit_participants', userId), {
+      [`answers.${secId}_q${qi}`]: { optIdx, optLabel, answeredAt: Date.now() },
+      totalAnswered: totalDone,
+      lastUpdated: Date.now()
+    }, { merge: true });
+
   } catch(e) { console.warn('Firebase sync error:', e); }
 }
 
-/* ── SURVEY DATA ── */
+// Helper: read current tally and increment (client-side, best effort)
+function incrementField(optIdx, secId, qi){
+  // We track a simple running tally client-side per session; Firestore merge handles multi-user
+  if(!window._tally) window._tally = {};
+  const k = `${secId}_q${qi}_opt${optIdx}`;
+  window._tally[k] = (window._tally[k] || 0) + 1;
+  return window._tally[k];
+}
+
+async function saveCompletionToFirebase(){
+  if(!fbReady || !db || !userId) return;
+  try {
+    await fsSetDoc(fsDoc(db, 'hit_participants', userId), {
+      completedAt: Date.now(),
+      totalAnswered: totalQ,
+      completed: true
+    }, { merge: true });
+  } catch(e){ console.warn('Firebase completion error:', e); }
+}
+
+/* ── LIVE AGGREGATE DATA FROM FIRESTORE ── */
+// aggData[secId][qi] = {opt0:N, opt1:N, opt2:N}
+let aggData = {};
+let liveCharts = {};
+
+function initAggData(){
+  SECTIONS.forEach(sec=>{
+    aggData[sec.id] = {};
+    sec.questions.forEach((_,qi)=>{ aggData[sec.id][qi]={opt0:0,opt1:0,opt2:0,opt3:0,opt4:0,opt5:0,opt6:0,opt7:0}; });
+  });
+}
+
+function subscribeToAggregates(){
+  if(!fbReady||!db) return;
+  SECTIONS.forEach(sec=>{
+    sec.questions.forEach((_,qi)=>{
+      const docId = getDocId(sec.id, qi);
+      const unsub = fsOnSnapshot(fsDoc(db,'hit_responses',docId), snap=>{
+        if(snap.exists()){
+          const d = snap.data();
+          const users = d.users || {};
+          const counts = {opt0:0,opt1:0,opt2:0,opt3:0,opt4:0,opt5:0,opt6:0,opt7:0};
+          Object.values(users).forEach(u=>{
+            const k = `opt${u.optIdx}`;
+            if(counts[k]!==undefined) counts[k]++;
+          });
+          aggData[sec.id][qi] = counts;
+        }
+        if(document.getElementById('results-section').classList.contains('show')){
+          refreshAllCharts();
+        }
+      });
+      unsubs.push(unsub);
+    });
+  });
+}
+
+function totalAgg(){
+  let o0=0,o1=0,o2=0,o3=0;
+  SECTIONS.forEach(sec=>{
+    sec.questions.forEach((_,qi)=>{
+      const d=aggData[sec.id]?.[qi]||{};
+      o0+=(d.opt0||0); o1+=(d.opt1||0); o2+=(d.opt2||0); o3+=(d.opt3||0);
+    });
+  });
+  return {o0,o1,o2,o3,tot:o0+o1+o2+o3};
+}
+
+function sectionAgg(secId){
+  const sec=SECTIONS.find(s=>s.id===secId);
+  if(!sec)return{o0:0,o1:0,o2:0,o3:0,tot:0};
+  let tot=0;
+  sec.questions.forEach((_,qi)=>{
+    const d=aggData[secId]?.[qi]||{};
+    Object.keys(d).forEach(k=>{ tot+=(d[k]||0); });
+  });
+  // also return o0-o3 for the overall chart
+  let o0=0,o1=0,o2=0,o3=0;
+  sec.questions.forEach((_,qi)=>{
+    const d=aggData[secId]?.[qi]||{};
+    o0+=(d.opt0||0);o1+=(d.opt1||0);o2+=(d.opt2||0);o3+=(d.opt3||0);
+  });
+  return{o0,o1,o2,o3,tot};
+}
+
+function buildResultsPanel(){
+  // Overall stats
+  const {o0,o1,o2,tot} = totalAgg();
+  // Get opt labels from first section's first question as generic labels
+  document.getElementById('overall-stats').innerHTML=`
+    <div class="res-stat"><div class="res-stat-num opt0">${o0}</div><div class="res-stat-lbl">Option 1 Total</div></div>
+    <div class="res-stat"><div class="res-stat-num opt1">${o1}</div><div class="res-stat-lbl">Option 2 Total</div></div>
+    <div class="res-stat"><div class="res-stat-num opt2">${o2}</div><div class="res-stat-lbl">Option 3 Total</div></div>
+    <div class="res-stat"><div class="res-stat-num tot">${tot}</div><div class="res-stat-lbl">Total Responses</div></div>
+  `;
+
+  // Overall grouped bar chart (one group per section)
+  buildOverallChart();
+
+  // Per-section mini stacked bar charts
+  buildSectionCharts();
+
+  document.getElementById('results-section').classList.add('show');
+}
+
+function buildOverallChart(){
+  const ctx = document.getElementById('chart-overall').getContext('2d');
+  if(liveCharts['overall']){ try{liveCharts['overall'].destroy();}catch(e){} }
+
+  const labels = SECTIONS.map(s=>s.title.length>14?s.title.substring(0,13)+'…':s.title);
+  const d0 = SECTIONS.map(s=>sectionAgg(s.id).o0);
+  const d1 = SECTIONS.map(s=>sectionAgg(s.id).o1);
+  const d2 = SECTIONS.map(s=>sectionAgg(s.id).o2);
+
+  liveCharts['overall'] = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Option 1',data:d0,backgroundColor:'rgba(255,92,138,.78)',borderColor:'#ff5c8a',borderWidth:1.5,borderRadius:4},
+        {label:'Option 2',data:d1,backgroundColor:'rgba(139,26,58,.78)',borderColor:'#8b1a3a',borderWidth:1.5,borderRadius:4},
+        {label:'Option 3',data:d2,backgroundColor:'rgba(144,96,160,.7)', borderColor:'#9060a0',borderWidth:1.5,borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'rgba(255,200,230,.7)',font:{family:"'Quicksand',sans-serif",size:11,weight:'600'}}},
+        tooltip:{callbacks:{
+          title:i=>{const sec=SECTIONS[i[0].dataIndex]; return sec?sec.title:'';},
+          afterTitle:i=>{const sec=SECTIONS[i[0].dataIndex]; return sec?`(${sec.questions.length} questions)`:'';}
+        }}
+      },
+      scales:{
+        x:{ticks:{color:'rgba(255,190,220,.5)',font:{size:9},maxRotation:30},grid:{color:'rgba(255,92,138,.05)'}},
+        y:{ticks:{color:'rgba(255,190,220,.5)',font:{size:10}},grid:{color:'rgba(255,92,138,.05)'},beginAtZero:true}
+      }
+    }
+  });
+}
+
+function buildSectionCharts(){
+  const grid = document.getElementById('sec-results-grid');
+  grid.innerHTML='';
+
+  const dsColors = [
+    {bg:'rgba(255,92,138,.78)',  border:'#ff5c8a'},
+    {bg:'rgba(139,26,58,.78)',   border:'#8b1a3a'},
+    {bg:'rgba(144,96,160,.70)',  border:'#9060a0'},
+    {bg:'rgba(200,160,0,.72)',   border:'#c4a000'},
+    {bg:'rgba(0,160,180,.65)',   border:'#00a0b4'},
+    {bg:'rgba(80,180,80,.65)',   border:'#50b450'},
+    {bg:'rgba(220,100,20,.65)',  border:'#dc6414'},
+    {bg:'rgba(160,160,220,.65)', border:'#a0a0dc'},
+  ];
+
+  SECTIONS.forEach((sec)=>{
+    const agg = sectionAgg(sec.id);
+    const card = document.createElement('div');
+    card.className='sec-res-card';
+    card.id=`src-${sec.id}`;
+    card.innerHTML=`
+      <div class="sec-res-hd">
+        <span class="sec-res-icon">${sec.icon.split(' ')[0]}</span>
+        <span class="sec-res-title">${sec.title}</span>
+        <span class="sec-res-tot" id="srt-${sec.id}">${agg.tot} response${agg.tot!==1?'s':''}</span>
+      </div>
+      <div class="chart-h150"><canvas id="chart-sec-${sec.id}"></canvas></div>
+    `;
+    grid.appendChild(card);
+
+    // Get max number of options across questions in this section
+    const maxOpts = Math.max(...sec.questions.map(q=>q.opts.length));
+    const ctx = document.getElementById(`chart-sec-${sec.id}`).getContext('2d');
+    const qLabels = sec.questions.map((_,qi)=>`Q${qi+1}`);
+    const tipLabels = sec.questions.map(q=>{const t=qText(q); return t.length>55?t.substring(0,52)+'…':t;});
+
+    // Build datasets dynamically based on max options
+    const firstQ = sec.questions[0];
+    const datasets = [];
+    for(let oi=0; oi<maxOpts; oi++){
+      const label = firstQ.opts[oi] || `Option ${oi+1}`;
+      const shortLabel = label.length>22?label.substring(0,20)+'…':label;
+      datasets.push({
+        label: shortLabel,
+        data: sec.questions.map((_,qi)=>aggData[sec.id]?.[qi]?.[`opt${oi}`]||0),
+        backgroundColor: dsColors[oi]?.bg || 'rgba(180,180,180,.6)',
+        borderColor: dsColors[oi]?.border || '#aaa',
+        borderWidth:1, borderRadius:3, stack:'s'
+      });
+    }
+
+    liveCharts[`sec-${sec.id}`] = new Chart(ctx,{
+      type:'bar',
+      data:{ labels:qLabels, datasets },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display: maxOpts<=4,
+            labels:{color:'rgba(255,200,230,.6)',font:{family:"'Quicksand',sans-serif",size:9,weight:'600'},boxWidth:10,padding:8}},
+          tooltip:{callbacks:{
+            title:i=>`Q${i[0].dataIndex+1}: ${tipLabels[i[0].dataIndex]}`,
+            label:i=>`${i.dataset.label}: ${i.raw}`
+          }}
+        },
+        scales:{
+          x:{stacked:true,ticks:{color:'rgba(255,190,220,.5)',font:{size:8}},grid:{color:'rgba(255,92,138,.04)'}},
+          y:{stacked:true,ticks:{color:'rgba(255,190,220,.5)',font:{size:9}},grid:{color:'rgba(255,92,138,.04)'},beginAtZero:true}
+        }
+      }
+    });
+  });
+}
+
+function refreshAllCharts(){
+  const {o0,o1,o2,o3,tot} = totalAgg();
+  const osEl = document.getElementById('overall-stats');
+  if(osEl) osEl.innerHTML=`
+    <div class="res-stat"><div class="res-stat-num opt0">${o0}</div><div class="res-stat-lbl">Option 1 Total</div></div>
+    <div class="res-stat"><div class="res-stat-num opt1">${o1}</div><div class="res-stat-lbl">Option 2 Total</div></div>
+    <div class="res-stat"><div class="res-stat-num opt2">${o2}</div><div class="res-stat-lbl">Option 3 Total</div></div>
+    <div class="res-stat"><div class="res-stat-num tot">${tot}</div><div class="res-stat-lbl">Total Responses</div></div>
+  `;
+
+  const oc = liveCharts['overall'];
+  if(oc){
+    oc.data.datasets[0].data = SECTIONS.map(s=>sectionAgg(s.id).o0);
+    oc.data.datasets[1].data = SECTIONS.map(s=>sectionAgg(s.id).o1);
+    oc.data.datasets[2].data = SECTIONS.map(s=>sectionAgg(s.id).o2);
+    oc.update('none');
+  }
+
+  SECTIONS.forEach(sec=>{
+    const sc = liveCharts[`sec-${sec.id}`];
+    if(sc){
+      const maxOpts = Math.max(...sec.questions.map(q=>q.opts.length));
+      for(let oi=0; oi<Math.min(maxOpts, sc.data.datasets.length); oi++){
+        sc.data.datasets[oi].data = sec.questions.map((_,qi)=>aggData[sec.id]?.[qi]?.[`opt${oi}`]||0);
+      }
+      sc.update('none');
+    }
+    const agg = sectionAgg(sec.id);
+    const tot2El = document.getElementById(`srt-${sec.id}`);
+    if(tot2El) tot2El.textContent=`${agg.tot} response${agg.tot!==1?'s':''}`;
+  });
+}
+
+function qText(q){ return typeof q==='string'?q:q.text; }
+
+/* ── REJECT BINARY OPTION (appended to gender section questions) ── */
+const REJECT = 'Reject the binary categorization of gender';
+
 const SECTIONS = [
+  {
+    id:'identity',
+    icon:'🪞',
+    title:'About You',
+    subtitle:'These questions help us understand who is participating. All answers are anonymous.',
+    questions:[
+      {
+        text:'How do you identify? (Select the option that best describes you — all are valid.)',
+        opts:[
+          'Woman',
+          'Man',
+          'Non-binary',
+          'Genderqueer / Genderfluid',
+          'Agender',
+          'Two-Spirit',
+          'Gender non-conforming',
+          'Prefer not to say'
+        ],
+        type:'identity'
+      },
+      {
+        text:'The following questions sometimes separate people into binary categories (e.g. "mostly women" vs "mostly men"). If at any point you want to reject the framing of a binary gender category, please use the "Reject the binary" option. Do you understand this option and feel comfortable proceeding?',
+        opts:[
+          'Yes, I understand and will proceed',
+          'Yes, and I plan to use "Reject the binary" for many questions',
+          'I prefer to answer within the binary categories provided',
+          'Prefer not to say'
+        ],
+        type:'awareness'
+      }
+    ]
+  },
   {
     id:'human',
     icon:'🧠',
@@ -525,18 +1196,18 @@ const SECTIONS = [
     id:'gender',
     icon:'👩🏿 👩🏽 👩🏻 👩🏾 👩🏼',
     title:'Who Does This Work?',
-    subtitle:'Think about who, in your experience and knowledge, most often performs each of the following types of work — paid or unpaid.',
+    subtitle:'Think about who, in your experience and knowledge, most often performs each of the following types of work — paid or unpaid. You may also reject the binary framing.',
     questions:[
-      {text:'Providing unpaid caregiving for children at home', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Nursing and bedside patient care in hospitals', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Teaching in primary and elementary schools', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Social work and community counseling services', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Domestic cleaning and household management', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Emotional labor at work (managing team morale, comfort)', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Caring for elderly parents or relatives at home', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Early childhood education and daycare', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Founding AI or robotics companies', opts:['Mostly women','Mostly men','Equal / Mixed']},
-      {text:'Leading the design and development of AI systems', opts:['Mostly women','Mostly men','Equal / Mixed']},
+      {text:'Providing unpaid caregiving for children at home', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Nursing and bedside patient care in hospitals', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Teaching in primary and elementary schools', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Social work and community counseling services', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Domestic cleaning and household management', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Emotional labor at work (managing team morale, comfort)', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Caring for elderly parents or relatives at home', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Early childhood education and daycare', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Founding AI or robotics companies', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
+      {text:'Leading the design and development of AI systems', opts:['Mostly women','Mostly men','Equal / Mixed',REJECT]},
     ]
   },
   {
@@ -593,15 +1264,26 @@ function buildSections(){
       card.className='qcard';
       card.id=`qc-${sec.id}-${qi}`;
 
-      const btnClass=['yb','nb','neub'];
-      const btns=q.opts.map((o,oi)=>`<button class="vbtn ${btnClass[oi]}" onclick="castVote('${sec.id}',${qi},${oi})">${o}</button>`).join('');
+      // identity/awareness questions get all opts as neub-style pills
+      // gender questions get 4 buttons with 4th as rejb
+      // all others get 3 buttons
+      const btnClass=['yb','nb','neub','rejb'];
+      let btns;
+      if(q.type==='identity'||q.type==='awareness'){
+        // Render as a vertical pill list for many options
+        btns=q.opts.map((o,oi)=>`<button class="vbtn neub" style="flex:none;width:100%;text-align:left;margin-bottom:.3rem;" onclick="castVote('${sec.id}',${qi},${oi})">${o}</button>`).join('');
+      } else {
+        btns=q.opts.map((o,oi)=>`<button class="vbtn ${btnClass[oi]||'neub'}" onclick="castVote('${sec.id}',${qi},${oi})">${o}</button>`).join('');
+      }
 
       card.innerHTML=`
         <div class="qcard-row">
           <div class="qnum-badge">${qi+1}</div>
           <div class="qtext">${q.text}</div>
         </div>
-        <div class="vbtns">${btns}</div>
+        <div class="vbtns" style="${(q.type==='identity'||q.type==='awareness')?'flex-direction:column;gap:.25rem;':''}">
+          ${btns}
+        </div>
       `;
       ql.appendChild(card);
     });
@@ -617,7 +1299,7 @@ function castVote(secId,qi,optIdx){
   if(!card)return;
   card.classList.add('answered');
 
-  // refresh buttons
+  // refresh buttons — works for any number of options
   const btns=card.querySelectorAll('.vbtn');
   btns.forEach((b,i)=>{
     b.classList.remove('voted');
@@ -652,10 +1334,12 @@ function checkComplete(){
   if(answeredCount()<totalQ)return;
   const rev=document.getElementById('reveal-section');
   if(rev.classList.contains('show'))return;
+  buildResultsPanel();
   buildReveal();
   rev.classList.add('show');
-  setTimeout(()=>rev.scrollIntoView({behavior:'smooth',block:'start'}),200);
-  showToast('✦ All questions answered — your reveal is ready!');
+  setTimeout(()=>document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}),200);
+  showToast('✦ All questions answered — results & reveal below!');
+  saveCompletionToFirebase();
 }
 
 function buildReveal(){
@@ -695,6 +1379,294 @@ function buildReveal(){
   document.getElementById('answer-chips').innerHTML=chips.slice(0,12).join('');
 }
 
+/* ── EXPORT CHARTS + ANSWERS AS PDF ── */
+async function exportChartsPDF(){
+  const btn = document.getElementById('export-btn');
+  btn.disabled = true;
+  const ov = document.getElementById('pdf-ov');
+  const msg = document.getElementById('pdf-msg');
+  ov.classList.add('show');
+
+  const {jsPDF} = window.jspdf;
+  const pdf = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+  const PW=210, PH=297, M=14, CW=PW-M*2;
+
+  // ── helpers ──
+  const sf = (sz,style='normal',r=252,g=220,b=240) => {
+    pdf.setFontSize(sz); pdf.setFont('helvetica',style); pdf.setTextColor(r,g,b);
+  };
+  const fr = (x,y,w,h,rad,R,G,B) => {
+    pdf.setFillColor(R,G,B); pdf.roundedRect(x,y,w,h,rad,rad,'F');
+  };
+  const frect = (x,y,w,h,R,G,B) => {
+    pdf.setFillColor(R,G,B); pdf.rect(x,y,w,h,'F');
+  };
+  const newPage = () => {
+    pdf.addPage(); frect(0,0,PW,PH,14,0,8,5);
+  };
+  const topBar = () => {
+    frect(0,0,PW,3.5,255,45,107);
+  };
+
+  // ── COVER PAGE ──
+  msg.textContent = 'Building cover page…';
+  frect(0,0,PW,PH,14,0,8,5);
+  topBar();
+  sf(32,'bold',255,133,179); pdf.text('CAREtech ✦ HIT',M,52);
+  sf(13,'normal',255,92,138); pdf.text('Survey Results Report',M,63);
+  sf(8,'normal',160,90,130);
+  pdf.text(`Participant: ${username}`,M,76);
+  pdf.text(`Generated: ${new Date().toLocaleString()}`,M,83);
+  pdf.text(`Total questions answered: ${answeredCount()} / ${totalQ}`,M,90);
+
+  // Cover stats box
+  fr(M,102,CW,48,4,28,6,18);
+  const {o0,o1,o2,o3,tot} = totalAgg();
+  const statCols = [
+    {v:tot,   lbl:'Total Responses', R:255,G:133,B:179},
+    {v:o0,    lbl:'Option 1 Total',  R:255,G:92, B:138},
+    {v:o1,    lbl:'Option 2 Total',  R:192,G:57, B:94 },
+    {v:o2,    lbl:'Option 3 Total',  R:144,G:96, B:160},
+    {v:o3,    lbl:'Reject Binary',   R:200,G:160,B:0  },
+  ];
+  statCols.forEach((s,i)=>{
+    const bw = CW/5, bx = M + i*bw;
+    sf(14,'bold',s.R,s.G,s.B);
+    pdf.text(String(s.v), bx+bw/2, 122, {align:'center'});
+    sf(6,'normal',160,90,130);
+    pdf.text(s.lbl, bx+bw/2, 130, {align:'center', maxWidth:bw-2});
+  });
+
+  sf(7,'normal',100,50,80);
+  pdf.text(`${SECTIONS.length} sections · ${totalQ} questions`,M,168);
+
+  // ── MY ANSWERS PAGES ──
+  msg.textContent = 'Writing your answers…';
+  newPage(); topBar();
+  sf(13,'bold',255,133,179); pdf.text('✦ My Answers',M,16);
+  sf(8,'normal',160,90,130); pdf.text('Your personal responses to each question',M,22);
+
+  let y = 30;
+  for(const sec of SECTIONS){
+    // Section header
+    if(y > PH-30){ newPage(); topBar(); y=14; }
+    fr(M, y, CW, 8, 2, 50,10,30);
+    sf(8,'bold',255,133,179);
+    pdf.text(`${sec.title}`, M+3, y+5.5);
+    y += 11;
+
+    for(let qi=0; qi<sec.questions.length; qi++){
+      const q = sec.questions[qi];
+      const ai = answers[sec.id]?.[qi];
+      const label = ai!==undefined ? q.opts[ai] : '— not answered —';
+      const qTxt = qText(q);
+
+      const cardH = 16;
+      if(y + cardH > PH-10){ newPage(); topBar(); y=14; }
+
+      fr(M, y, CW, cardH, 2, 30,6,20);
+      // Q number circle
+      fr(M+2, y+2.5, 8, 8, 4, 80,20,50);
+      sf(6,'bold',255,133,179); pdf.text(`Q${qi+1}`, M+6, y+7.5, {align:'center'});
+
+      // Question text
+      sf(7,'normal',220,180,210);
+      const shortQ = qTxt.length>70 ? qTxt.substring(0,67)+'…' : qTxt;
+      pdf.text(shortQ, M+13, y+6);
+
+      // Answer pill
+      const pillW = Math.min(CW-14, label.length*1.8+8);
+      const pillX = M+13;
+      fr(pillX, y+9, pillW, 5, 1.5,
+        ai===0?80:ai===1?40:ai===2?50:ai===3?60:30,
+        ai===0?20:ai===1?10:ai===2?30:ai===3?50:10,
+        ai===0?40:ai===1?20:ai===2?60:ai===3?0:15
+      );
+      sf(6,'bold',
+        ai===0?255:ai===1?220:ai===2?200:ai===3?220:160,
+        ai===0?133:ai===1?80:ai===2?150:ai===3?170:90,
+        ai===0?179:ai===1?100:ai===2?200:ai===3?0:120
+      );
+      pdf.text(label.length>38?label.substring(0,35)+'…':label, pillX+2, y+13.2);
+
+      y += cardH + 2;
+    }
+    y += 3;
+  }
+
+  // ── CHARTS PAGES ──
+  msg.textContent = 'Capturing charts…';
+
+  // Capture overall chart canvas
+  const overallCanvas = document.getElementById('chart-overall');
+  if(overallCanvas){
+    newPage(); topBar();
+    sf(12,'bold',255,133,179); pdf.text('📊 Overall Results — All Respondents',M,15);
+    sf(8,'normal',160,90,130); pdf.text('Total votes per option across all sections',M,21);
+    try{
+      const imgData = overallCanvas.toDataURL('image/png',1.0);
+      const ch = CW * (overallCanvas.height/overallCanvas.width);
+      pdf.addImage(imgData,'PNG',M,28,CW,Math.min(ch,90));
+    }catch(e){ sf(8,'normal',255,100,100); pdf.text('Chart unavailable',M,40); }
+  }
+
+  // Capture per-section charts
+  for(const sec of SECTIONS){
+    msg.textContent = `Capturing ${sec.title} chart…`;
+    const canvas = document.getElementById(`chart-sec-${sec.id}`);
+    if(!canvas) continue;
+    newPage(); topBar();
+    sf(11,'bold',255,133,179);
+    pdf.text(`${sec.icon.split(' ')[0]}  ${sec.title}`,M,15);
+    sf(7.5,'normal',160,90,130);
+    pdf.text(`${sec.questions.length} questions · stacked responses per question`,M,21);
+
+    // Section question key
+    let ky = 27;
+    sec.questions.forEach((q,qi)=>{
+      if(ky > 70){ return; }
+      sf(6.5,'normal',180,130,160);
+      const t = qText(q); const short = t.length>85?t.substring(0,82)+'…':t;
+      pdf.text(`Q${qi+1}  ${short}`, M, ky, {maxWidth:CW});
+      ky += 5;
+    });
+
+    // Chart image
+    try{
+      const imgData = canvas.toDataURL('image/png',1.0);
+      const imgY = ky + 4;
+      const ch = CW * (canvas.height/canvas.width);
+      pdf.addImage(imgData,'PNG',M,imgY,CW,Math.min(ch,PH-imgY-14));
+    }catch(e){ sf(8,'normal',255,100,100); pdf.text('Chart unavailable',M,80); }
+  }
+
+  // ── SAVE ──
+  msg.textContent = 'Saving PDF…';
+  pdf.save(`caretech-hit-${sanitizeKey(username)}-${Date.now()}.pdf`);
+  ov.classList.remove('show');
+  btn.disabled = false;
+  showToast('✦ Charts + answers exported as PDF!');
+}
+
+/* ── DOWNLOAD CSV ── */
+function downloadCSV(){
+  const btn = document.getElementById('dl-btn');
+  const rows = [['Participant','Section','Section Title','Question #','Question Text','Answer','Answer Label','Timestamp']];
+  const ts = new Date().toISOString();
+
+  SECTIONS.forEach(sec => {
+    sec.questions.forEach((q, qi) => {
+      const ai = answers[sec.id] ? answers[sec.id][qi] : undefined;
+      const label = ai !== undefined ? q.opts[ai] : '';
+      rows.push([
+        `"${username}"`,
+        sec.id,
+        `"${sec.title}"`,
+        qi + 1,
+        `"${q.text.replace(/"/g,'""')}"`,
+        ai !== undefined ? ai : '',
+        `"${label}"`,
+        ai !== undefined ? ts : ''
+      ]);
+    });
+  });
+
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `caretech-hit-${sanitizeKey(username)}-${Date.now()}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✦ Your responses saved as CSV!');
+}
+
+/* ── ADMIN RESET ── */
+const ADMIN_PASSWORD = 'caretech2024';
+
+function showResetModal(){
+  document.getElementById('reset-modal').classList.add('show');
+  document.getElementById('reset-pw').value='';
+  document.getElementById('reset-err').style.display='none';
+  document.getElementById('btn-confirm-reset').textContent='Reset All Data';
+  document.getElementById('btn-confirm-reset').disabled=false;
+  setTimeout(()=>document.getElementById('reset-pw').focus(),120);
+}
+
+function closeResetModal(){
+  document.getElementById('reset-modal').classList.remove('show');
+}
+
+async function confirmReset(){
+  const pw = document.getElementById('reset-pw').value;
+  const errEl = document.getElementById('reset-err');
+  const btn = document.getElementById('btn-confirm-reset');
+
+  if(pw !== ADMIN_PASSWORD){
+    errEl.style.display='block';
+    document.getElementById('reset-pw').value='';
+    document.getElementById('reset-pw').focus();
+    return;
+  }
+  errEl.style.display='none';
+  btn.textContent='Resetting…';
+  btn.disabled=true;
+
+  // Delete all Firestore docs in hit_responses and hit_participants
+  if(fbReady && db){
+    try{
+      const [respSnap, partSnap] = await Promise.all([
+        fsGetDocs(fsCollection(db,'hit_responses')),
+        fsGetDocs(fsCollection(db,'hit_participants'))
+      ]);
+      const allDocs = [...respSnap.docs, ...partSnap.docs];
+      const batchSize = 490;
+      let batch = fsWriteBatch(db);
+      let count = 0;
+      for(const d of allDocs){
+        batch.delete(d.ref);
+        count++;
+        if(count===batchSize){
+          await batch.commit();
+          batch = fsWriteBatch(db);
+          count = 0;
+        }
+      }
+      if(count>0) await batch.commit();
+      showToast(`✦ Firestore cleared — ${allDocs.length} records deleted`);
+    } catch(e){
+      console.error(e);
+      showToast('⚠ Firestore error: '+e.message);
+      btn.textContent='Reset All Data';
+      btn.disabled=false;
+      return;
+    }
+  }
+
+  // Reset all local aggregate data
+  initAggData();
+
+  // Destroy and clear live charts
+  Object.values(liveCharts).forEach(c=>{try{c.destroy();}catch(e){}});
+  liveCharts={};
+
+  // Hide results + reveal sections
+  document.getElementById('results-section').classList.remove('show');
+  document.getElementById('reveal-section').classList.remove('show');
+
+  closeResetModal();
+  showToast('✦ All data reset successfully!');
+}
+
+// Close modal on backdrop click
+document.addEventListener('click', e=>{
+  const modal = document.getElementById('reset-modal');
+  if(modal && e.target===modal) closeResetModal();
+});
+
 let _tt;
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -702,9 +1674,13 @@ function showToast(msg){
   clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3400);
 }
 
-// INIT
-buildSections();
-document.getElementById('hdr-prog').textContent=`0 / ${totalQ}`;
+// Enter on Enter key + generate initial avatar on load
+document.addEventListener('DOMContentLoaded', () => {
+  generateAvatar();
+  const input = document.getElementById('uname');
+  if(input) input.addEventListener('keydown', e => { if(e.key==='Enter') enterApp(); });
+});
+
 </script>
 </body>
 </html>
