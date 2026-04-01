@@ -4,33 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>✦ CAREBOT · Collaborative Q&A ✦</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --rose:#ff5c8a; --hot:#ff2d6b; --candy:#ff85b3; --blush:#ffb3cf;
-    --cream:#fff5f8; --berry:#c4005a; --crimson:#8b0030; --maroon:#4a001a;
-    --fuchsia:#ff1f80; --bg:#0e0008;
-    --card-border:rgba(255,140,185,.25);
-    --card-border-bright:rgba(255,80,150,.6);
-    --soft-glow:0 4px 30px rgba(255,45,107,.2);
-    --pop-glow:0 8px 50px rgba(255,45,107,.45),0 0 90px rgba(200,0,80,.15);
-    --text-dim:rgba(255,190,220,.5);
-    --purple-dim:rgba(180,130,220,.6);
-  }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  html,body{
-    min-height:100%;font-family:'Quicksand',sans-serif;font-weight:600;
-    color:var(--cream);background:var(--bg);
-    -webkit-font-smoothing:antialiased;
-    cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10,default;
-  }
-
-  /* background */
-  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,30,100,.06) 0%,transparent 65%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
+  html,body{min-height:100%;font-family:'Quicksand',sans-serif;font-weight:600;color:#fff5f8;background:#0e0008;-webkit-font-smoothing:antialiased;}
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
   .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
-  .orb-1{width:380px;height:380px;background:var(--crimson);opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
-  .orb-2{width:300px;height:300px;background:var(--berry);opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
-  .orb-3{width:200px;height:200px;background:var(--hot);opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
+  .orb-1{width:380px;height:380px;background:#8b0030;opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
+  .orb-2{width:300px;height:300px;background:#c4005a;opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+  .orb-3{width:200px;height:200px;background:#ff2d6b;opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
   @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
   @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
   @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
@@ -38,201 +20,159 @@
   .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
   @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
 
-  /* layout */
-  .screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(40px + env(safe-area-inset-bottom));gap:16px;}
+  .screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(40px + env(safe-area-inset-bottom));gap:14px;}
 
-  /* mascot bar */
-  .mascot-bar{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;}
-  .mascot{display:flex;align-items:center;gap:10px;}
-  .bot-face{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,rgba(255,45,107,.22),rgba(180,0,60,.32));border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);display:flex;align-items:center;justify-content:center;font-size:20px;animation:wobble 4s ease-in-out infinite;flex-shrink:0;}
-  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
-  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .bot-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
-  .mascot-right{display:flex;align-items:center;gap:8px;}
-  .time-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;letter-spacing:.1em;color:var(--text-dim);}
-  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
-  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
-  .online-badge{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:10px;color:var(--text-dim);}
+  .cb-topbar{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-logo{display:flex;align-items:center;gap:10px;}
+  .cb-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,45,107,.18);border:1.5px solid rgba(255,80,150,.5);display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .cb-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-top:1px;}
+  .cb-badges{display:flex;gap:7px;align-items:center;}
+  .cb-badge{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,140,185,.2);color:rgba(255,190,220,.5);letter-spacing:.06em;}
+  .cb-pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff2d6b;margin-right:5px;animation:pip 2s ease-in-out infinite;vertical-align:middle;}
+  @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
 
-  /* video section */
-  .video-section{width:100%;max-width:600px;position:relative;overflow:hidden;border-radius:20px;border:1.5px solid var(--card-border-bright);box-shadow:var(--pop-glow);}
-  .video-section::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);box-shadow:0 0 8px var(--candy);border-radius:999px;z-index:2;}
-  .video-section.watched{opacity:.6;}
-  .video-header{background:linear-gradient(135deg,rgba(140,0,45,.95),rgba(70,0,22,.98));padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
-  .video-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .video-ctrl-row{display:flex;gap:8px;align-items:center;}
-  .video-btn{appearance:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;letter-spacing:.06em;color:rgba(255,200,220,.7);background:rgba(255,255,255,.05);border:1px solid rgba(255,140,185,.25);padding:5px 12px;border-radius:999px;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;}
-  .video-btn:hover{background:rgba(255,45,107,.2);color:var(--blush);border-color:var(--card-border-bright);}
-  .video-embed{width:100%;aspect-ratio:16/9;display:block;}
-  .video-embed iframe{width:100%;height:100%;border:none;display:block;}
+  .cb-video{width:100%;max-width:600px;border-radius:16px;overflow:hidden;border:1.5px solid rgba(255,80,150,.5);box-shadow:0 8px 40px rgba(255,45,107,.3);}
+  .cb-video-head{background:linear-gradient(135deg,rgba(140,0,45,.95),rgba(70,0,22,.98));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-video-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-vbtn{font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;color:rgba(255,200,220,.7);background:rgba(255,255,255,.05);border:1px solid rgba(255,140,185,.2);padding:4px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
+  .cb-vbtn:hover{background:rgba(255,45,107,.2);color:#ffb3cf;}
+  .cb-video-embed{width:100%;aspect-ratio:16/9;}
+  .cb-video-embed iframe{width:100%;height:100%;border:none;display:block;}
+  .cb-video.watched{opacity:.55;}
 
-  /* card base */
-  .card{width:100%;max-width:600px;background:rgba(12,0,7,.9);border:1.5px solid var(--card-border-bright);border-radius:20px;padding:20px;position:relative;overflow:hidden;backdrop-filter:blur(18px);box-shadow:var(--soft-glow),inset 0 1px 0 rgba(255,140,185,.07);}
-  .card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;}
-  .card-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;}
-  .card-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(16px,4vw,20px);background:linear-gradient(90deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px;line-height:1.3;}
+  .cb-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .cb-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);border-radius:999px;}
+  .cb-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+  .cb-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .cb-row:last-child{margin-bottom:0;}
+  .cb-input{flex:1;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;color:#fff5f8;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0;}
+  .cb-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
+  .cb-input::placeholder{color:rgba(255,190,220,.35);}
+  .cb-name-in{max-width:150px;flex:0 0 150px;}
+  .cb-btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.05em;color:#fff5f8;display:inline-flex;align-items:center;gap:5px;padding:10px 18px;border-radius:12px;border:1.5px solid rgba(255,80,150,.5);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .cb-btn.primary{background:linear-gradient(135deg,#ff2d6b,#c4005a,#8b0030);box-shadow:0 4px 18px rgba(255,45,107,.3);}
+  .cb-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,45,107,.5);}
+  .cb-btn.soft{background:rgba(255,255,255,.04);color:rgba(255,190,220,.5);border-color:rgba(255,140,185,.15);font-size:11px;}
+  .cb-btn.soft:hover{background:rgba(255,45,107,.12);color:#ffb3cf;}
+  .cb-btn.purple{background:linear-gradient(135deg,#ab47bc,#6a1b9a);border-color:#ab47bc;}
+  .cb-btn:active{transform:scale(.97);}
 
-  /* input area */
-  .input-card{width:100%;max-width:600px;background:rgba(12,0,7,.9);border:1.5px solid var(--card-border-bright);border-radius:20px;padding:18px 18px 16px;position:relative;overflow:hidden;backdrop-filter:blur(18px);box-shadow:var(--soft-glow);}
-  .input-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;}
-  .input-row{display:flex;gap:8px;margin-bottom:10px;}
-  .input-row:last-child{margin-bottom:0;}
-  .kawaii-input{flex:1;padding:11px 16px;background:rgba(255,255,255,.05);border:1.5px solid var(--card-border);border-radius:13px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14px;color:var(--cream);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-tap-highlight-color:transparent;}
-  .kawaii-input:focus{border-color:var(--candy);box-shadow:0 0 0 3px rgba(255,133,179,.15);}
-  .kawaii-input::placeholder{color:var(--text-dim);}
-  .kawaii-input.name-input{max-width:160px;flex:0 0 160px;}
-  .btn{appearance:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;letter-spacing:.05em;color:var(--cream);display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:11px 20px;border-radius:13px;border:1.5px solid var(--card-border);cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;text-decoration:none;position:relative;overflow:hidden;}
-  .btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);pointer-events:none;}
-  .btn.primary{background:linear-gradient(135deg,var(--hot),var(--berry),var(--crimson));border-color:var(--hot);box-shadow:0 4px 20px rgba(255,45,107,.35);white-space:nowrap;}
-  .btn.primary:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 28px rgba(255,45,107,.5);}
-  .btn.soft{background:rgba(255,255,255,.05);color:var(--text-dim);border-color:rgba(255,140,185,.2);}
-  .btn.soft:hover{background:rgba(255,45,107,.15);color:var(--blush);border-color:var(--card-border-bright);transform:translateY(-2px);}
-  .btn.purple{background:linear-gradient(135deg,#ab47bc,#6a1b9a);border-color:#ab47bc;box-shadow:0 4px 20px rgba(171,71,188,.35);}
-  .btn.purple:hover{transform:translateY(-2px) scale(1.03);}
-  .btn:active{transform:scale(.97) !important;}
-  .btn.big{padding:14px 28px;font-size:14px;border-radius:16px;}
+  .cb-msgs{width:100%;max-width:600px;display:flex;flex-direction:column;gap:14px;}
+  .cb-empty{text-align:center;padding:44px 20px;color:rgba(255,190,220,.35);}
+  .cb-empty h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:7px;}
+  .cb-empty p{font-size:12px;}
+  .cb-pair{animation:slideUp .35s ease-out;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .cb-meta{font-size:11px;color:rgba(255,190,220,.45);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .cb-meta strong{font-weight:700;}
+  .cb-qbubble{display:inline-block;background:linear-gradient(135deg,#ff2d6b,#c4005a);color:#fff;padding:9px 14px;border-radius:16px 16px 16px 3px;font-size:13px;margin-bottom:12px;max-width:88%;line-height:1.5;box-shadow:0 3px 12px rgba(255,45,107,.3);}
+  .cb-pcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.4);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+  .cb-phead{background:linear-gradient(135deg,rgba(240,98,146,.8),rgba(194,24,91,.85));padding:9px 14px;display:flex;align-items:center;gap:7px;}
+  .cb-plabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-pbody{padding:14px;}
+  .cb-ptext{font-size:13px;line-height:1.7;color:rgba(255,215,235,.88);}
+  .cb-psrc{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,100,160,.12);font-size:11px;color:rgba(255,190,220,.45);}
+  .cb-psrc a{color:#ff85b3;text-decoration:none;}
+  .cb-psrc a:hover{text-decoration:underline;}
+  .cb-mcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(171,71,188,.45);border-radius:14px;overflow:hidden;}
+  .cb-mhead{background:linear-gradient(135deg,rgba(171,71,188,.8),rgba(106,27,154,.85));padding:9px 14px;}
+  .cb-mlabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-mbody{padding:14px;}
+  .cb-mtext{font-family:'Courier New',monospace;font-size:12px;line-height:1.85;color:rgba(220,180,255,.85);white-space:pre-wrap;}
+  .cb-spkrow{padding:8px 14px 12px;display:flex;gap:7px;}
 
-  /* debug log */
-  #debugLog{background:rgba(0,0,0,.4);color:rgba(150,255,150,.8);padding:8px 12px;font-family:'Courier New',monospace;font-size:11px;max-height:80px;overflow-y:auto;margin-top:10px;border-radius:10px;border:1px solid rgba(150,255,150,.1);display:none;}
+  .cb-bottom{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(140,0,45,.8),rgba(70,0,22,.92));border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;text-align:center;position:relative;overflow:hidden;}
+  .cb-bottom::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);border-radius:999px;}
+  .cb-btitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;}
+  .cb-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:12px 24px;border-radius:14px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 4px 18px rgba(255,45,107,.35);transition:all .2s;}
+  .cb-link:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,45,107,.5);}
 
-  /* messages area */
-  .messages-wrap{width:100%;max-width:600px;display:flex;flex-direction:column;gap:16px;}
-
-  .empty-state{text-align:center;padding:50px 20px;color:var(--text-dim);}
-  .empty-state h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;background:linear-gradient(90deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;}
-  .empty-state p{font-size:13px;}
-
-  /* message pair */
-  .message-pair{animation:slideUp .38s cubic-bezier(.34,1.4,.64,1);}
-  @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-  .msg-meta{font-size:11px;color:var(--text-dim);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-  .msg-meta strong{font-weight:700;}
-
-  .question-bubble{display:inline-block;background:linear-gradient(135deg,var(--hot),var(--berry));color:#fff;padding:10px 16px;border-radius:18px 18px 18px 4px;font-size:14px;margin-bottom:14px;max-width:90%;line-height:1.5;box-shadow:0 4px 16px rgba(255,45,107,.3);}
-
-  /* patent card */
-  .patent-card{background:rgba(12,0,7,.92);border:1.5px solid var(--card-border-bright);border-radius:16px;overflow:hidden;box-shadow:var(--soft-glow);margin-bottom:10px;}
-  .patent-header{background:linear-gradient(135deg,rgba(240,98,146,.85),rgba(194,24,91,.9));padding:10px 16px;display:flex;align-items:center;gap:8px;}
-  .patent-header-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
-  .patent-body{padding:16px;}
-  .patent-text{font-size:13.5px;line-height:1.7;color:rgba(255,215,235,.9);}
-  .patent-source{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,100,160,.15);font-size:11px;color:var(--text-dim);}
-  .patent-source a{color:var(--candy);text-decoration:none;}
-  .patent-source a:hover{text-decoration:underline;}
-
-  /* movement card */
-  .movement-card{background:rgba(12,0,7,.92);border:1.5px solid rgba(171,71,188,.5);border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(171,71,188,.2);}
-  .movement-header{background:linear-gradient(135deg,rgba(171,71,188,.85),rgba(106,27,154,.9));padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
-  .movement-header-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
-  .movement-body{padding:16px;}
-  .movement-text{font-family:'Courier New',monospace;font-size:11.5px;line-height:1.8;color:rgba(220,180,255,.85);white-space:pre-wrap;max-height:300px;overflow-y:auto;}
-  .movement-text::-webkit-scrollbar{width:4px;}
-  .movement-text::-webkit-scrollbar-track{background:rgba(255,255,255,.03);}
-  .movement-text::-webkit-scrollbar-thumb{background:rgba(171,71,188,.4);border-radius:4px;}
-  .speak-btn-row{padding:10px 16px 12px;display:flex;gap:8px;flex-wrap:wrap;}
-
-  /* advance / bottom section */
-  .bottom-section{width:100%;max-width:600px;display:flex;flex-direction:column;gap:10px;padding-top:8px;}
-  .advance-card{background:linear-gradient(135deg,rgba(140,0,45,.85),rgba(70,0,22,.95));border:1.5px solid var(--card-border-bright);border-radius:20px;padding:20px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--pop-glow);}
-  .advance-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 12px var(--candy);border-radius:999px;}
-  .advance-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;}
-  .advance-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(15px,3.5vw,18px);background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px;}
-
-  /* reset modal */
-  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;backdrop-filter:blur(4px);align-items:center;justify-content:center;}
-  .modal-backdrop.open{display:flex;}
-  .modal-box{background:rgba(14,0,8,.97);border:1.5px solid var(--card-border-bright);border-radius:20px;padding:28px 24px;max-width:360px;width:90%;box-shadow:var(--pop-glow);position:relative;}
-  .modal-box::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 8px var(--candy);border-radius:999px;}
-  .modal-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;color:var(--blush);margin-bottom:10px;}
-  .modal-body{font-size:13px;color:rgba(255,200,220,.7);line-height:1.6;margin-bottom:20px;}
-  .modal-btns{display:flex;gap:10px;}
-
-  .wordmark{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.15);padding-bottom:8px;}
+  .cb-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;}
+  .cb-modal.open{display:flex;}
+  .cb-mbox{background:rgba(14,0,8,.97);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:26px 22px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(255,45,107,.4);position:relative;}
+  .cb-mbox::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);border-radius:999px;}
+  .cb-mtitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#ffb3cf;margin-bottom:9px;}
+  .cb-mbodytxt{font-size:12px;color:rgba(255,200,220,.65);line-height:1.6;margin-bottom:16px;}
+  .cb-mbtns{display:flex;gap:9px;}
+  .cb-err{font-size:11px;color:#ff2d6b;margin-top:6px;min-height:16px;}
+  .cb-wmark{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.12);padding-bottom:8px;}
 </style>
 </head>
 <body>
 <div class="bg-layer"></div>
-<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 <div class="sparkles" id="sparkles"></div>
 
 <div class="screen">
 
-  <!-- mascot bar -->
-  <div class="mascot-bar">
-    <div class="mascot">
-      <div class="bot-face">💡</div>
+  <div class="cb-topbar">
+    <div class="cb-logo">
+      <div class="cb-icon">💡</div>
       <div>
-        <div class="bot-name">CAREBOT · Q&A ✦</div>
-        <div class="bot-sub">Women Inventors · Collaborative</div>
+        <div class="cb-name">CAREBOT · Q&A ✦</div>
+        <div class="cb-sub">Women Inventors · Collaborative</div>
       </div>
     </div>
-    <div class="mascot-right">
-      <div class="online-badge" id="onlineCount">👥 Connecting…</div>
-      <div class="time-badge"><div class="time-pip"></div><span id="sysTime">--:--:--</span></div>
+    <div class="cb-badges">
+      <div class="cb-badge" id="onlineCount"><span class="cb-pip"></span>Connecting…</div>
+      <div class="cb-badge" id="sysTime">--:--</div>
     </div>
   </div>
 
-  <!-- VIDEO SECTION -->
-  <div class="video-section" id="videoSection">
-    <div class="video-header">
-      <span class="video-label">✦ Research Video · Watch Before Asking</span>
-      <div class="video-ctrl-row">
-        <button class="video-btn" id="watchedBtn" onclick="markWatched()">Done watching</button>
-        <button class="video-btn" id="rewatchBtn" style="display:none" onclick="rewatch()">Rewatch ↩</button>
+  <div class="cb-video" id="videoSection">
+    <div class="cb-video-head">
+      <span class="cb-video-label">✦ Research Video · Watch First</span>
+      <div style="display:flex;gap:7px;">
+        <button class="cb-vbtn" id="watchedBtn" onclick="markWatched()">Done watching</button>
+        <button class="cb-vbtn" id="rewatchBtn" style="display:none" onclick="rewatch()">Rewatch ↩</button>
       </div>
     </div>
-    <div class="video-embed">
+    <div class="cb-video-embed">
       <iframe id="vimeoPlayer"
         src="https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479"
         allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-        title="CAREBOT Research Video">
-      </iframe>
+        title="CAREBOT Research Video"></iframe>
     </div>
   </div>
 
-  <!-- input card -->
-  <div class="input-card">
-    <div style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">✦ Ask a Question · Everyone Sees the Same Answers</div>
-    <div class="input-row">
-      <input class="kawaii-input name-input" type="text" id="userName" placeholder="Your name…" value="Tester">
-      <button class="btn primary" onclick="askQuestion()">✦ Ask</button>
-      <button class="btn soft" onclick="showResetModal()" title="Reset all messages">↺</button>
+  <div class="cb-card">
+    <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
+    <div class="cb-row">
+      <input class="cb-input cb-name-in" type="text" id="userName" placeholder="Your name…" value="">
+      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about technology and inventions…" autocomplete="off">
+      <button class="cb-btn primary" onclick="askQuestion()">✦ Ask</button>
+      <button class="cb-btn soft" onclick="showAdminModal()" title="Admin reset">⚙</button>
     </div>
-    <div class="input-row">
-      <input class="kawaii-input" type="text" id="userQuestion" placeholder="Ask about technology and inventions…" autocomplete="off">
-    </div>
-    <div id="debugLog"></div>
   </div>
 
-  <!-- messages area -->
-  <div class="messages-wrap" id="outputArea">
-    <div class="empty-state">
+  <div class="cb-msgs" id="outputArea">
+    <div class="cb-empty">
       <h3>✦ Answers appear here</h3>
       <p>Type a question above and tap Ask</p>
     </div>
   </div>
 
-  <!-- advance / bottom -->
-  <div class="bottom-section">
-    <div class="advance-card">
-      <div class="advance-eyebrow">✦ CAREBOT · Task Complete</div>
-      <div class="advance-title">Ready for your next task?</div>
-      <a class="btn primary big" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">✦ Advance to next task</a>
-    </div>
+  <div class="cb-bottom">
+    <div class="cb-btitle">Ready for your next task?</div>
+    <a class="cb-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">✦ Advance to next task</a>
   </div>
 
-  <div class="wordmark">✦ carebot/caretech research system · v2.4 ✦</div>
+  <div class="cb-wmark">✦ carebot/caretech research system · v3.0 ✦</div>
 </div>
 
-<!-- reset modal -->
-<div class="modal-backdrop" id="resetModal">
-  <div class="modal-box">
-    <div class="modal-title">⚠️ Reset All Messages?</div>
-    <div class="modal-body">This will clear all Q&A pairs from the display and Firebase database. This action cannot be undone.</div>
-    <div class="modal-btns">
-      <button class="btn soft" style="flex:1" onclick="closeResetModal()">Cancel</button>
-      <button class="btn primary" style="flex:1" onclick="confirmReset()">Reset All</button>
+<!-- Admin Modal -->
+<div class="cb-modal" id="adminModal">
+  <div class="cb-mbox">
+    <div class="cb-mtitle">🔒 Admin Reset</div>
+    <div class="cb-mbodytxt">Enter the admin passcode to clear all messages from the display and database.</div>
+    <input class="cb-input" type="password" id="adminPass" placeholder="Enter passcode…" style="width:100%;margin-bottom:6px;">
+    <div class="cb-err" id="adminErr"></div>
+    <div class="cb-mbtns" style="margin-top:10px;">
+      <button class="cb-btn soft" style="flex:1" onclick="closeAdminModal()">Cancel</button>
+      <button class="cb-btn primary" style="flex:1" onclick="confirmAdminReset()">Reset All</button>
     </div>
   </div>
 </div>
@@ -240,35 +180,43 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-<!-- Vimeo Player SDK -->
+<!-- Vimeo SDK -->
 <script src="https://player.vimeo.com/api/player.js"></script>
 
 <script>
-/* ── clock ── */
-function updateClock(){const n=new Date(),p=v=>String(v).padStart(2,'0');document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;}
+/* ── CONFIGURATION ── */
+const ADMIN_PASSCODE = 'carebot2025'; // Change this to your desired passcode
+const MAX_DISPLAY = 3;
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}`;
+}
 setInterval(updateClock,1000);updateClock();
 
-/* ── sparkles ── */
+/* ── Sparkles ── */
 (function(){
   const wrap=document.getElementById('sparkles');
   const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
   for(let i=0;i<28;i++){
     const s=document.createElement('span');s.className='sp';
     s.textContent=chars[Math.floor(Math.random()*chars.length)];
-    s.style.left=Math.random()*100+'vw';s.style.bottom=Math.random()*-60+'px';
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
     s.style.fontSize=(9+Math.random()*10)+'px';
     s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
-    s.style.animationDuration=(7+Math.random()*13)+'s';s.style.animationDelay=(Math.random()*13)+'s';
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
     wrap.appendChild(s);
   }
 })();
 
-/* ── video collapse ── */
-let vimeoPlayer=null;
+/* ── Vimeo ── */
 try{
-  vimeoPlayer=new Vimeo.Player(document.getElementById('vimeoPlayer'));
-  vimeoPlayer.on('ended',()=>markWatched());
-  vimeoPlayer.on('timeupdate',data=>{if(data.percent>=0.95)markWatched();});
+  const vp=new Vimeo.Player(document.getElementById('vimeoPlayer'));
+  vp.on('ended',markWatched);
+  vp.on('timeupdate',d=>{if(d.percent>=.95)markWatched();});
 }catch(e){}
 
 function markWatched(){
@@ -280,255 +228,425 @@ function rewatch(){
   document.getElementById('videoSection').classList.remove('watched');
   document.getElementById('rewatchBtn').style.display='none';
   document.getElementById('watchedBtn').style.display='block';
-  const iframe=document.getElementById('vimeoPlayer');
-  const src=iframe.src;iframe.src='';setTimeout(()=>iframe.src=src,100);
+  const f=document.getElementById('vimeoPlayer'),s=f.src;
+  f.src='';setTimeout(()=>f.src=s,100);
 }
 
 /* ── Firebase ── */
-const firebaseConfig={apiKey:"AIzaSyBK9wTaCHmQAorUOch1LNENU7rJjfyDoCA",authDomain:"womanasinventor.firebaseapp.com",databaseURL:"https://womanasinventor-default-rtdb.firebaseio.com",projectId:"womanasinventor",storageBucket:"womanasinventor.firebasestorage.app",messagingSenderId:"290959160470",appId:"1:290959160470:web:a9025db53ddde2ce117eb7"};
-let app,database,messagesRef,onlineRef;
-let currentUser=localStorage.getItem('carebotUserName')||'';
-let userColor=localStorage.getItem('carebotUserColor')||generateColor();
-let useFirebase=true;
+const firebaseConfig={
+  apiKey:"AIzaSyBK9wTaCHmQAorUOch1LNENU7rJjfyDoCA",
+  authDomain:"womanasinventor.firebaseapp.com",
+  databaseURL:"https://womanasinventor-default-rtdb.firebaseio.com",
+  projectId:"womanasinventor",
+  storageBucket:"womanasinventor.firebasestorage.app",
+  messagingSenderId:"290959160470",
+  appId:"1:290959160470:web:a9025db53ddde2ce117eb7"
+};
 
-function generateColor(){const c=['#e91e63','#9c27b0','#673ab7','#3f51b5','#2196f3','#00bcd4','#009688','#4caf50','#ff9800','#ff5722'];const v=c[Math.floor(Math.random()*c.length)];localStorage.setItem('carebotUserColor',v);return v;}
+let app,database,messagesRef,onlineRef,useFirebase=true;
+let currentUser=localStorage.getItem('cbUser')||'';
+let userColor=localStorage.getItem('cbColor')||genColor();
+
+function genColor(){
+  const c=['#e91e63','#9c27b0','#ff5722','#2196f3','#009688','#ff9800'];
+  const v=c[Math.floor(Math.random()*c.length)];
+  localStorage.setItem('cbColor',v);return v;
+}
 
 try{
   app=firebase.initializeApp(firebaseConfig);
   database=firebase.database();
   messagesRef=database.ref('qaMessages');
   onlineRef=database.ref('online');
-  log('Firebase initialized');
   if(currentUser)trackPresence();
-  messagesRef.on('child_added',(snapshot)=>{
-    const msg=snapshot.val();
-    if(msg.userName!==currentUser||snapshot.key.startsWith('-'))displayFromFirebase(msg,snapshot.key);
+
+  /* Initial load: fetch last MAX_DISPLAY messages silently, then watch for new ones */
+  let initialLoadDone=false;
+  messagesRef.orderByKey().limitToLast(MAX_DISPLAY).once('value',snapshot=>{
+    const area=document.getElementById('outputArea');
+    area.innerHTML='';
+    const items=[];
+    snapshot.forEach(child=>{items.push({key:child.key,val:child.val()});});
+    if(!items.length){
+      area.innerHTML='<div class="cb-empty"><h3>✦ Answers appear here</h3><p>Type a question above and tap Ask</p></div>';
+    } else {
+      items.reverse().forEach(({key,val})=>renderPair(val,key,false));
+    }
+    initialLoadDone=true;
+    const lastKey=items.length?items[items.length-1].key:null;
+    const newQuery=lastKey
+      ? messagesRef.orderByKey().startAfter(lastKey)
+      : messagesRef.orderByKey().limitToLast(1);
+    newQuery.on('child_added',snap=>{
+      if(!initialLoadDone)return;
+      const msg=snap.val();const key=snap.key;
+      const area=document.getElementById('outputArea');
+      const empty=area.querySelector('.cb-empty');if(empty)empty.remove();
+      const pairs=area.querySelectorAll('.cb-pair');
+      if(pairs.length>=MAX_DISPLAY)pairs[pairs.length-1].remove();
+      renderPair(msg,key,true);
+    });
   });
-  onlineRef.on('value',(snapshot)=>{
+
+  onlineRef.on('value',snapshot=>{
     const count=Object.keys(snapshot.val()||{}).length;
-    document.getElementById('onlineCount').textContent=`👥 ${count} online`;
+    document.getElementById('onlineCount').innerHTML=`<span class="cb-pip"></span>${count} online`;
   });
-}catch(err){log('Firebase error: '+err.message);useFirebase=false;document.getElementById('onlineCount').textContent='📴 Offline';}
+}catch(e){
+  useFirebase=false;
+  document.getElementById('onlineCount').textContent='Offline';
+}
 
-function trackPresence(){if(!onlineRef||!currentUser)return;const ref=onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_'));ref.set({name:currentUser,color:userColor,timestamp:firebase.database.ServerValue.TIMESTAMP});ref.onDisconnect().remove();}
+function trackPresence(){
+  if(!onlineRef||!currentUser)return;
+  const r=onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_'));
+  r.set({name:currentUser,timestamp:firebase.database.ServerValue.TIMESTAMP});
+  r.onDisconnect().remove();
+}
 
-document.getElementById('userName').addEventListener('change',function(){currentUser=this.value.trim();localStorage.setItem('carebotUserName',currentUser);if(currentUser&&useFirebase)trackPresence();});
+document.getElementById('userName').addEventListener('change',function(){
+  currentUser=this.value.trim();
+  localStorage.setItem('cbUser',currentUser);
+  if(currentUser&&useFirebase)trackPresence();
+});
 
-/* ── responses ── */
-const responses=[{text:"Katherine G. Johnson co-authored NASA Technical Note D-233 in 1960, presenting mathematical expressions for determining satellite trajectories and orbital mechanics. Her calculations were critical for placing satellites over selected Earth positions—work that helped launch America into space and proved essential for the space program!",source:"NASA Technical Note D-233 (1960)",link:"https://ntrs.nasa.gov/citations/19980227091"},{text:"Mary E. Winter patented an adding machine on May 23, 1882 (Patent No. 258,518). Her sophisticated mechanical calculator used ratchet wheels, pawls, and operating keys numbered 1-10 to perform addition up to 600. The machine included innovative features like bent pawls hinged to carrying-arms and pawl-trippers to prevent wear on the mechanism.",source:"U.S. Patent No. 258,518 (1882)",link:"https://patents.google.com/patent/US258518"},{text:"Ancient tradition credits women with inventing the arts most necessary to civilization. Isis in Egypt was worshiped for inventing bread-making and founding agriculture. Before her time, Egyptians lived on uncooked roots and herbs. She also taught the art of healing, the manufacture of flax, and laid the foundations of Egyptian literature!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"The invention of silk is attributed to Si-ling-chi, wife of Emperor Hoang-ti, four thousand years before Christ. China itself was named after her! Known as Sien Tshan, the goddess of silkworms, she is still worshiped today. For ages, the secret of silk was kept from other nations, and Roman emperors paid its weight in gold for a single garment.",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"Katherine Johnson's work at NASA involved complex orbital mechanics calculations. Her technical paper addressed how to determine azimuth angles at burnout for satellite launches, accounting for the Earth's rotation and oblateness. She worked on both eastward and westward satellite launches, proving there were no limitations based on launch direction!",source:"NASA Technical Note D-233 (1960)",link:"https://ntrs.nasa.gov/citations/19980227091"},{text:"Mary Winter's adding machine was remarkably sophisticated for 1882. It featured two series of ratchet teeth (upper and lower), a dial plate numbered from 1 to 600, and a spring mechanism that could reset the machine to zero. Keys 1-7 operated on the upper teeth series, while keys 6, 8, 9, and 10 operated on the lower series.",source:"U.S. Patent No. 258,518 (1882)",link:"https://patents.google.com/patent/US258518"},{text:"Minerva, the Greek goddess, was regarded as the inventor of every kind of work done by women. But she was also credited with originating agriculture and mechanics, inventing all tools of handicraft, musical instruments, war chariots, shipbuilding, and even the breaking of horses!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"The cotton-gin, one of the most remarkable inventions of the age, was conceived by Catharine Littlefield Greene, widow of Revolutionary General Greene. She entrusted its construction to Eli Whitney, who was boarding with her. When the wooden teeth failed, Whitney wanted to give up, but Greene's faith never wavered—she suggested using wire instead. Within ten days, a perfect model was completed!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"Mrs. Mary E. Walton invented a method for deadening the noise of elevated railroads after Edison and other inventors had unsuccessfully tried for six months. Her device was immediately adopted by the Metropolitan and other railways. A prominent New York physician noted that the constant din of the city causes shattered nervous systems—making her invention a tremendous benefit to human health!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"Miss Maggie Knight invented the machine for manufacturing satchel-bottom paper bags—the kind we still use today. The Commissioner of Patents complimented her on its entire originality, noting that most inventions merely improve upon preceding ones. She refused fifty thousand dollars for her patent shortly after receiving it!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"Phoebe Sarah Marks (later known as Hertha Ayrton) patented a Draftsman's Dividing-Instrument on January 6, 1885 (Patent No. 310,450). This mathematical instrument allowed users to divide any given line or space into equal divisions without calculation—requiring only simple manipulation. It was a brilliant solution to a problem that previously required delicate measurement and exact calculation!",source:"U.S. Patent No. 310,450 (1885)",link:"https://patents.google.com/patent/US310450"},{text:"Edith Clarke, a pioneering electrical engineer, patented a Calculator on September 1, 1925 (Patent No. 1,552,113). Clarke was the first woman to earn an M.S. in electrical engineering from MIT and became the first female professor of electrical engineering in the United States!",source:"U.S. Patent No. 1,552,113 (1925)",link:"https://patents.google.com/patent/US1552113"},{text:"Evelyn Berezin patented Control Means with Record Sensing for an Electronic Calculator on February 28, 1961 (Patent No. 2,973,141). Berezin later designed the first true word processor and founded the Redactron Corporation. She's known as the 'mother of the word processor'!",source:"U.S. Patent No. 2,973,141 (1961)",link:"https://patents.google.com/patent/US2973141"},{text:"Sarah Boone, an African American inventor, patented an improved Ironing-Board on April 26, 1892 (Patent No. 473,653). Her design was specifically shaped to iron the sleeves and bodies of ladies' garments more effectively—an innovation we still use today!",source:"U.S. Patent No. 473,653 (1892)",link:"https://patents.google.com/patent/US473653"},{text:"Mary Phelps Jacob patented the modern Brassiere on November 3, 1914 (Patent No. 1,115,674). She created it from two silk handkerchiefs and ribbon as a more comfortable alternative to the restrictive corset, revolutionizing women's undergarments!",source:"U.S. Patent No. 1,115,674 (1914)",link:"https://patents.google.com/patent/US1115674"},{text:"Beulah Louise Henry, known as 'Lady Edison,' patented a Typewriter on August 4, 1959 (Patent No. 2,897,944). Henry held 49 patents and had over 110 inventions to her name!",source:"U.S. Patent No. 2,897,944 (1959)",link:"https://patents.google.com/patent/US2897944"},{text:"Harriet Hosmer, the celebrated sculptor, invented a process for producing marble from limestone that closely simulates the finest antique varieties—a process the Italian Government had long sought without success. But her most valuable invention is the permanent magnet as a motive power, deemed one of the most important inventions of the century!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"Why didn't more women take out patents in their own names? Because to do so would expose them to ridicule and contempt, and a loss of position in society, which frowned upon any attempt at outside industry for women. Many patents in men's names are actually due to women's inventions!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"},{text:"Katherine Johnson's calculations were so precise that her NASA paper compared results with three-degree-of-freedom calculations performed on an IBM 704 computer. For the eastward launch example, her method placed the satellite just 18.6 nautical miles from the desired position—remarkable accuracy for hand calculations!",source:"NASA Technical Note D-233 (1960)",link:"https://ntrs.nasa.gov/citations/19980227091"},{text:"The Eureka street-sweeper was invented by a Hoboken lady after her dress was spattered with mud by a clumsy machine in New York one day. Possessed of mechanical genius, she determined to create a sweeper that would do its work more perfectly. Her success was great, and her invention a vast improvement upon all predecessors!",source:"\"Woman as an Inventor\" by Matilda Joslyn Gage, North American Review (1883)",link:"https://archive.org/details/jstor-25118326"}];
+/* ── Response Bank — each entry has its own custom 5-line movement sequence ── */
+const responses=[
+  {
+    text:"Katherine G. Johnson co-authored NASA Technical Note D-233 in 1960, presenting mathematical expressions for determining satellite trajectories and orbital mechanics. Her calculations were critical for placing satellites over selected Earth positions—work that helped launch America into space!",
+    source:"NASA Technical Note D-233 (1960)",link:"https://ntrs.nasa.gov/citations/19980227091",
+    inventor:"Katherine Johnson",theme:"ZERO GRAVITY FLOW",
+    moves:[
+      "1. SATELLITE ORBIT — one arm sweeps a wide slow arc overhead like a satellite circling Earth",
+      "2. TRAJECTORY POP — body leans forward like a rocket launch, then snaps upright with a chest pop",
+      "3. CALCULATE & LOCK — mime writing equations fast with one hand, then freeze both arms at 90°",
+      "4. EARTH SPIN — pivot one full slow turn on the spot, arms out like the globe rotating",
+      "5. FREEZE pointing at the sky — call out: 'Katherine Johnson sent us to space!'"
+    ]
+  },
+  {
+    text:"Mary E. Winter patented an adding machine on May 23, 1882 (Patent No. 258,518). Her sophisticated mechanical calculator used ratchet wheels, pawls, and operating keys numbered 1–10 to perform addition up to 600.",
+    source:"U.S. Patent No. 258,518 (1882)",link:"https://patents.google.com/patent/US258518",
+    inventor:"Mary Winter",theme:"ADDING MACHINE SEQUENCE",
+    moves:[
+      "1. ADDING MACHINE KEYS — jab each finger into the air one by one, ten sharp pops like pressing number keys 1 through 10",
+      "2. RATCHET CRANK — both wrists crank in small tight circles like turning the ratchet wheels inside the adding machine",
+      "3. ADDING MACHINE WAVE — arms ripple outward as the machine counts up, slow then speeding up to 600",
+      "4. MECHANICAL LOCK — freeze mid-move like a gear stuck in place, full body rigid for 4 counts",
+      "5. FREEZE arms at 90° — call out: 'Mary Winter built the adding machine!'"
+    ]
+  },
+  {
+    text:"Ancient tradition credits Isis of Egypt with inventing bread-making and founding agriculture. Before her time, Egyptians lived on uncooked roots and herbs. She also taught the art of healing, manufacture of flax, and laid the foundations of Egyptian literature!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Isis",theme:"HARVEST FLOW",
+    moves:[
+      "1. BREAD KNEAD — fists press and roll forward like kneading dough, slow and powerful, 8 counts",
+      "2. HARVEST SWEEP — arms swing wide and low like gathering grain from the field for bread-making",
+      "3. FLAX WEAVE — one arm ripples from shoulder to fingertip like flax blowing in the wind",
+      "4. HEALING HANDS — one palm faces outward slow and steady, the other cradles beneath it",
+      "5. FREEZE arms raised like a goddess — call out: 'Isis invented bread — mother of civilization!'"
+    ]
+  },
+  {
+    text:"The invention of silk is attributed to Si-ling-chi, wife of Emperor Hoang-ti, four thousand years before Christ. She is known as Sien Tshan, goddess of silkworms, and is still worshiped today. For ages, the secret of silk was kept from other nations.",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Si-ling-chi",theme:"SILK & SILKWORM FLOW",
+    moves:[
+      "1. SILK UNROLL — arms ripple outward from chest like unrolling a bolt of silk, 8 slow counts",
+      "2. SILKWORM WAVE — body undulates head to hip like a silkworm spinning silk inside its cocoon",
+      "3. SILK THREAD — arms alternate crossing and opening like pulling silk thread from the cocoon",
+      "4. SILK FLOAT — arms rise and fall in a gentle wave as if a silk fabric is floating on air",
+      "5. FREEZE draped like silk — call out: 'Si-ling-chi gave the world silk!'"
+    ]
+  },
+  {
+    text:"Edith Clarke patented an Electrical Calculator on September 1, 1925 (Patent No. 1,552,113). She was the first woman to earn an M.S. in electrical engineering from MIT and became the first female professor of electrical engineering in the United States!",
+    source:"U.S. Patent No. 1,552,113 (1925)",link:"https://patents.google.com/patent/US1552113",
+    inventor:"Edith Clarke",theme:"ELECTRICAL CALCULATOR SEQUENCE",
+    moves:[
+      "1. ELECTRICAL CURRENT — arms shoot outward fast like a jolt of electricity through the calculator circuit",
+      "2. CALCULATOR DIAL — one hand mimes turning the large dial on the electrical calculator, slow and precise",
+      "3. CIRCUIT WAVE — electric wave travels from one hand through the chest and out the other hand",
+      "4. ENGINEERING LOCK — snap into sharp tutting pose, rigid 90° angles like an electrical engineering diagram",
+      "5. FREEZE arms crossed like a professor — call out: 'Edith Clarke — electrical calculator pioneer!'"
+    ]
+  },
+  {
+    text:"Evelyn Berezin patented Control Means for an Electronic Calculator in 1961 (Patent No. 2,973,141). She later designed the first true word processor and founded the Redactron Corporation, earning the title 'mother of the word processor'!",
+    source:"U.S. Patent No. 2,973,141 (1961)",link:"https://patents.google.com/patent/US2973141",
+    inventor:"Evelyn Berezin",theme:"WORD PROCESSOR WAVE",
+    moves:[
+      "1. OLD TYPEWRITER TO WORD PROCESSOR — start with stiff typewriter jabs, then transition into smooth flowing typing",
+      "2. DELETE & RETYPE — sharp wipe gesture left like deleting text on the word processor, then quick jabs forward",
+      "3. WORD PROCESSOR SCROLL — one arm scrolls slowly upward like text flowing up a word processor screen",
+      "4. REDACTRON CORPORATION LOCK — freeze mid-type, one hand raised like founding a company",
+      "5. FREEZE in a power pose — call out: 'Evelyn Berezin — mother of the word processor!'"
+    ]
+  },
+  {
+    text:"Sarah Boone, an African American inventor, patented an improved Ironing-Board on April 26, 1892 (Patent No. 473,653). Her design was specifically shaped to iron the sleeves and bodies of ladies\' garments more effectively—an innovation we still use today!",
+    source:"U.S. Patent No. 473,653 (1892)",link:"https://patents.google.com/patent/US473653",
+    inventor:"Sarah Boone",theme:"IRONING BOARD SEQUENCE",
+    moves:[
+      "1. IRONING BOARD SETUP — mime unfolding an ironing board with two hands, then snap it into place",
+      "2. IRON GLIDE — flat palm presses down firm on the ironing board, then glides outward smooth across a sleeve",
+      "3. SLEEVE SHAPE — one arm curves and narrows like shaping a garment sleeve on the ironing board",
+      "4. PRESS & POP — sharp downward iron press, hold 2 counts, then lift with a full chest pop",
+      "5. FREEZE mid-press — call out: 'Sarah Boone perfected the ironing board!'"
+    ]
+  },
+  {
+    text:"Miss Maggie Knight invented the machine for manufacturing satchel-bottom paper bags—the kind we still use today. The Commissioner of Patents complimented her on its entire originality. She refused fifty thousand dollars for her patent shortly after receiving it!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Maggie Knight",theme:"PAPER BAG MACHINE FLOW",
+    moves:[
+      "1. BAG FOLD — hands press flat together, crease sharply left then right like folding a satchel-bottom paper bag",
+      "2. SATCHEL BOTTOM — arms frame a square at waist level, two sharp pops forming the paper bag base",
+      "3. BAG MACHINE CRANK — one arm cranks in a circle like feeding paper through the bag-making machine",
+      "4. FIFTY THOUSAND NO — arms cross in a firm X then push outward — she turned down the money!",
+      "5. FREEZE arms wide — call out: 'Maggie Knight made the paper bag machine!'"
+    ]
+  },
+  {
+    text:"Mrs. Mary E. Walton invented a method for deadening the noise of elevated railroads after Edison and others had tried unsuccessfully for six months. Her device was immediately adopted by major New York railways, benefiting the health of thousands of city residents!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Mary Walton",theme:"SILENT RAILROAD FLOW",
+    moves:[
+      "1. RAILROAD TOPROCK — feet shuffle along invisible elevated railroad tracks, arms pump like train pistons",
+      "2. NOISE POP — big loud arm pop outward, then land completely silent — the railroad noise is deadened",
+      "3. ELEVATED RAIL GLIDE — feet slide smoothly along the elevated railroad track, body low and steady",
+      "4. ELEVATED RISE — rise up slow onto toes like the elevated railroad above the street, arms out at full span",
+      "5. SILENT LANDING — drop back down with zero sound — call out: 'Mary Walton silenced the railroad!'"
+    ]
+  },
+  {
+    text:"Phoebe Sarah Marks (Hertha Ayrton) patented a Draftsman\'s Dividing-Instrument on January 6, 1885 (Patent No. 310,450). This tool allowed users to divide any line into equal parts without calculation—just simple manipulation!",
+    source:"U.S. Patent No. 310,450 (1885)",link:"https://patents.google.com/patent/US310450",
+    inventor:"Hertha Ayrton",theme:"DIVIDING INSTRUMENT SEQUENCE",
+    moves:[
+      "1. DIVIDING INSTRUMENT — both arms extend fully, then one hand slides to the exact midpoint and locks",
+      "2. EQUAL SPLITS — step out left then right in perfectly equal distances, sharp lock at each endpoint",
+      "3. LINE DRAW — one arm sweeps a long slow horizontal line through the air like the dividing instrument",
+      "4. MEASUREMENT POP — hand marks equal intervals along an invisible line with sharp finger pops",
+      "5. FREEZE at center — call out: 'Hertha Ayrton invented the dividing instrument!'"
+    ]
+  },
+  {
+    text:"The cotton-gin was conceived by Catharine Littlefield Greene, widow of Revolutionary General Greene. When wooden teeth failed, she suggested using wire—Whitney had wanted to give up. Within ten days of her suggestion, a perfect model was completed!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Catharine Greene",theme:"COTTON GIN FLOW",
+    moves:[
+      "1. COTTON PULL — both hands grip and yank downward repeatedly like pulling cotton through the cotton gin",
+      "2. WOODEN TEETH FAIL — arms jab forward then drop limp — the wooden gin teeth broke!",
+      "3. WIRE SWITCH — arms pull apart taut and firm like stretching wire to replace the broken cotton gin teeth",
+      "4. COTTON GIN CRANK — one arm cranks a big circle like the cotton gin finally working perfectly",
+      "5. FREEZE in a victory lock — call out: 'Catharine Greene made the cotton gin work!'"
+    ]
+  },
+  {
+    text:"Why didn\'t more women take out patents in their own names? To do so would expose them to ridicule and contempt and a loss of social position. Many patents in men\'s names are actually due to women\'s inventions!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Women Inventors",theme:"RECLAIM THE PATENT",
+    moves:[
+      "1. HIDDEN HANDS — arms pull back and hide behind the body, then slowly push forward into the open",
+      "2. RIDICULE BLOCK — sharp forearm cross in front of face blocks the contempt, then push both arms out defiantly",
+      "3. PATENT STAMP — big arm arc overhead, then STOMP down hard like stamping a patent in your own name",
+      "4. NAME CLAIM — point firmly forward with both hands — this invention belongs to a woman!",
+      "5. FREEZE arms raised — call out: 'Women invented this — and the world will know it!'"
+    ]
+  },
+  {
+    text:"Mary Phelps Jacob patented the modern Brassiere on November 3, 1914 (Patent No. 1,115,674). She created it from two silk handkerchiefs and ribbon as a more comfortable alternative to the restrictive corset, revolutionizing women\'s undergarments!",
+    source:"U.S. Patent No. 1,115,674 (1914)",link:"https://patents.google.com/patent/US1115674",
+    inventor:"Mary Phelps Jacob",theme:"BRASSIERE LIBERATION FLOW",
+    moves:[
+      "1. CORSET BREAK — arms wrap tight around body then burst open wide — freedom from the corset!",
+      "2. SILK HANDKERCHIEF UNFOLD — arms open from chest outward like unfolding two silk handkerchiefs",
+      "3. RIBBON TIE — one hand loops an invisible ribbon around the wrist of the other, then pulls free",
+      "4. BRASSIERE COMFORT WAVE — full body rolls through a slow comfortable wave, relaxed and free-flowing",
+      "5. FREEZE arms open wide — call out: 'Mary Phelps Jacob — she invented the brassiere!'"
+    ]
+  },
+  {
+    text:"Beulah Louise Henry, known as \'Lady Edison,\' held 49 patents and had over 110 inventions to her name. Among them was a Typewriter patented in 1959 (Patent No. 2,897,944) featuring innovative improvements to the typing mechanism.",
+    source:"U.S. Patent No. 2,897,944 (1959)",link:"https://patents.google.com/patent/US2897944",
+    inventor:"Beulah Henry",theme:"TYPEWRITER SEQUENCE",
+    moves:[
+      "1. TYPEWRITER TAP — fingers punch the air left to right across an invisible typewriter keyboard, sharp and rhythmic",
+      "2. CARRIAGE RETURN — one arm sweeps wide left like slamming the typewriter carriage back to start",
+      "3. TYPEWRITER KEY JAM — all fingers lock up mid-tap on the typewriter keys, then snap free with a full body pop",
+      "4. 49 PATENTS COUNT — count 1 to 8 twice with finger pops — honoring her 49 typewriter-era patents",
+      "5. FREEZE mid-type — call out: 'Beulah Henry — Lady Edison with 49 patents!'"
+    ]
+  },
+  {
+    text:"Harriet Hosmer invented a process for producing artificial marble from limestone that closely simulates the finest antique varieties—a process the Italian Government had long sought without success. Her permanent magnet invention was deemed one of the most important of the century!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Harriet Hosmer",theme:"MARBLE & MAGNET FLOW",
+    moves:[
+      "1. MARBLE CARVE — rise from a low crouch into a full standing lock, slow as a sculptor carving marble",
+      "2. LIMESTONE PRESS — fists push together from both sides like compressing limestone into artificial marble",
+      "3. MAGNETIC PULL — arms reach toward each other slow and trembling like permanent magnets attracting",
+      "4. MARBLE WAVE — one hand traces a smooth curve through the air like shaping a marble sculpture",
+      "5. FREEZE stiff as marble — call out: 'Harriet Hosmer turned limestone into marble!'"
+    ]
+  }
+];
 
 let recentlyShown=[];
-function getMatchingResponse(){
-  let available=responses.filter((_,i)=>!recentlyShown.includes(i));
-  if(available.length<5){recentlyShown=[];available=responses;}
-  const ri=Math.floor(Math.random()*available.length);
-  const sel=available[ri];
-  const ai=responses.indexOf(sel);
-  recentlyShown.push(ai);if(recentlyShown.length>15)recentlyShown.shift();
+function getResponse(){
+  let avail=responses.filter((_,i)=>!recentlyShown.includes(i));
+  if(avail.length<4){recentlyShown=[];avail=responses;}
+  const ri=Math.floor(Math.random()*avail.length);
+  const sel=avail[ri];const ai=responses.indexOf(sel);
+  recentlyShown.push(ai);if(recentlyShown.length>8)recentlyShown.shift();
   return sel;
 }
 
-/* ── movement generation ── */
-function generateMovement(text){
-  const words=text.toLowerCase();let movement=[];
-  let inventor='Unknown Inventor';
-  const np=[/(\w+\s+\w+\.\s+\w+)\s+(patented|invented|co-authored)/i,/(\w+\s+\w+)\s+(patented|invented|co-authored)/i];
-  for(const p of np){const m=text.match(p);if(m){inventor=m[1];break;}}
-  if(text.includes('Isis'))inventor='Isis (Ancient Egypt)';
-  else if(text.includes('Minerva'))inventor='Minerva (Ancient Greece)';
-  else if(text.includes('Si-ling-chi'))inventor='Si-ling-chi (Ancient China)';
-  const yearMatch=text.match(/\b(18|19|20)\d{2}\b/);const year=yearMatch?yearMatch[0]:'';
-  let invention='innovation';
-  const im=text.match(/patented (?:a|an|the)\s+([^,\.]+?)(?:\s+on|\s+\()/i);
-  if(im)invention=im[1].trim();
-  movement.push(`🎤 HIP HOP SEQUENCE: ${invention}`);
-  movement.push(`INNOVATOR: ${inventor}`);
-  if(year)movement.push(`YEAR: ${year} - THROW IT BACK!`);
-  movement.push(`\n=== CHOREO BREAKDOWN ===\n`);
-  let count=1;
-  movement.push(`${count}. OPENING: POP & LOCK INTO THE CIPHER`);
-  movement.push(`   🎵 Count: 5-6-7-8`);
-  movement.push(`   - Start: Art Deco statue pose - straight, metallic`);
-  movement.push(`   - 5: POP chest out (sharp)`);
-  movement.push(`   - 6: LOCK arms at 90° angles`);
-  movement.push(`   - 7: POP shoulders up`);
-  movement.push(`   - 8: Point and LOCK toward audience`);
-  movement.push(`   - Call out: "${inventor}!"`);count++;
-  if(words.includes('machine')||words.includes('calculator')||words.includes('device')){
-    movement.push(`\n${count}. THE MACHINE: FULL ROBOT`);
-    movement.push(`   🎵 16 counts`);
-    movement.push(`   - Counts 1-4: ROBOT WALK forward`);
-    movement.push(`   - Counts 5-8: WAVE down both arms`);
-    movement.push(`   - Counts 9-12: POPPING sequence`);
-    movement.push(`   - Counts 13-16: GLIDE and FREEZE`);count++;
-  }
-  if(words.includes('space')||words.includes('satellite')||words.includes('orbit')){
-    movement.push(`\n${count}. SPACE FLOW: ANTI-GRAVITY LOCKING`);
-    movement.push(`   🎵 16 counts`);
-    movement.push(`   - Counts 1-4: Slow-motion float up (WAVE arms upward)`);
-    movement.push(`   - Counts 5-8: ORBIT LOCK sequence`);
-    movement.push(`   - Counts 9-12: MOONWALK orbit in a circle`);
-    movement.push(`   - Counts 13-16: SPIN and point to sky`);count++;
-  }
-  if(words.includes('sew')||words.includes('stitch')||words.includes('needle')){
-    movement.push(`\n${count}. STITCHIN': POPPING & TUTTING`);
-    movement.push(`   🎵 16 counts (double-time)`);
-    movement.push(`   - Counts 1-8: TUTTING sequence (90° arm angles)`);
-    movement.push(`   - Counts 9-12: Quick CHEST POPS (like sewing machine)`);
-    movement.push(`   - Counts 13-16: FINGER WAVE and LOCK`);count++;
-  }
-  if(words.includes('textile')||words.includes('fabric')||words.includes('weav')||words.includes('silk')||words.includes('lace')){
-    movement.push(`\n${count}. WEAVE IT: LOCKING PATTERNS`);
-    movement.push(`   🎵 16 counts`);
-    movement.push(`   - Counts 1-4: ARM LOCKS weaving (thread over/under)`);
-    movement.push(`   - Counts 5-8: BODY WAVE (like fabric flowing)`);
-    movement.push(`   - Counts 9-12: HIP POPS with grapevine footwork`);
-    movement.push(`   - Counts 13-16: LOCK combo finish`);count++;
-  }
-  if(words.includes('patent')||words.includes('design')){
-    movement.push(`\n${count}. SIGN THE PATENT: LOCKING SIGNATURE`);
-    movement.push(`   🎵 8 counts`);
-    movement.push(`   - Counts 1-2: Crip walk prep, claim your space`);
-    movement.push(`   - Counts 3-5: LOCK signature in air (draw BIG with body)`);
-    movement.push(`   - Count 6: STOMP (stamping the patent)`);
-    movement.push(`   - Counts 7-8: Victory LOCK, arms in V + CHEST POP`);
-    const pm=text.match(/Patent No\.\s+([\d,]+)/i);
-    if(pm)movement.push(`   - Call out: "Patent ${pm[1]}!"`);count++;
-  }
-  movement.push(`\n${count}. DOMESTIC LABOR: 2025 SERVICE ROBOTS`);
-  movement.push(`   🎵 24 counts - THE INVISIBLE WORK`);
-  movement.push(`   - Counts 1-6: CLEANING SEQUENCE (sweep in straight lines)`);
-  movement.push(`   - Counts 7-10: LAUNDRY MOTION (fold invisible garments)`);
-  movement.push(`   - Counts 11-14: IRONING GESTURE (press, glide, lift)`);
-  movement.push(`   - Counts 15-18: HOSPITALITY MODE (pour tea with ceremony)`);
-  movement.push(`   - Counts 19-22: KITCHEN SERVICE (stir, flip, espresso)`);
-  movement.push(`   - Counts 23-24: COLLABORATION GESTURE (human-robot handshake)`);count++;
-  movement.push(`\n${count}. ENDING: ICONIC LOCK & FREEZE`);
-  movement.push(`   🎵 Final 8 counts`);
-  movement.push(`   - Counts 1-4: Run the full combo`);
-  movement.push(`   - Counts 5-6: Body roll setup`);
-  movement.push(`   - Count 7: STRIKE your hardest LOCK`);
-  movement.push(`   - Count 8: FREEZE - HOLD IT`);
-  movement.push(`     Say it: "${inventor}"`);
-  movement.push(`     Mic drop energy 🎤⬇️`);
-  movement.push(`\n=== END SEQUENCE ===`);
-  movement.push(`\n💪 ENERGY: Respect the legacy, bring the fire!`);
-  movement.push(`🤖 TECHNIQUE: Sharp POPS, clean LOCKS, smooth WAVES`);
-  return movement.join('\n');
+/* ── Movement Generator — reads moves directly baked into each response ── */
+function generateMovement(resp){
+  const inv=resp.inventor||'the Inventor';
+  const theme=resp.theme||'LOCK & POP';
+  const moves=resp.moves||[
+    "1. OPENING POP — chest pop entry, arms lock to 90°, claim your space",
+    "2. LOCKING SIGNATURE — draw the inventor's name BIG in the air with your whole arm",
+    "3. LIGHTBULB LOCK — fist rises slow above head, opens into a sharp lock",
+    "4. BODY WAVE head to hip — slow and controlled, 4 full counts",
+    `5. FREEZE — hardest lock you've got — call out: '${inv}!'`
+  ];
+  return `HIP HOP SEQUENCE: ${theme}\nHONORING: ${inv}\n\n${moves.join('\n')}\n\nENERGY: Sharp pops, clean locks, smooth waves. Respect the legacy!`;
 }
 
-/* ── log ── */
-function log(msg){
-  const d=document.getElementById('debugLog');
-  // keep log hidden from users — just console
-  console.log(msg);
-}
-
-/* ── ask ── */
+/* ── Ask ── */
 function askQuestion(){
-  const question=document.getElementById('userQuestion').value.trim();
-  const userName=document.getElementById('userName').value.trim();
-  if(!userName){alert('Please enter your name first!');document.getElementById('userName').focus();return;}
-  if(!question){alert('Please type a question!');return;}
-  const response=getMatchingResponse();
-  const movement=generateMovement(response.text);
+  const q=document.getElementById('userQuestion').value.trim();
+  const name=document.getElementById('userName').value.trim();
+  if(!name){alert('Please enter your name first!');document.getElementById('userName').focus();return;}
+  if(!q){alert('Please type a question!');return;}
+  const resp=getResponse();
+  const mv=generateMovement(resp);
+  const payload={
+    question:q,answerText:resp.text,answerSource:resp.source,
+    answerLink:resp.link,movement:mv,userName:name,
+    userColor:userColor,timestamp:firebase.database.ServerValue.TIMESTAMP
+  };
   if(useFirebase&&messagesRef){
-    messagesRef.push({question,answerText:response.text,answerSource:response.source,answerLink:response.link,movement,userName,userColor,timestamp:firebase.database.ServerValue.TIMESTAMP})
-    .then(()=>log('Saved to Firebase'))
-    .catch(()=>displayResults(question,response,movement,userName));
+    messagesRef.push(payload).catch(()=>localDisplay(q,resp,mv,name));
   } else {
-    displayResults(question,response,movement,userName);
+    localDisplay(q,resp,mv,name);
   }
   document.getElementById('userQuestion').value='';
 }
 
-/* ── display from firebase ── */
-function displayFromFirebase(msg,msgId){
+/* ── Local fallback (no Firebase) ── */
+let localMessages=[];
+function localDisplay(q,resp,mv,name){
   const area=document.getElementById('outputArea');
-  const empty=area.querySelector('.empty-state');if(empty)empty.remove();
-  const entry=document.createElement('div');entry.className='message-pair';entry.id='entry-'+msgId;
-  entry.innerHTML=`
-    <div class="msg-meta"><strong style="color:${escH(msg.userColor||'#ff85b3')}">${escH(msg.userName||'Anonymous')}</strong><span>asked:</span></div>
-    <div class="question-bubble">❓ ${escH(msg.question)}</div>
-    <div class="patent-card">
-      <div class="patent-header"><span style="font-size:16px">📝</span><span class="patent-header-label">Patent Information</span></div>
-      <div class="patent-body">
-        <div class="patent-text">${escH(msg.answerText)}</div>
-        <div class="patent-source">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
-      </div>
-    </div>
-    <div class="movement-card">
-      <div class="movement-header">
-        <span class="movement-header-label">🎭 Movement Instructions</span>
-      </div>
-      <div class="movement-body"><div class="movement-text">${escH(msg.movement)}</div></div>
-      <div class="speak-btn-row">
-        <button class="btn purple" style="font-size:11px;padding:8px 14px;" onclick="speakText(this)">🔊 Read Aloud</button>
-        <button class="btn soft" style="font-size:11px;padding:8px 14px;" onclick="stopSpeech()">⏹ Stop</button>
-      </div>
-    </div>`;
-  area.insertBefore(entry,area.firstChild);
-  setTimeout(()=>speakMovement(msg.movement),500);
+  localMessages.unshift({question:q,answerText:resp.text,answerSource:resp.source,answerLink:resp.link,movement:mv,userName:name,userColor:userColor});
+  if(localMessages.length>MAX_DISPLAY)localMessages=localMessages.slice(0,MAX_DISPLAY);
+  area.innerHTML='';
+  localMessages.forEach((msg,i)=>renderPair(msg,null,i===0));
 }
 
-function displayResults(question,response,movement,userName){
-  const area=document.getElementById('outputArea');
-  const empty=area.querySelector('.empty-state');if(empty)empty.remove();
-  const entry=document.createElement('div');entry.className='message-pair';
-  entry.innerHTML=`
-    <div class="msg-meta"><strong style="color:var(--candy)">${escH(userName||'You')}</strong><span>asked:</span></div>
-    <div class="question-bubble">❓ ${escH(question)}</div>
-    <div class="patent-card">
-      <div class="patent-header"><span style="font-size:16px">📝</span><span class="patent-header-label">Patent Information</span></div>
-      <div class="patent-body">
-        <div class="patent-text">${escH(response.text)}</div>
-        <div class="patent-source">Source: <a href="${escH(response.link)}" target="_blank" rel="noopener">${escH(response.source)}</a></div>
-      </div>
-    </div>
-    <div class="movement-card">
-      <div class="movement-header">
-        <span class="movement-header-label">🎭 Movement Instructions</span>
-      </div>
-      <div class="movement-body"><div class="movement-text">${escH(movement)}</div></div>
-      <div class="speak-btn-row">
-        <button class="btn purple" style="font-size:11px;padding:8px 14px;" onclick="speakText(this)">🔊 Read Aloud</button>
-        <button class="btn soft" style="font-size:11px;padding:8px 14px;" onclick="stopSpeech()">⏹ Stop</button>
-      </div>
-    </div>`;
-  area.insertBefore(entry,area.firstChild);
-  setTimeout(()=>speakMovement(movement),500);
+/* ── Web Audio chime (no file needed) ── */
+let audioCtx=null;
+function getAudioCtx(){
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function playChime(){
+  try{
+    const ctx=getAudioCtx();
+    /* Three rising tones: E4 → G#4 → B4 */
+    [[329.63,0],[415.30,0.18],[493.88,0.36]].forEach(([freq,delay])=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=freq;
+      const t=ctx.currentTime+delay;
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.35,t+0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+      osc.start(t);osc.stop(t+0.72);
+    });
+  }catch(e){}
 }
 
-/* ── speech ── */
+/* ── Render a Q&A pair ── */
+function renderPair(msg,key,playAudio=false){
+  const area=document.getElementById('outputArea');
+  const el=document.createElement('div');
+  el.className='cb-pair';
+  if(key)el.id='pair-'+key;
+  el.innerHTML=`
+    <div class="cb-meta">
+      <strong style="color:${escH(msg.userColor||'#ff85b3')}">${escH(msg.userName||'Anon')}</strong>
+      <span>asked:</span>
+    </div>
+    <div class="cb-qbubble">❓ ${escH(msg.question)}</div>
+    <div class="cb-pcard">
+      <div class="cb-phead"><span class="cb-plabel">📝 Patent Information</span></div>
+      <div class="cb-pbody">
+        <div class="cb-ptext">${escH(msg.answerText)}</div>
+        <div class="cb-psrc">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
+      </div>
+    </div>
+    <div class="cb-mcard">
+      <div class="cb-mhead"><span class="cb-mlabel">🎭 Movement Instructions</span></div>
+      <div class="cb-mbody"><div class="cb-mtext">${escH(msg.movement)}</div></div>
+      <div class="cb-spkrow">
+        <button class="cb-btn purple" style="font-size:11px;padding:7px 13px;" onclick="speakText(this)">🔊 Read Aloud</button>
+        <button class="cb-btn soft" style="font-size:11px;padding:7px 13px;" onclick="stopSpeech()">⏹ Stop</button>
+      </div>
+    </div>`;
+  area.insertBefore(el,area.firstChild);
+  if(playAudio){
+    playChime();
+    setTimeout(()=>speakMovement(msg.movement),950);
+  }
+}
+
+/* ── Speech ── */
 function speakMovement(text){
   if(!('speechSynthesis' in window))return;
   window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);u.rate=0.85;u.pitch=1.0;u.volume=1.0;
+  const u=new SpeechSynthesisUtterance(text);u.rate=0.88;u.pitch=1.0;
   window.speechSynthesis.speak(u);
 }
 function speakText(btn){
-  const card=btn.closest('.movement-card');
-  const text=card.querySelector('.movement-text').textContent;
-  speakMovement(text);
+  const c=btn.closest('.cb-mcard');
+  speakMovement(c.querySelector('.cb-mtext').textContent);
 }
 function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
 
-/* ── utils ── */
+/* ── Utils ── */
 function escH(str){const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;}
-
-/* ── enter key ── */
 document.getElementById('userQuestion').addEventListener('keypress',e=>{if(e.key==='Enter')askQuestion();});
 
-/* ── reset modal ── */
-function showResetModal(){document.getElementById('resetModal').classList.add('open');}
-function closeResetModal(){document.getElementById('resetModal').classList.remove('open');}
-function confirmReset(){
-  document.getElementById('outputArea').innerHTML='<div class="empty-state"><h3>✦ Messages cleared</h3><p>Type a question to begin</p></div>';
-  if(useFirebase&&messagesRef){messagesRef.remove().catch(()=>{});}
-  recentlyShown=[];closeResetModal();
+/* ── Admin Modal ── */
+function showAdminModal(){
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';
+  setTimeout(()=>document.getElementById('adminPass').focus(),100);
 }
+function closeAdminModal(){document.getElementById('adminModal').classList.remove('open');}
+function confirmAdminReset(){
+  const pass=document.getElementById('adminPass').value;
+  if(pass!==ADMIN_PASSCODE){
+    document.getElementById('adminErr').textContent='Incorrect passcode. Try again.';
+    document.getElementById('adminPass').value='';
+    document.getElementById('adminPass').focus();
+    return;
+  }
+  document.getElementById('outputArea').innerHTML='<div class="cb-empty"><h3>✦ Messages cleared</h3><p>Type a question to begin</p></div>';
+  if(useFirebase&&messagesRef)messagesRef.remove().catch(()=>{});
+  localMessages=[];recentlyShown=[];closeAdminModal();
+}
+document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
 
-/* ── cleanup ── */
+/* ── Cleanup ── */
 window.addEventListener('beforeunload',()=>{
   if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
   if('speechSynthesis' in window)window.speechSynthesis.cancel();
