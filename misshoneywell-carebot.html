@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ CAREBOT · Miss Honeywell ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{min-height:100%;font-family:'Quicksand',sans-serif;font-weight:600;color:#fff5f8;background:#0e0008;-webkit-font-smoothing:antialiased;}
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,30,100,.06) 0%,transparent 65%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
+  .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+  .orb-1{width:380px;height:380px;background:#8b0030;opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
+  .orb-2{width:300px;height:300px;background:#c4005a;opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+  .orb-3{width:200px;height:200px;background:#ff2d6b;opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+  .screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(40px + env(safe-area-inset-bottom));gap:14px;}
+
+  /* TOPBAR */
+  .cb-topbar{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-logo{display:flex;align-items:center;gap:10px;}
+  .cb-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,45,107,.18);border:1.5px solid rgba(255,80,150,.5);display:flex;align-items:center;justify-content:center;font-size:18px;animation:wobble 4s ease-in-out infinite;flex-shrink:0;}
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .cb-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-top:1px;}
+  .cb-badges{display:flex;gap:7px;align-items:center;}
+  .cb-badge{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,140,185,.2);color:rgba(255,190,220,.5);letter-spacing:.06em;}
+  .cb-pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff2d6b;margin-right:5px;animation:pip 2s ease-in-out infinite;vertical-align:middle;}
+  @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* CARD BASE */
+  .cb-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;backdrop-filter:blur(18px);box-shadow:0 4px 30px rgba(255,45,107,.2),inset 0 1px 0 rgba(255,140,185,.07);}
+  .cb-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+
+  /* CONTEXT BANNER */
+  .irony-card{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(180,0,40,.92),rgba(100,0,20,.95));border:1.5px solid rgba(255,80,80,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;box-shadow:0 4px 30px rgba(255,0,60,.25);}
+  .irony-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff8080 35%,#ff2020 50%,#ff8080 65%,transparent);box-shadow:0 0 10px #ff8080;border-radius:999px;}
+  .irony-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,160,160,.55);margin-bottom:6px;}
+  .irony-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,3.5vw,17px);color:#ffb3b3;margin-bottom:10px;line-height:1.3;}
+  .irony-text{font-size:12.5px;line-height:1.75;color:rgba(255,210,210,.85);}
+  .irony-text strong{color:#ffcccc;font-weight:700;}
+
+  /* PHOTO GRID */
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .photo-slot{aspect-ratio:4/3;background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.25);border-radius:10px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.7) brightness(.85);}
+  .photo-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;color:rgba(255,190,220,.25);font-size:9px;letter-spacing:.1em;text-align:center;padding:8px;}
+  .photo-fallback span{font-size:18px;margin-bottom:5px;opacity:.3;}
+  .photo-num{position:absolute;bottom:4px;right:7px;font-size:8px;color:rgba(255,140,185,.35);letter-spacing:.08em;}
+
+  /* VIDEO */
+  .cb-video-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;overflow:hidden;position:relative;box-shadow:0 8px 40px rgba(255,45,107,.25);}
+  .cb-video-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;z-index:2;}
+  .cb-video-head{background:linear-gradient(135deg,rgba(140,0,45,.95),rgba(70,0,22,.98));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-video-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-vbtn{font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;color:rgba(255,200,220,.7);background:rgba(255,255,255,.05);border:1px solid rgba(255,140,185,.2);padding:4px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
+  .cb-vbtn:hover{background:rgba(255,45,107,.2);color:#ffb3cf;}
+  .cb-video-embed{width:100%;aspect-ratio:16/9;}
+  .cb-video-embed iframe{width:100%;height:100%;border:none;display:block;}
+  .cb-video-card.watched .cb-video-embed{opacity:.55;}
+
+  /* INPUT */
+  .cb-input-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .cb-input-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .cb-row:last-child{margin-bottom:0;}
+  .cb-input{flex:1;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;color:#fff5f8;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0;}
+  .cb-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
+  .cb-input::placeholder{color:rgba(255,190,220,.35);}
+  .cb-name-in{max-width:150px;flex:0 0 150px;}
+  .cb-btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.05em;color:#fff5f8;display:inline-flex;align-items:center;gap:5px;padding:10px 18px;border-radius:12px;border:1.5px solid rgba(255,80,150,.5);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .cb-btn.primary{background:linear-gradient(135deg,#ff2d6b,#c4005a,#8b0030);box-shadow:0 4px 18px rgba(255,45,107,.3);}
+  .cb-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,45,107,.5);}
+  .cb-btn.soft{background:rgba(255,255,255,.04);color:rgba(255,190,220,.5);border-color:rgba(255,140,185,.15);font-size:11px;}
+  .cb-btn.soft:hover{background:rgba(255,45,107,.12);color:#ffb3cf;}
+  .cb-btn.purple{background:linear-gradient(135deg,#ab47bc,#6a1b9a);border-color:#ab47bc;}
+  .cb-btn:active{transform:scale(.97);}
+
+  /* MESSAGES */
+  .cb-msgs{width:100%;max-width:600px;display:flex;flex-direction:column;gap:14px;}
+  .cb-empty{text-align:center;padding:44px 20px;color:rgba(255,190,220,.35);}
+  .cb-empty h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:7px;}
+  .cb-empty p{font-size:12px;}
+  .cb-pair{animation:slideUp .35s ease-out;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .cb-meta{font-size:11px;color:rgba(255,190,220,.45);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .cb-meta strong{font-weight:700;}
+  .cb-qbubble{display:inline-block;background:linear-gradient(135deg,#ff2d6b,#c4005a);color:#fff;padding:9px 14px;border-radius:16px 16px 16px 3px;font-size:13px;margin-bottom:12px;max-width:88%;line-height:1.5;box-shadow:0 3px 12px rgba(255,45,107,.3);}
+  .cb-pcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.4);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+  .cb-phead{background:linear-gradient(135deg,rgba(240,98,146,.8),rgba(194,24,91,.85));padding:9px 14px;display:flex;align-items:center;gap:7px;}
+  .cb-plabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-pbody{padding:14px;}
+  .cb-ptext{font-size:13px;line-height:1.7;color:rgba(255,215,235,.88);}
+  .cb-psrc{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,100,160,.12);font-size:11px;color:rgba(255,190,220,.45);}
+  .cb-psrc a{color:#ff85b3;text-decoration:none;}
+  .cb-psrc a:hover{text-decoration:underline;}
+  .cb-mcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(171,71,188,.45);border-radius:14px;overflow:hidden;}
+  .cb-mhead{background:linear-gradient(135deg,rgba(171,71,188,.8),rgba(106,27,154,.85));padding:9px 14px;}
+  .cb-mlabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-mbody{padding:14px;}
+  .cb-mtext{font-family:'Courier New',monospace;font-size:12px;line-height:1.85;color:rgba(220,180,255,.85);white-space:pre-wrap;}
+  .cb-spkrow{padding:8px 14px 12px;display:flex;gap:7px;}
+
+  /* BOTTOM */
+  .cb-bottom{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(140,0,45,.8),rgba(70,0,22,.92));border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 50px rgba(255,45,107,.45),0 0 90px rgba(200,0,80,.15);}
+  .cb-bottom::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 12px #ff85b3;border-radius:999px;}
+  .cb-btitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;}
+  .cb-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:12px 24px;border-radius:14px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 4px 18px rgba(255,45,107,.35);transition:all .2s;}
+  .cb-link:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,45,107,.5);}
+
+  /* MODAL */
+  .cb-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;}
+  .cb-modal.open{display:flex;}
+  .cb-mbox{background:rgba(14,0,8,.97);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:26px 22px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(255,45,107,.4);position:relative;}
+  .cb-mbox::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 8px #ff85b3;border-radius:999px;}
+  .cb-mtitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#ffb3cf;margin-bottom:9px;}
+  .cb-mbodytxt{font-size:12px;color:rgba(255,200,220,.65);line-height:1.6;margin-bottom:16px;}
+  .cb-mbtns{display:flex;gap:9px;}
+  .cb-err{font-size:11px;color:#ff2d6b;margin-top:6px;min-height:16px;}
+  .cb-wmark{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.12);padding-bottom:8px;}
+
+  @media(max-width:480px){
+    .photo-grid{grid-template-columns:repeat(2,1fr);}
+    .cb-name-in{max-width:100%;flex:1 1 100%;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- TOPBAR -->
+  <div class="cb-topbar">
+    <div class="cb-logo">
+      <div class="cb-icon">🤖</div>
+      <div>
+        <div class="cb-name">CAREBOT · MISS HONEYWELL ✦</div>
+        <div class="cb-sub">Robot or Conjuring Trick? · 1960s</div>
+      </div>
+    </div>
+    <div class="cb-badges">
+      <div class="cb-badge" id="onlineCount"><span class="cb-pip"></span>Connecting…</div>
+      <div class="cb-badge" id="sysTime">--:--</div>
+    </div>
+  </div>
+
+  <!-- CONTEXT BANNER -->
+  <div class="irony-card">
+    <div class="irony-eyebrow">✦ Critical Context · Read Before Asking</div>
+    <div class="irony-title">⚠️ Is this a robot — or is it a woman doing unpaid performance labour?</div>
+    <div class="irony-text">
+      Honeywell presented <strong>Miss Honeywell</strong> as "the ultimate in automation" and "the human-tronic saleswoman of tomorrow" at the Instruments, Electronics and Automation Exhibition at Olympia. The narrator asks: "Is this computerized control or is it a conjuring trick?" 
+      The answer is neither. The firm behind her is <strong>Magical Productions</strong> — run by a Hollywood conjurer named Mark Wilson — and Honeywell paid <strong>£2,000</strong> to bring her over from Hollywood. When challenged to prove she was a robot by removing her head, <strong>he closed the cabinet</strong>, citing "delicate micro circuits." 
+      Whatever Miss Honeywell was, she was scripted to say she'd make "someone a very good wife." A machine defined by domesticity. A woman defined as a machine. The ambiguity was the whole point.
+    </div>
+  </div>
+
+  <!-- PHOTO GRID -->
+  <div class="cb-card">
+    <div class="cb-eyebrow">✦ Archive Images · Place files in /images/ folder named misshoneywell01.png through misshoneywell06.png</div>
+    <div class="photo-grid">
+      <div class="photo-slot">
+        <img src="images/misshoneywell01.png" alt="Miss Honeywell 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🤖</span>misshoneywell01.png</div>
+        <span class="photo-num">01</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/misshoneywell02.png" alt="Miss Honeywell 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🤖</span>misshoneywell02.png</div>
+        <span class="photo-num">02</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/misshoneywell03.png" alt="Miss Honeywell 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🤖</span>misshoneywell03.png</div>
+        <span class="photo-num">03</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/misshoneywell04.png" alt="Miss Honeywell 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🤖</span>misshoneywell04.png</div>
+        <span class="photo-num">04</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/misshoneywell05.png" alt="Miss Honeywell 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🤖</span>misshoneywell05.png</div>
+        <span class="photo-num">05</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/misshoneywell06.png" alt="Miss Honeywell 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🤖</span>misshoneywell06.png</div>
+        <span class="photo-num">06</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="cb-video-card" id="videoSection">
+    <div class="cb-video-head">
+      <span class="cb-video-label">✦ Watch First · Miss Honeywell · Pathe News</span>
+      <div style="display:flex;gap:7px;">
+        <button class="cb-vbtn" id="watchedBtn" onclick="markWatched()">Done watching</button>
+        <button class="cb-vbtn" id="rewatchBtn" style="display:none" onclick="rewatch()">Rewatch ↩</button>
+      </div>
+    </div>
+    <div class="cb-video-embed">
+      <iframe id="videoPlayer"
+        src="https://www.youtube.com/embed/6e8mj7r7V60"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="cb-input-card">
+    <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
+    <div class="cb-row">
+      <input class="cb-input cb-name-in" type="text" id="userName" placeholder="Your name…" value="">
+      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about Miss Honeywell…" autocomplete="off">
+      <button class="cb-btn primary" onclick="askQuestion()">✦ Ask</button>
+      <button class="cb-btn soft" onclick="showAdminModal()" title="Admin reset">⚙</button>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="cb-msgs" id="outputArea">
+    <div class="cb-empty">
+      <h3>✦ Answers appear here</h3>
+      <p>Type a question above and tap Ask</p>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="cb-bottom">
+    <div class="cb-btitle">✦ Task Complete · Ready for your next task?</div>
+    <a class="cb-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">✦ Advance to next task</a>
+  </div>
+
+  <div class="cb-wmark">✦ carebot/caretech research system · miss honeywell · v1.0 ✦</div>
+</div>
+
+<!-- Admin Modal -->
+<div class="cb-modal" id="adminModal">
+  <div class="cb-mbox">
+    <div class="cb-mtitle">🔒 Admin Reset</div>
+    <div class="cb-mbodytxt">Enter the admin passcode to clear all messages from the display and database.</div>
+    <input class="cb-input" type="password" id="adminPass" placeholder="Enter passcode…" style="width:100%;margin-bottom:6px;">
+    <div class="cb-err" id="adminErr"></div>
+    <div class="cb-mbtns" style="margin-top:10px;">
+      <button class="cb-btn soft" style="flex:1" onclick="closeAdminModal()">Cancel</button>
+      <button class="cb-btn primary" style="flex:1" onclick="confirmAdminReset()">Reset All</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+const ADMIN_PASSCODE = 'honeywell1968';
+const MAX_DISPLAY = 3;
+const FB_REF_KEY = 'honeywellMessages';
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── Video ── */
+function markWatched(){
+  document.getElementById('videoSection').style.opacity='.55';
+  document.getElementById('watchedBtn').style.display='none';
+  document.getElementById('rewatchBtn').style.display='block';
+}
+function rewatch(){
+  document.getElementById('videoSection').style.opacity='1';
+  document.getElementById('rewatchBtn').style.display='none';
+  document.getElementById('watchedBtn').style.display='block';
+  const f=document.getElementById('videoPlayer'),s=f.src;f.src='';setTimeout(()=>f.src=s,100);
+}
+
+/* ── Firebase ── */
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCOq3yuuvOiUlJILo_RbBoXf0WYGJBaLRE",
+
+  authDomain: "misshoneywell.firebaseapp.com",
+
+  projectId: "misshoneywell",
+
+  storageBucket: "misshoneywell.firebasestorage.app",
+
+  messagingSenderId: "112158461514",
+
+  appId: "1:112158461514:web:9f42950241d9abe1c3e0b3",
+
+  measurementId: "G-8232DBD6VN"
+
+};
+let app,database,messagesRef,onlineRef,useFirebase=true;
+let currentUser=localStorage.getItem('hwUser')||'';
+let userColor=localStorage.getItem('hwColor')||genColor();
+
+function genColor(){
+  const c=['#ff85b3','#ff2d6b','#ab47bc','#ff9800','#40c8ff','#c4005a'];
+  const v=c[Math.floor(Math.random()*c.length)];localStorage.setItem('hwColor',v);return v;
+}
+
+try{
+  app=firebase.initializeApp(firebaseConfig);
+  database=firebase.database();
+  messagesRef=database.ref(FB_REF_KEY);
+  onlineRef=database.ref('hwOnline');
+  if(currentUser)trackPresence();
+
+  let initialDone=false;
+  messagesRef.orderByKey().limitToLast(MAX_DISPLAY).once('value',snapshot=>{
+    const area=document.getElementById('outputArea');
+    area.innerHTML='';
+    const items=[];
+    snapshot.forEach(c=>{items.push({key:c.key,val:c.val()});});
+    if(!items.length){area.innerHTML=emptyHTML();}
+    else{items.reverse().forEach(({key,val})=>renderPair(val,key,false));}
+    initialDone=true;
+    const lastKey=items.length?items[items.length-1].key:null;
+    const nq=lastKey?messagesRef.orderByKey().startAfter(lastKey):messagesRef.orderByKey().limitToLast(1);
+    nq.on('child_added',snap=>{
+      if(!initialDone)return;
+      const msg=snap.val();const key=snap.key;
+      const area=document.getElementById('outputArea');
+      const emp=area.querySelector('.cb-empty');if(emp)emp.remove();
+      const pairs=area.querySelectorAll('.cb-pair');
+      if(pairs.length>=MAX_DISPLAY)pairs[pairs.length-1].remove();
+      renderPair(msg,key,true);
+    });
+  });
+
+  onlineRef.on('value',snapshot=>{
+    const count=Object.keys(snapshot.val()||{}).length;
+    document.getElementById('onlineCount').innerHTML=`<span class="cb-pip"></span>${count} online`;
+  });
+}catch(e){useFirebase=false;document.getElementById('onlineCount').textContent='Offline';}
+
+function trackPresence(){
+  if(!onlineRef||!currentUser)return;
+  const r=onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_'));
+  r.set({name:currentUser,timestamp:firebase.database.ServerValue.TIMESTAMP});
+  r.onDisconnect().remove();
+}
+document.getElementById('userName').addEventListener('change',function(){
+  currentUser=this.value.trim();localStorage.setItem('hwUser',currentUser);
+  if(currentUser&&useFirebase)trackPresence();
+});
+
+function emptyHTML(){return '<div class="cb-empty"><h3>✦ Answers appear here</h3><p>Type a question above and tap Ask</p></div>';}
+
+/* ── Response Bank ── */
+const responses=[
+  {
+    text:"The newsreel narrator opens with a challenge: 'Mass production calls for automation — which may or may not be what we've got here. Is this or is this not a robot?' The question hangs in the air. The camera closes in on Miss Honeywell. She's standing in a cabinet. The man beside her is carefully — very carefully — closing the door.",
+    source:"Miss Honeywell newsreel transcript, 0:00–0:18",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"IS THIS A ROBOT? SEQUENCE",
+    moves:[
+      "1. THE QUESTION POSE — arms open wide, one pointing at your body — is THIS a robot or is this a person?",
+      "2. CABINET CLOSE — both hands slowly push an invisible heavy door shut — careful, deliberate, suspicious",
+      "3. AUTOMATION LOCK — full body goes rigid, stiff like a machine powering on for the first time",
+      "4. CAMERA ZOOM — body leans slowly forward toward the audience, face neutral — study me closely",
+      "5. FREEZE mid-movement — call out: 'Is this or is this not a robot?'"
+    ]
+  },
+  {
+    text:"The narrator calls Miss Honeywell 'the ultimate in automation — the human-tronic saleswoman of tomorrow.' She was presented at the Instruments, Electronics and Automation Exhibition at Olympia as the future of selling. The boffins were bewildered. The crowds pulled in. Whether she was electronic, mechanical, or human — nobody officially knew.",
+    source:"Miss Honeywell newsreel transcript, 0:18–0:43",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"THE SALESWOMAN OF TOMORROW",
+    moves:[
+      "1. EXHIBITION WALK — glide forward slowly in a straight line, arms slightly out — you are on display",
+      "2. HUMAN-TRONIC WAVE — one arm ripples from shoulder to fingertip, too smooth to be natural",
+      "3. BOFFIN BEWILDERED — head tilts, arms out, confused shrug — even the experts don't know",
+      "4. CROWD PULL — both arms draw inward toward chest, magnetizing the audience toward you",
+      "5. FREEZE in a saleswoman pose — call out: 'The human-tronic saleswoman of tomorrow!'"
+    ]
+  },
+  {
+    text:"The narrator invites the audience to decide: 'Yourself — animal, vegetable or mineral? Science or science fiction?' Miss Honeywell speaks. She says she doesn't know if she is electronic, mechanical, or human. Her own spokesman says the same: he himself doesn't know what she is. The ambiguity is perfectly maintained — and perfectly useful.",
+    source:"Miss Honeywell newsreel transcript, 0:43–1:18",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"ANIMAL VEGETABLE OR MINERAL",
+    moves:[
+      "1. ANIMAL CROUCH — drop low, hands near ground, feral and unpredictable — what category is this?",
+      "2. VEGETABLE SWAY — stand slow, arms drift side to side like a plant in breeze — rooted, passive, organic",
+      "3. MINERAL FREEZE — snap into a full rigid lock, stone-still — inorganic, inert, perfectly still",
+      "4. SCIENCE FICTION — one slow arm rises above the head, finger points skyward — future or fantasy?",
+      "5. FREEZE — call out: 'Science? Or science fiction? She herself doesn't know.'"
+    ]
+  },
+  {
+    text:"The compère announces to his audience that Miss Honeywell would make a good assistant to any sales manager. She replies — in a high-pitched voice — 'Assistant? Nothing. I'd make someone a very good wife, if he were a BSc and mechanically minded.' A machine programmed to propose itself as a wife. Automation selling the idea of domestic femininity.",
+    source:"Miss Honeywell newsreel transcript, 1:18–1:44",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"GOOD WIFE SEQUENCE",
+    moves:[
+      "1. ASSISTANT STANCE — head bows slightly, hands clasped in front — performing deference on command",
+      "2. NOTHING — sharp shake of the head, arms cross in refusal — Assistant? No.",
+      "3. WIFE POSE — hands clasp in front, head tilts, high-pitched freeze — scripted domesticity",
+      "4. MECHANICALLY MINDED — tap your temple with one finger, then mime turning a wrench — the ideal husband",
+      "5. FREEZE in the pose — call out: 'She was programmed to say this. Who wrote her script?'"
+    ]
+  },
+  {
+    text:"The narrator reveals the key clue: the company that brought Miss Honeywell to London is called Magical Productions, run by a Hollywood man named Mark Wilson — who used to be a conjurer. Honeywell paid £2,000 to bring her over from Hollywood. 'There's something fishy — or fleshy — about this show,' the narrator says.",
+    source:"Miss Honeywell newsreel transcript, 1:44–2:06",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"THE CONJURER REVEALED",
+    moves:[
+      "1. MAGIC REVEAL — one hand sweeps dramatically in the air like a conjurer presenting an illusion",
+      "2. HOLLYWOOD WALK — long confident stride forward, arms loose — this man is from showbusiness",
+      "3. £2,000 GESTURE — mime counting out a large stack of bills, then hand it over slowly — someone paid for this",
+      "4. FISHY OR FLESHY — one hand waves under nose like something smells suspicious — what is really in that cabinet?",
+      "5. FREEZE pointing at the cabinet — call out: 'Magical Productions. He used to be a conjurer.'"
+    ]
+  },
+  {
+    text:"The narrator issues a simple challenge: if Miss Honeywell is a genuine robot, all the man has to do is take her head off — in the open. The camera closes in. The moment arrives. And then — he closes the cabinet. He says it's because of 'delicate micro circuits, integrated digital logic nodules, not to be disturbed.' The narrator's final line: 'Well, he could have fooled me.'",
+    source:"Miss Honeywell newsreel transcript, 2:06–2:58",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"CLOSE THE CABINET SEQUENCE",
+    moves:[
+      "1. THE CHALLENGE — arms open wide, one hand gestures to the head — prove it, just take it off, right here",
+      "2. THE PAUSE — body goes completely still, one beat, two beats — the moment of decision",
+      "3. CABINET CLOSE — both hands slowly, deliberately push the invisible door closed — the proof is sealed inside",
+      "4. MICRO CIRCUIT EXCUSE — fingers wiggle delicately in the air — delicate circuits, cannot be disturbed",
+      "5. FREEZE with a knowing look — call out: 'Well. He could have fooled me.'"
+    ]
+  },
+  {
+    text:"The pronouns in the newsreel refuse to settle. The narrator cycles through 'she — or it — or maybe he.' The compère calls Miss Honeywell 'he, she, or it.' Even the pronoun is part of the trick — keeping the audience unsure whether they are looking at a woman performing a robot, or a robot performing a woman. The confusion was engineered and it was the product being sold.",
+    source:"Miss Honeywell newsreel transcript — pronoun instability throughout",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"SHE OR IT OR MAYBE HE",
+    moves:[
+      "1. SHE — stand tall and still, arms at sides, present and feminine — she",
+      "2. IT — go completely mechanical, arms rigid at 90°, face blank — it",
+      "3. MAYBE HE — shift weight, lower stance, hand on chin, uncertain — maybe he?",
+      "4. ALL THREE — cycle through all three postures in quick succession, 2 counts each",
+      "5. FREEZE mid-transition — call out: 'She. It. Maybe he. The pronoun was the magic trick.'"
+    ]
+  },
+  {
+    text:"Miss Honeywell was presented as the future of sales — a tireless, smiling, compliant figure who would work exhibitions without pay, without breaks, without complaint. She was automation made feminine. The technology of labour control dressed up as a woman. Whether she was real or performed, the fantasy she embodied was perfectly legible: replace human workers with something that looks human but costs less.",
+    source:"Miss Honeywell newsreel transcript — exhibition context",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"AUTOMATION MADE FEMININE",
+    moves:[
+      "1. TIRELESS STAND — stand perfectly upright, arms at sides, unmoving — no breaks, no complaints",
+      "2. COMPLIANT WAVE — one slow mechanical arm wave, perfectly timed, performed on cue",
+      "3. SMILING FREEZE — face forward, body still, smile locked — the performance of endless pleasantness",
+      "4. LABOUR REPLACE — step forward and occupy the space of an invisible previous worker — their place is taken",
+      "5. FREEZE in the exhibition pose — call out: 'Automation made feminine. The fantasy was the product.'"
+    ]
+  },
+  {
+    text:"The crowd at the Instruments, Electronics and Automation Exhibition at Olympia couldn't look away. 'Miss Honeywell pulls in the crowds,' the narrator says, 'even at a refined exhibition which only the top technicians can begin to comprehend.' The most advanced technology of the era — and the biggest draw was a figure in a cabinet that nobody could fully explain.",
+    source:"Miss Honeywell newsreel transcript, 0:50–1:05",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"PULLING IN THE CROWDS",
+    moves:[
+      "1. EXHIBITION PRESENCE — walk slowly into the centre of the space, arms slightly out — you are the draw",
+      "2. CROWD GATHER — arms sweep inward repeatedly, pulling the invisible audience closer and closer",
+      "3. TOP TECHNICIAN STARE — body turns slowly to face imaginary experts — they cannot comprehend you either",
+      "4. MYSTERY HOLD — full body stillness, head raised, chin up — the not-knowing is the attraction",
+      "5. FREEZE centre stage — call out: 'Even the top technicians could not begin to comprehend.'"
+    ]
+  },
+  {
+    text:"The 'integrated digital logic nodules' that the man cites as his reason for not opening the cabinet are not a real technical category. The phrase sounds technical enough to be convincing, vague enough to be unfalsifiable. It is the language of authority performing expertise — the same trick the cabinet was performing. Miss Honeywell and her spokesman were running the same con from different angles.",
+    source:"Miss Honeywell newsreel transcript, 2:36–2:50",
+    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
+    theme:"INTEGRATED DIGITAL LOGIC NODULES",
+    moves:[
+      "1. TECHNICAL SPEAK — fingers tap together precisely while mouthing impressive-sounding words",
+      "2. NODULE GESTURE — both hands make small circular motions — these are the nodules, delicate and important",
+      "3. UNFALSIFIABLE LOCK — arms cross firmly — you cannot disprove this, the cabinet is closed",
+      "4. AUTHORITY WAVE — one hand waves dismissively — trust me, I am using technical language",
+      "5. FREEZE with one eyebrow raised — call out: 'Integrated digital logic nodules. Not to be disturbed.'"
+    ]
+  }
+];
+
+let recentlyShown=[];
+function getResponse(){
+  let avail=responses.filter((_,i)=>!recentlyShown.includes(i));
+  if(avail.length<4){recentlyShown=[];avail=responses;}
+  const ri=Math.floor(Math.random()*avail.length);
+  const sel=avail[ri];const ai=responses.indexOf(sel);
+  recentlyShown.push(ai);if(recentlyShown.length>7)recentlyShown.shift();
+  return sel;
+}
+
+function generateMovement(resp){
+  const theme=resp.theme||'MISS HONEYWELL SEQUENCE';
+  const moves=resp.moves||[
+    "1. CABINET STAND — stand perfectly still inside an invisible cabinet, arms at sides",
+    "2. MECHANICAL WAVE — one slow arm rises and waves, too smooth, too perfect",
+    "3. HIGH PITCH LOCK — body freezes mid-move, head tilts — the voice is about to speak",
+    "4. MYSTERY POSE — arms out, palms up — robot or woman? the question hangs in the air",
+    "5. FREEZE — call out: 'She. It. Maybe he. Miss Honeywell.'"
+  ];
+  return `HIP HOP SEQUENCE: ${theme}\nHONORING: Miss Honeywell\n\n${moves.join('\n')}\n\nENERGY: Precise, uncanny, deliberate. Every move asks the same question: robot or person?`;
+}
+
+/* ── Ask ── */
+function askQuestion(){
+  const q=document.getElementById('userQuestion').value.trim();
+  const name=document.getElementById('userName').value.trim();
+  if(!name){alert('Please enter your name first!');document.getElementById('userName').focus();return;}
+  if(!q){alert('Please type a question!');return;}
+  const resp=getResponse();
+  const mv=generateMovement(resp);
+  const payload={
+    question:q,answerText:resp.text,answerSource:resp.source,
+    answerLink:resp.link,movement:mv,userName:name,
+    userColor:userColor,timestamp:firebase.database.ServerValue.TIMESTAMP
+  };
+  if(useFirebase&&messagesRef){
+    messagesRef.push(payload).catch(()=>localDisplay(q,resp,mv,name));
+  } else {
+    localDisplay(q,resp,mv,name);
+  }
+  document.getElementById('userQuestion').value='';
+}
+
+let localMessages=[];
+function localDisplay(q,resp,mv,name){
+  const area=document.getElementById('outputArea');
+  localMessages.unshift({question:q,answerText:resp.text,answerSource:resp.source,answerLink:resp.link,movement:mv,userName:name,userColor:userColor});
+  if(localMessages.length>MAX_DISPLAY)localMessages=localMessages.slice(0,MAX_DISPLAY);
+  area.innerHTML='';
+  localMessages.forEach((msg,i)=>renderPair(msg,null,i===0));
+}
+
+/* ── Chime ── */
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playChime(){
+  try{
+    const ctx=getAudioCtx();
+    [[329.63,0],[415.30,0.18],[493.88,0.36]].forEach(([freq,delay])=>{
+      const osc=ctx.createOscillator();const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=freq;
+      const t=ctx.currentTime+delay;
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.35,t+0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+      osc.start(t);osc.stop(t+0.72);
+    });
+  }catch(e){}
+}
+
+/* ── Render ── */
+function renderPair(msg,key,playAudio=false){
+  const area=document.getElementById('outputArea');
+  const el=document.createElement('div');
+  el.className='cb-pair';
+  if(key)el.id='pair-'+key;
+  el.innerHTML=`
+    <div class="cb-meta">
+      <strong style="color:${escH(msg.userColor||'#ff85b3')}">${escH(msg.userName||'Anon')}</strong>
+      <span>asked:</span>
+    </div>
+    <div class="cb-qbubble">❓ ${escH(msg.question)}</div>
+    <div class="cb-pcard">
+      <div class="cb-phead"><span class="cb-plabel">🤖 From the Transcript</span></div>
+      <div class="cb-pbody">
+        <div class="cb-ptext">${escH(msg.answerText)}</div>
+        <div class="cb-psrc">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
+      </div>
+    </div>
+    <div class="cb-mcard">
+      <div class="cb-mhead"><span class="cb-mlabel">🎭 Movement Instructions</span></div>
+      <div class="cb-mbody"><div class="cb-mtext">${escH(msg.movement)}</div></div>
+      <div class="cb-spkrow">
+        <button class="cb-btn purple" style="font-size:11px;padding:7px 13px;" onclick="speakText(this)">🔊 Read Aloud</button>
+        <button class="cb-btn soft" style="font-size:11px;padding:7px 13px;" onclick="stopSpeech()">⏹ Stop</button>
+      </div>
+    </div>`;
+  area.insertBefore(el,area.firstChild);
+  if(playAudio){playChime();setTimeout(()=>speakMovement(msg.movement),950);}
+}
+
+/* ── Speech ── */
+function speakMovement(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.rate=0.88;u.pitch=1.0;
+  window.speechSynthesis.speak(u);
+}
+function speakText(btn){speakMovement(btn.closest('.cb-mcard').querySelector('.cb-mtext').textContent);}
+function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
+function escH(str){const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;}
+document.getElementById('userQuestion').addEventListener('keypress',e=>{if(e.key==='Enter')askQuestion();});
+
+/* ── Admin ── */
+function showAdminModal(){
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';
+  setTimeout(()=>document.getElementById('adminPass').focus(),100);
+}
+function closeAdminModal(){document.getElementById('adminModal').classList.remove('open');}
+function confirmAdminReset(){
+  if(document.getElementById('adminPass').value!==ADMIN_PASSCODE){
+    document.getElementById('adminErr').textContent='Incorrect passcode. Try again.';
+    document.getElementById('adminPass').value='';document.getElementById('adminPass').focus();return;
+  }
+  document.getElementById('outputArea').innerHTML=emptyHTML();
+  if(useFirebase&&messagesRef)messagesRef.remove().catch(()=>{});
+  localMessages=[];recentlyShown=[];closeAdminModal();
+}
+document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
+
+window.addEventListener('beforeunload',()=>{
+  if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
