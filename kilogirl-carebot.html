@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✦ CAREBOT · Miss Honeywell ✦</title>
+<title>✦ CAREBOT · Kilo-Girl Hours ✦</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -46,10 +46,21 @@
   .irony-text{font-size:12.5px;line-height:1.75;color:rgba(255,210,210,.85);}
   .irony-text strong{color:#ffcccc;font-weight:700;}
 
+  /* TRANSCRIPT CARD */
+  .transcript-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;overflow:hidden;position:relative;box-shadow:0 4px 30px rgba(255,45,107,.2);}
+  .transcript-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .transcript-head{background:linear-gradient(135deg,rgba(140,0,45,.95),rgba(70,0,22,.98));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .transcript-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .transcript-body{padding:18px;}
+  .transcript-speaker{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#ff85b3;margin-top:14px;margin-bottom:4px;}
+  .transcript-speaker:first-child{margin-top:0;}
+  .transcript-line{font-size:13px;line-height:1.75;color:rgba(255,215,235,.88);}
+  .transcript-line em{color:#ffb3cf;font-style:italic;font-weight:700;}
+
   /* PHOTO GRID */
   .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
   .photo-slot{aspect-ratio:4/3;background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.25);border-radius:10px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
-  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.7) brightness(.85);}
+  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.6) brightness(.85) sepia(.2);}
   .photo-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;color:rgba(255,190,220,.25);font-size:9px;letter-spacing:.1em;text-align:center;padding:8px;}
   .photo-fallback span{font-size:18px;margin-bottom:5px;opacity:.3;}
   .photo-num{position:absolute;bottom:4px;right:7px;font-size:8px;color:rgba(255,140,185,.35);letter-spacing:.08em;}
@@ -61,9 +72,13 @@
   .cb-video-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
   .cb-vbtn{font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;color:rgba(255,200,220,.7);background:rgba(255,255,255,.05);border:1px solid rgba(255,140,185,.2);padding:4px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
   .cb-vbtn:hover{background:rgba(255,45,107,.2);color:#ffb3cf;}
-  .cb-video-embed{width:100%;aspect-ratio:16/9;}
+  .cb-video-slot{padding:14px 16px;}
+  .cb-video-slot p{font-size:11px;color:rgba(255,190,220,.4);margin-bottom:10px;letter-spacing:.04em;}
+  .cb-video-input{width:100%;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:12px;color:#fff5f8;outline:none;transition:border-color .2s;}
+  .cb-video-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
+  .cb-video-input::placeholder{color:rgba(255,190,220,.3);}
+  .cb-video-embed{width:100%;aspect-ratio:16/9;display:none;}
   .cb-video-embed iframe{width:100%;height:100%;border:none;display:block;}
-  .cb-video-card.watched .cb-video-embed{opacity:.55;}
 
   /* INPUT */
   .cb-input-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
@@ -141,10 +156,10 @@
   <!-- TOPBAR -->
   <div class="cb-topbar">
     <div class="cb-logo">
-      <div class="cb-icon">🤖</div>
+      <div class="cb-icon">⭐</div>
       <div>
-        <div class="cb-name">CAREBOT · MISS HONEYWELL ✦</div>
-        <div class="cb-sub">Robot or Conjuring Trick? · 1960s</div>
+        <div class="cb-name">CAREBOT · KILO-GIRL HOURS ✦</div>
+        <div class="cb-sub">Harlow Shapley · Harvard Observatory</div>
       </div>
     </div>
     <div class="cb-badges">
@@ -156,46 +171,61 @@
   <!-- CONTEXT BANNER -->
   <div class="irony-card">
     <div class="irony-eyebrow">✦ Critical Context · Read Before Asking</div>
-    <div class="irony-title">⚠️ Is this a robot — or is it a woman doing unpaid performance labour?</div>
+    <div class="irony-title">⚠️ He coined the unit "kilo-girl hours" to measure the labour of women astronomers he did not name.</div>
     <div class="irony-text">
-      Honeywell presented <strong>Miss Honeywell</strong> as "the ultimate in automation" and "the human-tronic saleswoman of tomorrow" at the Instruments, Electronics and Automation Exhibition at Olympia. The narrator asks: "Is this computerized control or is it a conjuring trick?" 
-      The answer is neither. The firm behind her is <strong>Magical Productions</strong> — run by a Hollywood conjurer named Mark Wilson — and Honeywell paid <strong>£2,000</strong> to bring her over from Hollywood. When challenged to prove she was a robot by removing her head, <strong>he closed the cabinet</strong>, citing "delicate micro circuits." 
-      Whatever Miss Honeywell was, she was scripted to say she'd make "someone a very good wife." A machine defined by domesticity. A woman defined as a machine. The ambiguity was the whole point.
+      Harlow Shapley's work on globular clusters helped reshape our understanding of the Milky Way's size and our place in it. When asked who helped him, he said the work was done with <strong>Gretchen</strong> and "maybe one or two assistants." He introduced the term <strong>"girl hours"</strong> as a unit of measurement for their labour — and noted that one job alone took <strong>several kilo-girl hours</strong>. A kilo-girl hour is one thousand woman-hours of work. The women who produced these measurements were called <strong>"computers"</strong> — their job was to calculate, measure, and process data by hand. Harvard Observatory was <strong>"swarming with these assistants,"</strong> Shapley said. That is why, he explained, they got somewhere. The women made the science possible. They are almost entirely absent from the historical record by name.
+    </div>
+  </div>
+
+  <!-- TRANSCRIPT -->
+  <div class="transcript-card">
+    <div class="transcript-head">
+      <span class="transcript-label">✦ Oral History Transcript · Harlow Shapley Interview</span>
+    </div>
+    <div class="transcript-body">
+      <div class="transcript-speaker">Weiner:</div>
+      <div class="transcript-line">You talk of the work on globular clusters and the revolutionary implications of it which you pursued and published. And you talked of "we." Now, was this a solo effort or were there others involved with you in a discussion of this?</div>
+      <div class="transcript-speaker">Shapley:</div>
+      <div class="transcript-line">The discussion mostly was with Gretchen and maybe one or two assistants. You see, it took a tremendous lot of measures. I introduced the term <em>"girl hours,"</em> and it would take a lot of girl hours to solve some of the problems. In fact, one job took several <em>kilo-girl hours</em> to get it through. So I should say that I had help on a lot of the details. But I don't think I had much help in the hunching.</div>
+      <div class="transcript-speaker">Weiner:</div>
+      <div class="transcript-line">This was at Mount Wilson?</div>
+      <div class="transcript-speaker">Shapley:</div>
+      <div class="transcript-line">Both places. But not many girl hours at Mount Wilson. Very few. I had one full time girl assistant as I got along, but there were very few at Mount Wilson whereas Harvard was just <em>swarming</em> with these assistants. That's why we got somewhere, got it done.</div>
     </div>
   </div>
 
   <!-- PHOTO GRID -->
   <div class="cb-card">
-    <div class="cb-eyebrow">✦ Archive Images · Place files in /images/ folder named misshoneywell01.png through misshoneywell06.png</div>
+    <div class="cb-eyebrow">✦ Archive Images · Place files in /images/ folder named kilogirl01.png through kilogirl06.png</div>
     <div class="photo-grid">
       <div class="photo-slot">
-        <img src="images/misshoneywell01.png" alt="Miss Honeywell 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="photo-fallback"><span>🤖</span>misshoneywell01.png</div>
+        <img src="images/kilogirl01.png" alt="Kilo Girl Archive 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>⭐</span>kilogirl01.png</div>
         <span class="photo-num">01</span>
       </div>
       <div class="photo-slot">
-        <img src="images/misshoneywell02.png" alt="Miss Honeywell 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="photo-fallback"><span>🤖</span>misshoneywell02.png</div>
+        <img src="images/kilogirl02.png" alt="Kilo Girl Archive 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>⭐</span>kilogirl02.png</div>
         <span class="photo-num">02</span>
       </div>
       <div class="photo-slot">
-        <img src="images/misshoneywell03.png" alt="Miss Honeywell 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="photo-fallback"><span>🤖</span>misshoneywell03.png</div>
+        <img src="images/kilogirl03.png" alt="Kilo Girl Archive 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>⭐</span>kilogirl03.png</div>
         <span class="photo-num">03</span>
       </div>
       <div class="photo-slot">
-        <img src="images/misshoneywell04.png" alt="Miss Honeywell 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="photo-fallback"><span>🤖</span>misshoneywell04.png</div>
+        <img src="images/kilogirl04.png" alt="Kilo Girl Archive 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>⭐</span>kilogirl04.png</div>
         <span class="photo-num">04</span>
       </div>
       <div class="photo-slot">
-        <img src="images/misshoneywell05.png" alt="Miss Honeywell 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="photo-fallback"><span>🤖</span>misshoneywell05.png</div>
+        <img src="images/kilogirl05.png" alt="Kilo Girl Archive 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>⭐</span>kilogirl05.png</div>
         <span class="photo-num">05</span>
       </div>
       <div class="photo-slot">
-        <img src="images/misshoneywell06.png" alt="Miss Honeywell 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="photo-fallback"><span>🤖</span>misshoneywell06.png</div>
+        <img src="images/kilogirl06.png" alt="Kilo Girl Archive 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>⭐</span>kilogirl06.png</div>
         <span class="photo-num">06</span>
       </div>
     </div>
@@ -204,19 +234,19 @@
   <!-- VIDEO -->
   <div class="cb-video-card" id="videoSection">
     <div class="cb-video-head">
-      <span class="cb-video-label">✦ Watch First · Miss Honeywell · Pathe News</span>
+      <span class="cb-video-label">✦ Listen First · Oral History Audio</span>
       <div style="display:flex;gap:7px;">
-        <button class="cb-vbtn" id="watchedBtn" onclick="markWatched()">Done watching</button>
-        <button class="cb-vbtn" id="rewatchBtn" style="display:none" onclick="rewatch()">Rewatch ↩</button>
+        <button class="cb-vbtn" id="watchedBtn" onclick="markWatched()">Done listening</button>
+        <button class="cb-vbtn" id="rewatchBtn" style="display:none" onclick="rewatch()">Listen again ↩</button>
       </div>
     </div>
-    <div class="cb-video-embed">
-      <iframe id="videoPlayer"
-        src="https://www.youtube.com/embed/6e8mj7r7V60"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen>
-      </iframe>
+    <div class="cb-video-slot" id="videoSlot">
+      <p>Paste a link to the Harlow Shapley oral history audio or video</p>
+      <input class="cb-video-input" type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off">
+      <br><br>
+      <button class="cb-btn primary" style="font-size:11px;padding:8px 16px;" onclick="setVideo()">✦ Load</button>
     </div>
+    <div class="cb-video-embed" id="videoEmbed"></div>
   </div>
 
   <!-- INPUT -->
@@ -224,7 +254,7 @@
     <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
     <div class="cb-row">
       <input class="cb-input cb-name-in" type="text" id="userName" placeholder="Your name…" value="">
-      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about Miss Honeywell…" autocomplete="off">
+      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about kilo-girl hours…" autocomplete="off">
       <button class="cb-btn primary" onclick="askQuestion()">✦ Ask</button>
       <button class="cb-btn soft" onclick="showAdminModal()" title="Admin reset">⚙</button>
     </div>
@@ -244,7 +274,7 @@
     <a class="cb-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">✦ Advance to next task</a>
   </div>
 
-  <div class="cb-wmark">✦ carebot/caretech research system · miss honeywell · v1.0 ✦</div>
+  <div class="cb-wmark">✦ carebot/caretech research system · kilo-girl hours · v1.0 ✦</div>
 </div>
 
 <!-- Admin Modal -->
@@ -264,9 +294,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
-const ADMIN_PASSCODE = 'honeywell1968';
+const ADMIN_PASSCODE = 'kilogirl1920';
 const MAX_DISPLAY = 3;
-const FB_REF_KEY = 'honeywellMessages';
+const FB_REF_KEY = 'kilogirlMessages';
 
 /* ── Clock ── */
 function updateClock(){
@@ -278,7 +308,7 @@ setInterval(updateClock,1000);updateClock();
 /* ── Sparkles ── */
 (function(){
   const wrap=document.getElementById('sparkles');
-  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  const chars=['✦','✧','⭐','˚','·','★','◦','✿'];
   for(let i=0;i<28;i++){
     const s=document.createElement('span');s.className='sp';
     s.textContent=chars[Math.floor(Math.random()*chars.length)];
@@ -293,6 +323,22 @@ setInterval(updateClock,1000);updateClock();
 })();
 
 /* ── Video ── */
+function setVideo(){
+  const raw=document.getElementById('videoUrl').value.trim();
+  if(!raw)return;
+  let src='';
+  const yt=raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  const vm=raw.match(/vimeo\.com\/(\d+)/);
+  if(yt)src=`https://www.youtube.com/embed/${yt[1]}`;
+  else if(vm)src=`https://player.vimeo.com/video/${vm[1]}`;
+  else{alert('Please paste a YouTube or Vimeo URL.');return;}
+  const embed=document.getElementById('videoEmbed');
+  embed.innerHTML=`<iframe src="${src}" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+  embed.style.display='block';
+  document.getElementById('videoSlot').style.display='none';
+}
+document.getElementById('videoUrl').addEventListener('keypress',e=>{if(e.key==='Enter')setVideo();});
+
 function markWatched(){
   document.getElementById('videoSection').style.opacity='.55';
   document.getElementById('watchedBtn').style.display='none';
@@ -302,43 +348,45 @@ function rewatch(){
   document.getElementById('videoSection').style.opacity='1';
   document.getElementById('rewatchBtn').style.display='none';
   document.getElementById('watchedBtn').style.display='block';
-  const f=document.getElementById('videoPlayer'),s=f.src;f.src='';setTimeout(()=>f.src=s,100);
+  const slot=document.getElementById('videoSlot');
+  const embed=document.getElementById('videoEmbed');
+  if(embed.style.display==='block'){
+    const f=embed.querySelector('iframe');if(f){const s=f.src;f.src='';setTimeout(()=>f.src=s,100);}
+  }
 }
 
 /* ── Firebase ── */
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCOq3yuuvOiUlJILo_RbBoXf0WYGJBaLRE",
+  apiKey: "AIzaSyAbj3g7yW7hkxvua11ePzZNVHgM1vmSiWk",
 
-  authDomain: "misshoneywell.firebaseapp.com",
+  authDomain: "kilogirl-carebot.firebaseapp.com",
 
-  databaseURL: "https://misshoneywell-default-rtdb.firebaseio.com",
+  projectId: "kilogirl-carebot",
 
-  projectId: "misshoneywell",
+  storageBucket: "kilogirl-carebot.firebasestorage.app",
 
-  storageBucket: "misshoneywell.firebasestorage.app",
+  messagingSenderId: "636854658655",
 
-  messagingSenderId: "112158461514",
+  appId: "1:636854658655:web:36b30bd1e83c79fd719dea",
 
-  appId: "1:112158461514:web:9f42950241d9abe1c3e0b3",
-
-  measurementId: "G-8232DBD6VN"
+  measurementId: "G-L9W2FLG2TS"
 
 };
 let app,database,messagesRef,onlineRef,useFirebase=true;
-let currentUser=localStorage.getItem('hwUser')||'';
-let userColor=localStorage.getItem('hwColor')||genColor();
+let currentUser=localStorage.getItem('kgUser')||'';
+let userColor=localStorage.getItem('kgColor')||genColor();
 
 function genColor(){
   const c=['#ff85b3','#ff2d6b','#ab47bc','#ff9800','#40c8ff','#c4005a'];
-  const v=c[Math.floor(Math.random()*c.length)];localStorage.setItem('hwColor',v);return v;
+  const v=c[Math.floor(Math.random()*c.length)];localStorage.setItem('kgColor',v);return v;
 }
 
 try{
   app=firebase.initializeApp(firebaseConfig);
   database=firebase.database();
   messagesRef=database.ref(FB_REF_KEY);
-  onlineRef=database.ref('hwOnline');
+  onlineRef=database.ref('kgOnline');
   if(currentUser)trackPresence();
 
   let initialDone=false;
@@ -376,7 +424,7 @@ function trackPresence(){
   r.onDisconnect().remove();
 }
 document.getElementById('userName').addEventListener('change',function(){
-  currentUser=this.value.trim();localStorage.setItem('hwUser',currentUser);
+  currentUser=this.value.trim();localStorage.setItem('kgUser',currentUser);
   if(currentUser&&useFirebase)trackPresence();
 });
 
@@ -385,133 +433,133 @@ function emptyHTML(){return '<div class="cb-empty"><h3>✦ Answers appear here</
 /* ── Response Bank ── */
 const responses=[
   {
-    text:"The newsreel narrator opens with a challenge: 'Mass production calls for automation — which may or may not be what we've got here. Is this or is this not a robot?' The question hangs in the air. The camera closes in on Miss Honeywell. She's standing in a cabinet. The man beside her is carefully — very carefully — closing the door.",
-    source:"Miss Honeywell newsreel transcript, 0:00–0:18",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"IS THIS A ROBOT? SEQUENCE",
+    text:"Shapley says the discussion of his globular cluster work was 'mostly with Gretchen and maybe one or two assistants.' Gretchen is named once, casually, as part of a list. The 'one or two assistants' are not named at all. The pronoun 'we' that the interviewer noticed dissolves immediately into a vague enumeration — and the conversation moves on.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"THE 'WE' SEQUENCE",
     moves:[
-      "1. THE QUESTION POSE — arms open wide, one pointing at your body — is THIS a robot or is this a person?",
-      "2. CABINET CLOSE — both hands slowly push an invisible heavy door shut — careful, deliberate, suspicious",
-      "3. AUTOMATION LOCK — full body goes rigid, stiff like a machine powering on for the first time",
-      "4. CAMERA ZOOM — body leans slowly forward toward the audience, face neutral — study me closely",
-      "5. FREEZE mid-movement — call out: 'Is this or is this not a robot?'"
+      "1. THE WE POSE — step forward with both arms wide open, claiming shared space — we did this together",
+      "2. THE DISSOLVE — arms pull back in slowly, one by one — the 'we' is becoming 'I' in real time",
+      "3. GRETCHEN GESTURE — one hand extends briefly to the side, acknowledging a presence, then returns",
+      "4. THE UNNAMED — both hands reach outward into empty space — others were here, they have no names",
+      "5. FREEZE alone in the centre — call out: 'He said we. He meant I. She made it possible.'"
     ]
   },
   {
-    text:"The narrator calls Miss Honeywell 'the ultimate in automation — the human-tronic saleswoman of tomorrow.' She was presented at the Instruments, Electronics and Automation Exhibition at Olympia as the future of selling. The boffins were bewildered. The crowds pulled in. Whether she was electronic, mechanical, or human — nobody officially knew.",
-    source:"Miss Honeywell newsreel transcript, 0:18–0:43",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"THE SALESWOMAN OF TOMORROW",
+    text:"Shapley says: 'I introduced the term girl hours.' He is proud of the coinage. A girl hour is one hour of labour by a woman computer — a human calculator hired to measure photographic plates and perform computations by hand. He invented a unit of measurement for women's work and named it after their gender, not their skill, not their role, not their names.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"GIRL HOURS SEQUENCE",
     moves:[
-      "1. EXHIBITION WALK — glide forward slowly in a straight line, arms slightly out — you are on display",
-      "2. HUMAN-TRONIC WAVE — one arm ripples from shoulder to fingertip, too smooth to be natural",
-      "3. BOFFIN BEWILDERED — head tilts, arms out, confused shrug — even the experts don't know",
-      "4. CROWD PULL — both arms draw inward toward chest, magnetizing the audience toward you",
-      "5. FREEZE in a saleswoman pose — call out: 'The human-tronic saleswoman of tomorrow!'"
+      "1. THE INTRODUCTION — one hand sweeps outward like presenting a new invention — I introduced this term",
+      "2. MEASURE THE HOUR — mime watching a clock, marking time with one sharp finger tap — one girl hour",
+      "3. NAME THE UNIT — point at yourself, then point at the ground — named for gender, not for skill",
+      "4. MEASURE THE WORK — both hands move across an invisible photographic plate, measuring carefully",
+      "5. FREEZE mid-measure — call out: 'Girl hours. She measured the stars. He measured her time.'"
     ]
   },
   {
-    text:"The narrator invites the audience to decide: 'Yourself — animal, vegetable or mineral? Science or science fiction?' Miss Honeywell speaks. She says she doesn't know if she is electronic, mechanical, or human. Her own spokesman says the same: he himself doesn't know what she is. The ambiguity is perfectly maintained — and perfectly useful.",
-    source:"Miss Honeywell newsreel transcript, 0:43–1:18",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"ANIMAL VEGETABLE OR MINERAL",
+    text:"One job, Shapley says, 'took several kilo-girl hours to get it through.' A kilo-girl hour is one thousand girl hours — one thousand hours of women's calculating labour. He uses the prefix kilo as a scientist would, treating women's work as a quantity to be scaled. The women who produced those thousands of hours of measurement are not mentioned individually anywhere in this passage.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"KILO-GIRL HOURS SEQUENCE",
     moves:[
-      "1. ANIMAL CROUCH — drop low, hands near ground, feral and unpredictable — what category is this?",
-      "2. VEGETABLE SWAY — stand slow, arms drift side to side like a plant in breeze — rooted, passive, organic",
-      "3. MINERAL FREEZE — snap into a full rigid lock, stone-still — inorganic, inert, perfectly still",
-      "4. SCIENCE FICTION — one slow arm rises above the head, finger points skyward — future or fantasy?",
-      "5. FREEZE — call out: 'Science? Or science fiction? She herself doesn't know.'"
+      "1. KILO COUNT — fingers count upward in rapid pulses — ten, a hundred, a thousand — kilo scale",
+      "2. PLATE MEASURE — both hands move precisely across a surface, reading photographic glass plates",
+      "3. STACK THE HOURS — one arm stacks invisible hours upward, building the count — higher, higher",
+      "4. THOUSAND HANDS — arms open wide at full span — imagine a thousand hours of this exact motion",
+      "5. FREEZE arms at full span — call out: 'Kilo-girl hours. One thousand hours. She is still counting.'"
     ]
   },
   {
-    text:"The compère announces to his audience that Miss Honeywell would make a good assistant to any sales manager. She replies — in a high-pitched voice — 'Assistant? Nothing. I'd make someone a very good wife, if he were a BSc and mechanically minded.' A machine programmed to propose itself as a wife. Automation selling the idea of domestic femininity.",
-    source:"Miss Honeywell newsreel transcript, 1:18–1:44",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"GOOD WIFE SEQUENCE",
+    text:"Shapley distinguishes between two kinds of contribution: help with 'the details' and help with 'the hunching.' He says he had help on the details. He did not have much help with the hunching. The hunching — the inspired guesswork, the theoretical leaps — belongs to him. The details — the thousands of hours of measurement and calculation — belong to the girl hours. The hierarchy is built into the language.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"THE DETAILS AND THE HUNCHING",
     moves:[
-      "1. ASSISTANT STANCE — head bows slightly, hands clasped in front — performing deference on command",
-      "2. NOTHING — sharp shake of the head, arms cross in refusal — Assistant? No.",
-      "3. WIFE POSE — hands clasp in front, head tilts, high-pitched freeze — scripted domesticity",
-      "4. MECHANICALLY MINDED — tap your temple with one finger, then mime turning a wrench — the ideal husband",
-      "5. FREEZE in the pose — call out: 'She was programmed to say this. Who wrote her script?'"
+      "1. THE DETAILS — fingers move in rapid precise small gestures, measuring, calculating, recording",
+      "2. THE HUNCH — one hand rises to the chin, thoughtful pause — then shoots upward — the inspired leap",
+      "3. HIERARCHY SPLIT — one hand high, one hand low — genius above, labour below",
+      "4. RECLAIM THE DETAIL — lower hand rises slowly to meet the upper — the detail was the discovery",
+      "5. FREEZE both hands level — call out: 'The details made the hunching possible. Name the details.'"
     ]
   },
   {
-    text:"The narrator reveals the key clue: the company that brought Miss Honeywell to London is called Magical Productions, run by a Hollywood man named Mark Wilson — who used to be a conjurer. Honeywell paid £2,000 to bring her over from Hollywood. 'There's something fishy — or fleshy — about this show,' the narrator says.",
-    source:"Miss Honeywell newsreel transcript, 1:44–2:06",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"THE CONJURER REVEALED",
+    text:"Harvard Observatory was, in Shapley's words, 'just swarming with these assistants.' The word swarming is striking — it describes a mass, not individuals. Insects swarm. Crowds swarm. The women computers of Harvard are described as a phenomenon of density rather than as a group of named people. 'That's why we got somewhere,' Shapley says. The swarm produced the result.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"SWARMING SEQUENCE",
     moves:[
-      "1. MAGIC REVEAL — one hand sweeps dramatically in the air like a conjurer presenting an illusion",
-      "2. HOLLYWOOD WALK — long confident stride forward, arms loose — this man is from showbusiness",
-      "3. £2,000 GESTURE — mime counting out a large stack of bills, then hand it over slowly — someone paid for this",
-      "4. FISHY OR FLESHY — one hand waves under nose like something smells suspicious — what is really in that cabinet?",
-      "5. FREEZE pointing at the cabinet — call out: 'Magical Productions. He used to be a conjurer.'"
+      "1. THE SWARM ENTER — step in from the edges, arms loose, moving with others — you are part of a mass",
+      "2. SWARMING WAVE — body undulates through the space, fluid and collective — the swarm is moving",
+      "3. INDIVIDUAL EMERGE — one arm breaks cleanly from the wave motion and holds still — I am a person",
+      "4. GOT SOMEWHERE — both arms open wide and push forward — THIS is why we got somewhere",
+      "5. FREEZE stepping forward from the swarm — call out: 'She was not a swarm. She had a name.'"
     ]
   },
   {
-    text:"The narrator issues a simple challenge: if Miss Honeywell is a genuine robot, all the man has to do is take her head off — in the open. The camera closes in. The moment arrives. And then — he closes the cabinet. He says it's because of 'delicate micro circuits, integrated digital logic nodules, not to be disturbed.' The narrator's final line: 'Well, he could have fooled me.'",
-    source:"Miss Honeywell newsreel transcript, 2:06–2:58",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"CLOSE THE CABINET SEQUENCE",
+    text:"The women who worked as human computers at Harvard Observatory were sometimes called the 'Harvard Computers' or 'Pickering's Women' after the previous director. Among them: Williamina Fleming, Annie Jump Cannon, Henrietta Swan Leavitt, Cecilia Payne-Gaposchkin. Leavitt's discovery of the Cepheid period-luminosity relationship is what made Shapley's globular cluster measurements possible. She is not mentioned in his account.",
+    source:"Harlow Shapley oral history interview — transcript; history of Harvard computers",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"HENRIETTA LEAVITT SEQUENCE",
     moves:[
-      "1. THE CHALLENGE — arms open wide, one hand gestures to the head — prove it, just take it off, right here",
-      "2. THE PAUSE — body goes completely still, one beat, two beats — the moment of decision",
-      "3. CABINET CLOSE — both hands slowly, deliberately push the invisible door closed — the proof is sealed inside",
-      "4. MICRO CIRCUIT EXCUSE — fingers wiggle delicately in the air — delicate circuits, cannot be disturbed",
-      "5. FREEZE with a knowing look — call out: 'Well. He could have fooled me.'"
+      "1. CEPHEID PULSE — one arm pulses outward in a slow rhythm — bright, dim, bright, dim — the Cepheid star",
+      "2. MEASURE THE PERIOD — mime timing the pulse with precise finger taps — the period reveals the distance",
+      "3. DISTANCE WAVE — arms spread wider and wider — the universe is larger than anyone knew",
+      "4. LEAVITT STAND — step forward alone and hold — this discovery was hers, measured from photographic plates",
+      "5. FREEZE arms wide — call out: 'Henrietta Leavitt measured the universe. He built on her work.'"
     ]
   },
   {
-    text:"The pronouns in the newsreel refuse to settle. The narrator cycles through 'she — or it — or maybe he.' The compère calls Miss Honeywell 'he, she, or it.' Even the pronoun is part of the trick — keeping the audience unsure whether they are looking at a woman performing a robot, or a robot performing a woman. The confusion was engineered and it was the product being sold.",
-    source:"Miss Honeywell newsreel transcript — pronoun instability throughout",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"SHE OR IT OR MAYBE HE",
+    text:"When Shapley says he 'had one full time girl assistant' at Mount Wilson, he is describing a professional research assistant as a 'girl.' The women who worked as computers and assistants at observatories typically had university degrees in mathematics or astronomy. They were hired because they were cheaper than men and could be paid less for equivalent work. The word 'girl' erased their professional status.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"ONE FULL TIME GIRL SEQUENCE",
     moves:[
-      "1. SHE — stand tall and still, arms at sides, present and feminine — she",
-      "2. IT — go completely mechanical, arms rigid at 90°, face blank — it",
-      "3. MAYBE HE — shift weight, lower stance, hand on chin, uncertain — maybe he?",
-      "4. ALL THREE — cycle through all three postures in quick succession, 2 counts each",
-      "5. FREEZE mid-transition — call out: 'She. It. Maybe he. The pronoun was the magic trick.'"
+      "1. FULL TIME STAND — plant both feet firmly, shoulders back — present, professional, qualified",
+      "2. DEGREE GESTURE — mime receiving a diploma with both hands, then holding it to your chest",
+      "3. CHEAPER RATE — one hand holds payment high, then drops it lower — same work, lower pay",
+      "4. THE GIRL ERASE — both hands wave over the professional posture — the title disappears, replaced",
+      "5. FREEZE in full professional posture — call out: 'She had a degree. He called her a girl.'"
     ]
   },
   {
-    text:"Miss Honeywell was presented as the future of sales — a tireless, smiling, compliant figure who would work exhibitions without pay, without breaks, without complaint. She was automation made feminine. The technology of labour control dressed up as a woman. Whether she was real or performed, the fantasy she embodied was perfectly legible: replace human workers with something that looks human but costs less.",
-    source:"Miss Honeywell newsreel transcript — exhibition context",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"AUTOMATION MADE FEMININE",
+    text:"The interview format itself is revealing. The interviewer, Weiner, asks about the work. Shapley answers about the work. The women who performed the computational labour are mentioned only when Weiner explicitly asks about the 'we.' Even then, Shapley pivots quickly back to his own contribution — the hunching. The oral history records what Shapley chose to remember and how he chose to frame it. The women are in the negative space of his account.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"THE NEGATIVE SPACE SEQUENCE",
     moves:[
-      "1. TIRELESS STAND — stand perfectly upright, arms at sides, unmoving — no breaks, no complaints",
-      "2. COMPLIANT WAVE — one slow mechanical arm wave, perfectly timed, performed on cue",
-      "3. SMILING FREEZE — face forward, body still, smile locked — the performance of endless pleasantness",
-      "4. LABOUR REPLACE — step forward and occupy the space of an invisible previous worker — their place is taken",
-      "5. FREEZE in the exhibition pose — call out: 'Automation made feminine. The fantasy was the product.'"
+      "1. THE ACCOUNT — mime speaking confidently, hands gesturing — telling the story your way",
+      "2. THE QUESTION — one hand reaches out and stops the story — but who was there with you?",
+      "3. BRIEF MENTION — one hand gestures briefly to the side, then returns — Gretchen. And some others.",
+      "4. THE PIVOT — body turns back to centre — but I should say the hunching was mine",
+      "5. FREEZE turned away from the side — call out: 'She is in the negative space of his account.'"
     ]
   },
   {
-    text:"The crowd at the Instruments, Electronics and Automation Exhibition at Olympia couldn't look away. 'Miss Honeywell pulls in the crowds,' the narrator says, 'even at a refined exhibition which only the top technicians can begin to comprehend.' The most advanced technology of the era — and the biggest draw was a figure in a cabinet that nobody could fully explain.",
-    source:"Miss Honeywell newsreel transcript, 0:50–1:05",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"PULLING IN THE CROWDS",
+    text:"Shapley's globular cluster work, built on kilo-girl hours of measurement, fundamentally changed our understanding of where we are in the galaxy. He showed that the Sun is not at the centre of the Milky Way — we are far out on one arm. This was a Copernican moment. The women whose hands produced the measurements that made this possible are an uncredited foundation of one of the great discoveries in the history of astronomy.",
+    source:"Harlow Shapley oral history interview — transcript; history of astronomy",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"THE GALAXY SEQUENCE",
     moves:[
-      "1. EXHIBITION PRESENCE — walk slowly into the centre of the space, arms slightly out — you are the draw",
-      "2. CROWD GATHER — arms sweep inward repeatedly, pulling the invisible audience closer and closer",
-      "3. TOP TECHNICIAN STARE — body turns slowly to face imaginary experts — they cannot comprehend you either",
-      "4. MYSTERY HOLD — full body stillness, head raised, chin up — the not-knowing is the attraction",
-      "5. FREEZE centre stage — call out: 'Even the top technicians could not begin to comprehend.'"
+      "1. CENTRE CLAIM — stand in the very centre of the space, arms wide — we thought we were here",
+      "2. THE SHIFT — glide slowly to the side, off-centre — the Sun is not at the centre of the Milky Way",
+      "3. THE MEASURE — mime moving across photographic plates carefully — this shift was calculated by hand",
+      "4. GALAXY ARM — one arm sweeps in a long slow arc — we are out here, on one arm, far from the core",
+      "5. FREEZE off-centre — call out: 'She moved us. She measured where we actually are.'"
     ]
   },
   {
-    text:"The 'integrated digital logic nodules' that the man cites as his reason for not opening the cabinet are not a real technical category. The phrase sounds technical enough to be convincing, vague enough to be unfalsifiable. It is the language of authority performing expertise — the same trick the cabinet was performing. Miss Honeywell and her spokesman were running the same con from different angles.",
-    source:"Miss Honeywell newsreel transcript, 2:36–2:50",
-    link:"https://www.youtube.com/watch?v=6e8mj7r7V60",
-    theme:"INTEGRATED DIGITAL LOGIC NODULES",
+    text:"The unit 'kilo-girl hours' was Shapley's invention and he seems pleased with it in the interview — it is clever, it is scientific-sounding, it scales. But it is also a unit that makes women's labour legible only as a quantity, not as the work of individuals with names, training, and expertise. To count kilo-girl hours is to count women's work without counting women. The unit measures what it simultaneously erases.",
+    source:"Harlow Shapley oral history interview — transcript",
+    link:"https://www.aip.org/history-programs/niels-bohr-library/oral-histories/4861",
+    theme:"THE UNIT ERASES SEQUENCE",
     moves:[
-      "1. TECHNICAL SPEAK — fingers tap together precisely while mouthing impressive-sounding words",
-      "2. NODULE GESTURE — both hands make small circular motions — these are the nodules, delicate and important",
-      "3. UNFALSIFIABLE LOCK — arms cross firmly — you cannot disprove this, the cabinet is closed",
-      "4. AUTHORITY WAVE — one hand waves dismissively — trust me, I am using technical language",
-      "5. FREEZE with one eyebrow raised — call out: 'Integrated digital logic nodules. Not to be disturbed.'"
+      "1. QUANTITY COUNT — both hands count upward — numbers, quantities, units — the work is being measured",
+      "2. THE ERASE — one sweeping arm wipes the counting away — the quantity is counted, the person is not",
+      "3. NAME WRITE — mime writing a name carefully in the air — this is not a unit. this is a person.",
+      "4. UNIT RECLAIM — turn the counting motion into a writing motion — every hour was someone's hour",
+      "5. FREEZE writing — call out: 'The unit measures what it erases. Count the names, not the hours.'"
     ]
   }
 ];
@@ -527,15 +575,15 @@ function getResponse(){
 }
 
 function generateMovement(resp){
-  const theme=resp.theme||'MISS HONEYWELL SEQUENCE';
+  const theme=resp.theme||'KILO-GIRL HOURS SEQUENCE';
   const moves=resp.moves||[
-    "1. CABINET STAND — stand perfectly still inside an invisible cabinet, arms at sides",
-    "2. MECHANICAL WAVE — one slow arm rises and waves, too smooth, too perfect",
-    "3. HIGH PITCH LOCK — body freezes mid-move, head tilts — the voice is about to speak",
-    "4. MYSTERY POSE — arms out, palms up — robot or woman? the question hangs in the air",
-    "5. FREEZE — call out: 'She. It. Maybe he. Miss Honeywell.'"
+    "1. PLATE MEASURE — both hands move carefully across an invisible photographic plate",
+    "2. CALCULATION — finger taps rapid numbers into an invisible ledger — computing by hand",
+    "3. STAR POINT — one arm rises and points upward — the globular cluster is up there",
+    "4. KILO COUNT — arms spread wide at kilo scale — a thousand hours of this",
+    "5. FREEZE measuring — call out: 'Girl hours. She measured the universe.'"
   ];
-  return `HIP HOP SEQUENCE: ${theme}\nHONORING: Miss Honeywell\n\n${moves.join('\n')}\n\nENERGY: Precise, uncanny, deliberate. Every move asks the same question: robot or person?`;
+  return `HIP HOP SEQUENCE: ${theme}\nHONORING: The Harvard Computers\n\n${moves.join('\n')}\n\nENERGY: Precise, methodical, powerful. Every move is an hour of work. Every freeze is a name that was not recorded.`;
 }
 
 /* ── Ask ── */
@@ -600,7 +648,7 @@ function renderPair(msg,key,playAudio=false){
     </div>
     <div class="cb-qbubble">❓ ${escH(msg.question)}</div>
     <div class="cb-pcard">
-      <div class="cb-phead"><span class="cb-plabel">🤖 From the Transcript</span></div>
+      <div class="cb-phead"><span class="cb-plabel">⭐ From the Transcript</span></div>
       <div class="cb-pbody">
         <div class="cb-ptext">${escH(msg.answerText)}</div>
         <div class="cb-psrc">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
@@ -618,7 +666,7 @@ function renderPair(msg,key,playAudio=false){
   if(playAudio){playChime();setTimeout(()=>speakMovement(msg.movement),950);}
 }
 
-/* ── Speech ── */
+/* ── Speech (female voice) ── */
 function getFemaleVoice(){
   const voices=window.speechSynthesis.getVoices();
   const enVoices=voices.filter(v=>v.lang==='en-US'||v.lang==='en_US'||v.lang.startsWith('en-US'));
@@ -663,10 +711,64 @@ function confirmAdminReset(){
 }
 document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
 
+/* ── Ambient Audio ── */
+const ambientAudio = new Audio('audio/harlow_shapley_girl_hours.mp3');
+ambientAudio.loop = true;
+ambientAudio.volume = 0.55;
+
+let ambientStarted = false;
+function startAmbient(){
+  if(ambientStarted)return;
+  ambientStarted = true;
+  ambientAudio.play().catch(()=>{});
+  document.getElementById('audioBar').style.display = 'flex';
+}
+['click','touchstart','keydown'].forEach(evt=>
+  document.addEventListener(evt, startAmbient, {once:true})
+);
+
+function toggleAmbient(){
+  const btn = document.getElementById('audioToggleBtn');
+  if(ambientAudio.paused){
+    ambientAudio.play();
+    btn.textContent = '\u23f8 Pause audio';
+  } else {
+    ambientAudio.pause();
+    btn.textContent = '\u25b6 Play audio';
+  }
+}
+
+/* Duck ambient while speech plays, restore after */
+const _origSpeakMovement = speakMovement;
+speakMovement = function(text){
+  ambientAudio.volume = 0.12;
+  _origSpeakMovement(text);
+  const restore = ()=>{ ambientAudio.volume = 0.55; };
+  window.speechSynthesis.addEventListener('end', restore, {once:true});
+};
+
 window.addEventListener('beforeunload',()=>{
   if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
   if('speechSynthesis' in window)window.speechSynthesis.cancel();
+  ambientAudio.pause();
 });
 </script>
+
+<div id="audioBar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:linear-gradient(135deg,rgba(140,0,45,.97),rgba(70,0,22,.99));border-top:1.5px solid rgba(255,80,150,.4);padding:10px 16px;align-items:center;justify-content:space-between;gap:10px;backdrop-filter:blur(12px);">
+  <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+    <span style="font-size:13px;">&#128266;</span>
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:10px;letter-spacing:.1em;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:uppercase;">Now playing</div>
+      <div style="font-size:10px;color:rgba(255,190,220,.55);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Harlow Shapley on &#8220;girl hours&#8221; &#8212; oral history excerpt</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+    <input type="range" min="0" max="1" step="0.05" value="0.55"
+      oninput="ambientAudio.volume=parseFloat(this.value)"
+      style="width:70px;accent-color:#ff2d6b;cursor:pointer;">
+    <button id="audioToggleBtn" onclick="toggleAmbient()"
+      style="font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;letter-spacing:.06em;color:rgba(255,200,220,.8);background:rgba(255,255,255,.06);border:1px solid rgba(255,140,185,.25);padding:5px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;">&#9208; Pause audio</button>
+  </div>
+</div>
 </body>
 </html>

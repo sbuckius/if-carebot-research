@@ -318,6 +318,8 @@ const firebaseConfig = {
 
   authDomain: "motherofalldemos-7f370.firebaseapp.com",
 
+  databaseURL: "https://motherofalldemos-7f370-default-rtdb.firebaseio.com",
+
   projectId: "motherofalldemos-7f370",
 
   storageBucket: "motherofalldemos-7f370.firebasestorage.app",
@@ -663,11 +665,25 @@ function renderPair(msg,key,playAudio=false){
 }
 
 /* ── Speech ── */
+function getFemaleVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  const enVoices=voices.filter(v=>v.lang==='en-US'||v.lang==='en_US'||v.lang.startsWith('en-US'));
+  const allEn=voices.filter(v=>v.lang.startsWith('en'));
+  const pool=enVoices.length?enVoices:allEn;
+  const femaleKeywords=['female','woman','zira','samantha','victoria','karen','moira','fiona','ava','allison','susan','sara','tessa','aria','jenny','michelle','emma','elizabeth','julia'];
+  let voice=pool.find(v=>femaleKeywords.some(k=>v.name.toLowerCase().includes(k)));
+  if(!voice)voice=pool[0]||null;
+  return voice;
+}
 function speakMovement(text){
   if(!('speechSynthesis' in window))return;
   window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);u.rate=0.88;u.pitch=1.0;
-  window.speechSynthesis.speak(u);
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.88;u.pitch=1.2;
+  const trySpeak=()=>{const v=getFemaleVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);};
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.addEventListener('voiceschanged',trySpeak,{once:true});
+  } else {trySpeak();}
 }
 function speakText(btn){speakMovement(btn.closest('.cb-mcard').querySelector('.cb-mtext').textContent);}
 function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}

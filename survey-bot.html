@@ -1,1186 +1,679 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✦ CAREtech · Survey ✦</title>
-
-<!-- Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, onSnapshot, writeBatch, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  const firebaseConfig = {
-    apiKey: "AIzaSyAT5bd-3SUfXrz9Se_7_rrlDg4PUWY-yCs",
-    authDomain: "whoimpactstechnology.firebaseapp.com",
-    projectId: "whoimpactstechnology",
-    storageBucket: "whoimpactstechnology.firebasestorage.app",
-    messagingSenderId: "1069141826768",
-    appId: "1:1069141826768:web:6fc48e35e09a3a244a92d5",
-    measurementId: "G-LNV3EYMZ8V"
-  };
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-  window.db = db;
-  window.fsSetDoc = setDoc;
-  window.fsDoc = doc;
-  window.fsOnSnapshot = onSnapshot;
-  window.fsWriteBatch = writeBatch;
-  window.fsGetDocs = getDocs;
-  window.fsCollection = collection;
-  window.dispatchEvent(new Event("firebase-ready"));
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-
+<title>✦ CAREBOT · Collaborative Q&A ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --rose:#ff5c8a; --hot:#ff2d6b; --candy:#ff85b3; --blush:#ffb3cf;
-  --cream:#fff5f8; --berry:#c4005a; --crimson:#8b0030; --maroon:#4a001a;
-  --fuchsia:#ff1f80; --bg:#0e0008;
-  --surface:rgba(18,0,10,.92); --surface2:rgba(28,0,15,.95); --surface3:rgba(40,0,22,.98);
-  --border:rgba(255,140,185,.2); --border2:rgba(255,80,150,.5);
-  --yes:#ff5c8a; --no:#8b1a3a; --neu:#9060a0;
-  --text:#fff5f8; --muted:rgba(255,190,220,.5); --muted2:rgba(255,200,230,.7);
-  --radius:16px;
-  --fh:'Nunito',sans-serif; --fb:'Quicksand',sans-serif;
-  --soft-glow:0 4px 30px rgba(255,45,107,.2);
-  --pop-glow:0 8px 50px rgba(255,45,107,.4),0 0 80px rgba(200,0,80,.12);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%;font-family:var(--fb);font-weight:600;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;}
-body{
-  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10,default;
-}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{min-height:100%;font-family:'Quicksand',sans-serif;font-weight:600;color:#fff5f8;background:#0e0008;-webkit-font-smoothing:antialiased;}
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
+  .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+  .orb-1{width:380px;height:380px;background:#8b0030;opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
+  .orb-2{width:300px;height:300px;background:#c4005a;opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+  .orb-3{width:200px;height:200px;background:#ff2d6b;opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
 
-/* ── BG LAYER ── */
-.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.35) 0%,transparent 58%),
-             radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.3) 0%,transparent 58%),
-             radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,30,100,.05) 0%,transparent 65%),
-             linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
-.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
-.orb-1{width:380px;height:380px;background:var(--crimson);opacity:.18;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
-.orb-2{width:300px;height:300px;background:var(--berry);opacity:.16;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
-.orb-3{width:200px;height:200px;background:var(--hot);opacity:.09;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
-@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
-@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
-@keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
-.sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
-@keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-120px) scale(1.1)}}
+  .screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(40px + env(safe-area-inset-bottom));gap:14px;}
 
-/* ── LOGIN ── */
-#login-screen{
-  position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;
-  justify-content:center;flex-direction:column;padding:2rem;
-}
-.login-card{
-  background:rgba(14,0,8,.95);border:1.5px solid var(--border2);border-radius:24px;
-  padding:3rem 3.5rem;width:100%;max-width:440px;text-align:center;
-  box-shadow:var(--pop-glow);backdrop-filter:blur(20px);position:relative;overflow:hidden;
-}
-.login-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
-  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
-  box-shadow:0 0 12px var(--candy);border-radius:999px;}
-.logo{font-family:var(--fh);font-size:2.4rem;font-weight:900;letter-spacing:-.04em;margin-bottom:.25rem;
-  background:linear-gradient(90deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));
-  -webkit-background-clip:text;background-clip:text;color:transparent;}
-.logo span{color:var(--hot)}
-.login-sub{color:var(--muted2);font-size:.9rem;margin-bottom:2.5rem;font-weight:600;}
-.field-label{display:block;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
-input[type=text]{
-  width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--border);
-  border-radius:12px;padding:.85rem 1.1rem;color:var(--text);font-family:var(--fb);
-  font-size:1rem;font-weight:600;outline:none;transition:border-color .2s,box-shadow .2s;
-  margin-bottom:1.5rem;
-}
-input[type=text]:focus{border-color:var(--candy);box-shadow:0 0 0 3px rgba(255,133,179,.15)}
-input[type=text]::placeholder{color:var(--muted)}
-.btn-primary{
-  width:100%;background:linear-gradient(135deg,var(--hot),var(--berry),var(--crimson));
-  color:var(--cream);border:none;border-radius:12px;padding:.9rem 1.5rem;
-  font-family:var(--fh);font-size:1rem;font-weight:800;cursor:pointer;letter-spacing:.03em;
-  transition:transform .15s,box-shadow .15s;box-shadow:0 4px 20px rgba(255,45,107,.35);
-}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(255,45,107,.5)}
+  .cb-topbar{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-logo{display:flex;align-items:center;gap:10px;}
+  .cb-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,45,107,.18);border:1.5px solid rgba(255,80,150,.5);display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .cb-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-top:1px;}
+  .cb-badges{display:flex;gap:7px;align-items:center;}
+  .cb-badge{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,140,185,.2);color:rgba(255,190,220,.5);letter-spacing:.06em;}
+  .cb-pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff2d6b;margin-right:5px;animation:pip 2s ease-in-out infinite;vertical-align:middle;}
+  @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* ── APP SHELL ── */
-#app{display:none;flex-direction:column;height:100vh;position:relative;z-index:2;}
+  .cb-video{width:100%;max-width:600px;border-radius:16px;overflow:hidden;border:1.5px solid rgba(255,80,150,.5);box-shadow:0 8px 40px rgba(255,45,107,.3);}
+  .cb-video-head{background:linear-gradient(135deg,rgba(140,0,45,.95),rgba(70,0,22,.98));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-video-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-vbtn{font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;color:rgba(255,200,220,.7);background:rgba(255,255,255,.05);border:1px solid rgba(255,140,185,.2);padding:4px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
+  .cb-vbtn:hover{background:rgba(255,45,107,.2);color:#ffb3cf;}
+  .cb-video-embed{width:100%;aspect-ratio:16/9;}
+  .cb-video-embed iframe{width:100%;height:100%;border:none;display:block;}
+  .cb-video.watched{opacity:.55;}
 
-/* ── HEADER ── */
-.app-header{
-  position:sticky;top:0;z-index:200;
-  background:rgba(10,0,6,.9);backdrop-filter:blur(18px);
-  border-bottom:1.5px solid var(--border);
-  padding:.75rem 1.5rem;display:flex;align-items:center;gap:.9rem;flex-shrink:0;
-}
-.app-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--candy) 30%,var(--hot) 50%,var(--candy) 70%,transparent);
-  opacity:.5;}
-.header-logo{
-  font-family:var(--fh);font-size:1.3rem;font-weight:900;letter-spacing:-.02em;margin-right:auto;
-  background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.live-pill{
-  display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:800;
-  color:var(--candy);letter-spacing:.1em;text-transform:uppercase;
-  background:rgba(255,85,140,.1);border:1px solid rgba(255,85,140,.3);
-  border-radius:999px;padding:.28rem .8rem;
-}
-.live-dot{width:6px;height:6px;background:var(--hot);border-radius:50%;box-shadow:0 0 6px var(--hot);animation:breathe 1.8s ease-in-out infinite;}
-@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
-.btn-pdf{
-  display:flex;align-items:center;gap:.45rem;
-  background:linear-gradient(135deg,var(--crimson),var(--hot));
-  color:var(--cream);border:none;border-radius:10px;padding:.48rem 1rem;
-  font-family:var(--fh);font-size:.75rem;font-weight:800;cursor:pointer;letter-spacing:.04em;
-  transition:all .2s;flex-shrink:0;white-space:nowrap;
-  box-shadow:0 3px 14px rgba(255,45,107,.3);
-}
-.btn-pdf:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,45,107,.45)}
-.btn-pdf:disabled{opacity:.35;cursor:not-allowed;transform:none}
-.user-badge{
-  display:flex;align-items:center;gap:.45rem;
-  background:rgba(255,255,255,.05);border:1.5px solid var(--border);
-  border-radius:999px;padding:.3rem .85rem .3rem .35rem;font-size:.8rem;flex-shrink:0;
-}
-.user-avatar{
-  width:24px;height:24px;border-radius:50%;
-  background:linear-gradient(135deg,var(--hot),var(--crimson));
-  display:flex;align-items:center;justify-content:center;
-  font-size:.68rem;font-weight:800;color:var(--cream);flex-shrink:0;
-}
+  .cb-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .cb-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);border-radius:999px;}
+  .cb-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+  .cb-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .cb-row:last-child{margin-bottom:0;}
+  .cb-input{flex:1;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;color:#fff5f8;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0;}
+  .cb-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
+  .cb-input::placeholder{color:rgba(255,190,220,.35);}
+  .cb-name-in{max-width:150px;flex:0 0 150px;}
+  .cb-btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.05em;color:#fff5f8;display:inline-flex;align-items:center;gap:5px;padding:10px 18px;border-radius:12px;border:1.5px solid rgba(255,80,150,.5);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .cb-btn.primary{background:linear-gradient(135deg,#ff2d6b,#c4005a,#8b0030);box-shadow:0 4px 18px rgba(255,45,107,.3);}
+  .cb-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,45,107,.5);}
+  .cb-btn.soft{background:rgba(255,255,255,.04);color:rgba(255,190,220,.5);border-color:rgba(255,140,185,.15);font-size:11px;}
+  .cb-btn.soft:hover{background:rgba(255,45,107,.12);color:#ffb3cf;}
+  .cb-btn.purple{background:linear-gradient(135deg,#ab47bc,#6a1b9a);border-color:#ab47bc;}
+  .cb-btn:active{transform:scale(.97);}
 
-/* ── LAYOUT ── */
-.app-body{display:flex;flex:1;overflow:hidden}
+  .cb-msgs{width:100%;max-width:600px;display:flex;flex-direction:column;gap:14px;}
+  .cb-empty{text-align:center;padding:44px 20px;color:rgba(255,190,220,.35);}
+  .cb-empty h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:7px;}
+  .cb-empty p{font-size:12px;}
+  .cb-pair{animation:slideUp .35s ease-out;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .cb-meta{font-size:11px;color:rgba(255,190,220,.45);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .cb-meta strong{font-weight:700;}
+  .cb-qbubble{display:inline-block;background:linear-gradient(135deg,#ff2d6b,#c4005a);color:#fff;padding:9px 14px;border-radius:16px 16px 16px 3px;font-size:13px;margin-bottom:12px;max-width:88%;line-height:1.5;box-shadow:0 3px 12px rgba(255,45,107,.3);}
+  .cb-pcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.4);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+  .cb-phead{background:linear-gradient(135deg,rgba(240,98,146,.8),rgba(194,24,91,.85));padding:9px 14px;display:flex;align-items:center;gap:7px;}
+  .cb-plabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-pbody{padding:14px;}
+  .cb-ptext{font-size:13px;line-height:1.7;color:rgba(255,215,235,.88);}
+  .cb-psrc{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,100,160,.12);font-size:11px;color:rgba(255,190,220,.45);}
+  .cb-psrc a{color:#ff85b3;text-decoration:none;}
+  .cb-psrc a:hover{text-decoration:underline;}
+  .cb-mcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(171,71,188,.45);border-radius:14px;overflow:hidden;}
+  .cb-mhead{background:linear-gradient(135deg,rgba(171,71,188,.8),rgba(106,27,154,.85));padding:9px 14px;}
+  .cb-mlabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-mbody{padding:14px;}
+  .cb-mtext{font-family:'Courier New',monospace;font-size:12px;line-height:1.85;color:rgba(220,180,255,.85);white-space:pre-wrap;}
+  .cb-spkrow{padding:8px 14px 12px;display:flex;gap:7px;}
 
-/* ── SIDEBAR ── */
-.sidebar{
-  width:230px;flex-shrink:0;
-  background:rgba(12,0,7,.95);border-right:1.5px solid var(--border);
-  overflow-y:auto;padding:1rem 0;
-}
-.sidebar-label{
-  font-size:.62rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);padding:0 1rem;margin-bottom:.3rem;margin-top:.7rem;
-}
-.sbtn{
-  display:flex;align-items:center;gap:.55rem;width:100%;
-  padding:.6rem 1rem;background:transparent;border:none;
-  color:var(--muted2);font-family:var(--fb);font-size:.82rem;font-weight:600;
-  text-align:left;cursor:pointer;position:relative;transition:all .15s;
-}
-.sbtn:hover{background:rgba(255,85,140,.08);color:var(--blush)}
-.sbtn.theme-active{background:rgba(255,85,140,.12);color:var(--candy)}
-.sbtn.theme-active::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:3px;
-  background:linear-gradient(180deg,var(--candy),var(--hot));border-radius:0 3px 3px 0;}
-.sbtn.sum-active{background:rgba(180,0,60,.18);color:#ff9fcc}
-.sbtn.sum-active::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:3px;
-  background:var(--berry);border-radius:0 3px 3px 0;}
-.si{font-size:.95rem;flex-shrink:0}
-.sn{flex:1;font-weight:600;line-height:1.3}
-.sp{
-  font-size:.62rem;background:rgba(255,255,255,.06);
-  border-radius:999px;padding:.1rem .42rem;color:var(--muted);flex-shrink:0;
-  border:1px solid var(--border);
-}
-.sp.done{background:rgba(255,85,140,.2);color:var(--candy);border-color:rgba(255,85,140,.3);}
+  .cb-bottom{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(140,0,45,.8),rgba(70,0,22,.92));border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;text-align:center;position:relative;overflow:hidden;}
+  .cb-bottom::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);border-radius:999px;}
+  .cb-btitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;}
+  .cb-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:12px 24px;border-radius:14px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 4px 18px rgba(255,45,107,.35);transition:all .2s;}
+  .cb-link:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,45,107,.5);}
 
-/* ── MAIN ── */
-.main-content{flex:1;overflow-y:auto;padding:2rem 2.5rem}
-
-/* ── CONFIG NOTICE ── */
-.cfg{
-  background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2);
-  border-radius:12px;padding:.9rem 1.1rem;font-size:.82rem;color:#fca5a5;
-  margin-bottom:1.5rem;display:none;
-}
-.cfg.show{display:block}
-.cfg code{background:rgba(0,0,0,.3);padding:.1rem .32rem;border-radius:4px;font-size:.75rem}
-
-/* ── PAGE HEADERS ── */
-.pg-icon{font-size:2.2rem;margin-bottom:.35rem}
-.pg-title{
-  font-family:var(--fh);font-size:1.85rem;font-weight:900;letter-spacing:-.035em;
-  background:linear-gradient(90deg,var(--blush) 20%,var(--fuchsia) 55%,var(--candy));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.pg-sub{color:var(--muted2);font-size:.86rem;margin-top:.25rem;margin-bottom:1.8rem;font-weight:600;}
-.pg-sub strong{color:var(--candy)}
-
-/* ── OVERALL CARD ── */
-.overall-card{
-  background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius);
-  padding:1.6rem 1.9rem;margin-bottom:2rem;position:relative;overflow:hidden;
-  box-shadow:var(--soft-glow);
-}
-.overall-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
-  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
-  box-shadow:0 0 8px var(--candy);}
-.oc-title{font-family:var(--fh);font-size:1.05rem;font-weight:800;margin-bottom:.25rem;color:var(--blush)}
-.oc-sub{font-size:.8rem;color:var(--muted2);margin-bottom:1.3rem;line-height:1.65;font-weight:600;}
-.oc-stats{display:flex;gap:1.2rem;margin-bottom:1.3rem;flex-wrap:wrap}
-.ostat{text-align:center;min-width:70px}
-.ostat-num{font-family:var(--fh);font-size:1.8rem;font-weight:900;line-height:1}
-.ostat-num.y{color:var(--candy)}.ostat-num.n{color:#c0395e}.ostat-num.neu{color:#9060a0}
-.ostat-num.t{color:#ff9fcc}.ostat-num.r{color:var(--blush)}
-.ostat-lbl{font-size:.65rem;color:var(--muted);margin-top:.15rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;}
-.chart-h240{height:240px;position:relative}
-
-/* ── THEME SUMMARY ── */
-.tss{
-  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
-  padding:1.3rem 1.6rem;margin-bottom:1.1rem;position:relative;overflow:hidden;
-  transition:border-color .2s;
-}
-.tss:hover{border-color:var(--border2)}
-.tss::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,133,179,.3) 50%,transparent);}
-.tss-hd{display:flex;align-items:center;gap:.55rem;margin-bottom:1.1rem}
-.tss-ico{font-size:1.1rem}
-.tss-nm{font-family:var(--fh);font-size:.95rem;font-weight:800;color:var(--blush)}
-.tss-tot{
-  font-size:.68rem;color:var(--muted);margin-left:auto;
-  background:rgba(255,255,255,.05);padding:.12rem .45rem;border-radius:6px;
-  border:1px solid var(--border);
-}
-.chart-h130{height:130px;position:relative}
-
-/* ── QUESTION CARDS ── */
-.qgrid{display:flex;flex-direction:column;gap:1rem}
-.qcard{
-  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
-  padding:1.3rem 1.5rem;transition:border-color .2s;position:relative;overflow:hidden;
-}
-.qcard::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,133,179,.2) 50%,transparent);}
-.qcard:hover{border-color:var(--border2)}
-.qcard-img{width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:1rem;display:block;
-  border:1px solid var(--border);}
-.qcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.9rem;margin-bottom:.9rem}
-.qtext{font-size:.9rem;font-weight:600;line-height:1.55;flex:1;color:rgba(255,220,235,.9)}
-.qnum{
-  font-family:var(--fh);font-size:.62rem;font-weight:800;color:var(--muted);
-  background:rgba(255,255,255,.06);border-radius:6px;padding:.16rem .42rem;flex-shrink:0;
-  margin-top:2px;border:1px solid var(--border);letter-spacing:.06em;
-}
-
-/* ── VOTE BUTTONS ── */
-.vbtns{display:flex;gap:.5rem;margin-bottom:.9rem}
-.vbtn{
-  flex:1;padding:.52rem .3rem;border-radius:10px;border:1.5px solid transparent;
-  font-family:var(--fh);font-size:.75rem;font-weight:800;cursor:pointer;
-  letter-spacing:.04em;transition:all .18s cubic-bezier(.34,1.56,.64,1);
-  text-align:center;line-height:1.2;
-}
-.vbtn.yb{background:rgba(255,92,138,.08);border-color:rgba(255,92,138,.28);color:var(--candy)}
-.vbtn.yb:hover{background:rgba(255,92,138,.18);border-color:var(--candy);transform:translateY(-2px)}
-.vbtn.yb.voted{background:linear-gradient(135deg,var(--hot),var(--berry));color:var(--cream);border-color:var(--hot);box-shadow:0 4px 16px rgba(255,45,107,.35)}
-.vbtn.nb{background:rgba(139,26,58,.1);border-color:rgba(139,26,58,.35);color:#e05080}
-.vbtn.nb:hover{background:rgba(139,26,58,.2);border-color:#c0395e;transform:translateY(-2px)}
-.vbtn.nb.voted{background:linear-gradient(135deg,#4a0a1e,#8b1a3a);color:var(--cream);border-color:#8b1a3a;box-shadow:0 4px 16px rgba(139,26,58,.35)}
-.vbtn.neub{background:rgba(144,96,160,.08);border-color:rgba(144,96,160,.28);color:#b080c0}
-.vbtn.neub:hover{background:rgba(144,96,160,.18);border-color:#9060a0;transform:translateY(-2px)}
-.vbtn.neub.voted{background:linear-gradient(135deg,#3a1848,#6b3080);color:var(--cream);border-color:#6b3080;box-shadow:0 4px 16px rgba(107,48,128,.35)}
-.vbtn:active{transform:scale(.96) !important}
-
-/* ── BAR CHART ── */
-.bar-area{display:flex;flex-direction:column;gap:.4rem}
-.brow{display:flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700}
-.blbl{width:36px;text-align:right;flex-shrink:0;font-size:.65rem;letter-spacing:.05em}
-.blbl.y{color:var(--candy)}.blbl.n{color:#c0395e}.blbl.neu{color:#9060a0}
-.btrack{flex:1;height:9px;background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
-.bfill{height:100%;border-radius:999px;transition:width .55s cubic-bezier(.4,0,.2,1)}
-.bfill.y{background:linear-gradient(90deg,var(--crimson),var(--candy))}
-.bfill.n{background:linear-gradient(90deg,#2a040e,#8b1a3a)}
-.bfill.neu{background:linear-gradient(90deg,#2a1038,#9060a0)}
-.bcnt{width:24px;font-size:.68rem;color:var(--muted);flex-shrink:0;font-weight:700}
-.qtot{font-size:.65rem;color:var(--muted);margin-top:.15rem;letter-spacing:.04em}
-
-/* ── ADVANCE CARD ── */
-.advance-wrap{margin-top:1.5rem;animation:slideUp .4s cubic-bezier(.34,1.4,.64,1)}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.advance-card{
-  background:linear-gradient(135deg,rgba(140,0,45,.9),rgba(70,0,22,.95));
-  border:1.5px solid var(--border2);border-radius:20px;padding:22px 24px;
-  text-align:center;position:relative;overflow:hidden;
-  box-shadow:var(--pop-glow);
-}
-.advance-card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;
-  background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
-  box-shadow:0 0 12px var(--candy);}
-.advance-eyebrow{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700;}
-.advance-title{
-  font-family:var(--fh);font-weight:900;font-size:1.1rem;
-  background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  margin-bottom:14px;
-}
-.btn-advance{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  background:linear-gradient(135deg,var(--hot),var(--berry),var(--crimson));
-  color:var(--cream);border:none;border-radius:14px;padding:13px 28px;
-  font-family:var(--fh);font-size:.9rem;font-weight:800;cursor:pointer;
-  letter-spacing:.05em;transition:all .2s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 4px 22px rgba(255,45,107,.4);text-decoration:none;
-}
-.btn-advance:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 36px rgba(255,45,107,.55)}
-.btn-advance:active{transform:scale(.97)}
-
-/* ── PDF OVERLAY ── */
-#pdf-ov{
-  display:none;position:fixed;inset:0;z-index:9999;
-  background:rgba(10,0,6,.92);backdrop-filter:blur(8px);
-  align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;
-}
-#pdf-ov.show{display:flex}
-.pdf-spin{
-  width:46px;height:46px;border:3px solid var(--border2);
-  border-top-color:var(--hot);border-radius:50%;animation:spin .85s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.pdf-msg{font-family:var(--fh);font-size:.95rem;font-weight:700;color:var(--blush)}
-
-/* ── TOAST ── */
-#toast{
-  position:fixed;bottom:1.7rem;right:1.7rem;z-index:9000;
-  background:var(--surface2);border:1.5px solid var(--border2);
-  border-radius:12px;padding:.65rem 1.1rem;font-size:.82rem;font-weight:600;
-  opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;
-  pointer-events:none;color:var(--blush);
-}
-#toast.show{opacity:1;transform:translateY(0)}
-
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .sidebar{width:58px}
-  .sn,.sp{display:none}
-  .main-content{padding:1.25rem 1rem}
-}
-@media(max-width:580px){.btn-pdf .label{display:none}}
+  .cb-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;}
+  .cb-modal.open{display:flex;}
+  .cb-mbox{background:rgba(14,0,8,.97);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:26px 22px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(255,45,107,.4);position:relative;}
+  .cb-mbox::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);border-radius:999px;}
+  .cb-mtitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#ffb3cf;margin-bottom:9px;}
+  .cb-mbodytxt{font-size:12px;color:rgba(255,200,220,.65);line-height:1.6;margin-bottom:16px;}
+  .cb-mbtns{display:flex;gap:9px;}
+  .cb-err{font-size:11px;color:#ff2d6b;margin-top:6px;min-height:16px;}
+  .cb-wmark{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.12);padding-bottom:8px;}
 </style>
 </head>
 <body>
-
 <div class="bg-layer"></div>
-<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 <div class="sparkles" id="sparkles"></div>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="logo">CARE<span>tech</span> ✦</div>
-    <p class="login-sub">Survey to gather inclusive data for caring technology</p>
-    <label class="field-label" for="uname">Your display name</label>
-    <input type="text" id="uname" placeholder="e.g. Alex, Team B, Anonymous…" maxlength="30" autocomplete="off">
-    <button class="btn-primary" onclick="enterApp()">Join Survey →</button>
-  </div>
-</div>
+<div class="screen">
 
-<!-- APP -->
-<div id="app">
-  <header class="app-header">
-    <div class="header-logo">CARE<span style="color:var(--hot)">tech</span> ✦</div>
-    <div class="live-pill"><div class="live-dot"></div>Live</div>
-    <button class="btn-pdf" id="pdf-btn" onclick="exportPDF()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      <span class="label">Save PDF</span>
-    </button>
-    <button class="btn-pdf" id="reset-btn" onclick="showResetModal()" style="background:linear-gradient(135deg,#3a0818,#7a1040);">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.45"/></svg>
-      <span class="label">Reset</span>
-    </button>
-    <div class="user-badge">
-      <div class="user-avatar" id="u-init">?</div>
-      <span id="u-name">—</span>
+  <div class="cb-topbar">
+    <div class="cb-logo">
+      <div class="cb-icon">💡</div>
+      <div>
+        <div class="cb-name">CAREBOT · Q&A ✦</div>
+        <div class="cb-sub">Women Inventors · Collaborative</div>
+      </div>
     </div>
-  </header>
-  <div class="app-body">
-    <nav class="sidebar" id="sidebar"></nav>
-    <main class="main-content" id="main-content"></main>
+    <div class="cb-badges">
+      <div class="cb-badge" id="onlineCount"><span class="cb-pip"></span>Connecting…</div>
+      <div class="cb-badge" id="sysTime">--:--</div>
+    </div>
+  </div>
+
+  <div class="cb-video" id="videoSection">
+    <div class="cb-video-head">
+      <span class="cb-video-label">✦ Research Video · Watch First</span>
+      <div style="display:flex;gap:7px;">
+        <button class="cb-vbtn" id="watchedBtn" onclick="markWatched()">Done watching</button>
+        <button class="cb-vbtn" id="rewatchBtn" style="display:none" onclick="rewatch()">Rewatch ↩</button>
+      </div>
+    </div>
+    <div class="cb-video-embed">
+      <iframe id="vimeoPlayer"
+        src="https://player.vimeo.com/video/1170502826?h=759ce140f9&badge=0&autopause=0&player_id=0&app_id=58479"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+        title="CAREBOT Research Video"></iframe>
+    </div>
+  </div>
+
+  <div class="cb-card">
+    <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
+    <div class="cb-row">
+      <input class="cb-input cb-name-in" type="text" id="userName" placeholder="Your name…" value="">
+      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about technology and inventions…" autocomplete="off">
+      <button class="cb-btn primary" onclick="askQuestion()">✦ Ask</button>
+      <button class="cb-btn soft" onclick="showAdminModal()" title="Admin reset">⚙</button>
+    </div>
+  </div>
+
+  <div class="cb-msgs" id="outputArea">
+    <div class="cb-empty">
+      <h3>✦ Answers appear here</h3>
+      <p>Type a question above and tap Ask</p>
+    </div>
+  </div>
+
+  <div class="cb-bottom">
+    <div class="cb-btitle">Ready for your next task?</div>
+    <a class="cb-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">✦ Advance to next task</a>
+  </div>
+
+  <div class="cb-wmark">✦ carebot/caretech research system · v3.0 ✦</div>
+</div>
+
+<!-- Admin Modal -->
+<div class="cb-modal" id="adminModal">
+  <div class="cb-mbox">
+    <div class="cb-mtitle">🔒 Admin Reset</div>
+    <div class="cb-mbodytxt">Enter the admin passcode to clear all messages from the display and database.</div>
+    <input class="cb-input" type="password" id="adminPass" placeholder="Enter passcode…" style="width:100%;margin-bottom:6px;">
+    <div class="cb-err" id="adminErr"></div>
+    <div class="cb-mbtns" style="margin-top:10px;">
+      <button class="cb-btn soft" style="flex:1" onclick="closeAdminModal()">Cancel</button>
+      <button class="cb-btn primary" style="flex:1" onclick="confirmAdminReset()">Reset All</button>
+    </div>
   </div>
 </div>
 
-<div id="pdf-ov"><div class="pdf-spin"></div><div class="pdf-msg" id="pdf-msg">Building PDF…</div></div>
-<div id="toast"></div>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<!-- Vimeo SDK -->
+<script src="https://player.vimeo.com/api/player.js"></script>
 
 <script>
-/* ── SPARKLES ── */
+/* ── CONFIGURATION ── */
+const ADMIN_PASSCODE = 'carebot2025'; // Change this to your desired passcode
+const MAX_DISPLAY = 3;
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+/* ── Sparkles ── */
 (function(){
   const wrap=document.getElementById('sparkles');
-  const chars=['✦','✧','♡','˚','·','✿','◦'];
-  for(let i=0;i<24;i++){
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀'];
+  for(let i=0;i<28;i++){
     const s=document.createElement('span');s.className='sp';
     s.textContent=chars[Math.floor(Math.random()*chars.length)];
     s.style.left=Math.random()*100+'vw';
     s.style.bottom=Math.random()*-60+'px';
-    s.style.fontSize=(8+Math.random()*10)+'px';
-    s.style.color=`hsl(${315+Math.random()*45},70%,${65+Math.random()*22}%)`;
-    s.style.animationDuration=(8+Math.random()*14)+'s';
-    s.style.animationDelay=(Math.random()*14)+'s';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
     wrap.appendChild(s);
   }
 })();
 
-// ═══════════════════════════════════════════════════════════════
-//  SURVEY DATA
-// ═══════════════════════════════════════════════════════════════
-const SURVEY = [
+/* ── Vimeo ── */
+try{
+  const vp=new Vimeo.Player(document.getElementById('vimeoPlayer'));
+  vp.on('ended',markWatched);
+  vp.on('timeupdate',d=>{if(d.percent>=.95)markWatched();});
+}catch(e){}
+
+function markWatched(){
+  document.getElementById('videoSection').classList.add('watched');
+  document.getElementById('watchedBtn').style.display='none';
+  document.getElementById('rewatchBtn').style.display='block';
+}
+function rewatch(){
+  document.getElementById('videoSection').classList.remove('watched');
+  document.getElementById('rewatchBtn').style.display='none';
+  document.getElementById('watchedBtn').style.display='block';
+  const f=document.getElementById('vimeoPlayer'),s=f.src;
+  f.src='';setTimeout(()=>f.src=s,100);
+}
+
+/* ── Firebase ── */
+const firebaseConfig = {
+
+  apiKey: "AIzaSyAT5bd-3SUfXrz9Se_7_rrlDg4PUWY-yCs",
+
+  authDomain: "whoimpactstechnology.firebaseapp.com",
+
+  databaseURL: "https://whoimpactstechnology-default-rtdb.firebaseio.com",
+
+  projectId: "whoimpactstechnology",
+
+  storageBucket: "whoimpactstechnology.firebasestorage.app",
+
+  messagingSenderId: "1069141826768",
+
+  appId: "1:1069141826768:web:6fc48e35e09a3a244a92d5",
+
+  measurementId: "G-LNV3EYMZ8V"
+
+};
+
+let app,database,messagesRef,onlineRef,useFirebase=true;
+let currentUser=localStorage.getItem('cbUser')||'';
+let userColor=localStorage.getItem('cbColor')||genColor();
+
+function genColor(){
+  const c=['#e91e63','#9c27b0','#ff5722','#2196f3','#009688','#ff9800'];
+  const v=c[Math.floor(Math.random()*c.length)];
+  localStorage.setItem('cbColor',v);return v;
+}
+
+try{
+  app=firebase.initializeApp(firebaseConfig);
+  database=firebase.database();
+  messagesRef=database.ref('qaMessages');
+  onlineRef=database.ref('online');
+  if(currentUser)trackPresence();
+
+  /* Initial load: fetch last MAX_DISPLAY messages silently, then watch for new ones */
+  let initialLoadDone=false;
+  messagesRef.orderByKey().limitToLast(MAX_DISPLAY).once('value',snapshot=>{
+    const area=document.getElementById('outputArea');
+    area.innerHTML='';
+    const items=[];
+    snapshot.forEach(child=>{items.push({key:child.key,val:child.val()});});
+    if(!items.length){
+      area.innerHTML='<div class="cb-empty"><h3>✦ Answers appear here</h3><p>Type a question above and tap Ask</p></div>';
+    } else {
+      items.reverse().forEach(({key,val})=>renderPair(val,key,false));
+    }
+    initialLoadDone=true;
+    const lastKey=items.length?items[items.length-1].key:null;
+    const newQuery=lastKey
+      ? messagesRef.orderByKey().startAfter(lastKey)
+      : messagesRef.orderByKey().limitToLast(1);
+    newQuery.on('child_added',snap=>{
+      if(!initialLoadDone)return;
+      const msg=snap.val();const key=snap.key;
+      const area=document.getElementById('outputArea');
+      const empty=area.querySelector('.cb-empty');if(empty)empty.remove();
+      const pairs=area.querySelectorAll('.cb-pair');
+      if(pairs.length>=MAX_DISPLAY)pairs[pairs.length-1].remove();
+      renderPair(msg,key,true);
+    });
+  });
+
+  onlineRef.on('value',snapshot=>{
+    const count=Object.keys(snapshot.val()||{}).length;
+    document.getElementById('onlineCount').innerHTML=`<span class="cb-pip"></span>${count} online`;
+  });
+}catch(e){
+  useFirebase=false;
+  document.getElementById('onlineCount').textContent='Offline';
+}
+
+function trackPresence(){
+  if(!onlineRef||!currentUser)return;
+  const r=onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_'));
+  r.set({name:currentUser,timestamp:firebase.database.ServerValue.TIMESTAMP});
+  r.onDisconnect().remove();
+}
+
+document.getElementById('userName').addEventListener('change',function(){
+  currentUser=this.value.trim();
+  localStorage.setItem('cbUser',currentUser);
+  if(currentUser&&useFirebase)trackPresence();
+});
+
+/* ── Response Bank — each entry has its own custom 5-line movement sequence ── */
+const responses=[
   {
-    theme: "Inventors", icon: "💡", slug: "inventors",
-    questions: [
-      { text: "Do you tinker and create ideas for this type of technology?", image: "images/inventors01.png" },
-      { text: "Do you have ideas that get past the idea phase for this type of technology?", image: "images/inventors02.png" },
-      { text: "Can you afford to patent an idea for this technology if it costs $10,000 for the average patent?", image: "images/inventors03.png" },
-      { text: "Do you have a patent for this type of technology?", image: "images/inventors04.png" },
-      { text: "Have you invented a part of this technology?", image: "images/inventors05.png" },
-      { text: "Do you get to design ideas for this type of technology that might be produced and deployed?", image: "images/inventors06.png" }
+    text:"Katherine G. Johnson co-authored NASA Technical Note D-233 in 1960, presenting mathematical expressions for determining satellite trajectories and orbital mechanics. Her calculations were critical for placing satellites over selected Earth positions—work that helped launch America into space!",
+    source:"NASA Technical Note D-233 (1960)",link:"https://ntrs.nasa.gov/citations/19980227091",
+    inventor:"Katherine Johnson",theme:"ZERO GRAVITY FLOW",
+    moves:[
+      "1. SATELLITE ORBIT — one arm sweeps a wide slow arc overhead like a satellite circling Earth",
+      "2. TRAJECTORY POP — body leans forward like a rocket launch, then snaps upright with a chest pop",
+      "3. CALCULATE & LOCK — mime writing equations fast with one hand, then freeze both arms at 90°",
+      "4. EARTH SPIN — pivot one full slow turn on the spot, arms out like the globe rotating",
+      "5. FREEZE pointing at the sky — call out: 'Katherine Johnson sent us to space!'"
     ]
   },
   {
-    theme: "Researchers", icon: "🔬", slug: "researchers",
-    questions: [
-      { text: "Do you have access to research money for this area of technology?", image: "images/researchers01.png" },
-      { text: "Do you have access to equipment to research this area of technology?", image: "images/researchers02.png" },
-      { text: "Do you have access to space to research this area of technology?", image: "images/researchers03.png" },
-      { text: "Do you conduct research on this type of technology?", image: "images/researchers04.png" },
-      { text: "Do you have access to other people's research about this technology?", image: "images/researchers05.png" },
-      { text: "Do you have access to accurate research on the safety of this technology?", image: "images/researchers06.png" },
-      { text: "Do you have access to accurate research on the environmental impact of this technology?", image: "images/researchers07.png" }
+    text:"Mary E. Winter patented an adding machine on May 23, 1882 (Patent No. 258,518). Her sophisticated mechanical calculator used ratchet wheels, pawls, and operating keys numbered 1–10 to perform addition up to 600.",
+    source:"U.S. Patent No. 258,518 (1882)",link:"https://patents.google.com/patent/US258518",
+    inventor:"Mary Winter",theme:"ADDING MACHINE SEQUENCE",
+    moves:[
+      "1. ADDING MACHINE KEYS — jab each finger into the air one by one, ten sharp pops like pressing number keys 1 through 10",
+      "2. RATCHET CRANK — both wrists crank in small tight circles like turning the ratchet wheels inside the adding machine",
+      "3. ADDING MACHINE WAVE — arms ripple outward as the machine counts up, slow then speeding up to 600",
+      "4. MECHANICAL LOCK — freeze mid-move like a gear stuck in place, full body rigid for 4 counts",
+      "5. FREEZE arms at 90° — call out: 'Mary Winter built the adding machine!'"
     ]
   },
   {
-    theme: "Designers", icon: "✏️", slug: "designers",
-    questions: [
-      { text: "Do you get to design ideas for this type of technology?", image: "images/designers01.png" },
-      { text: "Do you have the computer programs to design ideas for this type of technology?", image: "images/designers02.png" },
-      { text: "Do you have a computer that can run computer programs to design ideas for this type of technology?", image: "images/designers03.png" },
-      { text: "Do your design ideas for this type of technology get developed and produced?", image: "images/designers04.png" },
-      { text: "Do your design ideas for this type of technology get patented?", image: "images/designers05.png" },
-      { text: "Do you have the ability to change parts of the technology that you don't like?", image: "images/designers06.png" },
-      { text: "Do you have the ability to redesign the technology if you think it needs to be improved?", image: "images/designers07.png" }
+    text:"Ancient tradition credits Isis of Egypt with inventing bread-making and founding agriculture. Before her time, Egyptians lived on uncooked roots and herbs. She also taught the art of healing, manufacture of flax, and laid the foundations of Egyptian literature!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Isis",theme:"HARVEST FLOW",
+    moves:[
+      "1. BREAD KNEAD — fists press and roll forward like kneading dough, slow and powerful, 8 counts",
+      "2. HARVEST SWEEP — arms swing wide and low like gathering grain from the field for bread-making",
+      "3. FLAX WEAVE — one arm ripples from shoulder to fingertip like flax blowing in the wind",
+      "4. HEALING HANDS — one palm faces outward slow and steady, the other cradles beneath it",
+      "5. FREEZE arms raised like a goddess — call out: 'Isis invented bread — mother of civilization!'"
     ]
   },
   {
-    theme: "Manufacturers", icon: "🏭", slug: "manufacturers",
-    questions: [
-      { text: "Do you manufacture this type of technology?", image: "images/manufacturers01.png" },
-      { text: "If you manufacture this type of technology, are your working conditions safe?", image: "images/manufacturers02.png" },
-      { text: "If you manufacture this type of technology, do you feel that your pay is fair?", image: "images/manufacturers03.png" },
-      { text: "If you manufacture this type of technology, do you find your working conditions to be supportive?", image: "images/manufacturers04.png" },
-      { text: "Are you in any way a part of manufacturing this technology?", image: "images/manufacturers05.png" },
-      { text: "If you learned that the manufacturing process was exploitative to workers or the environment, do you have the ability to make changes to it?", image: "images/designers05.png" }
+    text:"The invention of silk is attributed to Si-ling-chi, wife of Emperor Hoang-ti, four thousand years before Christ. She is known as Sien Tshan, goddess of silkworms, and is still worshiped today. For ages, the secret of silk was kept from other nations.",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Si-ling-chi",theme:"SILK & SILKWORM FLOW",
+    moves:[
+      "1. SILK UNROLL — arms ripple outward from chest like unrolling a bolt of silk, 8 slow counts",
+      "2. SILKWORM WAVE — body undulates head to hip like a silkworm spinning silk inside its cocoon",
+      "3. SILK THREAD — arms alternate crossing and opening like pulling silk thread from the cocoon",
+      "4. SILK FLOAT — arms rise and fall in a gentle wave as if a silk fabric is floating on air",
+      "5. FREEZE draped like silk — call out: 'Si-ling-chi gave the world silk!'"
     ]
   },
   {
-    theme: "Users", icon: "👤", slug: "users",
-    questions: [
-      { text: "Do you have access to this technology where you live?", image: "images/users01.png" },
-      { text: "Can you afford this technology as much as you need it?", image: "images/users02.png" },
-      { text: "Do you have access to service of this technology if it breaks?", image: "images/users03.png" },
-      { text: "Are your needs met by this technology?", image: "images/users04.png" },
-      { text: "Is this technology easy for you to use?", image: "images/users05.png" },
-      { text: "Is this technology understandable to you, given your language?", image: "images/users06.png" },
-      { text: "Is this technology the right size for you?", image: "images/users07.png" },
-      { text: "Does this technology work most of the time for you when you use it?", image: "images/users08.png" },
-      { text: "Does this technology fit into your culture?", image: "images/users09.png" },
-      { text: "Does this technology fit into your everyday life?", image: "images/users10.png" },
-      { text: "Does this technology improve your life?", image: "images/users11.png" },
-      { text: "Does this technology allow you to spend more time on leisure activities or creative pursuits?", image: "images/users12.png" },
-      { text: "Is this statement true: I want to own this technology AND I can own it.", image: "images/users13.png" },
-      { text: "Does this technology help you with tasks that you do not like to do?", image: "images/users14.png" },
-      { text: "Does this technology support you so you can spend more time on fun parts of your job?", image: "images/users15.png" },
-      { text: "Does this technology help you with tasks that are dangerous for you or humans?", image: "images/users16.png" },
-      { text: "Does this technology help you with tasks that are boring for you or humans?", image: "images/users17.png" },
-      { text: "Does this technology make your job easier?", image: "images/users18.png" },
-      { text: "Does this technology support you emotionally?", image: "images/users19.png" },
-      { text: "Does this technology support you socially?", image: "images/users20.png" },
-      { text: "Does this technology help you with domestic work?", image: "images/users21.png" },
-      { text: "Does this technology help you with caregiving?", image: "images/users22.png" },
-      { text: "Does this technology save you time at work?", image: "images/users23.png" },
-      { text: "Does this technology help you time at home?", image: "images/users24.png" },
-      { text: "Does this technology help you with communication at work?", image: "images/users25.png" },
-      { text: "Does this technology help you with communication at home?", image: "images/users26.png" }
+    text:"Edith Clarke patented an Electrical Calculator on September 1, 1925 (Patent No. 1,552,113). She was the first woman to earn an M.S. in electrical engineering from MIT and became the first female professor of electrical engineering in the United States!",
+    source:"U.S. Patent No. 1,552,113 (1925)",link:"https://patents.google.com/patent/US1552113",
+    inventor:"Edith Clarke",theme:"ELECTRICAL CALCULATOR SEQUENCE",
+    moves:[
+      "1. ELECTRICAL CURRENT — arms shoot outward fast like a jolt of electricity through the calculator circuit",
+      "2. CALCULATOR DIAL — one hand mimes turning the large dial on the electrical calculator, slow and precise",
+      "3. CIRCUIT WAVE — electric wave travels from one hand through the chest and out the other hand",
+      "4. ENGINEERING LOCK — snap into sharp tutting pose, rigid 90° angles like an electrical engineering diagram",
+      "5. FREEZE arms crossed like a professor — call out: 'Edith Clarke — electrical calculator pioneer!'"
     ]
   },
   {
-    theme: "News Images", icon: "📰", slug: "newsimages",
-    questions: [
-      { text: "Is the person pictured in the image someone other than a white man?", image: "images/newsimages01.png" },
-      { text: "Is the person pictured in the image designing the technology?", image: "images/newsimages02.png" },
-      { text: "Is the person pictured in the image working with the technology?", image: "images/newsimages03.png" },
-      { text: "Is the person pictured in the image doing work that could be considered paid work outside the home?", image: "images/newsimages04.png" },
-      { text: "Is the person pictured in the image looking competent with the technology?", image: "images/newsimages05.png" },
-      { text: "Is the person pictured in the image looking at the technology instead of the camera?", image: "images/newsimages06.png" },
-      { text: "Is this true: The person in the image is not smiling at the camera?", image: "images/newsimages07.png" },
-      { text: "Is this true: The person in the image does not look objectified?", image: "images/newsimages08.png" },
-      { text: "Is this true: The person in the image looks like they are working with the technology instead of just standing by it?", image: "images/newsimages09.png" }
+    text:"Evelyn Berezin patented Control Means for an Electronic Calculator in 1961 (Patent No. 2,973,141). She later designed the first true word processor and founded the Redactron Corporation, earning the title 'mother of the word processor'!",
+    source:"U.S. Patent No. 2,973,141 (1961)",link:"https://patents.google.com/patent/US2973141",
+    inventor:"Evelyn Berezin",theme:"WORD PROCESSOR WAVE",
+    moves:[
+      "1. OLD TYPEWRITER TO WORD PROCESSOR — start with stiff typewriter jabs, then transition into smooth flowing typing",
+      "2. DELETE & RETYPE — sharp wipe gesture left like deleting text on the word processor, then quick jabs forward",
+      "3. WORD PROCESSOR SCROLL — one arm scrolls slowly upward like text flowing up a word processor screen",
+      "4. REDACTRON CORPORATION LOCK — freeze mid-type, one hand raised like founding a company",
+      "5. FREEZE in a power pose — call out: 'Evelyn Berezin — mother of the word processor!'"
     ]
   },
   {
-    theme: "Advertising & Marketing Images", icon: "📢", slug: "advertising",
-    questions: [
-      { text: "Does the image show at least one person other than a white man using the technology?", image: "images/advertising01.png" },
-      { text: "Does the image show at least one person other than a white man designing the technology?", image: "images/advertising02.png" },
-      { text: "If there is a person other than a white man in the ad, is this person not objectified or sexualized? (If they are objectified or sexualized, answer No)", image: "images/advertising03.png" }
+    text:"Sarah Boone, an African American inventor, patented an improved Ironing-Board on April 26, 1892 (Patent No. 473,653). Her design was specifically shaped to iron the sleeves and bodies of ladies\' garments more effectively—an innovation we still use today!",
+    source:"U.S. Patent No. 473,653 (1892)",link:"https://patents.google.com/patent/US473653",
+    inventor:"Sarah Boone",theme:"IRONING BOARD SEQUENCE",
+    moves:[
+      "1. IRONING BOARD SETUP — mime unfolding an ironing board with two hands, then snap it into place",
+      "2. IRON GLIDE — flat palm presses down firm on the ironing board, then glides outward smooth across a sleeve",
+      "3. SLEEVE SHAPE — one arm curves and narrows like shaping a garment sleeve on the ironing board",
+      "4. PRESS & POP — sharp downward iron press, hold 2 counts, then lift with a full chest pop",
+      "5. FREEZE mid-press — call out: 'Sarah Boone perfected the ironing board!'"
     ]
   },
   {
-    theme: "Company Ownership", icon: "🏢", slug: "ownership",
-    questions: [
-      { text: "Do you own a company that makes or sells this technology?", image: "images/ownership01.png" },
-      { text: "Do you feel that the person who owns this company reflects your interests?", image: "images/ownership02.png" },
-      { text: "Do you feel that the person who owns this company reflects your needs?", image: "images/ownership03.png" }
+    text:"Miss Maggie Knight invented the machine for manufacturing satchel-bottom paper bags—the kind we still use today. The Commissioner of Patents complimented her on its entire originality. She refused fifty thousand dollars for her patent shortly after receiving it!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Maggie Knight",theme:"PAPER BAG MACHINE FLOW",
+    moves:[
+      "1. BAG FOLD — hands press flat together, crease sharply left then right like folding a satchel-bottom paper bag",
+      "2. SATCHEL BOTTOM — arms frame a square at waist level, two sharp pops forming the paper bag base",
+      "3. BAG MACHINE CRANK — one arm cranks in a circle like feeding paper through the bag-making machine",
+      "4. FIFTY THOUSAND NO — arms cross in a firm X then push outward — she turned down the money!",
+      "5. FREEZE arms wide — call out: 'Maggie Knight made the paper bag machine!'"
     ]
   },
   {
-    theme: "Environmental Impact", icon: "🌍", slug: "environmental",
-    questions: [
-      { text: "Do you have the ability to influence the environmental impact of this technology?", image: "images/environmental01.png" },
-      { text: "Do you live far from a manufacturing plant that makes this technology?", image: "images/environmental02.png" },
-      { text: "Do you believe that the company making this technology makes decisions with the environmental impact of the technology in mind?", image: "images/environmental03.png" }
+    text:"Mrs. Mary E. Walton invented a method for deadening the noise of elevated railroads after Edison and others had tried unsuccessfully for six months. Her device was immediately adopted by major New York railways, benefiting the health of thousands of city residents!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Mary Walton",theme:"SILENT RAILROAD FLOW",
+    moves:[
+      "1. RAILROAD TOPROCK — feet shuffle along invisible elevated railroad tracks, arms pump like train pistons",
+      "2. NOISE POP — big loud arm pop outward, then land completely silent — the railroad noise is deadened",
+      "3. ELEVATED RAIL GLIDE — feet slide smoothly along the elevated railroad track, body low and steady",
+      "4. ELEVATED RISE — rise up slow onto toes like the elevated railroad above the street, arms out at full span",
+      "5. SILENT LANDING — drop back down with zero sound — call out: 'Mary Walton silenced the railroad!'"
+    ]
+  },
+  {
+    text:"Phoebe Sarah Marks (Hertha Ayrton) patented a Draftsman\'s Dividing-Instrument on January 6, 1885 (Patent No. 310,450). This tool allowed users to divide any line into equal parts without calculation—just simple manipulation!",
+    source:"U.S. Patent No. 310,450 (1885)",link:"https://patents.google.com/patent/US310450",
+    inventor:"Hertha Ayrton",theme:"DIVIDING INSTRUMENT SEQUENCE",
+    moves:[
+      "1. DIVIDING INSTRUMENT — both arms extend fully, then one hand slides to the exact midpoint and locks",
+      "2. EQUAL SPLITS — step out left then right in perfectly equal distances, sharp lock at each endpoint",
+      "3. LINE DRAW — one arm sweeps a long slow horizontal line through the air like the dividing instrument",
+      "4. MEASUREMENT POP — hand marks equal intervals along an invisible line with sharp finger pops",
+      "5. FREEZE at center — call out: 'Hertha Ayrton invented the dividing instrument!'"
+    ]
+  },
+  {
+    text:"The cotton-gin was conceived by Catharine Littlefield Greene, widow of Revolutionary General Greene. When wooden teeth failed, she suggested using wire—Whitney had wanted to give up. Within ten days of her suggestion, a perfect model was completed!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Catharine Greene",theme:"COTTON GIN FLOW",
+    moves:[
+      "1. COTTON PULL — both hands grip and yank downward repeatedly like pulling cotton through the cotton gin",
+      "2. WOODEN TEETH FAIL — arms jab forward then drop limp — the wooden gin teeth broke!",
+      "3. WIRE SWITCH — arms pull apart taut and firm like stretching wire to replace the broken cotton gin teeth",
+      "4. COTTON GIN CRANK — one arm cranks a big circle like the cotton gin finally working perfectly",
+      "5. FREEZE in a victory lock — call out: 'Catharine Greene made the cotton gin work!'"
+    ]
+  },
+  {
+    text:"Why didn\'t more women take out patents in their own names? To do so would expose them to ridicule and contempt and a loss of social position. Many patents in men\'s names are actually due to women\'s inventions!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Women Inventors",theme:"RECLAIM THE PATENT",
+    moves:[
+      "1. HIDDEN HANDS — arms pull back and hide behind the body, then slowly push forward into the open",
+      "2. RIDICULE BLOCK — sharp forearm cross in front of face blocks the contempt, then push both arms out defiantly",
+      "3. PATENT STAMP — big arm arc overhead, then STOMP down hard like stamping a patent in your own name",
+      "4. NAME CLAIM — point firmly forward with both hands — this invention belongs to a woman!",
+      "5. FREEZE arms raised — call out: 'Women invented this — and the world will know it!'"
+    ]
+  },
+  {
+    text:"Mary Phelps Jacob patented the modern Brassiere on November 3, 1914 (Patent No. 1,115,674). She created it from two silk handkerchiefs and ribbon as a more comfortable alternative to the restrictive corset, revolutionizing women\'s undergarments!",
+    source:"U.S. Patent No. 1,115,674 (1914)",link:"https://patents.google.com/patent/US1115674",
+    inventor:"Mary Phelps Jacob",theme:"BRASSIERE LIBERATION FLOW",
+    moves:[
+      "1. CORSET BREAK — arms wrap tight around body then burst open wide — freedom from the corset!",
+      "2. SILK HANDKERCHIEF UNFOLD — arms open from chest outward like unfolding two silk handkerchiefs",
+      "3. RIBBON TIE — one hand loops an invisible ribbon around the wrist of the other, then pulls free",
+      "4. BRASSIERE COMFORT WAVE — full body rolls through a slow comfortable wave, relaxed and free-flowing",
+      "5. FREEZE arms open wide — call out: 'Mary Phelps Jacob — she invented the brassiere!'"
+    ]
+  },
+  {
+    text:"Beulah Louise Henry, known as \'Lady Edison,\' held 49 patents and had over 110 inventions to her name. Among them was a Typewriter patented in 1959 (Patent No. 2,897,944) featuring innovative improvements to the typing mechanism.",
+    source:"U.S. Patent No. 2,897,944 (1959)",link:"https://patents.google.com/patent/US2897944",
+    inventor:"Beulah Henry",theme:"TYPEWRITER SEQUENCE",
+    moves:[
+      "1. TYPEWRITER TAP — fingers punch the air left to right across an invisible typewriter keyboard, sharp and rhythmic",
+      "2. CARRIAGE RETURN — one arm sweeps wide left like slamming the typewriter carriage back to start",
+      "3. TYPEWRITER KEY JAM — all fingers lock up mid-tap on the typewriter keys, then snap free with a full body pop",
+      "4. 49 PATENTS COUNT — count 1 to 8 twice with finger pops — honoring her 49 typewriter-era patents",
+      "5. FREEZE mid-type — call out: 'Beulah Henry — Lady Edison with 49 patents!'"
+    ]
+  },
+  {
+    text:"Harriet Hosmer invented a process for producing artificial marble from limestone that closely simulates the finest antique varieties—a process the Italian Government had long sought without success. Her permanent magnet invention was deemed one of the most important of the century!",
+    source:"Woman as an Inventor by Matilda Joslyn Gage (1883)",link:"https://archive.org/details/jstor-25118326",
+    inventor:"Harriet Hosmer",theme:"MARBLE & MAGNET FLOW",
+    moves:[
+      "1. MARBLE CARVE — rise from a low crouch into a full standing lock, slow as a sculptor carving marble",
+      "2. LIMESTONE PRESS — fists push together from both sides like compressing limestone into artificial marble",
+      "3. MAGNETIC PULL — arms reach toward each other slow and trembling like permanent magnets attracting",
+      "4. MARBLE WAVE — one hand traces a smooth curve through the air like shaping a marble sculpture",
+      "5. FREEZE stiff as marble — call out: 'Harriet Hosmer turned limestone into marble!'"
     ]
   }
 ];
 
-function qText(q){ return typeof q === 'string' ? q : q.text; }
-function qImage(q){ return (typeof q === 'object' && q.image) ? q.image : null; }
-
-// ═══════════════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════════════
-let username = '';
-let currentView = 'theme-0';
-let votes = {}, myVotes = {}, charts = {}, unsubs = [];
-let db, fsSetDoc, fsDoc, fsOnSnapshot, isDemo = false;
-
-SURVEY.forEach((_,ti)=>{
-  votes[ti]={};myVotes[ti]={};
-  SURVEY[ti].questions.forEach((_,qi)=>{ votes[ti][qi]={yes:0,no:0,neutral:0}; });
-});
-
-window.addEventListener('firebase-ready',()=>{
-  db=window.db;fsSetDoc=window.fsSetDoc;fsDoc=window.fsDoc;fsOnSnapshot=window.fsOnSnapshot;
-  window._fbReady=true;
-});
-
-function enterApp(){
-  const v=document.getElementById('uname').value.trim();
-  if(!v){showToast('Please enter your name ✦');return;}
-  username=v;
-  document.getElementById('u-name').textContent=username;
-  document.getElementById('u-init').textContent=username[0].toUpperCase();
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app').style.display='flex';
-  waitForFB();
-}
-document.getElementById('uname').addEventListener('keydown',e=>{if(e.key==='Enter')enterApp();});
-
-function waitForFB(){
-  if(window._fbReady){initApp();return;}
-  setTimeout(waitForFB,80);
+let recentlyShown=[];
+function getResponse(){
+  let avail=responses.filter((_,i)=>!recentlyShown.includes(i));
+  if(avail.length<4){recentlyShown=[];avail=responses;}
+  const ri=Math.floor(Math.random()*avail.length);
+  const sel=avail[ri];const ai=responses.indexOf(sel);
+  recentlyShown.push(ai);if(recentlyShown.length>8)recentlyShown.shift();
+  return sel;
 }
 
-function initApp(){
-  isDemo=!db;
-  buildSidebar();
-  showTheme(0);
-  subscribeAll();
+/* ── Movement Generator — reads moves directly baked into each response ── */
+function generateMovement(resp){
+  const inv=resp.inventor||'the Inventor';
+  const theme=resp.theme||'LOCK & POP';
+  const moves=resp.moves||[
+    "1. OPENING POP — chest pop entry, arms lock to 90°, claim your space",
+    "2. LOCKING SIGNATURE — draw the inventor's name BIG in the air with your whole arm",
+    "3. LIGHTBULB LOCK — fist rises slow above head, opens into a sharp lock",
+    "4. BODY WAVE head to hip — slow and controlled, 4 full counts",
+    `5. FREEZE — hardest lock you've got — call out: '${inv}!'`
+  ];
+  return `HIP HOP SEQUENCE: ${theme}\nHONORING: ${inv}\n\n${moves.join('\n')}\n\nENERGY: Sharp pops, clean locks, smooth waves. Respect the legacy!`;
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  SIDEBAR
-// ═══════════════════════════════════════════════════════════════
-function buildSidebar(){
-  const sb=document.getElementById('sidebar');
-  const totalAllQ=SURVEY.reduce((a,t)=>a+t.questions.length,0);
-  sb.innerHTML=`
-    <div class="sidebar-label">Overview</div>
-    <button class="sbtn" id="sum-btn" onclick="showSummary()">
-      <span class="si">📊</span><span class="sn">Results</span>
-    </button>
-    <div style="padding:.3rem 1rem .5rem;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:.6rem;color:var(--muted);letter-spacing:.08em;font-weight:700;">TOTAL PROGRESS</span>
-      <span class="sp" id="overall-progress">0/${totalAllQ}</span>
-    </div>
-    <div class="sidebar-label" style="margin-top:.4rem">Themes</div>
-  `;
-  SURVEY.forEach((t,i)=>{
-    const btn=document.createElement('button');
-    btn.className='sbtn';btn.id=`tb-${i}`;
-    btn.innerHTML=`<span class="si">${t.icon}</span><span class="sn">${t.theme}</span><span class="sp" id="sp-${i}">0/${t.questions.length}</span>`;
-    btn.onclick=()=>showTheme(i);
-    sb.appendChild(btn);
-  });
-}
-
-function activateBtn(view){
-  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('theme-active','sum-active'));
-  if(view==='summary'){document.getElementById('sum-btn')?.classList.add('sum-active');}
-  else{document.getElementById(`tb-${parseInt(view.replace('theme-',''))}`)?.classList.add('theme-active');}
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  FIRESTORE
-// ═══════════════════════════════════════════════════════════════
-function subscribeAll(){
-  if(isDemo)return;
-  unsubs.forEach(u=>u());unsubs=[];
-  SURVEY.forEach((_,ti)=>SURVEY[ti].questions.forEach((_,qi)=>{
-    const u=fsOnSnapshot(fsDoc(db,'survey_responses',`t${ti}_q${qi}`),snap=>{
-      if(snap.exists()){
-        const d=snap.data();
-        votes[ti][qi]={yes:d.yes||0,no:d.no||0,neutral:d.neutral||0};
-      } else {
-        votes[ti][qi]={yes:0,no:0,neutral:0};
-      }
-      syncUI(ti,qi);
-    });
-    unsubs.push(u);
-  }));
-}
-
-function syncUI(ti,qi){
-  if(currentView===`theme-${ti}`)updateBar(ti,qi);
-  if(currentView==='summary'){syncSummaryChart(ti);syncOverall();}
-  updateSP();
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  VOTE
-// ═══════════════════════════════════════════════════════════════
-async function castVote(ti,qi,choice){
-  const prev=myVotes[ti][qi];
-  if(prev===choice)return;
-  const v=votes[ti][qi];
-  if(prev)v[prev]=Math.max(0,v[prev]-1);
-  v[choice]++;
-  myVotes[ti][qi]=choice;
-  refreshBtns(ti,qi);updateBar(ti,qi);updateSP();
-  checkThemeComplete(ti);
-  if(currentView==='summary'){syncSummaryChart(ti);syncOverall();}
-  if(isDemo){showToast('Demo mode — Firebase config needed to sync');return;}
-  try{
-    await fsSetDoc(fsDoc(db,'survey_responses',`t${ti}_q${qi}`),
-      {[`users.${sk(username)}`]:choice,yes:v.yes,no:v.no,neutral:v.neutral},{merge:true});
-  }catch(e){showToast('Sync error');console.error(e);}
-}
-
-function sk(n){return n.replace(/[^a-zA-Z0-9_-]/g,'_').substring(0,40);}
-
-// ═══════════════════════════════════════════════════════════════
-//  ADVANCE TO NEXT TASK — requires ALL questions across ALL themes
-// ═══════════════════════════════════════════════════════════════
-function checkThemeComplete(ti){
-  const totalAllQ=SURVEY.reduce((a,t)=>a+t.questions.length,0);
-  const answeredAllQ=SURVEY.reduce((a,_,i)=>a+SURVEY[i].questions.filter((_,qi)=>myVotes[i][qi]).length,0);
-  const allDone=answeredAllQ===totalAllQ;
-
-  // Update sidebar progress bar visual hint
-  updateSurveyProgress(answeredAllQ,totalAllQ);
-
-  // Show/hide advance button on whichever theme page is currently visible
-  const existing=document.getElementById('advance-wrap');
-  const qgrid=document.getElementById('qgrid');
-  if(allDone && !existing && qgrid){
-    const wrap=document.createElement('div');
-    wrap.className='advance-wrap';wrap.id='advance-wrap';
-    wrap.innerHTML=`
-      <div class="advance-card">
-        <div class="advance-eyebrow">✦ CARETECH · Survey Complete</div>
-        <div class="advance-title">All ${totalAllQ} questions answered across all themes! ✦</div>
-        <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">
-          ✦ Advance to next task
-        </a>
-      </div>
-    `;
-    qgrid.after(wrap);
-    wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
-  } else if(!allDone && existing){
-    existing.remove();
-  }
-}
-
-function updateSurveyProgress(answered,total){
-  const el=document.getElementById('overall-progress');
-  if(!el)return;
-  el.textContent=`${answered}/${total}`;
-  if(answered===total)el.classList.add('done');
-  else el.classList.remove('done');
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  THEME PAGE
-// ═══════════════════════════════════════════════════════════════
-function showTheme(idx){
-  currentView=`theme-${idx}`;activateBtn(currentView);destroyCharts();
-  const t=SURVEY[idx];
-  document.getElementById('main-content').innerHTML=`
-    ${demoBanner()}
-    <div class="pg-icon">${t.icon}</div>
-    <div class="pg-title">${t.theme}</div>
-    <div class="pg-sub">${t.questions.length} questions — results update <strong>live</strong></div>
-    <div class="qgrid" id="qgrid"></div>
-  `;
-  const g=document.getElementById('qgrid');
-  t.questions.forEach((_,qi)=>{
-    const c=document.createElement('div');
-    c.className='qcard';c.id=`qc-${idx}-${qi}`;
-    c.innerHTML=cardHTML(idx,qi);
-    g.appendChild(c);
-    updateBar(idx,qi);
-  });
-  // Re-check global completion whenever a theme page loads
-  checkThemeComplete(idx);
-}
-
-function cardHTML(ti,qi){
-  const entry=SURVEY[ti].questions[qi];
-  const q=qText(entry);
-  const img=qImage(entry);
-  const mv=myVotes[ti][qi];
-  const v=votes[ti][qi];
-  const tot=v.yes+v.no+v.neutral;
-  const yp=tot?Math.round(v.yes/tot*100):0;
-  const np=tot?Math.round(v.no/tot*100):0;
-  const nep=tot?Math.round(v.neutral/tot*100):0;
-  const imgHTML=img?`<img src="${img}" alt="Question image" class="qcard-img" onerror="this.style.display='none'">`:'' ;
-  return `
-    ${imgHTML}
-    <div class="qcard-top"><div class="qtext">${q}</div><div class="qnum">Q${qi+1}</div></div>
-    <div class="vbtns">
-      <button class="vbtn yb${mv==='yes'?' voted':''}" onclick="castVote(${ti},${qi},'yes')">✓ Yes</button>
-      <button class="vbtn nb${mv==='no'?' voted':''}" onclick="castVote(${ti},${qi},'no')">✗ No</button>
-      <button class="vbtn neub${mv==='neutral'?' voted':''}" onclick="castVote(${ti},${qi},'neutral')">— N/A</button>
-    </div>
-    <div class="bar-area">
-      <div class="brow"><div class="blbl y">YES</div><div class="btrack"><div class="bfill y" id="by-${ti}-${qi}" style="width:${yp}%"></div></div><div class="bcnt" id="cy-${ti}-${qi}">${v.yes}</div></div>
-      <div class="brow"><div class="blbl n">NO</div><div class="btrack"><div class="bfill n" id="bn-${ti}-${qi}" style="width:${np}%"></div></div><div class="bcnt" id="cn-${ti}-${qi}">${v.no}</div></div>
-      <div class="brow"><div class="blbl neu">N/A</div><div class="btrack"><div class="bfill neu" id="bne-${ti}-${qi}" style="width:${nep}%"></div></div><div class="bcnt" id="cne-${ti}-${qi}">${v.neutral}</div></div>
-      <div class="qtot" id="qt-${ti}-${qi}">${tot===1?'1 response':tot+' responses'}</div>
-    </div>`;
-}
-
-function refreshBtns(ti,qi){
-  const card=document.getElementById(`qc-${ti}-${qi}`);if(!card)return;
-  const mv=myVotes[ti][qi];
-  card.querySelectorAll('.vbtn').forEach(b=>{
-    b.classList.remove('voted');
-    if((b.classList.contains('yb')&&mv==='yes')||(b.classList.contains('nb')&&mv==='no')||(b.classList.contains('neub')&&mv==='neutral'))b.classList.add('voted');
-  });
-}
-
-function updateBar(ti,qi){
-  const v=votes[ti][qi];
-  const tot=v.yes+v.no+v.neutral;
-  const yp=tot?Math.round(v.yes/tot*100):0;
-  const np=tot?Math.round(v.no/tot*100):0;
-  const nep=tot?Math.round(v.neutral/tot*100):0;
-  const setW=(id,val)=>{const e=document.getElementById(id);if(e)e.style.width=val+'%';};
-  const setText=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
-  setW(`by-${ti}-${qi}`,yp);setW(`bn-${ti}-${qi}`,np);setW(`bne-${ti}-${qi}`,nep);
-  setText(`cy-${ti}-${qi}`,v.yes);setText(`cn-${ti}-${qi}`,v.no);setText(`cne-${ti}-${qi}`,v.neutral);
-  setText(`qt-${ti}-${qi}`,tot===1?'1 response':tot+' responses');
-}
-
-function updateSP(){
-  SURVEY.forEach((_,ti)=>{
-    let d=0;SURVEY[ti].questions.forEach((_,qi)=>{if(myVotes[ti][qi])d++;});
-    const e=document.getElementById(`sp-${ti}`);
-    if(e){
-      e.textContent=`${d}/${SURVEY[ti].questions.length}`;
-      if(d===SURVEY[ti].questions.length)e.classList.add('done');
-      else e.classList.remove('done');
-    }
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  SUMMARY PAGE
-// ═══════════════════════════════════════════════════════════════
-function showSummary(){
-  currentView='summary';activateBtn('summary');destroyCharts();
-  const totalQ=SURVEY.reduce((a,t)=>a+t.questions.length,0);
-  document.getElementById('main-content').innerHTML=`
-    ${demoBanner()}
-    <div class="pg-title">📊 Results</div>
-    <div class="pg-sub">Live aggregate of all responses across ${SURVEY.length} themes and ${totalQ} questions</div>
-    <div class="overall-card" id="oc">
-      <div class="oc-title">✦ Overall Survey Results</div>
-      <div class="oc-sub">Higher percentage of No answers could mean that the technology excludes diverse voices and it is not neutral. Your voice might not be represented in its design and deployment so it might be biased. Also, if you have a lot of Yes answers in the "User" section but Nos in all of the other sections, the technology could still be biased.</div>
-      <div class="oc-stats" id="oc-stats"></div>
-      <div class="chart-h240"><canvas id="chart-overall"></canvas></div>
-    </div>
-    <div id="theme-secs"></div>
-  `;
-  buildOverall();buildThemeSecs();
-}
-
-function buildOverall(){
-  renderOverallStats();
-  const ctx=document.getElementById('chart-overall').getContext('2d');
-  const ch=new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:SURVEY.map(t=>t.theme),
-      datasets:[
-        {label:'YES', data:SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].yes,0)),     backgroundColor:'rgba(255,92,138,.75)',borderColor:'#ff5c8a',borderWidth:1.5,borderRadius:4},
-        {label:'NO',  data:SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].no,0)),      backgroundColor:'rgba(139,26,58,.75)', borderColor:'#8b1a3a',borderWidth:1.5,borderRadius:4},
-        {label:'N/A', data:SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].neutral,0)), backgroundColor:'rgba(144,96,160,.65)',borderColor:'#9060a0',borderWidth:1.5,borderRadius:4}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'rgba(255,200,230,.7)',font:{family:"'Quicksand',sans-serif",size:12,weight:'600'}}}},
-      scales:{
-        x:{ticks:{color:'rgba(255,190,220,.5)',font:{size:10},maxRotation:35},grid:{color:'rgba(255,92,138,.06)'}},
-        y:{ticks:{color:'rgba(255,190,220,.5)',font:{size:11}},grid:{color:'rgba(255,92,138,.06)'},beginAtZero:true}
-      }
-    }
-  });
-  charts['overall']=ch;
-}
-
-function renderOverallStats(){
-  const{ty,tn,tne,tt}=totals();
-  const el=document.getElementById('oc-stats');if(!el)return;
-  el.innerHTML=`
-    <div class="ostat"><div class="ostat-num y">${ty}</div><div class="ostat-lbl">Total YES</div></div>
-    <div class="ostat"><div class="ostat-num n">${tn}</div><div class="ostat-lbl">Total NO</div></div>
-    <div class="ostat"><div class="ostat-num neu">${tne}</div><div class="ostat-lbl">Neutral/N/A</div></div>
-    <div class="ostat"><div class="ostat-num t">${tt}</div><div class="ostat-lbl">Total Responses</div></div>
-    <div class="ostat"><div class="ostat-num r">${tt?Math.round(ty/tt*100):0}%</div><div class="ostat-lbl">YES Rate</div></div>
-  `;
-}
-
-function syncOverall(){
-  const ch=charts['overall'];if(!ch)return;
-  ch.data.datasets[0].data=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].yes,0));
-  ch.data.datasets[1].data=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].no,0));
-  ch.data.datasets[2].data=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].neutral,0));
-  ch.update('none');renderOverallStats();
-}
-
-function totals(){
-  let ty=0,tn=0,tne=0;
-  SURVEY.forEach((_,ti)=>SURVEY[ti].questions.forEach((_,qi)=>{
-    ty+=votes[ti][qi].yes;tn+=votes[ti][qi].no;tne+=votes[ti][qi].neutral;
-  }));
-  return{ty,tn,tne,tt:ty+tn+tne};
-}
-
-function buildThemeSecs(){
-  const cont=document.getElementById('theme-secs');cont.innerHTML='';
-  SURVEY.forEach((t,ti)=>{
-    const tot=t.questions.reduce((s,_,qi)=>s+votes[ti][qi].yes+votes[ti][qi].no+votes[ti][qi].neutral,0);
-    const sec=document.createElement('div');sec.className='tss';sec.id=`tss-${ti}`;
-    sec.innerHTML=`
-      <div class="tss-hd">
-        <span class="tss-ico">${t.icon}</span>
-        <span class="tss-nm">${t.theme}</span>
-        <span class="tss-tot" id="tss-tot-${ti}">${tot} response${tot!==1?'s':''}</span>
-      </div>
-      <div class="chart-h130"><canvas id="chart-t-${ti}"></canvas></div>
-    `;
-    cont.appendChild(sec);buildThemeChart(ti);
-  });
-}
-
-function buildThemeChart(ti){
-  const t=SURVEY[ti];
-  const tips=t.questions.map(q=>{const txt=qText(q);return txt.length>60?txt.substring(0,57)+'…':txt;});
-  const ctx=document.getElementById(`chart-t-${ti}`).getContext('2d');
-  const ch=new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:t.questions.map((_,i)=>`Q${i+1}`),
-      datasets:[
-        {label:'YES', data:t.questions.map((_,qi)=>votes[ti][qi].yes),     backgroundColor:'rgba(255,92,138,.75)',borderColor:'#ff5c8a',borderWidth:1,borderRadius:3,stack:'s'},
-        {label:'NO',  data:t.questions.map((_,qi)=>votes[ti][qi].no),      backgroundColor:'rgba(139,26,58,.75)', borderColor:'#8b1a3a',borderWidth:1,borderRadius:3,stack:'s'},
-        {label:'N/A', data:t.questions.map((_,qi)=>votes[ti][qi].neutral),  backgroundColor:'rgba(144,96,160,.65)',borderColor:'#9060a0',borderWidth:1,borderRadius:3,stack:'s'}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{
-          title:i=>`Q${i[0].dataIndex+1}: ${tips[i[0].dataIndex]}`,
-          label:i=>`${i.dataset.label}: ${i.raw}`
-        }}
-      },
-      scales:{
-        x:{stacked:true,ticks:{color:'rgba(255,190,220,.5)',font:{size:9}},grid:{color:'rgba(255,92,138,.04)'}},
-        y:{stacked:true,ticks:{color:'rgba(255,190,220,.5)',font:{size:10}},grid:{color:'rgba(255,92,138,.04)'},beginAtZero:true}
-      }
-    }
-  });
-  charts[`t${ti}`]=ch;
-}
-
-function syncSummaryChart(ti){
-  const ch=charts[`t${ti}`];if(!ch)return;
-  ch.data.datasets[0].data=SURVEY[ti].questions.map((_,qi)=>votes[ti][qi].yes);
-  ch.data.datasets[1].data=SURVEY[ti].questions.map((_,qi)=>votes[ti][qi].no);
-  ch.data.datasets[2].data=SURVEY[ti].questions.map((_,qi)=>votes[ti][qi].neutral);
-  ch.update('none');
-  const tot=SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].yes+votes[ti][qi].no+votes[ti][qi].neutral,0);
-  const badge=document.getElementById(`tss-tot-${ti}`);
-  if(badge)badge.textContent=`${tot} response${tot!==1?'s':''}`;
-}
-
-function destroyCharts(){
-  Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});charts={};
-}
-
-function demoBanner(){
-  return isDemo?`<div class="cfg show">⚠ <strong>Firebase not configured.</strong> Replace the <code>firebaseConfig</code> values at the top of this file to enable live multi-user sync.</div>`:'';
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  PDF EXPORT
-// ═══════════════════════════════════════════════════════════════
-async function exportPDF(){
-  const btn=document.getElementById('pdf-btn');
-  btn.disabled=true;
-  document.getElementById('pdf-ov').classList.add('show');
-  const msg=document.getElementById('pdf-msg');
-  const{jsPDF}=window.jspdf;
-  const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const PW=210,PH=297,M=13,CW=PW-M*2;
-  const sf=(size,style='normal',r=252,g=232,b=240)=>{pdf.setFontSize(size);pdf.setFont('helvetica',style);pdf.setTextColor(r,g,b);};
-  const fr=(x,y,w,h,rad,R,G,B)=>{pdf.setFillColor(R,G,B);pdf.roundedRect(x,y,w,h,rad,rad,'F');};
-  const frsh=(x,y,w,h,R,G,B)=>{pdf.setFillColor(R,G,B);pdf.rect(x,y,w,h,'F');};
-  const newPage=()=>{pdf.addPage();frsh(0,0,PW,PH,14,0,8,5);};
-  const drawBar3=(x,y,w,h,yesV,noV,neuV)=>{
-    const tot=yesV+noV+neuV;fr(x,y,w,h,1,40,10,25);
-    if(tot>0){
-      const yw=w*(yesV/tot),nw=w*(noV/tot),new2=w*(neuV/tot);
-      if(yw>0)fr(x,y,yw,h,1,255,92,138);
-      if(nw>0)fr(x+yw,y,nw,h,1,139,26,58);
-      if(new2>0)fr(x+yw+nw,y,new2,h,1,144,96,160);
-    }
+/* ── Ask ── */
+function askQuestion(){
+  const q=document.getElementById('userQuestion').value.trim();
+  const name=document.getElementById('userName').value.trim();
+  if(!name){alert('Please enter your name first!');document.getElementById('userName').focus();return;}
+  if(!q){alert('Please type a question!');return;}
+  const resp=getResponse();
+  const mv=generateMovement(resp);
+  const payload={
+    question:q,answerText:resp.text,answerSource:resp.source,
+    answerLink:resp.link,movement:mv,userName:name,
+    userColor:userColor,timestamp:firebase.database.ServerValue.TIMESTAMP
   };
-  msg.textContent='Building cover page…';
-  frsh(0,0,PW,PH,14,0,8,5);
-  frsh(0,0,PW,4,255,92,138);
-  sf(34,'bold',255,179,207);pdf.text('CAREtech',M,62);
-  sf(15,'normal',255,92,138);pdf.text('Real-Time Survey Report',M,75);
-  sf(9,'normal',160,96,128);pdf.text(`Generated: ${new Date().toLocaleString()}`,M,86);
-  pdf.text(`Respondent: ${username}`,M,93);
-  const{ty,tn,tne,tt}=totals();
-  fr(M,108,CW,58,4,30,8,20);
-  sf(8,'bold',160,96,128);
-  pdf.text('TOTAL',M+6,121);pdf.text('YES',M+46,121);pdf.text('NO',M+88,121);pdf.text('NEUTRAL/N/A',M+124,121);pdf.text('YES RATE',M+172,121);
-  sf(18,'bold',255,159,204);pdf.text(String(tt),M+6,135);
-  sf(18,'bold',255,92,138);pdf.text(String(ty),M+46,135);
-  sf(18,'bold',192,57,94);pdf.text(String(tn),M+88,135);
-  sf(18,'bold',144,96,160);pdf.text(String(tne),M+124,135);
-  sf(18,'bold',255,179,217);pdf.text(`${tt?Math.round(ty/tt*100):0}%`,M+172,135);
-  sf(7,'normal',90,40,60);pdf.text(`${SURVEY.length} themes · ${SURVEY.reduce((a,t)=>a+t.questions.length,0)} questions`,M,176);
-  msg.textContent='Building overall chart…';
-  newPage();
-  frsh(0,0,PW,4,255,92,138);
-  sf(13,'bold',255,179,207);pdf.text('Overall Survey Results',M,18);
-  sf(8,'normal',160,96,128);pdf.text('YES, NO, and Neutral/N/A totals per theme',M,24);
-  const maxBarH=90,chartX=M+20,chartW=CW-24;
-  const barSlotW=chartW/SURVEY.length;
-  const yesData=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].yes,0));
-  const noData=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].no,0));
-  const neuData=SURVEY.map((_,ti)=>SURVEY[ti].questions.reduce((s,_,qi)=>s+votes[ti][qi].neutral,0));
-  const maxVal=Math.max(...yesData.map((y,i)=>y+noData[i]+neuData[i]),1);
-  const chartY=32;
-  pdf.setDrawColor(80,20,45);pdf.setLineWidth(.3);
-  pdf.line(chartX,chartY,chartX,chartY+maxBarH);
-  pdf.line(chartX,chartY+maxBarH,chartX+chartW,chartY+maxBarH);
-  SURVEY.forEach((t,i)=>{
-    const groupW=barSlotW*.8,bw=groupW/3,bx=chartX+i*barSlotW+barSlotW*.1;
-    const yH=yesData[i]/maxVal*maxBarH,nH=noData[i]/maxVal*maxBarH,neH=neuData[i]/maxVal*maxBarH;
-    if(yH>0)fr(bx,chartY+maxBarH-yH,bw,yH,.6,255,92,138);
-    if(nH>0)fr(bx+bw,chartY+maxBarH-nH,bw,nH,.6,139,26,58);
-    if(neH>0)fr(bx+bw*2,chartY+maxBarH-neH,bw,neH,.6,144,96,160);
-    sf(5.5,'normal',160,96,128);
-    const lbl=t.theme.length>11?t.theme.substring(0,10)+'…':t.theme;
-    pdf.text(lbl,chartX+i*barSlotW+barSlotW/2,chartY+maxBarH+5,{align:'center',maxWidth:barSlotW*.92});
-  });
-  const ly=chartY+maxBarH+20;
-  fr(M,ly,7,3.5,1,255,92,138);sf(7.5,'normal',255,92,138);pdf.text('YES',M+9,ly+3);
-  fr(M+25,ly,7,3.5,1,139,26,58);sf(7.5,'normal',192,57,94);pdf.text('NO',M+34,ly+3);
-  fr(M+50,ly,7,3.5,1,144,96,160);sf(7.5,'normal',144,96,160);pdf.text('Neutral/N/A',M+59,ly+3);
-  const statsY=chartY+maxBarH+32;
-  [{v:ty,lbl:'Total YES',R:255,G:92,B:138},{v:tn,lbl:'Total NO',R:192,G:57,B:94},
-   {v:tne,lbl:'Neutral/N/A',R:144,G:96,B:160},{v:tt,lbl:'Responses',R:255,G:159,B:204},
-   {v:`${tt?Math.round(ty/tt*100):0}%`,lbl:'YES Rate',R:255,G:179,B:217}
-  ].forEach((s,i)=>{
-    const cols=5,bw2=CW/cols-1.5,bx=M+i*(CW/cols)+.75;
-    fr(bx,statsY,bw2,21,3,30,8,20);
-    sf(13,'bold',s.R,s.G,s.B);pdf.text(String(s.v),bx+bw2/2,statsY+11,{align:'center'});
-    sf(6.5,'normal',160,96,128);pdf.text(s.lbl,bx+bw2/2,statsY+18,{align:'center'});
-  });
-  for(let ti=0;ti<SURVEY.length;ti++){
-    msg.textContent=`Building theme ${ti+1} of ${SURVEY.length}: ${SURVEY[ti].theme}…`;
-    const t=SURVEY[ti];
-    newPage();frsh(0,0,PW,4,255,92,138);
-    sf(13,'bold',255,179,207);pdf.text(`${t.icon}  ${t.theme}`,M,18);
-    sf(8,'normal',160,96,128);
-    const thTot=t.questions.reduce((s,_,qi)=>s+votes[ti][qi].yes+votes[ti][qi].no+votes[ti][qi].neutral,0);
-    pdf.text(`${t.questions.length} questions · ${thTot} total responses`,M,25);
-    const thChartY=30,thChartH=46,thChartX=M+14,thChartW=CW-16;
-    const thBarSlotW=thChartW/t.questions.length;
-    const thMax=Math.max(...t.questions.map((_,qi)=>votes[ti][qi].yes+votes[ti][qi].no+votes[ti][qi].neutral),1);
-    pdf.setDrawColor(80,20,45);pdf.setLineWidth(.22);
-    pdf.line(thChartX,thChartY,thChartX,thChartY+thChartH);
-    pdf.line(thChartX,thChartY+thChartH,thChartX+thChartW,thChartY+thChartH);
-    t.questions.forEach((_,qi)=>{
-      const v=votes[ti][qi];
-      const groupW=thBarSlotW*.78,bw=groupW/3;
-      const bx=thChartX+qi*thBarSlotW+thBarSlotW*.11;
-      const yH=v.yes/thMax*thChartH,nH=v.no/thMax*thChartH,neH=v.neutral/thMax*thChartH;
-      if(yH>0)fr(bx,thChartY+thChartH-yH,bw,yH,.5,255,92,138);
-      if(nH>0)fr(bx+bw,thChartY+thChartH-nH,bw,nH,.5,139,26,58);
-      if(neH>0)fr(bx+bw*2,thChartY+thChartH-neH,bw,neH,.5,144,96,160);
-      sf(5.5,'normal',160,96,128);pdf.text(`Q${qi+1}`,thChartX+qi*thBarSlotW+thBarSlotW/2,thChartY+thChartH+3.5,{align:'center'});
-    });
-    let y=thChartY+thChartH+11;
-    sf(7.5,'bold',255,92,138);pdf.text('QUESTION-BY-QUESTION RESULTS',M,y);y+=5;
-    for(let qi=0;qi<t.questions.length;qi++){
-      const v=votes[ti][qi],tot=v.yes+v.no+v.neutral;
-      const cardH=19;
-      if(y+cardH>PH-10){newPage();frsh(0,0,PW,4,255,92,138);y=14;}
-      fr(M,y,CW,cardH,2.5,30,8,20);
-      fr(M+2.5,y+3,9,13,1.5,60,18,40);
-      sf(7,'bold',255,92,138);pdf.text(`Q${qi+1}`,M+7,y+10.5,{align:'center'});
-      sf(7.5,'normal',230,180,210);
-      const qtxt=qText(t.questions[qi]);
-      const qtxtShort=qtxt.length>72?qtxt.substring(0,69)+'…':qtxt;
-      pdf.text(qtxtShort,M+14,y+7);
-      drawBar3(M+14,y+11.5,CW-44,3.5,v.yes,v.no,v.neutral);
-      sf(6,'bold',255,92,138);pdf.text(`Y:${v.yes}`,M+CW-26,y+7);
-      sf(6,'bold',192,57,94);pdf.text(`N:${v.no}`,M+CW-17,y+7);
-      sf(6,'bold',144,96,160);pdf.text(`?:${v.neutral}`,M+CW-8,y+7);
-      sf(5.5,'normal',160,96,128);
-      const pct=tot?`${Math.round(v.yes/tot*100)}% yes`:'no votes';
-      pdf.text(pct,M+CW-26,y+14);
-      y+=cardH+2.5;
-    }
+  if(useFirebase&&messagesRef){
+    messagesRef.push(payload).catch(()=>localDisplay(q,resp,mv,name));
+  } else {
+    localDisplay(q,resp,mv,name);
   }
-  msg.textContent='Saving…';
-  pdf.save(`caretech-report-${new Date().toISOString().slice(0,10)}.pdf`);
-  document.getElementById('pdf-ov').classList.remove('show');
-  btn.disabled=false;
-  showToast('✦ PDF saved!');
+  document.getElementById('userQuestion').value='';
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════════════════════
-let _tt;
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3200);
+/* ── Local fallback (no Firebase) ── */
+let localMessages=[];
+function localDisplay(q,resp,mv,name){
+  const area=document.getElementById('outputArea');
+  localMessages.unshift({question:q,answerText:resp.text,answerSource:resp.source,answerLink:resp.link,movement:mv,userName:name,userColor:userColor});
+  if(localMessages.length>MAX_DISPLAY)localMessages=localMessages.slice(0,MAX_DISPLAY);
+  area.innerHTML='';
+  localMessages.forEach((msg,i)=>renderPair(msg,null,i===0));
 }
-</script>
-<!-- RESET MODAL -->
-<div id="reset-modal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
-  <div style="background:rgba(14,0,8,.98);border:1.5px solid var(--border2);border-radius:22px;padding:2rem 2.2rem;max-width:380px;width:90%;position:relative;box-shadow:var(--pop-glow);overflow:hidden;">
-    <div style="position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);box-shadow:0 0 10px var(--candy);border-radius:999px;"></div>
-    <div style="font-size:1.6rem;margin-bottom:.5rem;">⚠️</div>
-    <div style="font-family:var(--fh);font-size:1.1rem;font-weight:900;color:var(--blush);margin-bottom:.4rem;">Admin Reset</div>
-    <div style="font-size:.83rem;color:var(--muted2);line-height:1.6;margin-bottom:1.4rem;">This will delete <strong style="color:var(--candy)">all votes</strong> from Firestore across every theme and question. Enter the admin password to continue.</div>
-    <label style="display:block;font-size:.68rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;">Admin Password</label>
-    <input type="password" id="reset-pw" placeholder="Enter password…"
-      style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:11px;padding:.75rem 1rem;color:var(--text);font-family:var(--fb);font-size:.95rem;font-weight:600;outline:none;margin-bottom:.5rem;transition:border-color .2s;"
-      onkeydown="if(event.key==='Enter')confirmReset()"
-      onfocus="this.style.borderColor='var(--candy)'"
-      onblur="this.style.borderColor='var(--border)'">
-    <div id="reset-pw-err" style="font-size:.75rem;color:#ff6b6b;min-height:1.1rem;margin-bottom:.9rem;display:none;">✗ Incorrect password. Try again.</div>
-    <div style="display:flex;gap:.7rem;">
-      <button onclick="closeResetModal()" style="flex:1;padding:.75rem;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:11px;color:var(--muted2);font-family:var(--fh);font-size:.82rem;font-weight:800;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">Cancel</button>
-      <button onclick="confirmReset()" id="reset-confirm-btn" style="flex:1;padding:.75rem;background:linear-gradient(135deg,var(--hot),var(--berry));border:none;border-radius:11px;color:var(--cream);font-family:var(--fh);font-size:.82rem;font-weight:800;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px rgba(255,45,107,.3);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Reset All Votes</button>
+
+/* ── Web Audio chime (no file needed) ── */
+let audioCtx=null;
+function getAudioCtx(){
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function playChime(){
+  try{
+    const ctx=getAudioCtx();
+    /* Three rising tones: E4 → G#4 → B4 */
+    [[329.63,0],[415.30,0.18],[493.88,0.36]].forEach(([freq,delay])=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=freq;
+      const t=ctx.currentTime+delay;
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.35,t+0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+      osc.start(t);osc.stop(t+0.72);
+    });
+  }catch(e){}
+}
+
+/* ── Render a Q&A pair ── */
+function renderPair(msg,key,playAudio=false){
+  const area=document.getElementById('outputArea');
+  const el=document.createElement('div');
+  el.className='cb-pair';
+  if(key)el.id='pair-'+key;
+  el.innerHTML=`
+    <div class="cb-meta">
+      <strong style="color:${escH(msg.userColor||'#ff85b3')}">${escH(msg.userName||'Anon')}</strong>
+      <span>asked:</span>
     </div>
-  </div>
-</div>
-
-<script>
-// ── ADMIN RESET ──────────────────────────────────────────────
-const ADMIN_PASSWORD = 'caretech2024';
-
-function showResetModal(){
-  const modal=document.getElementById('reset-modal');
-  modal.style.display='flex';
-  document.getElementById('reset-pw').value='';
-  document.getElementById('reset-pw-err').style.display='none';
-  setTimeout(()=>document.getElementById('reset-pw').focus(),100);
+    <div class="cb-qbubble">❓ ${escH(msg.question)}</div>
+    <div class="cb-pcard">
+      <div class="cb-phead"><span class="cb-plabel">📝 Patent Information</span></div>
+      <div class="cb-pbody">
+        <div class="cb-ptext">${escH(msg.answerText)}</div>
+        <div class="cb-psrc">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
+      </div>
+    </div>
+    <div class="cb-mcard">
+      <div class="cb-mhead"><span class="cb-mlabel">🎭 Movement Instructions</span></div>
+      <div class="cb-mbody"><div class="cb-mtext">${escH(msg.movement)}</div></div>
+      <div class="cb-spkrow">
+        <button class="cb-btn purple" style="font-size:11px;padding:7px 13px;" onclick="speakText(this)">🔊 Read Aloud</button>
+        <button class="cb-btn soft" style="font-size:11px;padding:7px 13px;" onclick="stopSpeech()">⏹ Stop</button>
+      </div>
+    </div>`;
+  area.insertBefore(el,area.firstChild);
+  if(playAudio){
+    playChime();
+    setTimeout(()=>speakMovement(msg.movement),950);
+  }
 }
 
-function closeResetModal(){
-  document.getElementById('reset-modal').style.display='none';
+/* ── Speech ── */
+function getFemaleVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  const enVoices=voices.filter(v=>v.lang==='en-US'||v.lang==='en_US'||v.lang.startsWith('en-US'));
+  const allEn=voices.filter(v=>v.lang.startsWith('en'));
+  const pool=enVoices.length?enVoices:allEn;
+  const femaleKeywords=['female','woman','zira','samantha','victoria','karen','moira','fiona','ava','allison','susan','sara','tessa','aria','jenny','michelle','emma','elizabeth','julia'];
+  let voice=pool.find(v=>femaleKeywords.some(k=>v.name.toLowerCase().includes(k)));
+  if(!voice)voice=pool[0]||null;
+  return voice;
 }
+function speakMovement(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.88;u.pitch=1.2;
+  const trySpeak=()=>{const v=getFemaleVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);};
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.addEventListener('voiceschanged',trySpeak,{once:true});
+  } else {trySpeak();}
+}
+function speakText(btn){
+  const c=btn.closest('.cb-mcard');
+  speakMovement(c.querySelector('.cb-mtext').textContent);
+}
+function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
 
-async function confirmReset(){
-  const pw=document.getElementById('reset-pw').value;
-  const errEl=document.getElementById('reset-pw-err');
-  if(pw!==ADMIN_PASSWORD){
-    errEl.style.display='block';
-    document.getElementById('reset-pw').style.borderColor='#ff6b6b';
-    document.getElementById('reset-pw').value='';
-    document.getElementById('reset-pw').focus();
+/* ── Utils ── */
+function escH(str){const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;}
+document.getElementById('userQuestion').addEventListener('keypress',e=>{if(e.key==='Enter')askQuestion();});
+
+/* ── Admin Modal ── */
+function showAdminModal(){
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';
+  setTimeout(()=>document.getElementById('adminPass').focus(),100);
+}
+function closeAdminModal(){document.getElementById('adminModal').classList.remove('open');}
+function confirmAdminReset(){
+  const pass=document.getElementById('adminPass').value;
+  if(pass!==ADMIN_PASSCODE){
+    document.getElementById('adminErr').textContent='Incorrect passcode. Try again.';
+    document.getElementById('adminPass').value='';
+    document.getElementById('adminPass').focus();
     return;
   }
-  errEl.style.display='none';
-  const btn=document.getElementById('reset-confirm-btn');
-  btn.textContent='Resetting…';btn.disabled=true;
-
-  if(!isDemo && db){
-    try{
-      // Delete all survey_responses documents in batches
-      const snap = await window.fsGetDocs(window.fsCollection(db,'survey_responses'));
-      const batchSize=500;
-      let batch=window.fsWriteBatch(db);
-      let count=0;
-      for(const d of snap.docs){
-        batch.delete(d.ref);
-        count++;
-        if(count===batchSize){await batch.commit();batch=window.fsWriteBatch(db);count=0;}
-      }
-      if(count>0)await batch.commit();
-      showToast('✦ All votes cleared from Firestore');
-    }catch(e){
-      console.error(e);
-      showToast('⚠ Firestore error: '+e.message);
-      btn.textContent='Reset All Votes';btn.disabled=false;
-      return;
-    }
-  }
-
-  // Reset local state
-  SURVEY.forEach((_,ti)=>{
-    myVotes[ti]={};
-    SURVEY[ti].questions.forEach((_,qi)=>{votes[ti][qi]={yes:0,no:0,neutral:0};});
-  });
-
-  closeResetModal();
-  // Refresh current view
-  if(currentView==='summary')showSummary();
-  else showTheme(parseInt(currentView.replace('theme-','')));
-  updateSP();
-  const totalAllQ=SURVEY.reduce((a,t)=>a+t.questions.length,0);
-  updateSurveyProgress(0,totalAllQ);
-  showToast('✦ Survey reset complete!');
+  document.getElementById('outputArea').innerHTML='<div class="cb-empty"><h3>✦ Messages cleared</h3><p>Type a question to begin</p></div>';
+  if(useFirebase&&messagesRef)messagesRef.remove().catch(()=>{});
+  localMessages=[];recentlyShown=[];closeAdminModal();
 }
+document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
 
-// Close modal on backdrop click
-document.getElementById('reset-modal').addEventListener('click',function(e){
-  if(e.target===this)closeResetModal();
+/* ── Cleanup ── */
+window.addEventListener('beforeunload',()=>{
+  if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
 });
 </script>
 </body>
