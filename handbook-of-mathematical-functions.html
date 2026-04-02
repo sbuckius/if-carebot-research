@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ CAREBOT · Abramowitz & Stegun ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{min-height:100%;font-family:'Quicksand',sans-serif;font-weight:600;color:#fff5f8;background:#0e0008;-webkit-font-smoothing:antialiased;}
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,30,100,.06) 0%,transparent 65%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
+  .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+  .orb-1{width:380px;height:380px;background:#8b0030;opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
+  .orb-2{width:300px;height:300px;background:#c4005a;opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+  .orb-3{width:200px;height:200px;background:#ff2d6b;opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+  .screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(40px + env(safe-area-inset-bottom));gap:14px;}
+
+  /* TOPBAR */
+  .cb-topbar{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-logo{display:flex;align-items:center;gap:10px;}
+  .cb-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,45,107,.18);border:1.5px solid rgba(255,80,150,.5);display:flex;align-items:center;justify-content:center;font-size:18px;animation:wobble 4s ease-in-out infinite;flex-shrink:0;}
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .cb-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-top:1px;}
+  .cb-badges{display:flex;gap:7px;align-items:center;}
+  .cb-badge{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,140,185,.2);color:rgba(255,190,220,.5);letter-spacing:.06em;}
+  .cb-pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff2d6b;margin-right:5px;animation:pip 2s ease-in-out infinite;vertical-align:middle;}
+  @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* CARD BASE */
+  .cb-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;backdrop-filter:blur(18px);box-shadow:0 4px 30px rgba(255,45,107,.2),inset 0 1px 0 rgba(255,140,185,.07);}
+  .cb-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+
+  /* CONTEXT BANNER */
+  .irony-card{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(180,0,40,.92),rgba(100,0,20,.95));border:1.5px solid rgba(255,80,80,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;box-shadow:0 4px 30px rgba(255,0,60,.25);}
+  .irony-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff8080 35%,#ff2020 50%,#ff8080 65%,transparent);box-shadow:0 0 10px #ff8080;border-radius:999px;}
+  .irony-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,160,160,.55);margin-bottom:6px;}
+  .irony-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,3.5vw,17px);color:#ffb3b3;margin-bottom:10px;line-height:1.3;}
+  .irony-text{font-size:12.5px;line-height:1.75;color:rgba(255,210,210,.85);}
+  .irony-text strong{color:#ffcccc;font-weight:700;}
+
+  /* PHOTO GRID */
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .photo-slot{aspect-ratio:4/3;background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.25);border-radius:10px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.6) brightness(.85) sepia(.15);}
+  .photo-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;color:rgba(255,190,220,.25);font-size:9px;letter-spacing:.1em;text-align:center;padding:8px;}
+  .photo-fallback span{font-size:18px;margin-bottom:5px;opacity:.3;}
+  .photo-num{position:absolute;bottom:4px;right:7px;font-size:8px;color:rgba(255,140,185,.35);letter-spacing:.08em;}
+
+  /* PDF LINK CARD */
+  .pdf-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .pdf-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .pdf-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+  .pdf-row{display:flex;align-items:center;gap:12px;}
+  .pdf-icon{font-size:28px;flex-shrink:0;}
+  .pdf-info{flex:1;}
+  .pdf-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#ffb3cf;margin-bottom:3px;line-height:1.3;}
+  .pdf-meta{font-size:11px;color:rgba(255,190,220,.45);line-height:1.5;}
+  .pdf-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.04em;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:8px 16px;border-radius:10px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 3px 12px rgba(255,45,107,.3);transition:all .2s;margin-top:10px;white-space:nowrap;flex-shrink:0;}
+  .pdf-link:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,45,107,.5);}
+
+  /* INPUT */
+  .cb-input-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .cb-input-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .cb-row:last-child{margin-bottom:0;}
+  .cb-input{flex:1;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;color:#fff5f8;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0;}
+  .cb-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
+  .cb-input::placeholder{color:rgba(255,190,220,.35);}
+  .cb-name-in{max-width:150px;flex:0 0 150px;}
+  .cb-btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.05em;color:#fff5f8;display:inline-flex;align-items:center;gap:5px;padding:10px 18px;border-radius:12px;border:1.5px solid rgba(255,80,150,.5);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .cb-btn.primary{background:linear-gradient(135deg,#ff2d6b,#c4005a,#8b0030);box-shadow:0 4px 18px rgba(255,45,107,.3);}
+  .cb-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,45,107,.5);}
+  .cb-btn.soft{background:rgba(255,255,255,.04);color:rgba(255,190,220,.5);border-color:rgba(255,140,185,.15);font-size:11px;}
+  .cb-btn.soft:hover{background:rgba(255,45,107,.12);color:#ffb3cf;}
+  .cb-btn.purple{background:linear-gradient(135deg,#ab47bc,#6a1b9a);border-color:#ab47bc;}
+  .cb-btn:active{transform:scale(.97);}
+
+  /* MESSAGES */
+  .cb-msgs{width:100%;max-width:600px;display:flex;flex-direction:column;gap:14px;}
+  .cb-empty{text-align:center;padding:44px 20px;color:rgba(255,190,220,.35);}
+  .cb-empty h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:7px;}
+  .cb-empty p{font-size:12px;}
+  .cb-pair{animation:slideUp .35s ease-out;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .cb-meta{font-size:11px;color:rgba(255,190,220,.45);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .cb-meta strong{font-weight:700;}
+  .cb-qbubble{display:inline-block;background:linear-gradient(135deg,#ff2d6b,#c4005a);color:#fff;padding:9px 14px;border-radius:16px 16px 16px 3px;font-size:13px;margin-bottom:12px;max-width:88%;line-height:1.5;box-shadow:0 3px 12px rgba(255,45,107,.3);}
+  .cb-pcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.4);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+  .cb-phead{background:linear-gradient(135deg,rgba(240,98,146,.8),rgba(194,24,91,.85));padding:9px 14px;display:flex;align-items:center;gap:7px;}
+  .cb-plabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-pbody{padding:14px;}
+  .cb-ptext{font-size:13px;line-height:1.7;color:rgba(255,215,235,.88);}
+  .cb-psrc{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,100,160,.12);font-size:11px;color:rgba(255,190,220,.45);}
+  .cb-psrc a{color:#ff85b3;text-decoration:none;}
+  .cb-psrc a:hover{text-decoration:underline;}
+  .cb-mcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(171,71,188,.45);border-radius:14px;overflow:hidden;}
+  .cb-mhead{background:linear-gradient(135deg,rgba(171,71,188,.8),rgba(106,27,154,.85));padding:9px 14px;}
+  .cb-mlabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-mbody{padding:14px;}
+  .cb-mtext{font-family:'Courier New',monospace;font-size:12px;line-height:1.85;color:rgba(220,180,255,.85);white-space:pre-wrap;}
+  .cb-spkrow{padding:8px 14px 12px;display:flex;gap:7px;}
+
+  /* BOTTOM */
+  .cb-bottom{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(140,0,45,.8),rgba(70,0,22,.92));border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 50px rgba(255,45,107,.45),0 0 90px rgba(200,0,80,.15);}
+  .cb-bottom::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 12px #ff85b3;border-radius:999px;}
+  .cb-btitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;}
+  .cb-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:12px 24px;border-radius:14px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 4px 18px rgba(255,45,107,.35);transition:all .2s;}
+  .cb-link:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,45,107,.5);}
+
+  /* MODAL */
+  .cb-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;}
+  .cb-modal.open{display:flex;}
+  .cb-mbox{background:rgba(14,0,8,.97);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:26px 22px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(255,45,107,.4);position:relative;}
+  .cb-mbox::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 8px #ff85b3;border-radius:999px;}
+  .cb-mtitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#ffb3cf;margin-bottom:9px;}
+  .cb-mbodytxt{font-size:12px;color:rgba(255,200,220,.65);line-height:1.6;margin-bottom:16px;}
+  .cb-mbtns{display:flex;gap:9px;}
+  .cb-err{font-size:11px;color:#ff2d6b;margin-top:6px;min-height:16px;}
+  .cb-wmark{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.12);padding-bottom:8px;}
+
+  @media(max-width:480px){
+    .photo-grid{grid-template-columns:repeat(2,1fr);}
+    .cb-name-in{max-width:100%;flex:1 1 100%;}
+    .pdf-row{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- TOPBAR -->
+  <div class="cb-topbar">
+    <div class="cb-logo">
+      <div class="cb-icon">📐</div>
+      <div>
+        <div class="cb-name">CAREBOT · ABRAMOWITZ & STEGUN ✦</div>
+        <div class="cb-sub">Irene Stegun · NBS · 1964</div>
+      </div>
+    </div>
+    <div class="cb-badges">
+      <div class="cb-badge" id="onlineCount"><span class="cb-pip"></span>Connecting…</div>
+      <div class="cb-badge" id="sysTime">--:--</div>
+    </div>
+  </div>
+
+  <!-- CONTEXT BANNER -->
+  <div class="irony-card">
+    <div class="irony-eyebrow">✦ Critical Context · Read Before Asking</div>
+    <div class="irony-title">⚠️ She finished the most cited mathematical reference work in history. It is known by his name first.</div>
+    <div class="irony-text">
+      <strong>Irene Ann Stegun</strong> (1919–2008) co-edited the <em>Handbook of Mathematical Functions</em> with Milton Abramowitz at the National Bureau of Standards. With over <strong>40,000 citations</strong> — cited once every 1.5 hours of every working day through the 1990s — it is arguably the most cited scientific reference work ever produced. When Abramowitz died of a heart attack in <strong>July 1958</strong>, Stegun took over management of the entire project and carried it to completion, publishing in 1964. She was awarded the <strong>Department of Commerce Gold Medal</strong> in 1965 for her efforts. The book is universally known as <strong>"Abramowitz and Stegun"</strong> — his name first, always. On the Dover Publications paperback edition, her name was misprinted as <strong>"Irene A. Segun."</strong> The handbook is described as <strong>"one of the very few scientific activities of the 1950s led by a woman."</strong> You would not know that from its name.
+    </div>
+  </div>
+
+  <!-- PHOTO GRID -->
+  <div class="cb-card">
+    <div class="cb-eyebrow">✦ Archive Images · Place files in /images/ folder named aands01.png through aands06.png</div>
+    <div class="photo-grid">
+      <div class="photo-slot">
+        <img src="images/aands01.png" alt="A&S Archive 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>📐</span>aands01.png</div>
+        <span class="photo-num">01</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/aands02.png" alt="A&S Archive 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>📐</span>aands02.png</div>
+        <span class="photo-num">02</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/aands03.png" alt="A&S Archive 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>📐</span>aands03.png</div>
+        <span class="photo-num">03</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/aands04.png" alt="A&S Archive 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>📐</span>aands04.png</div>
+        <span class="photo-num">04</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/aands05.png" alt="A&S Archive 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>📐</span>aands05.png</div>
+        <span class="photo-num">05</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/aands06.png" alt="A&S Archive 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>📐</span>aands06.png</div>
+        <span class="photo-num">06</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF LINK -->
+  <div class="pdf-card">
+    <div class="pdf-eyebrow">✦ Primary Source · Full Handbook PDF</div>
+    <div class="pdf-row">
+      <div class="pdf-icon">📖</div>
+      <div class="pdf-info">
+        <div class="pdf-title">Handbook of Mathematical Functions with Formulas, Graphs, and Mathematical Tables</div>
+        <div class="pdf-meta">Milton Abramowitz &amp; Irene A. Stegun (eds.) · National Bureau of Standards · 1964 · 1,046 pages · Public domain</div>
+        <div class="pdf-meta" style="margin-top:4px;color:rgba(255,140,185,.4);">University of British Columbia hosted edition — the standard web reference</div>
+      </div>
+      <a class="pdf-link" href="https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf" target="_blank" rel="noopener">✦ Open PDF</a>
+    </div>
+  </div>
+
+
+  <!-- INPUT -->
+  <div class="cb-input-card">
+    <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
+    <div class="cb-row">
+      <input class="cb-input cb-name-in" type="text" id="userName" placeholder="Your name…" value="">
+      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about Abramowitz &amp; Stegun…" autocomplete="off">
+      <button class="cb-btn primary" onclick="askQuestion()">✦ Ask</button>
+      <button class="cb-btn soft" onclick="showAdminModal()" title="Admin reset">⚙</button>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="cb-msgs" id="outputArea">
+    <div class="cb-empty">
+      <h3>✦ Answers appear here</h3>
+      <p>Type a question above and tap Ask</p>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="cb-bottom">
+    <div class="cb-btitle">✦ Task Complete · Ready for your next task?</div>
+    <a class="cb-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">✦ Advance to next task</a>
+  </div>
+
+  <div class="cb-wmark">✦ carebot/caretech research system · abramowitz &amp; stegun · v1.0 ✦</div>
+</div>
+
+<!-- Admin Modal -->
+<div class="cb-modal" id="adminModal">
+  <div class="cb-mbox">
+    <div class="cb-mtitle">🔒 Admin Reset</div>
+    <div class="cb-mbodytxt">Enter the admin passcode to clear all messages from the display and database.</div>
+    <input class="cb-input" type="password" id="adminPass" placeholder="Enter passcode…" style="width:100%;margin-bottom:6px;">
+    <div class="cb-err" id="adminErr"></div>
+    <div class="cb-mbtns" style="margin-top:10px;">
+      <button class="cb-btn soft" style="flex:1" onclick="closeAdminModal()">Cancel</button>
+      <button class="cb-btn primary" style="flex:1" onclick="confirmAdminReset()">Reset All</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+const ADMIN_PASSCODE = 'stegun1964';
+const MAX_DISPLAY = 3;
+const FB_REF_KEY = 'aandsMessages';
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','∑','∫','π','∞','·','◦'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+
+/* ── Firebase ── */
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCEd0x2_6jCdUksa54FSkNHvLCjWnJitak",
+
+  authDomain: "handbookofmathematicalfunction.firebaseapp.com",
+
+  projectId: "handbookofmathematicalfunction",
+
+  storageBucket: "handbookofmathematicalfunction.firebasestorage.app",
+
+  messagingSenderId: "27143907664",
+
+  appId: "1:27143907664:web:e4dd29cf764fb74537e455",
+
+  measurementId: "G-P1ZZYNZDSZ"
+
+};
+let app,database,messagesRef,onlineRef,useFirebase=true;
+let currentUser=localStorage.getItem('aandsUser')||'';
+let userColor=localStorage.getItem('aandsColor')||genColor();
+
+function genColor(){
+  const c=['#ff85b3','#ff2d6b','#ab47bc','#ff9800','#40c8ff','#c4005a'];
+  const v=c[Math.floor(Math.random()*c.length)];localStorage.setItem('aandsColor',v);return v;
+}
+
+try{
+  app=firebase.initializeApp(firebaseConfig);
+  database=firebase.database();
+  messagesRef=database.ref(FB_REF_KEY);
+  onlineRef=database.ref('aandsOnline');
+  if(currentUser)trackPresence();
+
+  let initialDone=false;
+  messagesRef.orderByKey().limitToLast(MAX_DISPLAY).once('value',snapshot=>{
+    const area=document.getElementById('outputArea');
+    area.innerHTML='';
+    const items=[];
+    snapshot.forEach(c=>{items.push({key:c.key,val:c.val()});});
+    if(!items.length){area.innerHTML=emptyHTML();}
+    else{items.reverse().forEach(({key,val})=>renderPair(val,key,false));}
+    initialDone=true;
+    const lastKey=items.length?items[items.length-1].key:null;
+    const nq=lastKey?messagesRef.orderByKey().startAfter(lastKey):messagesRef.orderByKey().limitToLast(1);
+    nq.on('child_added',snap=>{
+      if(!initialDone)return;
+      const msg=snap.val();const key=snap.key;
+      const area=document.getElementById('outputArea');
+      const emp=area.querySelector('.cb-empty');if(emp)emp.remove();
+      const pairs=area.querySelectorAll('.cb-pair');
+      if(pairs.length>=MAX_DISPLAY)pairs[pairs.length-1].remove();
+      renderPair(msg,key,true);
+    });
+  });
+
+  onlineRef.on('value',snapshot=>{
+    const count=Object.keys(snapshot.val()||{}).length;
+    document.getElementById('onlineCount').innerHTML=`<span class="cb-pip"></span>${count} online`;
+  });
+}catch(e){useFirebase=false;document.getElementById('onlineCount').textContent='Offline';}
+
+function trackPresence(){
+  if(!onlineRef||!currentUser)return;
+  const r=onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_'));
+  r.set({name:currentUser,timestamp:firebase.database.ServerValue.TIMESTAMP});
+  r.onDisconnect().remove();
+}
+document.getElementById('userName').addEventListener('change',function(){
+  currentUser=this.value.trim();localStorage.setItem('aandsUser',currentUser);
+  if(currentUser&&useFirebase)trackPresence();
+});
+
+function emptyHTML(){return '<div class="cb-empty"><h3>✦ Answers appear here</h3><p>Type a question above and tap Ask</p></div>';}
+
+/* ── Response Bank ── */
+const responses=[
+  {
+    text:"The Handbook of Mathematical Functions was first published in 1964 by the National Bureau of Standards. It collects formulas, graphs, and numerical tables for the special functions of applied mathematics — Bessel functions, gamma functions, elliptic integrals, hypergeometric functions, and 25 other families. It became the most widely distributed NBS publication of all time and with over 40,000 citations is arguably the most cited scientific reference work ever produced.",
+    source:"Handbook of Mathematical Functions — Abramowitz & Stegun (1964), p. i–xiv; NIST history",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"THE HANDBOOK SEQUENCE",
+    moves:[
+      "1. OPEN THE BOOK — both arms open wide from chest, slow and ceremonial — 1,046 pages of mathematics",
+      "2. TABLE SCAN — one finger traces down an invisible column of numbers, precise and methodical",
+      "3. FORMULA LOCK — arms snap into a mathematical pose — 90° angles, tight geometry",
+      "4. CITATION WAVE — arms sweep outward repeatedly — 40,000 citations, once every 1.5 hours, every working day",
+      "5. FREEZE arms wide open — call out: 'Stegun finished it. She made science possible.'"
+    ]
+  },
+  {
+    text:"Irene Ann Stegun was born in Yonkers, New York in 1919, the daughter of immigrants. She trained as a teacher, completed a master's degree in mathematics at Columbia University, and joined the Mathematical Tables Project of the WPA during World War II. There she learned numerical analysis from Gertrude Blanch, the project's chair. She moved to the National Bureau of Standards in Washington in 1948 and rose to Assistant Chief of the Computation Laboratory.",
+    source:"Irene Stegun biography — Wikipedia; NIST history of the Handbook",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"IRENE STEGUN — THE BEGINNING",
+    moves:[
+      "1. TEACHER POSE — stand straight, one hand extended as if writing on a board — she trained as a teacher first",
+      "2. COLUMBIA WALK — step forward with purpose, diploma held to chest — master's degree, mathematics",
+      "3. WPA TABLES — hands move across an invisible table, computing by hand — wartime mathematics work",
+      "4. COMPUTATION LAB — arms frame a laboratory space, then snap into authority — Assistant Chief",
+      "5. FREEZE in a leadership pose — call out: 'Irene Stegun. She rose. She led. She finished the work.'"
+    ]
+  },
+  {
+    text:"In July 1958, Milton Abramowitz died of a heart attack over a weekend. Stegun, who was then Assistant Chief of the Computation Laboratory, took over management of the entire Handbook project. Twelve chapters had been completed. The remaining ones were well underway. She carried the project to completion and publication in 1964 — six years of finishing what they had begun together. The work is known as Abramowitz and Stegun. His name comes first.",
+    source:"NIST history of the Handbook; Irene Stegun biography",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"SHE FINISHED IT — JULY 1958",
+    moves:[
+      "1. THE SETBACK — body stops mid-motion, head drops — the project loses its leader over a weekend",
+      "2. TAKE OVER — step forward into the empty space, both arms reach forward — she takes the helm",
+      "3. TWELVE CHAPTERS DONE — count twelve on fingers, precise — here is what was finished",
+      "4. SIX YEARS CARRY — arms push forward slowly, weighted — six years of completion, chapter by chapter",
+      "5. FREEZE stepping forward — call out: 'She finished it. His name comes first.'"
+    ]
+  },
+  {
+    text:"The tables in the Handbook were generated largely by hand on desk calculators, during the period when general-purpose computing was just beginning. The Mathematical Tables Project that preceded it employed not only mathematicians but a large number of additional staff — mostly women — who performed the hand computations. From 1938 to 1946, 37 volumes of mathematical tables were produced this way. The computers were human. Many were women. Their names are not in the title.",
+    source:"NIST history of the Handbook; Mathematical Tables Project history",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"THE HUMAN COMPUTERS",
+    moves:[
+      "1. DESK CALCULATOR — both hands operate an invisible mechanical calculator, rhythmic and repetitive",
+      "2. TABLE BY HAND — one finger writes numbers in columns down an invisible page — row after row",
+      "3. 37 VOLUMES — arms stack invisible books upward — each one computed by hand",
+      "4. HUMAN COMPUTER — stand at full attention, precise and capable — this is what a computer looked like",
+      "5. FREEZE mid-calculation — call out: 'The computers were human. Most were women. Read their names.'"
+    ]
+  },
+  {
+    text:"The notation standardized in the Handbook became the de facto standard for much of applied mathematics. Before the Handbook, different authors used different symbols for the same functions — creating confusion across disciplines and countries. Stegun and her collaborators chose, defined, and fixed the notation that physicists, engineers, and mathematicians around the world still use today. Every equation written with a Bessel function J_n uses notation that Stegun helped standardize.",
+    source:"Abramowitz & Stegun (1964) — foreword; NIST history",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"THE NOTATION SEQUENCE",
+    moves:[
+      "1. SYMBOL DRAW — one finger traces a J in the air — J for Bessel function, standard notation",
+      "2. BEFORE — two hands make different gestures simultaneously — confusion, different systems",
+      "3. STANDARDIZE — both hands come together to one fixed point — one notation, worldwide",
+      "4. WRITE THE EQUATION — mime writing a long equation across an invisible blackboard, left to right",
+      "5. FREEZE pointing at the notation — call out: 'Every equation in that notation is hers. She standardized it.'"
+    ]
+  },
+  {
+    text:"The Dover Publications paperback edition of the Handbook misprinted Irene Stegun's name on the cover as 'Irene A. Segun.' The woman who completed the most cited mathematical reference work in history, who was awarded the Department of Commerce Gold Medal for her efforts, who spent decades at the National Bureau of Standards — her name was misprinted in the mass-market edition of her own book.",
+    source:"Abramowitz and Stegun — Wikipedia; Dover Publications edition note",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"THE MISPRINT SEQUENCE",
+    moves:[
+      "1. WRITE THE NAME — mime writing S-T-E-G-U-N carefully in the air, letter by letter",
+      "2. THE MISPRINT — cross out one letter mid-air, replace it — Segun. The name is wrong.",
+      "3. GOLD MEDAL HOLD — mime receiving a medal with both hands, hold it to the chest — she earned this",
+      "4. COVER POINT — point to an invisible book cover, then shake your head — her name, misspelled",
+      "5. FREEZE pointing at the name — call out: 'S-T-E-G-U-N. Her name. Get it right.'"
+    ]
+  },
+  {
+    text:"In 1965, Irene Stegun was awarded the Department of Commerce Gold Medal for her work completing and editing the Handbook. The citation described it as a major cooperative endeavour and 'one of the very few scientific activities of the 1950s led by a woman.' She held the position of Assistant Chief of the Computation Laboratory until she became interim director in 1965. She continued working at NBS for years after publication.",
+    source:"Irene Stegun biography — Wikipedia; Department of Commerce Gold Medal citation",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"THE GOLD MEDAL SEQUENCE",
+    moves:[
+      "1. COOPERATIVE GESTURE — arms open to include everyone — this was a major cooperative endeavour",
+      "2. THE FEW — hold up one finger — one of the very few scientific activities of the 1950s led by a woman",
+      "3. GOLD MEDAL RECEIVE — both hands come forward, accept the medal, bring it to the chest",
+      "4. INTERIM DIRECTOR — step to the centre, arms at sides, authoritative — she led the laboratory",
+      "5. FREEZE in a director's stance — call out: 'One of the very few. Led by a woman. In the 1950s.'"
+    ]
+  },
+  {
+    text:"The Handbook contains 29 sets of tables, some computed to as many as 20 decimal places. Chapter 6, on the gamma function, was written by Philip J. Davis and served as the model for all other chapters — establishing the telegraphic style that is the Handbook's hallmark: maximum information, minimum text. The Handbook covered Bessel functions, hypergeometric functions, elliptic integrals, Mathieu functions, spheroidal wave functions, and orthogonal polynomials, among many others.",
+    source:"Abramowitz & Stegun (1964) — table of contents; NIST history",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"29 TABLES SEQUENCE",
+    moves:[
+      "1. TWENTY DECIMAL PLACES — fingers count rapidly to twenty, precise — each digit matters",
+      "2. TELEGRAPHIC STYLE — one hand slices through the air, sharp and efficient — maximum information, minimum words",
+      "3. BESSEL FUNCTION WAVE — one arm curves in a slow oscillating motion — J_0, J_1, J_2",
+      "4. TABLE STACK — both hands mime stacking 29 invisible heavy books — the full set of tables",
+      "5. FREEZE arms full of invisible volumes — call out: '29 tables. 20 decimal places. All by hand.'"
+    ]
+  },
+  {
+    text:"The Handbook's impact lasted well into the computer era. Even as calculators, then computers, then software replaced the need for printed tables, researchers kept citing it — for its formulas, its notation, its systematic organization. During the mid-1990s, it was cited at the rate of more than 2,000 times per year. A digital successor, the NIST Digital Library of Mathematical Functions, was not released until 2010 — 46 years after Stegun's edition.",
+    source:"Abramowitz & Stegun (1964); NIST DLMF history; Science Citation Index data",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"LASTING IMPACT SEQUENCE",
+    moves:[
+      "1. COMPUTER ARRIVE — mime a large machine rolling in — the computer era has begun",
+      "2. HANDBOOK STAYS — one hand holds the invisible book firm against the machine's wind — it is still cited",
+      "3. 2000 CITATIONS — both arms count outward — two thousand times a year, every year through the 1990s",
+      "4. 46 YEARS — count slowly — 1964 to 2010, forty-six years before a digital replacement existed",
+      "5. FREEZE holding the invisible book — call out: 'Forty-six years. Her edition held the field.'"
+    ]
+  },
+  {
+    text:"The Handbook was produced at the National Bureau of Standards, a government agency. Because it is the work of US federal government employees acting in their official capacity, it is not protected by copyright in the United States. It has been freely available and freely reproduced since publication. The PDF at the University of British Columbia is one of the most accessed mathematical documents on the internet — Stegun's work, free to the world.",
+    source:"Abramowitz & Stegun — copyright status; UBC hosted PDF",
+    link:"https://personal.math.ubc.ca/~cbm/aands/abramowitz_and_stegun.pdf",
+    theme:"FREE TO THE WORLD SEQUENCE",
+    moves:[
+      "1. GOVERNMENT STAMP — one hand mimes stamping an invisible document — National Bureau of Standards",
+      "2. NO COPYRIGHT — arms cross and then open wide — public domain, no restriction",
+      "3. FREE RELEASE — arms open outward from chest, releasing something into the world",
+      "4. INTERNET WAVE — arms ripple outward in a wide spreading motion — the PDF reaches everyone",
+      "5. FREEZE arms wide — call out: 'Stegun made it. The world made it free. It still feeds the world.'"
+    ]
+  }
+];
+
+let recentlyShown=[];
+function getResponse(){
+  let avail=responses.filter((_,i)=>!recentlyShown.includes(i));
+  if(avail.length<4){recentlyShown=[];avail=responses;}
+  const ri=Math.floor(Math.random()*avail.length);
+  const sel=avail[ri];const ai=responses.indexOf(sel);
+  recentlyShown.push(ai);if(recentlyShown.length>7)recentlyShown.shift();
+  return sel;
+}
+
+function generateMovement(resp){
+  const theme=resp.theme||'HANDBOOK SEQUENCE';
+  const moves=resp.moves||[
+    "1. OPEN THE BOOK — both arms open wide, slow and deliberate — 1,046 pages",
+    "2. TABLE TRACE — one finger moves down an invisible column of numbers",
+    "3. FORMULA LOCK — arms snap to 90°, tight mathematical geometry",
+    "4. CITATION WAVE — arms sweep outward — 40,000 citations",
+    "5. FREEZE — call out: 'Stegun finished it.'"
+  ];
+  return `HIP HOP SEQUENCE: ${theme}\nHONORING: Irene Ann Stegun\n\n${moves.join('\n')}\n\nENERGY: Precise, mathematical, powerful. Every move is a formula. Every freeze is a page she completed.`;
+}
+
+/* ── Ask ── */
+function askQuestion(){
+  const q=document.getElementById('userQuestion').value.trim();
+  const name=document.getElementById('userName').value.trim();
+  if(!name){alert('Please enter your name first!');document.getElementById('userName').focus();return;}
+  if(!q){alert('Please type a question!');return;}
+  const resp=getResponse();
+  const mv=generateMovement(resp);
+  const payload={
+    question:q,answerText:resp.text,answerSource:resp.source,
+    answerLink:resp.link,movement:mv,userName:name,
+    userColor:userColor,timestamp:firebase.database.ServerValue.TIMESTAMP
+  };
+  if(useFirebase&&messagesRef){
+    messagesRef.push(payload).catch(()=>localDisplay(q,resp,mv,name));
+  } else {
+    localDisplay(q,resp,mv,name);
+  }
+  document.getElementById('userQuestion').value='';
+}
+
+let localMessages=[];
+function localDisplay(q,resp,mv,name){
+  const area=document.getElementById('outputArea');
+  localMessages.unshift({question:q,answerText:resp.text,answerSource:resp.source,answerLink:resp.link,movement:mv,userName:name,userColor:userColor});
+  if(localMessages.length>MAX_DISPLAY)localMessages=localMessages.slice(0,MAX_DISPLAY);
+  area.innerHTML='';
+  localMessages.forEach((msg,i)=>renderPair(msg,null,i===0));
+}
+
+/* ── Chime ── */
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playChime(){
+  try{
+    const ctx=getAudioCtx();
+    [[329.63,0],[415.30,0.18],[493.88,0.36]].forEach(([freq,delay])=>{
+      const osc=ctx.createOscillator();const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=freq;
+      const t=ctx.currentTime+delay;
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.35,t+0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+      osc.start(t);osc.stop(t+0.72);
+    });
+  }catch(e){}
+}
+
+/* ── Render ── */
+function renderPair(msg,key,playAudio=false){
+  const area=document.getElementById('outputArea');
+  const el=document.createElement('div');
+  el.className='cb-pair';
+  if(key)el.id='pair-'+key;
+  el.innerHTML=`
+    <div class="cb-meta">
+      <strong style="color:${escH(msg.userColor||'#ff85b3')}">${escH(msg.userName||'Anon')}</strong>
+      <span>asked:</span>
+    </div>
+    <div class="cb-qbubble">❓ ${escH(msg.question)}</div>
+    <div class="cb-pcard">
+      <div class="cb-phead"><span class="cb-plabel">📐 From the Handbook Record</span></div>
+      <div class="cb-pbody">
+        <div class="cb-ptext">${escH(msg.answerText)}</div>
+        <div class="cb-psrc">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
+      </div>
+    </div>
+    <div class="cb-mcard">
+      <div class="cb-mhead"><span class="cb-mlabel">🎭 Movement Instructions</span></div>
+      <div class="cb-mbody"><div class="cb-mtext">${escH(msg.movement)}</div></div>
+      <div class="cb-spkrow">
+        <button class="cb-btn purple" style="font-size:11px;padding:7px 13px;" onclick="speakText(this)">🔊 Read Aloud</button>
+        <button class="cb-btn soft" style="font-size:11px;padding:7px 13px;" onclick="stopSpeech()">⏹ Stop</button>
+      </div>
+    </div>`;
+  area.insertBefore(el,area.firstChild);
+  if(playAudio){playChime();setTimeout(()=>speakMovement(msg.movement),950);}
+}
+
+/* ── Speech (female, English) ── */
+function getFemaleVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  const enVoices=voices.filter(v=>v.lang==='en-US'||v.lang==='en_US'||v.lang.startsWith('en-US'));
+  const allEn=voices.filter(v=>v.lang.startsWith('en'));
+  const pool=enVoices.length?enVoices:allEn;
+  const femaleKeywords=['female','woman','zira','samantha','victoria','karen','moira','fiona','ava','allison','susan','sara','tessa','aria','jenny','michelle','emma','elizabeth','julia'];
+  let voice=pool.find(v=>femaleKeywords.some(k=>v.name.toLowerCase().includes(k)));
+  if(!voice)voice=pool[0]||null;
+  return voice;
+}
+function speakMovement(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.88;u.pitch=1.2;
+  const trySpeak=()=>{const v=getFemaleVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);};
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.addEventListener('voiceschanged',trySpeak,{once:true});
+  } else {trySpeak();}
+}
+function speakText(btn){speakMovement(btn.closest('.cb-mcard').querySelector('.cb-mtext').textContent);}
+function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
+function escH(str){const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;}
+document.getElementById('userQuestion').addEventListener('keypress',e=>{if(e.key==='Enter')askQuestion();});
+
+/* ── Admin ── */
+function showAdminModal(){
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';
+  setTimeout(()=>document.getElementById('adminPass').focus(),100);
+}
+function closeAdminModal(){document.getElementById('adminModal').classList.remove('open');}
+function confirmAdminReset(){
+  if(document.getElementById('adminPass').value!==ADMIN_PASSCODE){
+    document.getElementById('adminErr').textContent='Incorrect passcode. Try again.';
+    document.getElementById('adminPass').value='';document.getElementById('adminPass').focus();return;
+  }
+  document.getElementById('outputArea').innerHTML=emptyHTML();
+  if(useFirebase&&messagesRef)messagesRef.remove().catch(()=>{});
+  localMessages=[];recentlyShown=[];closeAdminModal();
+}
+document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
+
+window.addEventListener('beforeunload',()=>{
+  if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
