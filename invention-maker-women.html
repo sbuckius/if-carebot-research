@@ -647,7 +647,6 @@ async function generate(){
   out.innerHTML=`<div class="thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-text">Drawing on ${added.length} patent${added.length!==1?'s':''}… synthesizing new invention…</div></div>`;
   try{
     const text = await callAI({
-      type: 'invention',
       model:'claude-sonnet-4-20250514',
       max_tokens:1000,
       system: buildSys(),
@@ -726,7 +725,6 @@ Return ONLY the raw SVG code starting with <svg and ending with </svg>. No expla
 
   try{
     const svg = await callAI({
-      type: 'sketch',
       model:'claude-sonnet-4-20250514',
       max_tokens:1000,
       messages:[{role:'user', content: sketchPrompt}]
