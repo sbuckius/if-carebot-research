@@ -357,21 +357,13 @@ function rewatch(){
 
 /* ── Firebase ── */
 const firebaseConfig = {
-
   apiKey: "AIzaSyAbj3g7yW7hkxvua11ePzZNVHgM1vmSiWk",
-
   authDomain: "kilogirl-carebot.firebaseapp.com",
-
   projectId: "kilogirl-carebot",
-
   storageBucket: "kilogirl-carebot.firebasestorage.app",
-
   messagingSenderId: "636854658655",
-
   appId: "1:636854658655:web:36b30bd1e83c79fd719dea",
-
   measurementId: "G-L9W2FLG2TS"
-
 };
 let app,database,messagesRef,onlineRef,useFirebase=true;
 let currentUser=localStorage.getItem('kgUser')||'';
@@ -711,64 +703,10 @@ function confirmAdminReset(){
 }
 document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
 
-/* ── Ambient Audio ── */
-const ambientAudio = new Audio('audio/harlow_shapley_girl_hours.mp3');
-ambientAudio.loop = true;
-ambientAudio.volume = 0.55;
-
-let ambientStarted = false;
-function startAmbient(){
-  if(ambientStarted)return;
-  ambientStarted = true;
-  ambientAudio.play().catch(()=>{});
-  document.getElementById('audioBar').style.display = 'flex';
-}
-['click','touchstart','keydown'].forEach(evt=>
-  document.addEventListener(evt, startAmbient, {once:true})
-);
-
-function toggleAmbient(){
-  const btn = document.getElementById('audioToggleBtn');
-  if(ambientAudio.paused){
-    ambientAudio.play();
-    btn.textContent = '\u23f8 Pause audio';
-  } else {
-    ambientAudio.pause();
-    btn.textContent = '\u25b6 Play audio';
-  }
-}
-
-/* Duck ambient while speech plays, restore after */
-const _origSpeakMovement = speakMovement;
-speakMovement = function(text){
-  ambientAudio.volume = 0.12;
-  _origSpeakMovement(text);
-  const restore = ()=>{ ambientAudio.volume = 0.55; };
-  window.speechSynthesis.addEventListener('end', restore, {once:true});
-};
-
 window.addEventListener('beforeunload',()=>{
   if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
   if('speechSynthesis' in window)window.speechSynthesis.cancel();
-  ambientAudio.pause();
 });
 </script>
-
-<div id="audioBar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:linear-gradient(135deg,rgba(140,0,45,.97),rgba(70,0,22,.99));border-top:1.5px solid rgba(255,80,150,.4);padding:10px 16px;align-items:center;justify-content:space-between;gap:10px;backdrop-filter:blur(12px);">
-  <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
-    <span style="font-size:13px;">&#128266;</span>
-    <div style="flex:1;min-width:0;">
-      <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:10px;letter-spacing:.1em;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:uppercase;">Now playing</div>
-      <div style="font-size:10px;color:rgba(255,190,220,.55);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Harlow Shapley on &#8220;girl hours&#8221; &#8212; oral history excerpt</div>
-    </div>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-    <input type="range" min="0" max="1" step="0.05" value="0.55"
-      oninput="ambientAudio.volume=parseFloat(this.value)"
-      style="width:70px;accent-color:#ff2d6b;cursor:pointer;">
-    <button id="audioToggleBtn" onclick="toggleAmbient()"
-      style="font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;letter-spacing:.06em;color:rgba(255,200,220,.8);background:rgba(255,255,255,.06);border:1px solid rgba(255,140,185,.25);padding:5px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;">&#9208; Pause audio</button>
-  </div>
-</div>
 </body>
 </html>
