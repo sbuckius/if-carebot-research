@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVENTRIX · Women's Patent AI Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0008; --pink: #ff2d6b; --pink-soft: #ff85b3;
+    --rose: #ff6b9d; --lilac: #c97bff; --white: #fff5f8;
+    --muted: rgba(255,190,220,0.45); --border: rgba(255,80,150,0.22);
+    --card-bg: rgba(255,255,255,0.03); --card-border: rgba(255,80,150,0.18);
+  }
+  body { font-family:'Quicksand',sans-serif; font-weight:600; background:var(--bg); color:var(--white); min-height:100vh; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse 60% 50% at 15% 20%,rgba(255,45,107,0.07) 0%,transparent 70%), radial-gradient(ellipse 50% 40% at 85% 80%,rgba(201,123,255,0.07) 0%,transparent 70%); pointer-events:none; z-index:0; }
+
+  .sparkles { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .sparkle { position:absolute; font-size:14px; opacity:0; animation:floatUp var(--dur,8s) var(--delay,0s) ease-in infinite; left:var(--x,50%); }
+  @keyframes floatUp { 0%{opacity:0;transform:translateY(100vh) scale(0.5) rotate(0deg);} 10%{opacity:0.6;} 90%{opacity:0.3;} 100%{opacity:0;transform:translateY(-10vh) scale(1.2) rotate(360deg);} }
+
+  /* TOPBAR */
+  .topbar { position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:18px 24px 14px; border-bottom:1px solid var(--border); background:rgba(14,0,8,0.7); backdrop-filter:blur(12px); }
+  .logo { display:flex; align-items:center; gap:12px; }
+  .logo-icon { width:44px; height:44px; border-radius:14px; background:rgba(255,45,107,0.15); border:1.5px solid rgba(255,80,150,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 0 16px rgba(255,45,107,0.2); }
+  .logo-name { font-family:'Nunito',sans-serif; font-weight:900; font-size:18px; background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:0.04em; line-height:1; }
+  .logo-sub { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+  .top-badges { display:flex; gap:8px; align-items:center; }
+  .badge { font-size:10px; padding:5px 12px; border-radius:999px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--muted); letter-spacing:0.06em; display:flex; align-items:center; gap:5px; }
+  .badge-pip { width:5px; height:5px; border-radius:50%; background:var(--pink); animation:pip 2s ease-in-out infinite; }
+  @keyframes pip { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* HERO */
+  .hero { position:relative; z-index:1; text-align:center; padding:36px 24px 24px; }
+  .hero-eyebrow { font-size:10px; letter-spacing:0.35em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:12px; opacity:0.7; }
+  .hero h1 { font-family:'Nunito',sans-serif; font-weight:900; font-size:clamp(2rem,6vw,3.5rem); line-height:1.05; background:linear-gradient(135deg,#fff5f8 0%,#ffb3cf 40%,#ff2d6b 70%,#c97bff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
+  .hero p { font-size:13px; color:var(--muted); max-width:480px; margin:0 auto; line-height:1.7; }
+
+  /* LAYOUT */
+  .lab { position:relative; z-index:1; display:grid; grid-template-columns:420px 1fr; gap:20px; padding:0 20px 40px; max-width:1200px; margin:0 auto; }
+  @media(max-width:860px){ .lab{ grid-template-columns:1fr; } }
+
+  /* CARD */
+  .card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; overflow:hidden; box-shadow:0 4px 32px rgba(255,45,107,0.06), 0 1px 0 rgba(255,255,255,0.04) inset; position:relative; }
+  .card::before { content:''; position:absolute; top:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,150,200,0.5),transparent); }
+  .card-header { padding:14px 18px; background:rgba(255,45,107,0.06); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .card-header h2 { font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.12em; text-transform:uppercase; background:linear-gradient(90deg,#ffb3cf,#ff2d6b); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .card-dot { width:8px; height:8px; border-radius:50%; background:var(--pink); box-shadow:0 0 8px var(--pink); animation:pip 2s ease-in-out infinite; }
+  .count-badge { margin-left:auto; background:linear-gradient(135deg,rgba(255,45,107,0.3),rgba(201,123,255,0.3)); border:1px solid rgba(255,80,150,0.4); color:var(--pink-soft); font-size:9px; padding:2px 9px; border-radius:999px; font-weight:700; letter-spacing:0.05em; }
+
+  /* TABS for patent categories */
+  .cat-tabs { display:flex; gap:4px; padding:12px 14px 0; flex-wrap:wrap; }
+  .cat-tab { padding:6px 12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,80,150,0.15); border-radius:8px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.08em; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+  .cat-tab.active { background:linear-gradient(135deg,rgba(255,45,107,0.2),rgba(201,123,255,0.15)); color:var(--pink-soft); border-color:rgba(255,80,150,0.4); }
+
+  /* PATENT BROWSER */
+  .patent-browser { max-height:340px; overflow-y:auto; padding:8px 12px 12px; display:flex; flex-direction:column; gap:5px; }
+  .patent-browser::-webkit-scrollbar { width:3px; }
+  .patent-browser::-webkit-scrollbar-thumb { background:rgba(255,80,150,0.3); border-radius:2px; }
+
+  .patent-item { display:flex; align-items:flex-start; gap:10px; padding:9px 12px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,80,150,0.1); border-radius:10px; cursor:pointer; transition:all 0.18s; }
+  .patent-item:hover { background:rgba(255,45,107,0.08); border-color:rgba(255,80,150,0.3); }
+  .patent-item.added { opacity:0.4; cursor:default; }
+  .patent-item.added:hover { background:rgba(255,255,255,0.02); border-color:rgba(255,80,150,0.1); }
+  .pi-info { flex:1; min-width:0; }
+  .pi-inventor { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:2px; opacity:0.8; }
+  .pi-title { font-size:11px; font-weight:700; color:var(--white); line-height:1.35; }
+  .pi-year { font-size:9px; color:var(--muted); margin-top:2px; }
+  .pi-btn { flex-shrink:0; padding:4px 10px; border-radius:7px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; border:1px solid rgba(255,80,150,0.3); background:rgba(255,45,107,0.08); color:var(--pink-soft); cursor:pointer; transition:all 0.18s; white-space:nowrap; }
+  .pi-btn:hover { background:rgba(255,45,107,0.2); }
+  .pi-btn.done { background:rgba(201,123,255,0.1); border-color:rgba(201,123,255,0.3); color:var(--lilac); cursor:default; }
+
+  /* ADDED LIBRARY */
+  .added-section { border-top:1px solid var(--border); }
+  .added-header { padding:10px 16px; display:flex; align-items:center; gap:8px; }
+  .added-header span { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink-soft); opacity:0.7; }
+  .added-list { max-height:200px; overflow-y:auto; padding:0 10px 10px; display:flex; flex-direction:column; gap:5px; }
+  .added-list::-webkit-scrollbar { width:3px; }
+  .added-list::-webkit-scrollbar-thumb { background:rgba(255,80,150,0.3); border-radius:2px; }
+  .a-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,80,150,0.15); border-left:3px solid var(--pink); border-radius:10px; padding:8px 30px 8px 10px; position:relative; animation:slideIn 0.3s ease; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+  .a-inventor { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:2px; }
+  .a-title { font-size:11px; font-weight:700; color:var(--white); line-height:1.3; }
+  .a-remove { position:absolute; top:7px; right:8px; background:none; border:none; color:rgba(255,150,200,0.35); cursor:pointer; font-size:15px; line-height:1; transition:color 0.2s; }
+  .a-remove:hover { color:var(--pink); }
+
+  .empty-state { text-align:center; padding:24px 20px; color:var(--muted); font-size:12px; line-height:1.8; }
+  .empty-icon { font-size:26px; margin-bottom:8px; }
+
+  .stats-bar { display:flex; gap:14px; align-items:center; padding:8px 16px; background:rgba(255,45,107,0.05); border-top:1px solid var(--border); font-size:10px; color:var(--muted); letter-spacing:0.06em; }
+  .stat-num { color:var(--pink-soft); font-weight:700; margin-right:3px; }
+
+  /* STUDIO */
+  .studio { display:flex; flex-direction:column; gap:18px; }
+  .mode-tabs { display:flex; gap:4px; margin:16px 16px 0; background:rgba(255,255,255,0.03); padding:4px; border-radius:12px; border:1px solid var(--border); }
+  .tab { flex:1; padding:9px 8px; background:none; border:none; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.08em; cursor:pointer; color:var(--muted); border-radius:9px; transition:all 0.2s; }
+  .tab.active { background:linear-gradient(135deg,rgba(255,45,107,0.25),rgba(201,123,255,0.2)); color:var(--pink-soft); border:1px solid rgba(255,80,150,0.3); }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; padding:10px 16px 0; }
+  .chip { padding:5px 12px; background:rgba(201,123,255,0.08); border:1px solid rgba(201,123,255,0.25); border-radius:999px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:11px; color:var(--lilac); cursor:pointer; transition:all 0.2s; }
+  .chip:hover { background:rgba(201,123,255,0.2); border-color:rgba(201,123,255,0.5); color:#e0b8ff; }
+  .field-block { padding:12px 16px 0; }
+  .field-label { display:block; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:7px; opacity:0.8; }
+  textarea { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,80,150,0.2); border-radius:12px; padding:11px 14px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:13px; color:var(--white); resize:vertical; line-height:1.5; transition:border-color 0.2s,box-shadow 0.2s; }
+  textarea::placeholder { color:rgba(255,180,210,0.3); }
+  textarea:focus { outline:none; border-color:rgba(255,45,107,0.6); box-shadow:0 0 0 3px rgba(255,45,107,0.1); background:rgba(255,255,255,0.06); }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; border:none; border-radius:12px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s; letter-spacing:0.04em; }
+  .btn-primary { background:linear-gradient(135deg,#ff2d6b,#c97bff); color:white; width:100%; box-shadow:0 4px 20px rgba(255,45,107,0.3); }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(255,45,107,0.45); }
+  .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+  .add-row { padding:14px 16px 16px; }
+
+  /* OUTPUT */
+  .output-body { padding:24px; min-height:380px; }
+  .welcome { text-align:center; padding:50px 20px; }
+  .welcome-icon { font-size:44px; margin-bottom:16px; }
+  .welcome h3 { font-family:'Nunito',sans-serif; font-weight:800; font-size:1.3rem; background:linear-gradient(90deg,#ffb3cf,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
+  .welcome p { font-size:12px; color:var(--muted); line-height:1.8; max-width:300px; margin:0 auto; }
+  .thinking { display:flex; align-items:center; gap:16px; padding:50px 0; justify-content:center; }
+  .thinking-dots { display:flex; gap:7px; }
+  .thinking-dots span { width:9px; height:9px; border-radius:50%; animation:bounce 1.2s ease-in-out infinite; }
+  .thinking-dots span:nth-child(1){ background:var(--pink); }
+  .thinking-dots span:nth-child(2){ background:var(--rose); animation-delay:0.2s; }
+  .thinking-dots span:nth-child(3){ background:var(--lilac); animation-delay:0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-9px);opacity:1} }
+  .thinking-text { font-size:12px; color:var(--muted); font-style:italic; }
+  .result { animation:fadeUp 0.4s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .result-title { font-family:'Nunito',sans-serif; font-weight:900; font-size:1.6rem; background:linear-gradient(135deg,#fff5f8,#ff85b3,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:6px; line-height:1.15; }
+  .result-inspired { font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border); opacity:0.8; }
+  .result-concept { font-size:14px; font-weight:700; color:var(--white); margin-bottom:20px; line-height:1.6; }
+  .result-body { font-size:13px; color:rgba(255,240,248,0.75); line-height:1.85; }
+  .result-body h3 { font-family:'Nunito',sans-serif; font-weight:800; font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--pink-soft); margin:20px 0 8px; opacity:0.8; }
+  .result-body p { margin-bottom:10px; }
+  .result-body ul { padding-left:18px; margin-bottom:12px; }
+  .result-body li { margin-bottom:5px; }
+  .action-row { display:flex; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border); align-items:center; }
+  .btn-sm { padding:8px 16px; border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; cursor:pointer; border:1px solid rgba(255,80,150,0.25); background:rgba(255,45,107,0.07); color:var(--pink-soft); transition:all 0.2s; }
+  .btn-sm:hover { background:rgba(255,45,107,0.15); }
+  .ts { margin-left:auto; font-size:10px; color:rgba(255,180,210,0.3); }
+  .err { background:rgba(255,45,107,0.08); border:1px solid rgba(255,45,107,0.3); border-left:3px solid var(--pink); padding:12px 14px; border-radius:10px; font-size:12px; color:#ff85b3; margin-top:10px; line-height:1.6; }
+  /* SKETCH */
+  .sketch-section { margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+  .sketch-label { font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--pink-soft); opacity:0.7; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .sketch-wrap { background:rgba(255,255,255,0.02); border:1px solid rgba(255,80,150,0.15); border-radius:14px; padding:16px; overflow:hidden; }
+  .sketch-wrap svg { width:100%; height:auto; display:block; }
+  .sketch-thinking { display:flex; align-items:center; gap:12px; padding:20px; }
+  .sketch-thinking-text { font-size:11px; color:var(--muted); font-style:italic; }
+  .sketch-btn { padding:8px 16px; border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; cursor:pointer; border:1px solid rgba(201,123,255,0.3); background:rgba(201,123,255,0.08); color:var(--lilac); transition:all 0.2s; }
+  .sketch-btn:hover { background:rgba(201,123,255,0.18); }
+  .sketch-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .sketch-section .thinking-dots span { width:7px; height:7px; border-radius:50%; animation:bounce 1.2s ease-in-out infinite; }
+  .sketch-section .thinking-dots span:nth-child(1){ background:var(--lilac); }
+  .sketch-section .thinking-dots span:nth-child(2){ background:var(--pink-soft); animation-delay:0.2s; }
+  .sketch-section .thinking-dots span:nth-child(3){ background:var(--lilac); animation-delay:0.4s; }
+  .inspire-banner { position:relative; z-index:1; margin:0 20px 32px; padding:16px 20px; background:rgba(255,45,107,0.07); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+  .inspire-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,150,200,0.5),transparent); }
+  .inspire-text { font-size:12px; color:var(--muted); line-height:1.7; }
+  .inspire-text strong { color:var(--pink-soft); }
+
+  /* ADVANCE BUTTON */
+  .advance-wrap {
+    position:relative; z-index:1;
+    margin:0 20px 40px;
+    text-align:center;
+  }
+  .advance-card {
+    display:inline-block;
+    background:linear-gradient(135deg,rgba(255,45,107,0.12),rgba(201,123,255,0.12));
+    border:1.5px solid rgba(255,80,150,0.35);
+    border-radius:20px;
+    padding:24px 36px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 4px 32px rgba(255,45,107,0.1);
+  }
+  .advance-card::before {
+    content:'';position:absolute;top:0;left:8%;right:8%;height:1.5px;
+    background:linear-gradient(90deg,transparent,rgba(255,133,179,0.6) 35%,rgba(255,45,107,0.8) 50%,rgba(255,133,179,0.6) 65%,transparent);
+    box-shadow:0 0 12px rgba(255,45,107,0.3);
+  }
+  .advance-eyebrow {
+    font-size:9px;letter-spacing:0.25em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:8px;font-weight:700;
+  }
+  .advance-title {
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:16px;
+    background:linear-gradient(90deg,#ffb3cf,#ff2d6b 55%,#c97bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:16px;
+  }
+  .btn-advance {
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.05em;
+    color:white;text-decoration:none;
+    background:linear-gradient(135deg,#ff2d6b,#c97bff);
+    border:none;border-radius:14px;
+    padding:14px 32px;
+    box-shadow:0 4px 22px rgba(255,45,107,0.4),inset 0 1px 0 rgba(255,255,255,0.1);
+    transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    cursor:pointer;
+    position:relative;overflow:hidden;
+  }
+  .btn-advance::before {
+    content:'';position:absolute;inset:0;border-radius:inherit;
+    background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent 55%);
+    pointer-events:none;
+  }
+  .btn-advance:hover { transform:translateY(-3px) scale(1.04); box-shadow:0 10px 36px rgba(255,45,107,0.55); }
+  .btn-advance:active { transform:scale(0.97); }
+
+  /* search */
+  .search-wrap { padding:10px 14px 0; }
+  .search-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,80,150,0.18); border-radius:10px; padding:8px 12px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:12px; color:var(--white); }
+  .search-input::placeholder { color:rgba(255,180,210,0.3); }
+  .search-input:focus { outline:none; border-color:rgba(255,45,107,0.5); }
+</style>
+</head>
+<body>
+
+<div class="sparkles" id="sparkles"></div>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">⚗️</div>
+    <div>
+      <div class="logo-name">INVENTRIX</div>
+      <div class="logo-sub">Women's Patent AI Lab</div>
+    </div>
+  </div>
+  <div class="top-badges">
+    <div class="badge"><span class="badge-pip"></span>AI Active</div>
+    <div class="badge" id="topBadge">0 Patents Selected</div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">✦ AI Invention Laboratory ✦</div>
+  <h1>Invent with Women's Genius</h1>
+  <p>Browse real patents by women inventors, add them to your library, then generate bold new inventions inspired by their brilliance.</p>
+</div>
+
+<div class="lab">
+
+  <!-- LEFT: Patent Browser -->
+  <aside>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot"></div>
+        <h2>Patent Library</h2>
+        <div class="count-badge" id="countBadge">0 selected</div>
+      </div>
+
+      <div class="search-wrap">
+        <input class="search-input" type="text" id="searchBox" placeholder="🔍 Search patents, inventors…" oninput="filterPatents()">
+      </div>
+
+      <div class="cat-tabs" id="catTabs"></div>
+
+      <div class="patent-browser" id="patentBrowser"></div>
+
+      <!-- Added Patents -->
+      <div class="added-section" id="addedSection" style="display:none;">
+        <div class="added-header">
+          <div class="card-dot" style="animation:none; opacity:0.6;"></div>
+          <span>Added to Invention Library</span>
+        </div>
+        <div class="added-list" id="addedList"></div>
+        <div class="stats-bar">
+          <span><span class="stat-num" id="statCount">0</span> patents</span>
+          <span><span class="stat-num" id="statWords">0</span> words indexed</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Studio -->
+  <main class="studio">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--lilac);box-shadow:0 0 8px var(--lilac);"></div>
+        <h2>Invention Studio</h2>
+      </div>
+      <div class="mode-tabs">
+        <button class="tab active" onclick="setMode(this,'invent')">✦ New Invention</button>
+        <button class="tab" onclick="setMode(this,'combine')">⊕ Combine Ideas</button>
+        <button class="tab" onclick="setMode(this,'improve')">↑ Improve On</button>
+      </div>
+      <div class="chips">
+        <button class="chip" onclick="useChip(this)">sustainable textiles</button>
+        <button class="chip" onclick="useChip(this)">medical diagnostics</button>
+        <button class="chip" onclick="useChip(this)">communication tech</button>
+        <button class="chip" onclick="useChip(this)">materials science</button>
+        <button class="chip" onclick="useChip(this)">personal safety</button>
+        <button class="chip" onclick="useChip(this)">computation tools</button>
+      </div>
+      <div class="field-block">
+        <label class="field-label" id="modeLabel">Describe a problem to solve or domain to invent in</label>
+        <textarea id="userPrompt" rows="3" placeholder="e.g. Design a new kind of loom that also computes…"></textarea>
+      </div>
+      <div class="add-row">
+        <button class="btn btn-primary" onclick="generate()" id="genBtn">⚗ Generate Invention</button>
+        <div id="genErr" style="display:none;" class="err"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--pink-soft);box-shadow:0 0 8px rgba(255,133,179,0.6);animation:none;"></div>
+        <h2>Invention Output</h2>
+      </div>
+      <div class="output-body" id="outputArea">
+        <div class="welcome">
+          <div class="welcome-icon">⚙️</div>
+          <h3>Ready to invent</h3>
+          <p>Select patents from women inventors in the library, then describe a problem — the AI will generate a new invention inspired by their genius.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="inspire-banner">
+  <div class="inspire-text">
+    <strong>✦ Featuring real patents by:</strong> Helen A. Blanchard · Edith Clarke · Beulah Louise Henry · Mary Phelps Jacob · Hertha Ayrton · Emily C. Duncan · Evelyn Berezin · Sarah Boone · Margaret E. Knight · Josephine M. Weil · and many more
+  </div>
+</div>
+
+<div class="advance-wrap">
+  <div class="advance-card">
+    <div class="advance-eyebrow">✦ carebot research system</div>
+    <div class="advance-title">Ready for your next task?</div>
+    <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">
+      ✦ Advance to next HIT
+    </a>
+  </div>
+</div>
+
+<script type="module">
+
+const PROXY = 'https://us-central1-invention-maker-women.cloudfunctions.net/anthropicProxy';
+
+async function callAI(payload) {
+  const res = await fetch(PROXY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('API error ' + res.status);
+  const data = await res.json();
+  return data.content?.find(b => b.type === 'text')?.text || '';
+}
+
+// ── SPARKLES ──
+const SPARKS=['✦','✧','⚗','⚙','✿','◆','◇','✶'];
+const sc=document.getElementById('sparkles');
+for(let i=0;i<18;i++){
+  const s=document.createElement('div'); s.className='sparkle';
+  s.textContent=SPARKS[i%SPARKS.length];
+  s.style.setProperty('--x',Math.random()*100+'%');
+  s.style.setProperty('--dur',(7+Math.random()*8)+'s');
+  s.style.setProperty('--delay',(Math.random()*10)+'s');
+  s.style.color=`hsl(${320+Math.random()*60},80%,${65+Math.random()*20}%)`;
+  sc.appendChild(s);
+}
+
+// ── PATENT DATA ──
+const PATENTS = [
+  // COMPUTER
+  { cat:'Computer', id:'US258518A', inventor:'Mary E. Winter & Cushman W. Crary', title:'Adding-Machine', year:1882, url:'https://patents.google.com/patent/US258518A', content:'An adding machine device for performing arithmetic calculations, with a mechanism for carrying and accumulating numerical values through interlocking digit wheels and a manual input lever mechanism. The device enables rapid addition of multiple-digit numbers with a compact mechanical register.' },
+  { cat:'Computer', id:'US310450A', inventor:'Hertha Ayrton (Phoebe Sarah Marks)', title:'Draftsman\'s Dividing-Instrument', year:1885, url:'https://patents.google.com/patent/US310450A', content:'A precision instrument for dividing lines into equal parts for technical drawing and drafting. The device uses a sliding scale and vernier mechanism to allow accurate subdivision of any line segment, improving drafting precision for engineering and mathematical applications.' },
+  { cat:'Computer', id:'US640348A', inventor:'Margaret A. Wise', title:'Computing Attachment for Scale-Beams', year:1900, url:'https://patents.google.com/patent/US640348A', content:'A computing attachment for scale-beams designed to automatically calculate weights and values. The device attaches to standard weighing scales and uses a sliding computation table to instantly convert weight readings into monetary or unit values, reducing the need for manual arithmetic.' },
+  { cat:'Computer', id:'US745167A', inventor:'Emily C. Duncan', title:'Calculator', year:1903, url:'https://patents.google.com/patent/US745167A', content:'A mechanical calculator device for performing arithmetic operations. The calculator uses a series of numbered wheels and levers to perform addition and subtraction with a carry mechanism for multi-digit calculations.' },
+  { cat:'Computer', id:'US749851A', inventor:'Emily C. Duncan', title:'Calculator (improved)', year:1904, url:'https://patents.google.com/patent/US749851A', content:'An improved mechanical calculator with enhanced carry mechanism and simplified user interface. Features rotating disc inputs and a display register for showing accumulated results, with a reset function for successive calculations.' },
+  { cat:'Computer', id:'US1097891A', inventor:'Elizabeth C. Swinnerton', title:'Novelty Device', year:1914, url:'https://patents.google.com/patent/US1097891A', content:'A novelty computation device designed for educational use, enabling learners to perform arithmetic through a physical manipulation interface. The device uses sliding panels with number grids to visually demonstrate calculation results.' },
+  { cat:'Computer', id:'US1552113A', inventor:'Edith Clarke', title:'Calculator', year:1925, url:'https://patents.google.com/patent/US1552113A', content:'A graphical calculator for solving equations involving electrical circuits, particularly for calculating line loading and distribution in electrical power systems. The Clarke calculator uses a graphical scale slide-rule format to rapidly compute hyperbolic functions and circuit parameters, dramatically reducing calculation time for electrical engineers.' },
+  { cat:'Computer', id:'US1728491A', inventor:'Elizabeth Janneson', title:'Number-Learning Device', year:1929, url:'https://patents.google.com/patent/US1728491A', content:'An educational number-learning device for teaching arithmetic to children. The device uses moveable numbered tiles on a grid to allow physical manipulation of numbers during addition and subtraction exercises, reinforcing numerical concepts through tactile learning.' },
+  { cat:'Computer', id:'USD164150S', inventor:'Sarah Ann Ayres', title:'Tax Computer', year:1951, url:'https://patents.google.com/patent/USD164150S', content:'A design patent for a tax computation device with a specialized calculation chart and sliding reference scale. The device is optimized for rapidly computing tax obligations based on income tables, allowing users to quickly look up and calculate owed amounts.' },
+  { cat:'Computer', id:'US2973141A', inventor:'Evelyn Berezin', title:'Control means with record sensing for electronic calculator', year:1961, url:'https://patents.google.com/patent/US2973141A', content:'An electronic calculator with control means incorporating record sensing capabilities. The invention enables automatic input from punch cards or punched tape, allowing the electronic calculator to read pre-recorded data and perform sequential computations automatically. This represents an early form of programmable electronic computation with stored data input.' },
+
+  // TYPEWRITER
+  { cat:'Typewriter', id:'US825335A', inventor:'Edna Mcarthur et al.', title:'Type-writing Machine', year:1906, url:'https://patents.google.com/patent/US825335A', content:'An improved typewriting machine with enhanced key action and ribbon mechanism for cleaner, more consistent ink transfer. The machine features a simplified carriage return mechanism and improved platen grip for accurate paper positioning.' },
+  { cat:'Typewriter', id:'US1166487A', inventor:'Emma Sherwood', title:'Typewriting apparatus', year:1916, url:'https://patents.google.com/patent/US1166487A', content:'A typewriting apparatus with an improved paper guide system and key arrangement for more efficient text input. The apparatus includes a novel tabulation mechanism for formatted document production and column alignment.' },
+  { cat:'Typewriter', id:'US498129A', inventor:'Lizzie J. Magie', title:'Scale for Hammond Type-writers', year:1893, url:'https://patents.google.com/patent/US498129A', content:'A measuring scale attachment for Hammond typewriters to assist with accurate margin setting and column alignment. The scale clips to the typewriter carriage and provides visual reference marks for consistent document formatting.' },
+  { cat:'Typewriter', id:'US2660502A', inventor:'Mary M. Smith', title:'Typewriter', year:1953, url:'https://patents.google.com/patent/US2660502A', content:'An improved typewriter with a modified key mechanism for reduced operator fatigue and more consistent key strikes. The invention features a spring-loaded key return system and improved ribbon advance mechanism for reliable ink distribution.' },
+  { cat:'Typewriter', id:'US2897944A', inventor:'Beulah Louise Henry', title:'Typewriter', year:1959, url:'https://patents.google.com/patent/US2897944A', content:'A typewriter with an innovative multiple-copy mechanism that allows simultaneous production of several copies without carbon paper, using a special platen and pressure distribution system. Beulah Louise Henry, known as "Lady Edison," filed over 49 patents in her lifetime.' },
+  { cat:'Typewriter', id:'US3159264A', inventor:'Beulah Louise Henry', title:'Keyboard assembly', year:1964, url:'https://patents.google.com/patent/US3159264A', content:'An improved keyboard assembly for typewriters featuring a modular key design for easier maintenance and replacement. The assembly uses a standardized mounting system allowing individual keys to be removed and replaced without disassembling the entire keyboard mechanism.' },
+  { cat:'Typewriter', id:'US3341861A', inventor:'Beulah M. Robbins', title:'Typewriter-related device', year:1967, url:'https://patents.google.com/patent/US3341861A', content:'A typewriter accessory device for improved document handling and formatting. The device attaches to standard office typewriters and provides automated margin control and paper registration for consistent professional document production.' },
+
+  // LOOM
+  { cat:'Loom', id:'US829474A', inventor:'Mary P. C. Hooper', title:'Loom', year:1906, url:'https://patents.google.com/patent/US829474A', content:'A loom with an improved heddle mechanism allowing faster and more precise thread separation for complex weave patterns. The design includes a simplified threading system and enhanced shuttle guide for consistent weft insertion across the full width of the warp.' },
+  { cat:'Loom', id:'US951935A', inventor:'Anna M. Boydston & Carrie A. Cowden', title:'Loom', year:1910, url:'https://patents.google.com/patent/US951935A', content:'A hand loom with a dual-inventor collaboration featuring an improved shed-opening mechanism and beater assembly. The loom includes adjustable warp tension controls and a simplified treadle linkage for easier operation and more consistent fabric production.' },
+  { cat:'Loom', id:'USD52697S', inventor:'Elna M. de Neergaard', title:'Loom-Frame (design)', year:1918, url:'https://patents.google.com/patent/USD52697S', content:'A design patent for a loom frame with an elegant and functional aesthetic, optimized for domestic use. The frame design incorporates folding elements for compact storage and a sturdy beam construction for consistent warp tension.' },
+  { cat:'Loom', id:'US1332165A', inventor:'Elna M. de Neergaard', title:'Loom', year:1920, url:'https://patents.google.com/patent/US1332165A', content:'A utility patent for an improved loom with a novel heddle frame suspension system allowing rapid pattern changes. The loom features a counterbalance mechanism for even shed opening and a simplified reed-beater assembly for consistent weft beating.' },
+  { cat:'Loom', id:'US1532848A', inventor:'Josephine Marie Weil', title:'Loom for Hand Weaving', year:1925, url:'https://patents.google.com/patent/US1532848A', content:'A hand weaving loom with improvements to the warp beam tensioning and heddle operating mechanism. The design prioritizes ease of use for domestic weavers, with clear threading guides, simplified treadle connections, and a compact footprint suitable for home studios.' },
+
+  // SEWING MACHINE
+  { cat:'Sewing', id:'US141987A', inventor:'Helen A. Blanchard', title:'Improvement in Sewing-Machines', year:1873, url:'https://patents.google.com/patent/US141987A', content:'An improvement to sewing machine design featuring an enhanced stitch-forming mechanism for more uniform and durable seams. The improvement includes a modified needle bar and presser foot assembly for better fabric control during high-speed stitching.' },
+  { cat:'Sewing', id:'US252992A', inventor:'Helen A. Blanchard', title:'Sewing-Machine Needle (Hollow Needle)', year:1882, url:'https://patents.google.com/patent/US252992A', content:'A hollow sewing machine needle design that carries thread through the hollow shaft rather than through an eye, enabling a new class of stitch formation. The hollow needle allows thread to be fed from a bobbin positioned above the fabric, simplifying threading and enabling new overseam stitch types.' },
+  { cat:'Sewing', id:'US500556A', inventor:'Helen A. Blanchard', title:'Sewing-Needle', year:1893, url:'https://patents.google.com/patent/US500556A', content:'An improved sewing needle with a reinforced shank and optimized eye geometry for reduced thread breakage at high speeds. The needle design incorporates a groove along the shank to reduce friction against the fabric, extending needle life and improving stitch quality.' },
+  { cat:'Sewing', id:'US612011A', inventor:'Helen A. Blanchard', title:'Improvements in Sewing-Machines', year:1898, url:'https://patents.google.com/patent/US612011A', content:'Comprehensive improvements to sewing machines including a novel feed dog mechanism for more even fabric advancement, an improved tension regulator for consistent thread control, and a modified bobbin winding system. Helen Blanchard held 28 patents in her lifetime.' },
+  { cat:'Sewing', id:'US666578A', inventor:'Harriet Ruth Tracy', title:'Sewing-Machine', year:1901, url:'https://patents.google.com/patent/US666578A', content:'A sewing machine with an innovative automatic thread cutter and chain stitch mechanism for rapid seam finishing. The machine includes a specialized presser foot that guides fabric at consistent angles for curved seam production.' },
+  { cat:'Sewing', id:'US683900A', inventor:'Helen A. Blanchard', title:'Hat-Sewing Machine', year:1901, url:'https://patents.google.com/patent/US683900A', content:'A specialized sewing machine designed specifically for hat manufacture, with a rotary head that accommodates circular and curved hat brims. The machine uses a specially shaped arm allowing the curved edge of hat bodies to pass freely under the stitching mechanism.' },
+  { cat:'Sewing', id:'US829830A', inventor:'Sarah Lambert Bailey', title:'Work Attachment for Sewing-Machines', year:1906, url:'https://patents.google.com/patent/US829830A', content:'A sewing machine work attachment for guiding pleats, tucks, and decorative stitching. The attachment clips to standard machines and includes adjustable guides that maintain consistent stitch patterns without manual measuring, enabling decorative garment work with professional results.' },
+  { cat:'Sewing', id:'US921720A', inventor:'Lillian C. Mattell', title:'Tension-Device for Sewing-Machines', year:1909, url:'https://patents.google.com/patent/US921720A', content:'An improved thread tension device for sewing machines that automatically compensates for different thread weights and fabric thicknesses. The tension device uses a spring and cam mechanism to maintain consistent thread tension throughout the stitch cycle, reducing puckering and thread breakage.' },
+  { cat:'Sewing', id:'US659999A', inventor:'Helen A. Blanchard', title:'Sewing-Machine Needle', year:1900, url:'https://patents.google.com/patent/US659999A', content:'An improved sewing machine needle with optimized tip geometry and thread groove design for high-speed industrial stitching. The needle features a reinforced tip and a precisely angled groove along the shank that reduces friction against fabric, extending needle life and improving stitch quality at elevated sewing speeds.' },
+  { cat:'Sewing', id:'US683901A', inventor:'Helen A. Blanchard', title:'Overseaming Sewing-Machine', year:1901, url:'https://patents.google.com/patent/US683901A', content:'A specialized overseaming sewing machine for finishing fabric edges to prevent fraying, using a looping stitch mechanism that wraps thread around the cut edge of the fabric. The machine features a specialized presser foot and edge guide for consistent seam finishing on curved and straight fabric edges.' },
+  { cat:'Sewing', id:'US684176A', inventor:'Helen A. Blanchard', title:'Hat-Sewing Machine', year:1901, url:'https://patents.google.com/patent/US684176A', content:'A second hat-sewing machine patent by Blanchard featuring improvements to the rotary head mechanism for stitching brim edges and crown seams. The machine accommodates varying hat sizes through an adjustable guide system and uses a specialized needle configuration for sewing through multiple layers of stiffened hat material.' },
+  { cat:'Sewing', id:'US683902A', inventor:'Helen A. Blanchard', title:'Seam for Sewed Articles', year:1901, url:'https://patents.google.com/patent/US683902A', content:'A patent for a novel seam construction method for sewn articles that produces a flat, durable seam suitable for hat manufacture and garment assembly. The seam design minimizes bulk at the joint while maximizing strength, using a specific stitch pattern that locks fabric layers together without creating a raised ridge.' },
+  { cat:'Sewing', id:'US837620A', inventor:'Margaret Graaf', title:'Thread-Cutting Mechanism for Sewing-Machines', year:1906, url:'https://patents.google.com/patent/US837620A', content:'An automatic thread-cutting mechanism for sewing machines that severs both needle and bobbin threads at the completion of a seam. The mechanism uses a cam-driven blade synchronized with the needle bar to cut threads cleanly at the end of each stitching sequence, reducing operator hand movements and improving production speed.' },
+  { cat:'Sewing', id:'US887586A', inventor:'Ida J. Calhoun', title:'Guide for Sewing-Machines', year:1908, url:'https://patents.google.com/patent/US887586A', content:'A sewing machine guide attachment for maintaining consistent seam allowances and stitch placement during garment construction. The guide attaches to the presser foot or machine bed and uses an adjustable fence to keep fabric edges at a fixed distance from the needle, producing uniform seam widths without marking or measuring.' },
+  { cat:'Sewing', id:'US1012856A', inventor:'Mary E. Irving', title:'Combined Table and Work-Box', year:1911, url:'https://patents.google.com/patent/US1012856A', content:'A combined sewing table and work-box that integrates storage for sewing supplies with a work surface optimized for sewing machine use. The design features compartmentalized storage for thread, needles, and accessories within the table structure, with a hinged top that converts between work surface and storage access configurations.' },
+  { cat:'Sewing', id:'US1022185A', inventor:'Ethel Mary Elsden', title:'Spool-Holder for Sewing-Machines', year:1912, url:'https://patents.google.com/patent/US1022185A', content:'An improved spool-holder for sewing machines that accommodates multiple thread spool sizes and maintains consistent thread tension during unwinding. The holder uses a spring-tensioned spindle and guide system that prevents thread tangling and spool bounce during high-speed sewing operation.' },
+  { cat:'Sewing', id:'US1089816A', inventor:'Helen A. Blanchard', title:'Method of Selvage-Sewing', year:1914, url:'https://patents.google.com/patent/US1089816A', content:'A patented method for sewing along the selvage edge of woven fabrics using a specialized stitch sequence that reinforces the woven edge while joining it to another fabric layer. The method produces a flat, durable join at the selvage that exploits the natural strength of the woven edge rather than cutting it away.' },
+  { cat:'Sewing', id:'US1091672A', inventor:'Mary Magdalene Lamy', title:'Cord and Rope-Making Device', year:1914, url:'https://patents.google.com/patent/US1091672A', content:'A device for making cords and ropes from thread or yarn using a rotary twisting mechanism. The device allows controlled twisting of multiple thread strands into a unified cord of consistent diameter and twist density, suitable for decorative trim, lacing, and functional rope production from textile materials.' },
+  { cat:'Sewing', id:'US1222503A', inventor:'Margaret Elizabeth Beedle Williams', title:'Combined Sewing-Machine Cabinet and Lap-Board', year:1917, url:'https://patents.google.com/patent/US1222503A', content:'A combined sewing machine cabinet and lap-board designed to provide a compact and ergonomic sewing workstation. The cabinet houses the sewing machine in a fold-away configuration and extends to provide a lap-board work surface, making efficient use of small domestic spaces while keeping the machine protected when not in use.' },
+  { cat:'Sewing', id:'US1368820A', inventor:'Unknown (early 1920s)', title:'Bobbin-Unwinding Attachment for Sewing-Machines', year:1921, url:'https://patents.google.com/patent/US1368820A', content:'A bobbin-unwinding attachment for sewing machines that controls the rate of thread release from the bobbin during stitching. The attachment uses a tensioning mechanism to prevent bobbin overrun and thread slack, maintaining consistent stitch tension throughout the sewing operation.' },
+
+  // TEXTILE
+  { cat:'Textile', id:'USD18001S', inventor:'Elizabeth A. Fenner', title:'Design for a Textile Fabric', year:1888, url:'https://patents.google.com/patent/USD18001S', content:'A design patent for an ornamental textile fabric featuring a repeating geometric pattern for use in upholstery and decorative applications. The pattern uses interlocking geometric forms creating visual rhythm through alternating light and dark weave structures.' },
+  { cat:'Textile', id:'USD21525S', inventor:'Annie G. Thyng', title:'Design for a Textile Fabric', year:1892, url:'https://patents.google.com/patent/USD21525S', content:'A design patent for a textile fabric with a floral and vine repeating pattern for decorative fabric production. The design incorporates organic curved motifs within a regular geometric grid, suitable for woven or printed textile production.' },
+  { cat:'Textile', id:'USD21998S', inventor:'Annie G. Thyng', title:'Design for a Textile Fabric', year:1892, url:'https://patents.google.com/patent/USD21998S', content:'A second textile fabric design patent by Annie G. Thyng featuring a variant repeating pattern with refined decorative motifs. The design extends her earlier work with additional pattern elements and a refined repeat structure for decorative fabric production.' },
+  { cat:'Textile', id:'USD22554S', inventor:'Ellen Whitcomb', title:'Design for a Textile Fabric', year:1893, url:'https://patents.google.com/patent/USD22554S', content:'An ornamental textile design featuring a symmetrical woven pattern with interlaced geometric elements. The design creates visual depth through the systematic alternation of weave structure, producing a fabric with inherent three-dimensional surface texture.' },
+  { cat:'Textile', id:'USD31457S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1899, url:'https://patents.google.com/patent/USD31457S', content:'A textile fabric design by Helen P. Johnstone featuring an early repeating ornamental pattern. Johnstone was a prolific textile designer who filed numerous fabric design patents in the early twentieth century, contributing significantly to American commercial textile design.' },
+  { cat:'Textile', id:'USD37613S', inventor:'Emma W. Doughty', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37613S', content:'A textile fabric design featuring an innovative repeating pattern that creates a dimensional optical effect through systematic variation in weave density. The design is optimized for mechanical loom production with a pattern repeat suitable for commercial fabric production.' },
+  { cat:'Textile', id:'USD37614S', inventor:'Emma W. Doughty', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37614S', content:'A second textile design by Emma W. Doughty featuring a complementary repeating pattern to her earlier filing. The design uses a different geometric configuration while maintaining the same production-ready repeat structure suitable for commercial loom weaving.' },
+  { cat:'Textile', id:'USD37615S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37615S', content:'One of several textile fabric designs by Sophia L. Crownfield, a highly prolific designer who filed over a dozen fabric design patents. This design features a structured repeating motif optimized for jacquard or dobby loom production.' },
+  { cat:'Textile', id:'USD37616S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37616S', content:'A textile fabric design by Sophia L. Crownfield featuring a variant geometric repeat. Crownfield\'s multiple simultaneous patent filings suggest a professional design practice producing commercial textile patterns for manufacturers.' },
+  { cat:'Textile', id:'USD37618S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37618S', content:'Another textile design in the Crownfield series, featuring a distinct repeating pattern with interlocking geometric forms. The design demonstrates systematic variation across a pattern family, characteristic of professional commercial textile design practice.' },
+  { cat:'Textile', id:'USD37620S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37620S', content:'A textile fabric design by Sophia L. Crownfield with a refined geometric repeat pattern. The structured, symmetrical design is engineered for efficient loom production with a regular warp and weft structure.' },
+  { cat:'Textile', id:'USD37621S', inventor:'Harriet W. Fowler', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37621S', content:'A textile fabric design by Harriet W. Fowler featuring a decorative repeating pattern for commercial fabric production. The design uses a structured motif suitable for upholstery and decorative textile applications.' },
+  { cat:'Textile', id:'USD37622S', inventor:'Harriet W. Fowler', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37622S', content:'A second textile design patent by Harriet W. Fowler with a complementary pattern to her earlier filing. The design extends the visual vocabulary of the first with a variant repeat structure.' },
+  { cat:'Textile', id:'USD37628S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37628S', content:'A textile design by Helen P. Johnstone featuring a refined repeating ornamental pattern for commercial fabric. Johnstone\'s sustained output of fabric design patents across multiple years demonstrates a productive professional textile design career.' },
+  { cat:'Textile', id:'USD37629S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37629S', content:'Another textile fabric design by Helen P. Johnstone, one of several filed in 1905. The design features a systematic geometric repeat suitable for power loom production.' },
+  { cat:'Textile', id:'USD37630S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37630S', content:'A textile design by Helen P. Johnstone with a variant geometric motif from her 1905 series. The design employs a different density and scale of repeat for a distinct fabric hand and visual effect.' },
+  { cat:'Textile', id:'USD37631S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1905, url:'https://patents.google.com/patent/USD37631S', content:'The fourth 1905 textile design patent by Helen P. Johnstone, completing a coordinated family of commercial textile patterns. The repeat structure is designed to complement her other designs when used together in interior textile schemes.' },
+  { cat:'Textile', id:'USD38062S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1906, url:'https://patents.google.com/patent/USD38062S', content:'A 1906 textile design by Sophia L. Crownfield continuing her prolific design output with a new geometric repeat pattern. The design reflects contemporary decorative arts trends adapted for commercial woven textile production.' },
+  { cat:'Textile', id:'USD38064S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1906, url:'https://patents.google.com/patent/USD38064S', content:'A textile fabric design by Sophia L. Crownfield with a structured repeat pattern filed in 1906. The design demonstrates her continued development of geometric textile motifs across a sustained commercial practice.' },
+  { cat:'Textile', id:'USD38085S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1906, url:'https://patents.google.com/patent/USD38085S', content:'Another 1906 Crownfield textile design patent featuring a refined geometric repeat. The pattern builds on earlier designs with increased complexity in the repeat unit while maintaining production feasibility on commercial looms.' },
+  { cat:'Textile', id:'USD38099S', inventor:'Emma W. Doughty', title:'Design for a Textile Fabric', year:1906, url:'https://patents.google.com/patent/USD38099S', content:'A 1906 textile design by Emma W. Doughty continuing her pattern design series. The design features an evolved repeating motif that demonstrates development from her 1905 designs toward more refined pattern structures.' },
+  { cat:'Textile', id:'USD38119S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1906, url:'https://patents.google.com/patent/USD38119S', content:'A 1906 textile fabric design by Helen P. Johnstone extending her commercial design output into a second year of active patent filing. The pattern introduces new geometric elements while maintaining the commercial production viability of her design series.' },
+  { cat:'Textile', id:'USD38121S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1906, url:'https://patents.google.com/patent/USD38121S', content:'A second 1906 textile design by Helen P. Johnstone featuring a complementary repeat pattern. The design pair suggests a coordinated collection approach to commercial textile design, offering buyers coordinated fabric options.' },
+  { cat:'Textile', id:'USD38592S', inventor:'Harriet W. Fowler', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38592S', content:'A 1907 textile design by Harriet W. Fowler showing continued activity in commercial fabric pattern design. The geometric repeat reflects decorative arts trends of the period adapted for woven textile production.' },
+  { cat:'Textile', id:'USD38702S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38702S', content:'A 1907 textile design by Helen P. Johnstone, demonstrating three consecutive years of active patent filing. The design continues her established geometric pattern vocabulary with new repeat configurations.' },
+  { cat:'Textile', id:'USD38703S', inventor:'Helen P. Johnstone', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38703S', content:'A second 1907 textile design by Helen P. Johnstone, paired with her other 1907 filing as a coordinated pattern offering. The design uses a contrasting scale or density variation to the companion pattern.' },
+  { cat:'Textile', id:'USD38864S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38864S', content:'A 1907 Crownfield textile design continuing her three-year sustained output of commercial fabric patterns. The geometric repeat reflects the mature phase of her design practice with refined geometric forms.' },
+  { cat:'Textile', id:'USD38865S', inventor:'Sophia L. Crownfield', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38865S', content:'A companion 1907 textile design by Sophia L. Crownfield, completing a coordinated pattern pair for commercial sale. The paired designs offer coordinated repeats for multi-fabric interior or fashion textile applications.' },
+  { cat:'Textile', id:'USD38876S', inventor:'Ada M. Rapp', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38876S', content:'A textile fabric design by Ada M. Rapp featuring a decorative repeating pattern. Rapp\'s entry into the fabric design patent record in 1907 reflects the active participation of women designers in the commercial textile industry of the period.' },
+  { cat:'Textile', id:'USD38908S', inventor:'Elizabeth L. Mosenthal', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38908S', content:'A textile fabric design by Elizabeth L. Mosenthal featuring a distinctive repeating ornamental pattern. The design reflects the diversity of women designers active in the commercial fabric industry in the early twentieth century.' },
+  { cat:'Textile', id:'USD38909S', inventor:'Anna Olsson', title:'Design for a Textile Fabric', year:1907, url:'https://patents.google.com/patent/USD38909S', content:'A textile fabric design by Anna Olsson filed in 1907, featuring a repeating geometric pattern for commercial fabric production. Olsson filed multiple textile design patents across several years, establishing a sustained presence in commercial textile design.' },
+  { cat:'Textile', id:'USD40782S', inventor:'Anna Olsson', title:'Design for a Textile Fabric', year:1910, url:'https://patents.google.com/patent/USD40782S', content:'A 1910 textile design by Anna Olsson continuing her commercial design practice with a new repeat pattern. The design demonstrates sustained professional activity across several years in the competitive commercial textile market.' },
+  { cat:'Textile', id:'USD60790S', inventor:'Clara Katz', title:'Design for a Textile Fabric', year:1922, url:'https://patents.google.com/patent/USD60790S', content:'A 1922 textile fabric design by Clara Katz reflecting post-WWI decorative arts trends in commercial fabric design. The pattern incorporates period-appropriate geometric and stylized motifs adapted for commercial loom production.' },
+  { cat:'Textile', id:'USD71532S', inventor:'Eleanor M. Sarton', title:'Design for Textile Fabric or Similar Article', year:1926, url:'https://patents.google.com/patent/USD71532S', content:'A textile fabric design with an Art Deco-influenced geometric pattern featuring angular repeating motifs. The design balances positive and negative space in the weave structure, creating a sophisticated pattern suitable for fashion and interior textile applications.' },
+  { cat:'Textile', id:'USD86782S', inventor:'Edna F. Leonhardt', title:'Textile Fabric for Upholstery', year:1932, url:'https://patents.google.com/patent/USD86782S', content:'A textile fabric design specifically developed for upholstery applications, featuring a durable repeating pattern with high visual density and symmetrical structure. The pattern is engineered for resistance to wear while maintaining decorative appeal in furniture covering applications.' },
+  { cat:'Textile', id:'USD86784S', inventor:'Edna F. Leonhardt', title:'Textile Fabric for Upholstery or the Like', year:1932, url:'https://patents.google.com/patent/USD86784S', content:'A second 1932 upholstery textile design by Edna F. Leonhardt, paired with her other filings as a coordinated collection. The pattern offers a variant repeat suitable for companion upholstery fabric in the same interior scheme.' },
+  { cat:'Textile', id:'USD86787S', inventor:'Edna F. Leonhardt', title:'Textile Fabric for Upholstery or the Like', year:1932, url:'https://patents.google.com/patent/USD86787S', content:'A third coordinated upholstery textile design by Edna F. Leonhardt, demonstrating a prolific output in 1932 aimed at the commercial upholstery fabric market. The design rounds out a coordinated family of upholstery patterns.' },
+  { cat:'Textile', id:'USD86789S', inventor:'Edna F. Leonhardt', title:'Textile Fabric for Upholstery or the Like', year:1932, url:'https://patents.google.com/patent/USD86789S', content:'The fourth 1932 upholstery textile design by Edna F. Leonhardt, completing a substantial coordinated collection of commercial upholstery patterns. Her multiple simultaneous patents reflect a professional commercial design practice focused on the upholstery market.' },
+  { cat:'Textile', id:'USD88338S', inventor:'Irene A. Weitz', title:'Textile Fabric or the Like', year:1932, url:'https://patents.google.com/patent/USD88338S', content:'A textile design featuring a modernist geometric pattern with bold line elements. The design uses simple repeated geometric units combined to create complex visual patterns from elementary weave structures, demonstrating sophisticated design thinking within the constraints of woven construction.' },
+  { cat:'Textile', id:'USD88339S', inventor:'Irene A. Weitz', title:'Textile Fabric or the Like', year:1932, url:'https://patents.google.com/patent/USD88339S', content:'A second 1932 textile design by Irene A. Weitz, paired with her other filing as a coordinated pattern set. The design offers a complementary variant repeat using the same modernist design vocabulary as her companion pattern.' },
+  { cat:'Textile', id:'USD110853S', inventor:'Edith M. Swanson', title:'Textile Fabric', year:1938, url:'https://patents.google.com/patent/USD110853S', content:'A textile fabric design with a flowing repeating pattern incorporating curved organic elements within a structured geometric framework. The design balances organic and geometric form, suitable for fashion fabric production and home textile applications.' },
+  { cat:'Textile', id:'USD111090S', inventor:'Dorothy S. Smith', title:'Textile Fabric', year:1938, url:'https://patents.google.com/patent/USD111090S', content:'A 1938 textile fabric design by Dorothy S. Smith featuring a decorative repeating pattern reflecting late 1930s design sensibilities. The pattern uses structured geometric elements in a repeat suitable for fashion and home textile production.' },
+  { cat:'Textile', id:'USD118760S', inventor:'Ruth Schmidt', title:'Textile Fabric or Similar Article', year:1940, url:'https://patents.google.com/patent/USD118760S', content:'A 1940 textile fabric design by Ruth Schmidt featuring a repeating decorative pattern. The design reflects early 1940s textile design trends with structured geometric motifs adapted for commercial fabric production.' },
+  { cat:'Textile', id:'USD130798S', inventor:'Ida Jolles', title:'Needlepoint Tapestry Fabric or Similar Article', year:1941, url:'https://patents.google.com/patent/USD130798S', content:'A needlepoint tapestry fabric design by Ida Jolles featuring a decorative repeating pattern designed specifically for needlepoint canvas or tapestry weaving. The design\'s grid-based structure is optimized for counted-thread needlework techniques.' },
+  { cat:'Textile', id:'USD131261S', inventor:'Ida Jolles', title:'Needlepoint Tapestry Fabric or Similar Article', year:1942, url:'https://patents.google.com/patent/USD131261S', content:'A second needlepoint tapestry design by Ida Jolles filed in 1942, continuing her specialization in counted-thread needlework pattern design. The pattern provides a new decorative motif for needlepoint canvas production, adapted for both hand and machine needlework.' },
+
+  // CLOTHING
+  { cat:'Clothing', id:'US149280A', inventor:'Frederika M. McDonald', title:'Improvement in Skirt-Protectors', year:1874, url:'https://patents.google.com/patent/US149280A', content:'An improvement in skirt-protecting devices featuring a simplified attachment mechanism for holding skirt hems elevated from ground level. The improvement uses a cord and pulley system operated by hand to raise and lower the skirt hem as needed during walking on muddy surfaces.' },
+  { cat:'Clothing', id:'US282646A', inventor:'Margaret E. Knight & Harriet M. MacFarland', title:'Skirt-Protector', year:1883, url:'https://patents.google.com/patent/US282646A', content:'A skirt protector device for preventing damage to women\'s skirt hems from mud and soiling during outdoor activities. The device attaches to the skirt hem and uses a weighted mechanism to hold fabric above ground level while walking. Margaret Knight, known as "the female Edison," held over 87 patents in her lifetime.' },
+  { cat:'Clothing', id:'US318038A', inventor:'Annie E. Sawyer', title:'Skirt-Protector', year:1885, url:'https://patents.google.com/patent/US318038A', content:'A skirt-protector device by Annie E. Sawyer featuring an improved mechanism for lifting and holding skirt hems clear of wet or muddy surfaces. The device uses a simpler fastening system than earlier designs, making it easier for women to attach and operate while dressed.' },
+  { cat:'Clothing', id:'US473653A', inventor:'Sarah Boone', title:'Ironing-Board', year:1892, url:'https://patents.google.com/patent/US473653A', content:'An improved ironing board designed specifically for ironing the sleeves and bodies of women\'s garments. The narrow, curved board form allows garments to be slipped over the board for wrinkle-free pressing of curved seams and fitted garment sections that flat boards cannot accommodate. Sarah Boone was one of the first African American women to receive a U.S. patent.' },
+  { cat:'Clothing', id:'US540756A', inventor:'Mary Matilda Odell', title:'Infants\' Bib', year:1895, url:'https://patents.google.com/patent/US540756A', content:'An improved infant\'s bib design featuring a novel fastening mechanism and improved coverage area to protect infant clothing during feeding. The bib uses a simplified tie or button system for quick attachment and removal, with a shaped form that provides better coverage of the infant\'s front.' },
+  { cat:'Clothing', id:'US555428A', inventor:'Alice Louisa Bygrave', title:'Cycling-Skirt', year:1896, url:'https://patents.google.com/patent/US555428A', content:'A cycling skirt designed for women cyclists featuring a novel fastening system that allows the skirt to be quickly converted from a walking configuration to a safer cycling configuration. The skirt uses cords and loops to gather fabric away from the bicycle wheels while maintaining modesty standards of the era.' },
+  { cat:'Clothing', id:'US610988A', inventor:'Ellen M. Hoey', title:'Skirt for Cycling', year:1898, url:'https://patents.google.com/patent/US610988A', content:'A women\'s cycling skirt design with improved safety features, including attachment points that secure the skirt fabric to prevent entanglement with bicycle mechanisms. The skirt incorporates internal weights at the hem to maintain modesty and shape during cycling activity.' },
+  { cat:'Clothing', id:'US637524A', inventor:'Carrie P. Parker', title:'Garment-Fastener', year:1899, url:'https://patents.google.com/patent/US637524A', content:'A garment fastener device designed as an improved alternative to hooks, eyes, and buttons for securing women\'s garments. The fastener uses an interlocking mechanism that is easier to operate single-handedly while providing a secure, flat closure that does not create bulk under outer garments.' },
+  { cat:'Clothing', id:'US644606A', inventor:'Laura H. Johnson', title:'Garment', year:1900, url:'https://patents.google.com/patent/US644606A', content:'A garment design patent featuring an innovative construction method for women\'s clothing that improves fit and ease of dressing. The garment uses a novel seam and dart arrangement that allows the garment to conform to the body while enabling the wearer to dress without assistance.' },
+  { cat:'Clothing', id:'US971680A', inventor:'Mabel Marie Kline', title:'Catamenial Skirt-Protector', year:1910, url:'https://patents.google.com/patent/US971680A', content:'A catamenial skirt-protector designed for menstrual protection of women\'s clothing, featuring an improved attachment and coverage system. The device provides reliable protection of outer garments using a specialized internal liner and fastening mechanism that keeps the protector securely positioned during daily activities.' },
+  { cat:'Clothing', id:'US1115674A', inventor:'Mary Phelps Jacob', title:'Brassiere', year:1914, url:'https://patents.google.com/patent/US1115674A', content:'The first modern brassiere patent in the United States, featuring two handkerchiefs connected by ribbon to support the bust in a natural shape. The design replaced the rigid corset with a lightweight, flexible alternative that allowed greater freedom of movement. Mary Phelps Jacob later sold the patent to the Warner Brothers Corset Company for $1,500.' },
+  { cat:'Clothing', id:'US1137452A', inventor:'Anna E. Bienstock', title:'Dress-Shield Protector', year:1915, url:'https://patents.google.com/patent/US1137452A', content:'A dress-shield protector designed to protect the underarm area of women\'s garments from perspiration damage. The shield uses an absorbent inner layer with a waterproof outer layer and features an improved fastening system that attaches securely to the garment\'s underarm seam without requiring sewing.' },
+  { cat:'Clothing', id:'US1223854A', inventor:'Harriet Cutler', title:'Nurse\'s Cap', year:1917, url:'https://patents.google.com/patent/US1223854A', content:'A nurse\'s cap design with an improved construction that maintains its shape and position during active nursing work. The cap features a novel internal stiffening structure and fastening mechanism that keeps the cap securely positioned on the head while allowing easy adjustment and removal.' },
+  { cat:'Clothing', id:'US1348754A', inventor:'Ethel Shrader', title:'Dress-Shield Supporter', year:1920, url:'https://patents.google.com/patent/US1348754A', content:'A dress-shield supporter device designed to hold dress shields in position within women\'s garments without sewing. The supporter uses an adjustable clip or pin mechanism that attaches to the garment\'s underarm area and grips the shield firmly while allowing easy removal for laundering.' },
+  { cat:'Clothing', id:'US1364276A', inventor:'Sallie C. Hannaford', title:'Dress-Skirt Shield', year:1921, url:'https://patents.google.com/patent/US1364276A', content:'A dress-skirt shield designed to protect the lower portion of women\'s skirts from soiling and wear. The shield attaches to the interior hem of the skirt and provides a removable protective layer that can be laundered separately from the outer garment.' },
+  { cat:'Clothing', id:'US1475018A', inventor:'Alma Marie Lassen', title:'Dress Shield', year:1923, url:'https://patents.google.com/patent/US1475018A', content:'An improved dress shield with enhanced absorbency and a novel fastening system that attaches securely to garments of varying construction. The shield uses layered absorbent materials and a flexible outer covering that moves naturally with the garment during wear.' },
+  { cat:'Clothing', id:'US2113469A', inventor:'Eleanor W. Standley', title:'Dress Shield', year:1938, url:'https://patents.google.com/patent/US2113469A', content:'A 1938 dress shield design incorporating improved materials available in the late 1930s, including synthetic fabrics, for better performance and easier laundering. The shield features a streamlined shape and simplified fastening appropriate for the closer-fitting garment silhouettes of the period.' },
+];
+
+const CATS = ['All', 'Computer', 'Typewriter', 'Loom', 'Sewing', 'Textile', 'Clothing'];
+const added = []; // holds patent ids added to invention library
+let currentCat = 'All';
+let searchQuery = '';
+let mode = 'invent';
+
+// Build category tabs
+const catTabsEl = document.getElementById('catTabs');
+CATS.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-tab' + (c==='All'?' active':'');
+  btn.textContent = c;
+  btn.onclick = () => {
+    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = c;
+    renderBrowser();
+  };
+  catTabsEl.appendChild(btn);
+});
+
+function filterPatents() {
+  searchQuery = document.getElementById('searchBox').value.toLowerCase();
+  renderBrowser();
+}
+
+function renderBrowser() {
+  const browser = document.getElementById('patentBrowser');
+  let filtered = PATENTS.filter(p => {
+    const matchCat = currentCat === 'All' || p.cat === currentCat;
+    const matchSearch = !searchQuery ||
+      p.inventor.toLowerCase().includes(searchQuery) ||
+      p.title.toLowerCase().includes(searchQuery) ||
+      p.year.toString().includes(searchQuery);
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    browser.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div>No patents match your search.</div>';
+    return;
+  }
+
+  browser.innerHTML = filtered.map(p => {
+    const isAdded = added.some(a=>a.id===p.id);
+    return `<div class="patent-item${isAdded?' added':''}">
+      <div class="pi-info">
+        <div class="pi-inventor">${esc(p.inventor)}</div>
+        <div class="pi-title">${esc(p.title)}</div>
+        <div class="pi-year">${p.id} · ${p.year}</div>
+      </div>
+      <button class="pi-btn${isAdded?' done':''}" onclick="${isAdded?'':'window.addFromBrowser(\''+p.id+'\')'}">${isAdded?'✓ Added':'+ Add'}</button>
+    </div>`;
+  }).join('');
+}
+
+function addFromBrowser(id) {
+  const p = PATENTS.find(x=>x.id===id);
+  if (!p || added.some(a=>a.id===id)) return;
+  added.push(p);
+  updateCounts();
+  renderBrowser();
+  renderAdded();
+}
+
+function removeAdded(id) {
+  const i = added.findIndex(a=>a.id===id);
+  if (i>=0) added.splice(i,1);
+  updateCounts();
+  renderBrowser();
+  renderAdded();
+}
+
+function renderAdded() {
+  const section = document.getElementById('addedSection');
+  const list = document.getElementById('addedList');
+  if (added.length === 0) { section.style.display='none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = added.map(p=>`
+    <div class="a-card">
+      <button class="a-remove" onclick="window.removeAdded('${p.id}')">×</button>
+      <div class="a-inventor">${esc(p.inventor)}</div>
+      <div class="a-title">${esc(p.title)} (${p.year})</div>
+    </div>`).join('');
+  const words = added.reduce((s,p)=>s+p.content.split(/\s+/).length,0);
+  document.getElementById('statCount').textContent = added.length;
+  document.getElementById('statWords').textContent = words.toLocaleString();
+}
+
+function updateCounts() {
+  const n = added.length;
+  document.getElementById('countBadge').textContent = n + ' selected';
+  document.getElementById('topBadge').textContent = n + ' Patent'+(n!==1?'s':'')+' Selected';
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function setMode(btn,m){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); mode=m;
+  const L={invent:'Describe a problem to solve or domain to invent in',combine:'Describe two or more concepts to combine',improve:'Describe an existing technology to radically improve'};
+  document.getElementById('modeLabel').textContent=L[m];
+}
+
+function useChip(btn){
+  const cur=document.getElementById('userPrompt').value.trim();
+  document.getElementById('userPrompt').value=cur?cur+', '+btn.textContent:btn.textContent;
+  document.getElementById('userPrompt').focus();
+}
+
+function buildSys(){
+  let s=`You are INVENTRIX, an AI invention engine trained on patents by women inventors. Generate detailed, visionary new invention concepts inspired by the technical principles in the patent library.
+
+Format EXACTLY as:
+**INVENTION NAME:** [bold memorable name]
+**INSPIRED BY:** [inventor names and patents]
+**ONE-LINE CONCEPT:** [one sentence]
+
+**OVERVIEW**
+[2-3 paragraphs]
+
+**CORE TECHNICAL PRINCIPLES**
+[3-5 bullet points drawing on the patent library]
+
+**KEY INNOVATIONS OVER PRIOR ART**
+[3-4 bullet points]
+
+**APPLICATIONS**
+[3-5 use cases]
+
+**NEXT STEPS FOR DEVELOPMENT**
+[2-3 concrete steps]`;
+
+  if(added.length>0){
+    s+=`\n\n=== SELECTED PATENT LIBRARY (${added.length} patents) ===\n`;
+    added.forEach((p,i)=>{
+      s+=`\n[PATENT ${i+1}] ID: ${p.id}\nInventor(s): ${p.inventor}\nTitle: ${p.title} (${p.year})\nDescription: ${p.content}\n`;
+    });
+  }
+  return s;
+}
+
+function buildUser(input){
+  const M={
+    invent:`Generate a completely new invention in the domain of: ${input}`,
+    combine:`Generate a new invention combining these concepts: ${input}`,
+    improve:`Generate a dramatically improved version of: ${input}`
+  };
+  return M[mode]+(added.length>0?'\n\nDraw directly on the specific patents in the library — reference their inventors and technical approaches.':'\n\nNo patents selected yet — draw on your general knowledge of women inventors in STEM.');
+}
+
+let lastInventionText = '';
+
+async function generate(){
+  const input=document.getElementById('userPrompt').value.trim();
+  const genErr=document.getElementById('genErr');
+  const btn=document.getElementById('genBtn');
+  const out=document.getElementById('outputArea');
+  genErr.style.display='none';
+  if(!input){genErr.textContent='Please describe what you want to invent.';genErr.style.display='block';return;}
+  btn.disabled=true; btn.textContent='⏳ Inventing…';
+  out.innerHTML=`<div class="thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-text">Drawing on ${added.length} patent${added.length!==1?'s':''}… synthesizing new invention…</div></div>`;
+  try{
+    const text = await callAI({
+      type: 'invention',
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      system: buildSys(),
+      messages:[{role:'user',content:buildUser(input)}]
+    });
+    lastInventionText = text;
+    showResult(text);
+    // Auto-generate sketch after text appears
+    generateSketch(text);
+  }catch(e){
+    out.innerHTML='';
+    genErr.textContent='Error: '+e.message; genErr.style.display='block';
+  }
+  btn.disabled=false; btn.textContent='⚗ Generate Invention';
+}
+
+function showResult(text){
+  const out=document.getElementById('outputArea');
+  const tM=text.match(/\*\*INVENTION NAME:\*\*\s*(.+)/);
+  const iM=text.match(/\*\*INSPIRED BY:\*\*\s*(.+)/);
+  const cM=text.match(/\*\*ONE-LINE CONCEPT:\*\*\s*(.+)/);
+  const title=tM?tM[1].trim():'New Invention';
+  const insp=iM?iM[1].trim():'';
+  const conc=cM?cM[1].trim():'';
+  let body=text.replace(/\*\*INVENTION NAME:\*\*.+/,'').replace(/\*\*INSPIRED BY:\*\*.+/,'').replace(/\*\*ONE-LINE CONCEPT:\*\*.+/,'').trim();
+  body=body.replace(/\*\*(.+?)\*\*/g,'<h3>$1</h3>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>.*<\/li>\n?)+/gs,m=>'<ul>'+m+'</ul>').replace(/\n\n+/g,'</p><p>').replace(/^(?!<)(.+)$/gm,'<p>$1</p>');
+  const ts=new Date().toLocaleTimeString();
+  out.innerHTML=`<div class="result">
+    <div class="result-title">${esc(title)}</div>
+    ${insp?`<div class="result-inspired">✦ Inspired by ${esc(insp)}</div>`:''}
+    ${conc?`<div class="result-concept">${esc(conc)}</div>`:''}
+    <div class="result-body">${body}</div>
+    <div class="action-row">
+      <button class="btn-sm" onclick="window.copyRes(event)">⎘ Copy</button>
+      <button class="btn-sm" onclick="window.generate()">↺ Regenerate</button>
+      <button class="sketch-btn" id="resketchBtn" onclick="window.generateSketch(lastInventionText)" style="display:none;">✏ Re-sketch</button>
+      <span class="ts">Generated ${ts}</span>
+    </div>
+    <div class="sketch-section" id="sketchSection">
+      <div class="sketch-label">✏ Patent Sketch</div>
+      <div class="sketch-wrap" id="sketchWrap">
+        <div class="sketch-thinking">
+          <div class="thinking-dots"><span></span><span></span><span></span></div>
+          <div class="sketch-thinking-text">Drafting invention sketch…</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function generateSketch(inventionText){
+  const wrap = document.getElementById('sketchWrap');
+  if(!wrap) return;
+  wrap.innerHTML = `<div class="sketch-thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="sketch-thinking-text">Drafting patent sketch…</div></div>`;
+
+  const sketchPrompt = `You are a patent sketch artist. Based on this invention description, create a detailed SVG patent-style technical drawing.
+
+INVENTION:
+${inventionText}
+
+Create an SVG technical sketch in the style of a hand-drawn patent illustration. Requirements:
+- viewBox="0 0 600 420"
+- Dark background: fill the background rect with #0e0008
+- Use ONLY these colors for drawing: stroke="#ff85b3" (main lines), stroke="#c97bff" (labels/callouts), stroke="#ff2d6b" (accent/highlight lines), fill="none" for all shapes
+- Draw the invention as a technical schematic with labeled parts (use <text> elements in fill="#ff85b3" font-family="monospace" font-size="11")
+- Include callout lines with part labels (like real patent drawings: "A", "B", "C" or short descriptive labels)
+- Use dashed lines for internal/hidden components: stroke-dasharray="4 3"
+- Show the invention from a 3/4 perspective or front view with cross-section details where relevant
+- Include a title at the bottom in fill="#c97bff" font-size="13" font-family="monospace"
+- Make it look like a hand-sketched technical drawing with slightly imperfect lines (use small path variations)
+- Add dimension lines or arrows where appropriate
+- Include at least 6-8 labeled components
+- Minimum 30 SVG elements to make it detailed and rich
+
+Return ONLY the raw SVG code starting with <svg and ending with </svg>. No explanation, no markdown, no code fences.`;
+
+  try{
+    const svg = await callAI({
+      type: 'sketch',
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      messages:[{role:'user', content: sketchPrompt}]
+    });
+    let cleanSvg = svg.replace(/```svg\n?/gi,'').replace(/```\n?/g,'').trim();
+    if(cleanSvg.startsWith('<svg')){
+      wrap.innerHTML = cleanSvg;
+      const resketch = document.getElementById('resketchBtn');
+      if(resketch) resketch.style.display='inline-flex';
+    } else {
+      wrap.innerHTML = `<div style="padding:16px;font-size:11px;color:rgba(255,180,210,0.4);text-align:center;">Sketch unavailable — try regenerating.</div>`;
+    }
+  }catch(e){
+    wrap.innerHTML = `<div style="padding:16px;font-size:11px;color:rgba(255,180,210,0.4);text-align:center;">Sketch error: ${e.message}</div>`;
+  }
+}
+
+function copyRes(e){
+  const t=document.querySelector('.result')?.innerText||'';
+  navigator.clipboard.writeText(t).then(()=>{e.target.textContent='✓ Copied!';setTimeout(()=>e.target.textContent='⎘ Copy',2000);});
+}
+
+// ── EXPOSE TO WINDOW (required for onclick attrs in ES module) ──
+window.addFromBrowser = addFromBrowser;
+window.removeAdded    = removeAdded;
+window.filterPatents  = filterPatents;
+window.setMode        = setMode;
+window.useChip        = useChip;
+window.generate       = generate;
+window.generateSketch = generateSketch;
+window.copyRes        = copyRes;
+
+// Init
+renderBrowser();
+</script>
+</body>
+</html>
