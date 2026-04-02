@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>✦ CAREtech ✦ Amplifying Diverse Voices in Technology</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --bubble:  #ffe4f0;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --bg:      #1a0012;
+    --card:    rgba(255,255,255,.055);
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 8px 50px rgba(255,45,107,.45), 0 0 100px rgba(255,30,128,.18);
+    --text-dim:  rgba(255,200,224,.55);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    min-height: 100vh;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, default;
+    padding-bottom: 80px;
+  }
+
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 15%,  rgba(180,0,50,.4)   0%, transparent 55%),
+      radial-gradient(ellipse 60% 70% at 90% 85%,  rgba(120,0,30,.35)  0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 50% 50%,  rgba(255,45,107,.08) 0%, transparent 65%),
+      linear-gradient(160deg, #220008, #180008 45%, #120005);
+  }
+
+  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(70px); }
+  .orb-1 { width:500px;height:500px;background:var(--maroon); opacity:.25; top:-120px; left:-100px; animation:drift1 20s ease-in-out infinite; }
+  .orb-2 { width:400px;height:400px;background:#c40032;        opacity:.2;  bottom:-80px; right:-80px; animation:drift2 24s ease-in-out infinite; }
+  .orb-3 { width:300px;height:300px;background:var(--hot);     opacity:.12; top:35%; left:55%;       animation:drift3 16s ease-in-out infinite; }
+  .orb-4 { width:200px;height:200px;background:var(--candy);   opacity:.15; top:10%; right:20%;      animation:drift2 19s ease-in-out infinite reverse; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,35px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-25px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-25px,18px)}66%{transform:translate(18px,-12px)}}
+
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{
+    0%  {opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}
+    15% {opacity:.7}
+    85% {opacity:.4}
+    100%{opacity:0;transform:translateY(-140px) scale(1.1) rotate(180deg)}
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative; z-index: 10;
+    padding: 36px clamp(20px,6vw,80px) 0;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0;
+    text-align: center;
+  }
+
+  .nav-bar {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 48px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-icon {
+    width:48px;height:48px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(255,45,107,.3),rgba(180,0,50,.4));
+    border:1.5px solid var(--card-border-bright);
+    box-shadow:var(--soft-glow);
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    animation:wobble 4s ease-in-out infinite;
+  }
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .brand-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .brand-sub{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-top:2px;}
+
+  .nav-chips { display: flex; gap: 8px; }
+  .nav-chip {
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(255,45,107,.08); border: 1px solid rgba(255,130,180,.2);
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text-dim); font-family: 'Quicksand', sans-serif; font-weight: 600;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 720px;
+    margin: 0 auto 64px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 999px;
+    background: rgba(255,45,107,.1); border: 1px solid rgba(255,130,180,.25);
+    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--candy);
+  }
+  .hero-badge .pip { width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite; }
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  .hero-title {
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(28px, 6vw, 52px); line-height: 1.2;
+    background: linear-gradient(120deg, var(--cream) 10%, var(--blush) 45%, var(--fuchsia) 80%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    letter-spacing: -.02em;
+  }
+  .hero-sub {
+    font-size: clamp(13px, 2.5vw, 16px);
+    color: var(--text-dim); line-height: 1.7;
+    max-width: 560px;
+    letter-spacing: .02em;
+  }
+  .matilda-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 20px; border-radius: 14px;
+    background: rgba(15,0,8,.7);
+    border: 1.5px solid var(--card-border-bright);
+    box-shadow: var(--soft-glow);
+    font-size: 12px; letter-spacing: .06em; color: var(--blush);
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    margin-top: 4px;
+  }
+  .matilda-pill span { color: var(--fuchsia); font-weight: 900; }
+
+  .divider {
+    width: min(90vw, 600px);
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--card-border-bright) 30%, var(--hot) 50%, var(--card-border-bright) 70%, transparent);
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(255,45,107,.3);
+    margin: 0 auto 48px;
+    position: relative; z-index: 10;
+  }
+
+  /* ── GRID LABEL ── */
+  .section-label {
+    position: relative; z-index: 10;
+    text-align: center;
+    margin-bottom: 32px;
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 13px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .section-label::before, .section-label::after {
+    content: '✦';
+    margin: 0 10px;
+    color: var(--hot); opacity: .6;
+    font-size: 10px;
+  }
+
+  /* ── CARD GRID ── */
+  .grid-wrapper {
+    position: relative; z-index: 10;
+    padding: 0 clamp(16px,4vw,64px);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 18px;
+  }
+
+  /* ── BOT CARD ── */
+  .bot-card {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 12px;
+    padding: 22px 16px 18px;
+    border-radius: 22px;
+    background: rgba(15,0,8,.68);
+    border: 1.5px solid var(--card-border);
+    box-shadow: 0 4px 30px rgba(255,45,107,.12), inset 0 1px 0 rgba(255,160,200,.07);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    text-decoration: none; color: inherit;
+    transition: all .25s cubic-bezier(.34,1.56,.64,1);
+    cursor: pointer;
+    position: relative; overflow: hidden;
+  }
+  .bot-card::before {
+    content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--candy) 40%,var(--hot) 50%,var(--candy) 60%,transparent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .bot-card:hover {
+    border-color: var(--card-border-bright);
+    box-shadow: 0 10px 40px rgba(255,45,107,.35), 0 0 60px rgba(255,30,128,.15), inset 0 1px 0 rgba(255,160,200,.1);
+    transform: translateY(-5px) scale(1.025);
+  }
+  .bot-card:hover::before { opacity: 1; }
+  .bot-card:active { transform: translateY(0) scale(.98); }
+
+  .bot-icon {
+    width: 72px; height: 72px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(255,45,107,.18), rgba(180,0,50,.28));
+    border: 1.5px solid rgba(255,100,160,.4);
+    box-shadow: 0 0 20px rgba(255,45,107,.2), inset 0 1px 0 rgba(255,255,255,.05);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: box-shadow .25s, transform .25s;
+  }
+  .bot-card:hover .bot-icon {
+    box-shadow: 0 0 32px rgba(255,45,107,.4), inset 0 1px 0 rgba(255,255,255,.08);
+    transform: rotate(-3deg) scale(1.06);
+  }
+  .bot-icon svg { width:44px; height:44px; }
+
+  .bot-title {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 11.5px; line-height: 1.4; text-align: center;
+    color: var(--cream); letter-spacing: .01em;
+  }
+  .bot-tag {
+    font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--text-dim); text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 10;
+    margin-top: 72px;
+    padding: 0 20px 40px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .footer-divider {
+    width: min(90vw, 400px); height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-border) 40%, var(--card-border) 60%, transparent);
+    margin-bottom: 20px;
+  }
+  .footer-text {
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,160,200,.2);
+  }
+  .footer-mission {
+    font-size: 12px; color: var(--text-dim); max-width: 420px;
+    line-height: 1.7; letter-spacing: .03em; margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="orb orb-4"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="nav-bar">
+    <div class="brand">
+      <div class="brand-icon">🤖</div>
+      <div>
+        <div class="brand-name">CAREtech ✦</div>
+        <div class="brand-sub">Human Intelligence Research</div>
+      </div>
+    </div>
+    <div class="nav-chips">
+      <div class="nav-chip">v2.4</div>
+      <div class="nav-chip">40 Carebots</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-badge">
+      <div class="pip"></div>
+      Active Research System
+    </div>
+    <h1 class="hero-title">Amplifying Diverse Voices in Technology</h1>
+    <p class="hero-sub">CAREtech raises awareness of the Matilda Effect — the systematic erasure and underattribution of women's contributions in science and technology. Explore our carebots to learn, reflect, and act.</p>
+    <div class="matilda-pill">
+      <span>✦</span>
+      The Matilda Effect: when women's scientific work is credited to men
+      <span>✦</span>
+    </div>
+  </div>
+</header>
+
+<div class="divider"></div>
+<div class="section-label">Select a Carebot to Begin</div>
+
+<!-- ── GRID ── -->
+<div class="grid-wrapper">
+  <div class="grid" id="botGrid"></div>
+</div>
+
+<footer>
+  <div class="footer-divider"></div>
+  <div class="footer-text">✦ carebot research system · v2.4 ✦</div>
+  <div class="footer-mission">CAREtech is dedicated to surfacing erased histories, challenging bias in AI systems, and building a more equitable future for technology.</div>
+</footer>
+
+<script>
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','♡','˚','·','✿','◦','❀','°'];
+  for(let i=0;i<32;i++){
+    const s=document.createElement('span');
+    s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-80+'px';
+    s.style.fontSize=(9+Math.random()*12)+'px';
+    s.style.color=`hsl(${310+Math.random()*50},75%,${65+Math.random()*25}%)`;
+    s.style.animationDuration=(7+Math.random()*14)+'s';
+    s.style.animationDelay=(Math.random()*14)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── Bot Data ── */
+const bots = [
+  {
+    title: "Direct Robot",
+    tag: "AI Interaction",
+    url: "https://sbuckius.github.io/if-carebot-research/direct-robot-1.html",
+    icon: "robot"
+  },
+  {
+    title: "Miss Honeywell",
+    tag: "She Can Compute",
+    url: "https://sbuckius.github.io/if-carebot-research/if-only-she-can-cook-as-well-as-honeywell-can-compute.html",
+    icon: "honeywell"
+  },
+  {
+    title: "Women Inventors",
+    tag: "Patent History",
+    url: "https://sbuckius.github.io/if-carebot-research/women-inventors-bot.html",
+    icon: "lightbulb"
+  },
+  {
+    title: "Career Coach",
+    tag: "Guidance Bot",
+    url: "https://sbuckius.github.io/if-carebot-research/career-coach.html",
+    icon: "coach"
+  },
+  {
+    title: "Weaving Diverse Data",
+    tag: "Data & Inclusion",
+    url: "https://sbuckius.github.io/if-carebot-research/weaving-diverse-data.html",
+    icon: "weave"
+  },
+  {
+    title: "Survey Bot",
+    tag: "Research Survey",
+    url: "https://sbuckius.github.io/if-carebot-research/survey-bot.html",
+    icon: "survey"
+  },
+  {
+    title: "Paid Work",
+    tag: "Labor & Value",
+    url: "https://sbuckius.github.io/if-carebot-research/paid.html",
+    icon: "dollar"
+  },
+  {
+    title: "Work & Automation",
+    tag: "Future of Labor",
+    url: "https://sbuckius.github.io/if-carebot-research/work-automation-human.html",
+    icon: "automation"
+  },
+  {
+    title: "CEO Bot",
+    tag: "Leadership Bias",
+    url: "https://sbuckius.github.io/if-carebot-research/ceo.html",
+    icon: "ceo"
+  },
+  {
+    title: "Gender Bias Images",
+    tag: "Visual AI Bias",
+    url: "https://sbuckius.github.io/if-carebot-research/gender-bias-images.html",
+    icon: "eye"
+  },
+  {
+    title: "Replace Machine Work",
+    tag: "Automation Ethics",
+    url: "https://sbuckius.github.io/if-carebot-research/replacemachinework.html",
+    icon: "gear"
+  },
+  {
+    title: "Machines",
+    tag: "Technology History",
+    url: "https://sbuckius.github.io/if-carebot-research/machines.html",
+    icon: "chip"
+  },
+  {
+    title: "Objectified",
+    tag: "Critical Theory",
+    url: "https://sbuckius.github.io/if-carebot-research/objectified.html",
+    icon: "mirror"
+  },
+  {
+    title: "Human Computers",
+    tag: "Computing History",
+    url: "https://sbuckius.github.io/if-carebot-research/humancomputers.html",
+    icon: "humancomp"
+  },
+  {
+    title: "Biased Image Game",
+    tag: "Interactive",
+    url: "https://sbuckius.github.io/if-carebot-research/game-1-biased-image.html",
+    icon: "game"
+  },
+  {
+    title: "Harlow Shapley",
+    tag: "Astronomy History",
+    url: "https://sbuckius.github.io/if-carebot-research/harlow-shapley.html",
+    icon: "star"
+  },
+  {
+    title: "Katherine Johnson",
+    tag: "NASA Legacy",
+    url: "https://sbuckius.github.io/if-carebot-research/katharine-johnson-nasa-work.html",
+    icon: "nasa"
+  },
+  {
+    title: "Woman as Inventor",
+    tag: "Innovation History",
+    url: "https://sbuckius.github.io/if-carebot-research/woman-as-inventor-work.html",
+    icon: "wrench"
+  },
+  {
+    title: "Verify",
+    tag: "Fact Check",
+    url: "https://sbuckius.github.io/if-carebot-research/verify-1.html",
+    icon: "verify"
+  },
+  {
+    title: "QR Portal",
+    tag: "Access Hub",
+    url: "https://sbuckius.github.io/if-carebot-research/qr.html",
+    icon: "qr"
+  },
+  {
+    title: "Begin Work 2",
+    tag: "Task Launcher",
+    url: "https://sbuckius.github.io/if-carebot-research/begin-work-2.html",
+    icon: "launch"
+  },
+  {
+    title: "Miss Honeywell Bot",
+    tag: "Vintage Computing",
+    url: "https://sbuckius.github.io/if-carebot-research/misshoneywell-carebot.html",
+    icon: "vintage"
+  },
+  {
+    title: "Kilogirl Carebot",
+    tag: "Labor Units",
+    url: "https://sbuckius.github.io/if-carebot-research/kilogirl-carebot.html",
+    icon: "kilogirl"
+  },
+  {
+    title: "Mother of All Demos",
+    tag: "Tech Pioneers",
+    url: "https://sbuckius.github.io/if-carebot-research/motherofalldemos-carebot.html",
+    icon: "demo"
+  },
+  {
+    title: "Patent Gender Bias",
+    tag: "IP & Gender",
+    url: "https://sbuckius.github.io/if-carebot-research/patent-gender-bias-words.html",
+    icon: "patent"
+  },
+  {
+    title: "Direct Robot II",
+    tag: "AI Dialogue",
+    url: "https://sbuckius.github.io/if-carebot-research/direct-robot-1.html",
+    icon: "robot2"
+  },
+  {
+    title: "Survey Bot II",
+    tag: "Extended Research",
+    url: "https://sbuckius.github.io/if-carebot-research/survey-bot.html",
+    icon: "survey2"
+  },
+  {
+    title: "Work Automation II",
+    tag: "Post-Work Futures",
+    url: "https://sbuckius.github.io/if-carebot-research/work-automation-human.html",
+    icon: "future"
+  },
+  {
+    title: "Ada Lovelace",
+    tag: "First Programmer",
+    url: "https://sbuckius.github.io/if-carebot-research/women-inventors-bot.html",
+    icon: "ada"
+  },
+  {
+    title: "Invisible Labor",
+    tag: "Care Work",
+    url: "https://sbuckius.github.io/if-carebot-research/paid.html",
+    icon: "invisible"
+  },
+  {
+    title: "Bias in Algorithms",
+    tag: "Algorithmic Fairness",
+    url: "https://sbuckius.github.io/if-carebot-research/gender-bias-images.html",
+    icon: "algo"
+  },
+  {
+    title: "The Glass Ceiling",
+    tag: "Workplace Equity",
+    url: "https://sbuckius.github.io/if-carebot-research/ceo.html",
+    icon: "ceiling"
+  },
+  {
+    title: "Code & Gender",
+    tag: "Programming History",
+    url: "https://sbuckius.github.io/if-carebot-research/humancomputers.html",
+    icon: "code"
+  },
+  {
+    title: "Matilda Effect",
+    tag: "Attribution Bias",
+    url: "https://sbuckius.github.io/if-carebot-research/verify-1.html",
+    icon: "matilda"
+  },
+  {
+    title: "Data Feminism",
+    tag: "Critical Data Studies",
+    url: "https://sbuckius.github.io/if-carebot-research/weaving-diverse-data.html",
+    icon: "datafem"
+  },
+  {
+    title: "Rosie the Robot",
+    tag: "Domestic Tech",
+    url: "https://sbuckius.github.io/if-carebot-research/machines.html",
+    icon: "rosie"
+  },
+  {
+    title: "Tech Gatekeeping",
+    tag: "Access & Power",
+    url: "https://sbuckius.github.io/if-carebot-research/objectified.html",
+    icon: "gate"
+  },
+  {
+    title: "ENIAC Women",
+    tag: "Computing Pioneers",
+    url: "https://sbuckius.github.io/if-carebot-research/humancomputers.html",
+    icon: "eniac"
+  },
+  {
+    title: "Futures of Care",
+    tag: "Speculative Design",
+    url: "https://sbuckius.github.io/if-carebot-research/career-coach.html",
+    icon: "care"
+  },
+  {
+    title: "Voice & Visibility",
+    tag: "Representation",
+    url: "https://sbuckius.github.io/if-carebot-research/game-1-biased-image.html",
+    icon: "voice"
+  },
+  {
+    title: "Invention Maker",
+    tag: "Creative Tools",
+    url: "https://sbuckius.github.io/if-carebot-research/invention-maker.html",
+    icon: "inventionmaker"
+  },
+  {
+    title: "Handbook of Math Functions",
+    tag: "Scientific Legacy",
+    url: "https://sbuckius.github.io/if-carebot-research/handbook-of-mathematical-functions.html",
+    icon: "mathbook"
+  },
+  {
+    title: "IBM 29 Card Punch",
+    tag: "Computing Artifacts",
+    url: "https://sbuckius.github.io/if-carebot-research/ibm29cardpunch-carebot.html",
+    icon: "cardpunch"
+  },
+  {
+    title: "Katherine Johnson Bot",
+    tag: "Hidden Figures",
+    url: "https://sbuckius.github.io/if-carebot-research/kjohnson-carebot.html",
+    icon: "kjohnson"
+  }
+];
+
+/* ── SVG Icons ── */
+const icons = {
+  robot: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="14" width="24" height="20" rx="5" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="16" y="20" width="5" height="5" rx="1.5" fill="#ff2d6b"/>
+    <rect x="23" y="20" width="5" height="5" rx="1.5" fill="#ff2d6b"/>
+    <path d="M17 30h10" stroke="#ffb3cf" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="19" y="8" width="6" height="6" rx="2" fill="rgba(255,45,107,.3)" stroke="#ff85b3" stroke-width="1.3"/>
+    <line x1="22" y1="14" x2="22" y2="10" stroke="#ff85b3" stroke-width="1.3"/>
+    <rect x="6" y="19" width="4" height="8" rx="2" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.2"/>
+    <rect x="34" y="19" width="4" height="8" rx="2" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.2"/>
+    <circle cx="22" cy="8" r="1.5" fill="#ff2d6b"/>
+  </svg>`,
+
+  honeywell: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="10" width="28" height="24" rx="4" fill="rgba(255,45,107,.15)" stroke="#c4005a" stroke-width="1.5"/>
+    <rect x="12" y="14" width="8" height="6" rx="1.5" fill="rgba(255,45,107,.3)" stroke="#ff85b3" stroke-width="1"/>
+    <rect x="24" y="14" width="8" height="6" rx="1.5" fill="rgba(255,45,107,.3)" stroke="#ff85b3" stroke-width="1"/>
+    <path d="M12 24h20" stroke="#ff5c8a" stroke-width="1.2" stroke-dasharray="2 2"/>
+    <path d="M12 28h14" stroke="#ff85b3" stroke-width="1.2" stroke-dasharray="2 2"/>
+    <circle cx="30" cy="28" r="2.5" fill="#ff2d6b" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M18 6l4 4 4-4" stroke="#ff85b3" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  lightbulb: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 6C16.477 6 12 10.477 12 16c0 3.5 1.75 6.6 4.4 8.4V28h11v-3.6C30.25 22.6 32 19.5 32 16c0-5.523-4.477-10-10-10z" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="16.5" y="28" width="11" height="3" rx="1.5" fill="rgba(255,45,107,.35)" stroke="#ff5c8a" stroke-width="1"/>
+    <rect x="18" y="31" width="8" height="3" rx="1.5" fill="rgba(255,45,107,.35)" stroke="#ff5c8a" stroke-width="1"/>
+    <line x1="22" y1="10" x2="22" y2="16" stroke="#ffb3cf" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="19" y1="13" x2="25" y2="13" stroke="#ffb3cf" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="22" cy="16" r="2" fill="#ff2d6b"/>
+  </svg>`,
+
+  coach: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="14" r="7" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M10 36c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M28 20l4-2 2 4" stroke="#ffb3cf" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="34" cy="22" r="5" fill="rgba(255,45,107,.2)" stroke="#ff2d6b" stroke-width="1.2"/>
+    <path d="M32 22l1.5 1.5L36 20" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  weave: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 16 Q16 10 24 16 Q32 22 40 16" stroke="#ff85b3" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <path d="M8 22 Q16 16 24 22 Q32 28 40 22" stroke="#ff2d6b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <path d="M8 28 Q16 22 24 28 Q32 34 40 28" stroke="#ffb3cf" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <circle cx="8" cy="16" r="2.5" fill="#ff2d6b"/><circle cx="24" cy="16" r="2.5" fill="#ff85b3"/><circle cx="40" cy="16" r="2.5" fill="#ff2d6b"/>
+    <circle cx="8" cy="22" r="2.5" fill="#ffb3cf"/><circle cx="24" cy="22" r="2.5" fill="#ff2d6b"/><circle cx="40" cy="22" r="2.5" fill="#ffb3cf"/>
+    <circle cx="8" cy="28" r="2.5" fill="#ff85b3"/><circle cx="24" cy="28" r="2.5" fill="#ffb3cf"/><circle cx="40" cy="28" r="2.5" fill="#ff85b3"/>
+  </svg>`,
+
+  survey: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="8" width="24" height="30" rx="4" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="14" y="14" width="16" height="2.5" rx="1.25" fill="#ff5c8a"/>
+    <rect x="14" y="20" width="12" height="2.5" rx="1.25" fill="rgba(255,180,207,.5)"/>
+    <rect x="14" y="26" width="14" height="2.5" rx="1.25" fill="rgba(255,180,207,.5)"/>
+    <circle cx="28" cy="32" r="5" fill="#ff2d6b" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M25.5 32l1.5 1.5L31 30" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  dollar: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="22" r="16" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M22 10v24M17 14.5c0-1.5 2.5-3 5-3s5 1.5 5 4-2.5 3.5-5 3.5-5 2-5 4.5 2.5 4.5 5 4.5 5-1.5 5-3" stroke="#ff2d6b" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="32" cy="13" r="4" fill="rgba(255,45,107,.3)" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M30.5 13h3M32 11.5v3" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  automation: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="22" r="8" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.5"/>
+    <circle cx="22" cy="22" r="3" fill="#ff2d6b"/>
+    <path d="M22 8v6M22 30v6M8 22h6M30 22h6" stroke="#ff85b3" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M12.1 12.1l4.2 4.2M27.7 27.7l4.2 4.2M31.9 12.1l-4.2 4.2M16.3 27.7l-4.2 4.2" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="22" cy="8" r="2" fill="#ff2d6b"/><circle cx="22" cy="36" r="2" fill="#ff2d6b"/>
+    <circle cx="8" cy="22" r="2" fill="#ff5c8a"/><circle cx="36" cy="22" r="2" fill="#ff5c8a"/>
+  </svg>`,
+
+  ceo: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="12" y="28" width="20" height="10" rx="3" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.3"/>
+    <circle cx="22" cy="20" r="7" fill="rgba(255,45,107,.25)" stroke="#ff5c8a" stroke-width="1.5"/>
+    <path d="M16 14l6-6 6 6" stroke="#ffb3cf" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <circle cx="22" cy="8" r="2" fill="#ff2d6b"/>
+    <path d="M16 32h12" stroke="#ff85b3" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M16 35h8" stroke="rgba(255,180,207,.4)" stroke-width="1.2" stroke-linecap="round"/>
+    <rect x="19" y="22" width="6" height="6" rx="1" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1"/>
+  </svg>`,
+
+  eye: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 22c0 0 6-12 16-12s16 12 16 12-6 12-16 12S6 22 6 22z" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.5"/>
+    <circle cx="22" cy="22" r="5" fill="rgba(255,45,107,.3)" stroke="#ff2d6b" stroke-width="1.5"/>
+    <circle cx="22" cy="22" r="2.5" fill="#ff2d6b"/>
+    <circle cx="24" cy="20" r="1" fill="white" opacity=".6"/>
+    <path d="M30 12l4-4M30 32l4 4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="35" cy="8" r="3" fill="rgba(255,45,107,.2)" stroke="#ff5c8a" stroke-width="1"/>
+    <path d="M34 8h2M35 7v2" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  gear: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 14a8 8 0 100 16 8 8 0 000-16z" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.5"/>
+    <circle cx="22" cy="22" r="3" fill="#ff2d6b"/>
+    <path d="M22 8v4M22 32v4M8 22h4M32 22h4M12.7 12.7l2.8 2.8M28.5 28.5l2.8 2.8M31.3 12.7l-2.8 2.8M15.5 28.5l-2.8 2.8" stroke="#ffb3cf" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="32" cy="32" r="5" fill="rgba(255,45,107,.25)" stroke="#ff5c8a" stroke-width="1.2"/>
+    <path d="M30 32h4M32 30v4" stroke="#ff85b3" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>`,
+
+  chip: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="12" y="12" width="20" height="20" rx="4" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="16" y="16" width="12" height="12" rx="2" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1"/>
+    <path d="M17 8v4M22 8v4M27 8v4M17 32v4M22 32v4M27 32v4M8 17h4M8 22h4M8 27h4M32 17h4M32 22h4M32 27h4" stroke="#ffb3cf" stroke-width="1.3" stroke-linecap="round"/>
+    <circle cx="19" cy="19" r="1.5" fill="#ff2d6b"/><circle cx="25" cy="19" r="1.5" fill="#ff2d6b"/>
+    <circle cx="19" cy="25" r="1.5" fill="#ff2d6b"/><circle cx="25" cy="25" r="1.5" fill="#ff2d6b"/>
+  </svg>`,
+
+  mirror: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="22" cy="18" rx="11" ry="14" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <ellipse cx="22" cy="18" rx="7" ry="10" fill="rgba(255,45,107,.12)" stroke="rgba(255,133,179,.4)" stroke-width="1"/>
+    <path d="M18 32h8M22 32v6" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M16 14c0-3.3 2.7-6 6-6" stroke="#ffb3cf" stroke-width="1.3" stroke-linecap="round"/>
+    <circle cx="31" cy="10" r="4" fill="rgba(255,45,107,.25)" stroke="#ff2d6b" stroke-width="1"/>
+    <path d="M29.5 10h3M31 8.5v3" stroke="#ff85b3" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  humancomp: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="14" r="5" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.3"/>
+    <circle cx="30" cy="14" r="5" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.3"/>
+    <path d="M9 28c0-5 3.1-7 7-7M23 28c0-5 3.1-7 7-7" stroke="#ff5c8a" stroke-width="1.3" stroke-linecap="round"/>
+    <rect x="14" y="28" width="16" height="10" rx="3" fill="rgba(255,45,107,.2)" stroke="#ffb3cf" stroke-width="1.2"/>
+    <path d="M18 32h8M18 35h5" stroke="#ff85b3" stroke-width="1" stroke-linecap="round"/>
+    <path d="M22 21v7" stroke="#ff2d6b" stroke-width="1.3" stroke-linecap="round"/>
+  </svg>`,
+
+  game: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="14" width="28" height="18" rx="6" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M16 20v6M13 23h6" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="30" cy="21" r="1.5" fill="#ff2d6b"/><circle cx="33" cy="24" r="1.5" fill="#ff2d6b"/><circle cx="27" cy="24" r="1.5" fill="#ffb3cf"/><circle cx="30" cy="27" r="1.5" fill="#ffb3cf"/>
+    <path d="M18 10l-2 4h12l-2-4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="22" cy="10" r="2" fill="#ff2d6b"/>
+  </svg>`,
+
+  star: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 8l3.5 8 8.5 1-6.5 6 2 9-7.5-4-7.5 4 2-9-6.5-6 8.5-1z" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="22" cy="22" r="4" fill="#ff2d6b" opacity=".6"/>
+    <circle cx="10" cy="8" r="2" fill="#ffb3cf" opacity=".6"/>
+    <circle cx="34" cy="10" r="1.5" fill="#ff85b3" opacity=".7"/>
+    <circle cx="8" cy="30" r="1.5" fill="#ffb3cf" opacity=".5"/>
+    <circle cx="36" cy="32" r="2" fill="#ff5c8a" opacity=".6"/>
+  </svg>`,
+
+  nasa: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="22" cy="22" rx="14" ry="14" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <ellipse cx="22" cy="22" rx="14" ry="5" fill="rgba(255,45,107,.1)" stroke="#ff5c8a" stroke-width="1" stroke-dasharray="3 2"/>
+    <path d="M22 8c0 0-4 7-4 14s4 14 4 14" stroke="#ffb3cf" stroke-width="1" stroke-dasharray="2 2"/>
+    <circle cx="22" cy="22" r="4" fill="rgba(255,45,107,.4)" stroke="#ff2d6b" stroke-width="1.5"/>
+    <circle cx="22" cy="22" r="1.5" fill="#ff2d6b"/>
+    <path d="M10 16l-4-4M34 16l4-4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="6" cy="12" r="2.5" fill="rgba(255,45,107,.3)" stroke="#ff85b3" stroke-width="1"/>
+    <circle cx="38" cy="12" r="2.5" fill="rgba(255,45,107,.3)" stroke="#ff85b3" stroke-width="1"/>
+  </svg>`,
+
+  wrench: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M30 10c-3.3 0-6 2.7-6 6 0 .7.1 1.4.4 2L12 30c-1.1 1.1-1.1 2.9 0 4s2.9 1.1 4 0l12.4-12.4c.6.3 1.3.4 2 .4 3.3 0 6-2.7 6-6 0-1-.2-1.9-.7-2.7L32 16l-2 2-2-2 2-2-1.3-1.3c-.8-.5-1.7-.7-2.7-.7h2z" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.2" stroke-linejoin="round"/>
+    <circle cx="14" cy="32" r="2" fill="#ff2d6b"/>
+    <circle cx="30" cy="12" r="3" fill="rgba(255,45,107,.4)" stroke="#ffb3cf" stroke-width="1"/>
+  </svg>`,
+
+  verify: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 8l12 5v9c0 7-5 13-12 15C15 35 10 29 10 22V13l12-5z" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M16 22l4 4 8-8" stroke="#ff2d6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  qr: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="8" width="12" height="12" rx="2" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.3"/>
+    <rect x="10" y="10" width="8" height="8" rx="1" fill="rgba(255,45,107,.3)"/>
+    <rect x="24" y="8" width="12" height="12" rx="2" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.3"/>
+    <rect x="26" y="10" width="8" height="8" rx="1" fill="rgba(255,45,107,.3)"/>
+    <rect x="8" y="24" width="12" height="12" rx="2" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1.3"/>
+    <rect x="10" y="26" width="8" height="8" rx="1" fill="rgba(255,45,107,.3)"/>
+    <rect x="24" y="24" width="4" height="4" rx="1" fill="#ff2d6b"/>
+    <rect x="32" y="24" width="4" height="4" rx="1" fill="#ff85b3"/>
+    <rect x="24" y="32" width="4" height="4" rx="1" fill="#ff85b3"/>
+    <rect x="32" y="32" width="4" height="4" rx="1" fill="#ff2d6b"/>
+    <circle cx="13" cy="13" r="2" fill="#ff2d6b"/><circle cx="29" cy="13" r="2" fill="#ff2d6b"/><circle cx="13" cy="29" r="2" fill="#ff2d6b"/>
+  </svg>`,
+
+  launch: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 36V28M22 28l-4 4M22 28l4 4" stroke="#ff85b3" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M14 30c-3-1.5-6-5-6-10C8 12 14.5 7 22 7s14 5 14 13c0 5-3 8.5-6 10" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="22" cy="20" r="5" fill="rgba(255,45,107,.35)" stroke="#ff2d6b" stroke-width="1.5"/>
+    <circle cx="22" cy="20" r="2" fill="#ff2d6b"/>
+    <path d="M22 10v4M22 26v4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+  </svg>`,
+
+  vintage: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="12" width="28" height="22" rx="3" fill="rgba(255,45,107,.15)" stroke="#c4005a" stroke-width="1.5"/>
+    <rect x="12" y="16" width="10" height="8" rx="1.5" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1"/>
+    <circle cx="30" cy="20" r="4" fill="rgba(255,45,107,.2)" stroke="#ff5c8a" stroke-width="1"/>
+    <circle cx="30" cy="20" r="1.5" fill="#ff2d6b"/>
+    <path d="M12 28h20" stroke="#ff5c8a" stroke-width="1" stroke-dasharray="2 2"/>
+    <rect x="16" y="34" width="12" height="3" rx="1" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1"/>
+    <path d="M12 8l4 4h12l4-4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  kilogirl: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="14" r="6" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M14 36V28c0-4.4 3.6-8 8-8s8 3.6 8 8v8" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="10" y="22" width="6" height="3" rx="1.5" fill="rgba(255,45,107,.3)" stroke="#ffb3cf" stroke-width="1"/>
+    <rect x="28" y="22" width="6" height="3" rx="1.5" fill="rgba(255,45,107,.3)" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M18 36h8" stroke="#ff85b3" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="34" cy="10" r="5" fill="rgba(255,45,107,.15)" stroke="#ff2d6b" stroke-width="1.2"/>
+    <path d="M32 10h4M34 8v4" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  demo: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="10" width="28" height="20" rx="4" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="12" y="14" width="20" height="12" rx="2" fill="rgba(255,45,107,.1)" stroke="rgba(255,133,179,.3)" stroke-width="1"/>
+    <path d="M18 18l6 3-6 3V18z" fill="#ff2d6b" stroke="#ffb3cf" stroke-width=".8"/>
+    <path d="M18 30H26M22 30v4" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="34" cy="12" r="4" fill="rgba(255,45,107,.3)" stroke="#ff2d6b" stroke-width="1"/>
+    <path d="M32.5 12h3M34 10.5v3" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  patent: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="8" width="24" height="30" rx="4" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M22 6v4" stroke="#ffb3cf" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M22 14c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5z" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1.2"/>
+    <path d="M19 26h6M16 29h12M16 32h8" stroke="#ff85b3" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="22" cy="19" r="2" fill="#ff2d6b"/>
+    <path d="M30 10l3-3M30 7l3 3" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>`,
+
+  robot2: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="14" width="24" height="20" rx="5" fill="rgba(255,45,107,.2)" stroke="#ff5c8a" stroke-width="1.5"/>
+    <circle cx="17" cy="22" r="2.5" fill="#ff2d6b" stroke="#ffb3cf" stroke-width="1"/>
+    <circle cx="27" cy="22" r="2.5" fill="#ff2d6b" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M17 28c0 0 2.5 2 5 2s5-2 5-2" stroke="#ff85b3" stroke-width="1.3" stroke-linecap="round"/>
+    <rect x="19" y="8" width="6" height="6" rx="2" fill="rgba(255,45,107,.25)" stroke="#ffb3cf" stroke-width="1.3"/>
+    <line x1="22" y1="14" x2="22" y2="10" stroke="#ff85b3" stroke-width="1.3"/>
+    <rect x="6" y="19" width="4" height="8" rx="2" fill="rgba(255,45,107,.15)" stroke="#ff5c8a" stroke-width="1.2"/>
+    <rect x="34" y="19" width="4" height="8" rx="2" fill="rgba(255,45,107,.15)" stroke="#ff5c8a" stroke-width="1.2"/>
+    <path d="M20 11h4" stroke="#ff2d6b" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  survey2: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="8" width="24" height="30" rx="4" fill="rgba(255,45,107,.12)" stroke="#ff85b3" stroke-width="1.5"/>
+    <circle cx="15" cy="16" r="1.5" fill="#ff2d6b"/><rect x="18" y="14.5" width="12" height="2.5" rx="1.25" fill="rgba(255,133,179,.5)"/>
+    <circle cx="15" cy="22" r="1.5" fill="#ff85b3"/><rect x="18" y="20.5" width="10" height="2.5" rx="1.25" fill="rgba(255,133,179,.4)"/>
+    <circle cx="15" cy="28" r="1.5" fill="#ffb3cf"/><rect x="18" y="26.5" width="14" height="2.5" rx="1.25" fill="rgba(255,133,179,.3)"/>
+    <rect x="10" y="33" width="24" height="5" rx="2" fill="rgba(255,45,107,.25)" stroke="#ff5c8a" stroke-width="1"/>
+    <path d="M18 35.5h8" stroke="#ff85b3" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>`,
+
+  future: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="22" r="14" fill="rgba(255,45,107,.1)" stroke="#ff85b3" stroke-width="1.3" stroke-dasharray="4 3"/>
+    <path d="M22 12v4M22 28v4M12 22h4M28 22h4" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="22" cy="22" r="5" fill="rgba(255,45,107,.3)" stroke="#ff2d6b" stroke-width="1.5"/>
+    <path d="M20 22l1.5 1.5 3-3" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="22" cy="12" r="1.5" fill="#ff2d6b"/><circle cx="22" cy="32" r="1.5" fill="#ff2d6b"/>
+    <circle cx="12" cy="22" r="1.5" fill="#ff85b3"/><circle cx="32" cy="22" r="1.5" fill="#ff85b3"/>
+  </svg>`,
+
+  ada: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="13" r="7" fill="rgba(255,45,107,.22)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M22 20v6M18 36V26M26 36V26" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M18 26l-6 10M26 26l6 10" stroke="#ff85b3" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M10 26h24" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="34" cy="10" r="4" fill="rgba(255,45,107,.2)" stroke="#ff2d6b" stroke-width="1"/>
+    <path d="M32 10h4M34 8v4" stroke="#ff85b3" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  invisible: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 22c4-8 12-12 14-12s10 4 14 12c-4 8-12 12-14 12S12 30 8 22z" stroke="#ff85b3" stroke-width="1.5" fill="rgba(255,45,107,.1)" stroke-dasharray="4 3"/>
+    <circle cx="22" cy="22" r="5" fill="rgba(255,45,107,.3)" stroke="#ff2d6b" stroke-width="1.5"/>
+    <path d="M8 8l28 28" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="14" cy="14" r="2" fill="#ffb3cf" opacity=".6"/>
+    <circle cx="30" cy="30" r="2" fill="#ffb3cf" opacity=".6"/>
+  </svg>`,
+
+  algo: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="8" width="28" height="28" rx="4" fill="rgba(255,45,107,.1)" stroke="#ff85b3" stroke-width="1.3"/>
+    <path d="M14 18h16M14 22h12M14 26h8" stroke="rgba(255,133,179,.5)" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M14 18l4-4M18 14v8" stroke="#ff2d6b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="30" cy="18" r="5" fill="rgba(255,45,107,.3)" stroke="#ff2d6b" stroke-width="1.5"/>
+    <path d="M28 18h4M30 16v4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M14 30l4 4 8-8" stroke="#ff5c8a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  ceiling: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="10" width="32" height="4" rx="2" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1.3"/>
+    <path d="M16 14v8M22 14v12M28 14v8" stroke="rgba(255,133,179,.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 2"/>
+    <circle cx="22" cy="30" r="6" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M20 30l1.5 1.5L25 28" stroke="#ff2d6b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16 22l-2-3M28 22l2-3" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>`,
+
+  code: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="10" width="28" height="26" rx="4" fill="rgba(255,45,107,.12)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M16 20l-4 3 4 3" stroke="#ff2d6b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 20l4 3-4 3" stroke="#ff2d6b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 17l-4 12" stroke="#ffb3cf" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="10" y="12" width="24" height="3" rx="1.5" fill="rgba(255,45,107,.2)"/>
+    <circle cx="13" cy="13.5" r="1" fill="#ff2d6b"/><circle cx="16" cy="13.5" r="1" fill="#ffb3cf"/><circle cx="19" cy="13.5" r="1" fill="#ff85b3"/>
+  </svg>`,
+
+  matilda: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="14" r="7" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M14 38V30a8 8 0 0116 0v8" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M30 18l6-6M36 18l-6-6" stroke="#ff2d6b" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="36" cy="12" r="4" fill="rgba(255,45,107,.2)" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M34 12h4M36 10v4" stroke="#ff85b3" stroke-width="1" stroke-linecap="round"/>
+    <rect x="16" y="30" width="12" height="3" rx="1.5" fill="rgba(255,45,107,.2)" stroke="#ff85b3" stroke-width="1"/>
+  </svg>`,
+
+  datafem: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="28" width="6" height="10" rx="1.5" fill="#ff2d6b" opacity=".8"/>
+    <rect x="17" y="20" width="6" height="18" rx="1.5" fill="#ff85b3" opacity=".7"/>
+    <rect x="26" y="14" width="6" height="24" rx="1.5" fill="#ffb3cf" opacity=".7"/>
+    <path d="M11 28L20 20 29 14" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="11" cy="28" r="2" fill="#ff2d6b"/><circle cx="20" cy="20" r="2" fill="#ff85b3"/><circle cx="29" cy="14" r="2" fill="#ffb3cf"/>
+    <path d="M6 10h32" stroke="rgba(255,133,179,.2)" stroke-width="1"/>
+    <path d="M6 36h32" stroke="rgba(255,133,179,.2)" stroke-width="1"/>
+    <path d="M6 8v30" stroke="rgba(255,133,179,.2)" stroke-width="1"/>
+  </svg>`,
+
+  rosie: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="22" cy="22" rx="12" ry="14" fill="rgba(255,45,107,.18)" stroke="#ff85b3" stroke-width="1.5"/>
+    <circle cx="22" cy="16" r="5" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1.3"/>
+    <circle cx="20" cy="15" r="1" fill="#ff2d6b"/><circle cx="24" cy="15" r="1" fill="#ff2d6b"/>
+    <path d="M20 18c0 0 1 1 2 1s2-1 2-1" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round"/>
+    <path d="M10 22l4 0M30 22l4 0" stroke="#ff85b3" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M14 22c0 0-4 2-4 5" stroke="#ff85b3" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M30 22c0 0 4 2 4 5" stroke="#ff85b3" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M16 32c2 2 4 2.5 6 2.5s4-.5 6-2.5" stroke="#ff5c8a" stroke-width="1.3" stroke-linecap="round"/>
+  </svg>`,
+
+  gate: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="12" width="12" height="22" rx="2" fill="rgba(255,45,107,.18)" stroke="#ff85b3" stroke-width="1.3"/>
+    <rect x="24" y="12" width="12" height="22" rx="2" fill="rgba(255,45,107,.18)" stroke="#ff85b3" stroke-width="1.3"/>
+    <path d="M6 12h32" stroke="#ff5c8a" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M6 34h32" stroke="#ff5c8a" stroke-width="1.3" stroke-linecap="round"/>
+    <circle cx="22" cy="23" r="5" fill="rgba(255,45,107,.3)" stroke="#ff2d6b" stroke-width="1.5"/>
+    <circle cx="22" cy="23" r="2" fill="#ff2d6b"/>
+    <path d="M20 10l2-4 2 4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  eniac: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="12" width="32" height="22" rx="3" fill="rgba(255,45,107,.12)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="10" y="16" width="6" height="6" rx="1" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1"/>
+    <rect x="19" y="16" width="6" height="6" rx="1" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1"/>
+    <rect x="28" y="16" width="6" height="6" rx="1" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1"/>
+    <path d="M10 26h24" stroke="#ffb3cf" stroke-width="1" stroke-dasharray="2 2"/>
+    <path d="M10 29h18" stroke="rgba(255,133,179,.4)" stroke-width="1" stroke-dasharray="2 2"/>
+    <circle cx="13" cy="19" r="1.5" fill="#ff2d6b"/><circle cx="22" cy="19" r="1.5" fill="#ff2d6b"/><circle cx="31" cy="19" r="1.5" fill="#ff2d6b"/>
+    <path d="M20 8l2 4 2-4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  care: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 36S8 28 8 18a8 8 0 0114-5.3A8 8 0 0136 18c0 10-14 18-14 18z" fill="rgba(255,45,107,.3)" stroke="#ff85b3" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="22" cy="20" r="4" fill="#ff2d6b" opacity=".6"/>
+    <path d="M17 14c0 0 1.5-4 5-4" stroke="#ffb3cf" stroke-width="1.3" stroke-linecap="round"/>
+    <circle cx="32" cy="10" r="4" fill="rgba(255,45,107,.2)" stroke="#ff5c8a" stroke-width="1"/>
+    <path d="M30 10h4M32 8v4" stroke="#ff85b3" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  voice: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 8c-3.3 0-6 2.7-6 6v8c0 3.3 2.7 6 6 6s6-2.7 6-6V14c0-3.3-2.7-6-6-6z" fill="rgba(255,45,107,.25)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M14 22c0 4.4 3.6 8 8 8s8-3.6 8-8" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <path d="M22 30v6M18 36h8" stroke="#ffb3cf" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M8 20l3 0M33 20l3 0" stroke="#ff85b3" stroke-width="1.3" stroke-linecap="round" opacity=".5"/>
+    <path d="M10 16l2 0M32 16l2 0" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" opacity=".4"/>
+    <circle cx="22" cy="18" r="2" fill="#ff2d6b" opacity=".7"/>
+  </svg>`,
+
+  inventionmaker: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 6C16.477 6 12 10.477 12 16c0 3.5 1.75 6.6 4.4 8.4V28h11v-3.6C30.25 22.6 32 19.5 32 16c0-5.523-4.477-10-10-10z" fill="rgba(255,45,107,.22)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="16.5" y="28" width="11" height="3" rx="1.5" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1"/>
+    <rect x="18" y="31" width="8" height="3" rx="1.5" fill="rgba(255,45,107,.3)" stroke="#ff5c8a" stroke-width="1"/>
+    <path d="M20 36h4" stroke="#ffb3cf" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M18 18l4-4 4 4" stroke="#ff2d6b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 14v8" stroke="#ff2d6b" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="34" cy="10" r="5" fill="rgba(255,45,107,.2)" stroke="#ff5c8a" stroke-width="1.2"/>
+    <path d="M32 10h4M34 8v4" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="10" cy="10" r="3" fill="rgba(255,45,107,.15)" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M9 10h2M10 9v2" stroke="#ff85b3" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  mathbook: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="8" width="22" height="30" rx="3" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <rect x="30" y="8" width="6" height="30" rx="2" fill="rgba(255,45,107,.25)" stroke="#ff5c8a" stroke-width="1"/>
+    <path d="M12 15h14M12 19h10M12 23h14M12 27h8" stroke="rgba(255,133,179,.5)" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M13 31l2 4M17 31l-2 4" stroke="#ff2d6b" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M20 31l3 0M21.5 29.5v3" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="36" cy="14" r="4" fill="rgba(255,45,107,.3)" stroke="#ff2d6b" stroke-width="1"/>
+    <path d="M34.5 14h3M36 12.5v3" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round"/>
+    <path d="M12 12h14" stroke="#ff85b3" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
+
+  cardpunch: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="12" width="32" height="22" rx="2" fill="rgba(255,45,107,.15)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M6 18h32" stroke="rgba(255,133,179,.3)" stroke-width="1"/>
+    <path d="M6 24h32" stroke="rgba(255,133,179,.3)" stroke-width="1"/>
+    <rect x="10" y="14" width="3" height="3" rx=".5" fill="#ff2d6b"/>
+    <rect x="16" y="14" width="3" height="3" rx=".5" fill="rgba(255,45,107,.4)"/>
+    <rect x="22" y="14" width="3" height="3" rx=".5" fill="#ff2d6b"/>
+    <rect x="28" y="14" width="3" height="3" rx=".5" fill="rgba(255,45,107,.4)"/>
+    <rect x="34" y="14" width="3" height="3" rx=".5" fill="#ff85b3"/>
+    <rect x="10" y="20" width="3" height="3" rx=".5" fill="rgba(255,45,107,.4)"/>
+    <rect x="16" y="20" width="3" height="3" rx=".5" fill="#ff2d6b"/>
+    <rect x="28" y="20" width="3" height="3" rx=".5" fill="#ff2d6b"/>
+    <rect x="34" y="20" width="3" height="3" rx=".5" fill="rgba(255,45,107,.4)"/>
+    <rect x="10" y="26" width="3" height="3" rx=".5" fill="#ff85b3"/>
+    <rect x="22" y="26" width="3" height="3" rx=".5" fill="#ff2d6b"/>
+    <rect x="28" y="26" width="3" height="3" rx=".5" fill="rgba(255,45,107,.4)"/>
+    <path d="M8 34l4-4h20l4 4" stroke="#ffb3cf" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6 10l4-4h24l4 4" stroke="#ff5c8a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+
+  kjohnson: `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="13" r="6" fill="rgba(255,45,107,.28)" stroke="#ff85b3" stroke-width="1.5"/>
+    <path d="M14 36V28c0-4.4 3.6-8 8-8s8 3.6 8 8v8" stroke="#ff5c8a" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="32" cy="16" rx="8" ry="8" fill="rgba(255,45,107,.1)" stroke="#ff85b3" stroke-width="1.2" stroke-dasharray="3 2"/>
+    <ellipse cx="32" cy="16" rx="8" ry="3" fill="none" stroke="#ff5c8a" stroke-width="1" stroke-dasharray="3 2"/>
+    <path d="M32 8v16M24 16h16" stroke="rgba(255,133,179,.3)" stroke-width="1" stroke-dasharray="2 2"/>
+    <circle cx="32" cy="16" r="2.5" fill="#ff2d6b" stroke="#ffb3cf" stroke-width="1"/>
+    <path d="M10 28h24" stroke="#ffb3cf" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 2"/>
+  </svg>`
+};
+
+/* ── Render Grid ── */
+const grid = document.getElementById('botGrid');
+bots.forEach((bot, i) => {
+  const a = document.createElement('a');
+  a.className = 'bot-card';
+  a.href = bot.url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.setAttribute('aria-label', bot.title);
+
+  const svgStr = icons[bot.icon] || icons.robot;
+
+  a.innerHTML = `
+    <div class="bot-icon">${svgStr}</div>
+    <div class="bot-title">${bot.title}</div>
+    <div class="bot-tag">${bot.tag}</div>
+  `;
+
+  // Stagger entrance animation
+  a.style.opacity = '0';
+  a.style.transform = 'translateY(20px)';
+  a.style.transition = `opacity .4s ease ${i * 30}ms, transform .4s ease ${i * 30}ms`;
+
+  grid.appendChild(a);
+});
+
+// Trigger entrance animations
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.bot-card').forEach(card => {
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    });
+  });
+});
+</script>
+</body>
+</html>

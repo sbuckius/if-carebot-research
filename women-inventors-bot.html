@@ -612,7 +612,27 @@ function speakMovement(text){
   if(!('speechSynthesis' in window))return;
   window.speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);u.rate=0.88;u.pitch=1.0;
-  window.speechSynthesis.speak(u);
+
+  const setVoice = () => {
+    const voices = window.speechSynthesis.getVoices();
+    // 1st priority: American English female voice by name
+    const femaleVoice = voices.find(v =>
+      v.lang === 'en-US' &&
+      /female|woman|samantha|victoria|karen|zira|helen|linda|amy|emma|joanna|salli|kimberly|kendra|susan/i.test(v.name)
+    )
+    // 2nd priority: any en-US voice
+    || voices.find(v => v.lang === 'en-US');
+
+    if(femaleVoice) u.voice = femaleVoice;
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  };
+
+  if(window.speechSynthesis.getVoices().length){
+    setVoice();
+  } else {
+    window.speechSynthesis.onvoiceschanged = setVoice;
+  }
 }
 function speakText(btn){
   const c=btn.closest('.cb-mcard');
