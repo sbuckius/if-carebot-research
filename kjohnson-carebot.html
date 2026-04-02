@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ CAREBOT · Katherine Johnson · NASA TN D-233 ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{min-height:100%;font-family:'Quicksand',sans-serif;font-weight:600;color:#fff5f8;background:#0e0008;-webkit-font-smoothing:antialiased;}
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,30,100,.06) 0%,transparent 65%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
+  .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+  .orb-1{width:380px;height:380px;background:#8b0030;opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
+  .orb-2{width:300px;height:300px;background:#c4005a;opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+  .orb-3{width:200px;height:200px;background:#ff2d6b;opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+  .screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(40px + env(safe-area-inset-bottom));gap:14px;}
+
+  /* TOPBAR */
+  .cb-topbar{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-logo{display:flex;align-items:center;gap:10px;}
+  .cb-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,45,107,.18);border:1.5px solid rgba(255,80,150,.5);display:flex;align-items:center;justify-content:center;font-size:18px;animation:wobble 4s ease-in-out infinite;flex-shrink:0;}
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .cb-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-top:1px;}
+  .cb-badges{display:flex;gap:7px;align-items:center;}
+  .cb-badge{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,140,185,.2);color:rgba(255,190,220,.5);letter-spacing:.06em;}
+  .cb-pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff2d6b;margin-right:5px;animation:pip 2s ease-in-out infinite;vertical-align:middle;}
+  @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* CARD BASE */
+  .cb-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;backdrop-filter:blur(18px);box-shadow:0 4px 30px rgba(255,45,107,.2),inset 0 1px 0 rgba(255,140,185,.07);}
+  .cb-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+
+  /* CONTEXT BANNER */
+  .irony-card{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(180,0,40,.92),rgba(100,0,20,.95));border:1.5px solid rgba(255,80,80,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;box-shadow:0 4px 30px rgba(255,0,60,.25);}
+  .irony-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff8080 35%,#ff2020 50%,#ff8080 65%,transparent);box-shadow:0 0 10px #ff8080;border-radius:999px;}
+  .irony-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,160,160,.55);margin-bottom:6px;}
+  .irony-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,3.5vw,17px);color:#ffb3b3;margin-bottom:10px;line-height:1.3;}
+  .irony-text{font-size:12.5px;line-height:1.75;color:rgba(255,210,210,.85);}
+  .irony-text strong{color:#ffcccc;font-weight:700;}
+
+  /* PHOTO GRID */
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .photo-slot{aspect-ratio:4/3;background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.25);border-radius:10px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.65) brightness(.85);}
+  .photo-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;color:rgba(255,190,220,.25);font-size:9px;letter-spacing:.1em;text-align:center;padding:8px;}
+  .photo-fallback span{font-size:18px;margin-bottom:5px;opacity:.3;}
+  .photo-num{position:absolute;bottom:4px;right:7px;font-size:8px;color:rgba(255,140,185,.35);letter-spacing:.08em;}
+
+  /* PDF LINK CARD */
+  .pdf-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .pdf-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .pdf-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+  .pdf-row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  .pdf-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
+  .pdf-info{flex:1;min-width:180px;}
+  .pdf-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#ffb3cf;margin-bottom:3px;line-height:1.3;}
+  .pdf-meta{font-size:11px;color:rgba(255,190,220,.45);line-height:1.5;}
+  .pdf-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.04em;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:8px 16px;border-radius:10px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 3px 12px rgba(255,45,107,.3);transition:all .2s;margin-top:10px;white-space:nowrap;flex-shrink:0;}
+  .pdf-link:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,45,107,.5);}
+
+  /* INPUT */
+  .cb-input-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .cb-input-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .cb-row:last-child{margin-bottom:0;}
+  .cb-input{flex:1;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;color:#fff5f8;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0;}
+  .cb-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
+  .cb-input::placeholder{color:rgba(255,190,220,.35);}
+  .cb-name-in{max-width:150px;flex:0 0 150px;}
+  .cb-btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.05em;color:#fff5f8;display:inline-flex;align-items:center;gap:5px;padding:10px 18px;border-radius:12px;border:1.5px solid rgba(255,80,150,.5);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .cb-btn.primary{background:linear-gradient(135deg,#ff2d6b,#c4005a,#8b0030);box-shadow:0 4px 18px rgba(255,45,107,.3);}
+  .cb-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,45,107,.5);}
+  .cb-btn.soft{background:rgba(255,255,255,.04);color:rgba(255,190,220,.5);border-color:rgba(255,140,185,.15);font-size:11px;}
+  .cb-btn.soft:hover{background:rgba(255,45,107,.12);color:#ffb3cf;}
+  .cb-btn.purple{background:linear-gradient(135deg,#ab47bc,#6a1b9a);border-color:#ab47bc;}
+  .cb-btn:active{transform:scale(.97);}
+
+  /* MESSAGES */
+  .cb-msgs{width:100%;max-width:600px;display:flex;flex-direction:column;gap:14px;}
+  .cb-empty{text-align:center;padding:44px 20px;color:rgba(255,190,220,.35);}
+  .cb-empty h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:7px;}
+  .cb-empty p{font-size:12px;}
+  .cb-pair{animation:slideUp .35s ease-out;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .cb-meta{font-size:11px;color:rgba(255,190,220,.45);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .cb-meta strong{font-weight:700;}
+  .cb-qbubble{display:inline-block;background:linear-gradient(135deg,#ff2d6b,#c4005a);color:#fff;padding:9px 14px;border-radius:16px 16px 16px 3px;font-size:13px;margin-bottom:12px;max-width:88%;line-height:1.5;box-shadow:0 3px 12px rgba(255,45,107,.3);}
+  .cb-pcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.4);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+  .cb-phead{background:linear-gradient(135deg,rgba(240,98,146,.8),rgba(194,24,91,.85));padding:9px 14px;display:flex;align-items:center;gap:7px;}
+  .cb-plabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-pbody{padding:14px;}
+  .cb-ptext{font-size:13px;line-height:1.7;color:rgba(255,215,235,.88);}
+  .cb-psrc{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,100,160,.12);font-size:11px;color:rgba(255,190,220,.45);}
+  .cb-psrc a{color:#ff85b3;text-decoration:none;}
+  .cb-psrc a:hover{text-decoration:underline;}
+  .cb-mcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(171,71,188,.45);border-radius:14px;overflow:hidden;}
+  .cb-mhead{background:linear-gradient(135deg,rgba(171,71,188,.8),rgba(106,27,154,.85));padding:9px 14px;}
+  .cb-mlabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-mbody{padding:14px;}
+  .cb-mtext{font-family:'Courier New',monospace;font-size:12px;line-height:1.85;color:rgba(220,180,255,.85);white-space:pre-wrap;}
+  .cb-spkrow{padding:8px 14px 12px;display:flex;gap:7px;}
+
+  /* BOTTOM */
+  .cb-bottom{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(140,0,45,.8),rgba(70,0,22,.92));border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 50px rgba(255,45,107,.45),0 0 90px rgba(200,0,80,.15);}
+  .cb-bottom::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 12px #ff85b3;border-radius:999px;}
+  .cb-btitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;}
+  .cb-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:12px 24px;border-radius:14px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 4px 18px rgba(255,45,107,.35);transition:all .2s;}
+  .cb-link:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,45,107,.5);}
+
+  /* MODAL */
+  .cb-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;}
+  .cb-modal.open{display:flex;}
+  .cb-mbox{background:rgba(14,0,8,.97);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:26px 22px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(255,45,107,.4);position:relative;}
+  .cb-mbox::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 8px #ff85b3;border-radius:999px;}
+  .cb-mtitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#ffb3cf;margin-bottom:9px;}
+  .cb-mbodytxt{font-size:12px;color:rgba(255,200,220,.65);line-height:1.6;margin-bottom:16px;}
+  .cb-mbtns{display:flex;gap:9px;}
+  .cb-err{font-size:11px;color:#ff2d6b;margin-top:6px;min-height:16px;}
+  .cb-wmark{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.12);padding-bottom:8px;}
+
+  @media(max-width:480px){
+    .photo-grid{grid-template-columns:repeat(2,1fr);}
+    .cb-name-in{max-width:100%;flex:1 1 100%;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- TOPBAR -->
+  <div class="cb-topbar">
+    <div class="cb-logo">
+      <div class="cb-icon">🚀</div>
+      <div>
+        <div class="cb-name">CAREBOT · KATHERINE JOHNSON ✦</div>
+        <div class="cb-sub">NASA TN D-233 · Langley · 1960</div>
+      </div>
+    </div>
+    <div class="cb-badges">
+      <div class="cb-badge" id="onlineCount"><span class="cb-pip"></span>Connecting…</div>
+      <div class="cb-badge" id="sysTime">--:--</div>
+    </div>
+  </div>
+
+  <!-- CONTEXT BANNER -->
+  <div class="irony-card">
+    <div class="irony-eyebrow">✦ Critical Context · Read Before Asking</div>
+    <div class="irony-title">⚠️ She calculated the trajectories that put Americans in space. Her name is second on the paper.</div>
+    <div class="irony-text">
+      <strong>Katherine G. Johnson</strong> (1918–2020) was a Black mathematician at NASA's Langley Research Center. In 1960 she co-authored <em>NASA Technical Note D-233</em> — a paper that established the mathematical method for determining the azimuth angle at rocket burnout needed to place a satellite over any selected point on Earth. This was the foundational calculation for satellite recovery and human spaceflight. Her co-author is listed first: <strong>T. H. Skopinski</strong>. Johnson was one of the "computers" — human calculators — at NASA, working in a racially segregated computing pool. She had to <strong>fight to be in the briefing rooms</strong> where the work she was doing was being discussed. When John Glenn refused to fly his orbital mission unless <strong>Katherine Johnson personally verified the computer's trajectory numbers</strong>, she did — and he flew. Her name was barely known publicly for decades.
+    </div>
+  </div>
+
+  <!-- PHOTO GRID -->
+  <div class="cb-card">
+    <div class="cb-eyebrow">✦ Archive Images · Place files in /images/ folder named kjohnson01.png through kjohnson06.png</div>
+    <div class="photo-grid">
+      <div class="photo-slot">
+        <img src="images/kjohnson01.png" alt="Katherine Johnson 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🚀</span>kjohnson01.png</div>
+        <span class="photo-num">01</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/kjohnson02.png" alt="Katherine Johnson 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🚀</span>kjohnson02.png</div>
+        <span class="photo-num">02</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/kjohnson03.png" alt="Katherine Johnson 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🚀</span>kjohnson03.png</div>
+        <span class="photo-num">03</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/kjohnson04.png" alt="Katherine Johnson 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🚀</span>kjohnson04.png</div>
+        <span class="photo-num">04</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/kjohnson05.png" alt="Katherine Johnson 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🚀</span>kjohnson05.png</div>
+        <span class="photo-num">05</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/kjohnson06.png" alt="Katherine Johnson 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🚀</span>kjohnson06.png</div>
+        <span class="photo-num">06</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF LINK -->
+  <div class="pdf-card">
+    <div class="pdf-eyebrow">✦ Primary Source · Full Technical Paper PDF</div>
+    <div class="pdf-row">
+      <div class="pdf-icon">📄</div>
+      <div class="pdf-info">
+        <div class="pdf-title">Determination of Azimuth Angle at Burnout for Placing a Satellite Over a Selected Earth Position</div>
+        <div class="pdf-meta">T. H. Skopinski and Katherine G. Johnson · NASA Technical Note D-233 · Langley Research Center · September 1960</div>
+        <div class="pdf-meta" style="margin-top:4px;color:rgba(255,140,185,.4);">NASA Technical Reports Server · Public domain</div>
+      </div>
+      <a class="pdf-link" href="https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf" target="_blank" rel="noopener">✦ Open PDF</a>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="cb-input-card">
+    <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
+    <div class="cb-row">
+      <input class="cb-input cb-name-in" type="text" id="userName" placeholder="Your name…" value="">
+      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about Katherine Johnson's work…" autocomplete="off">
+      <button class="cb-btn primary" onclick="askQuestion()">✦ Ask</button>
+      <button class="cb-btn soft" onclick="showAdminModal()" title="Admin reset">⚙</button>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="cb-msgs" id="outputArea">
+    <div class="cb-empty">
+      <h3>✦ Answers appear here</h3>
+      <p>Type a question above and tap Ask</p>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="cb-bottom">
+    <div class="cb-btitle">✦ Task Complete · Ready for your next task?</div>
+    <a class="cb-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">✦ Advance to next task</a>
+  </div>
+
+  <div class="cb-wmark">✦ carebot/caretech research system · katherine johnson · nasa tn d-233 · v1.0 ✦</div>
+</div>
+
+<!-- Admin Modal -->
+<div class="cb-modal" id="adminModal">
+  <div class="cb-mbox">
+    <div class="cb-mtitle">🔒 Admin Reset</div>
+    <div class="cb-mbodytxt">Enter the admin passcode to clear all messages from the display and database.</div>
+    <input class="cb-input" type="password" id="adminPass" placeholder="Enter passcode…" style="width:100%;margin-bottom:6px;">
+    <div class="cb-err" id="adminErr"></div>
+    <div class="cb-mbtns" style="margin-top:10px;">
+      <button class="cb-btn soft" style="flex:1" onclick="closeAdminModal()">Cancel</button>
+      <button class="cb-btn primary" style="flex:1" onclick="confirmAdminReset()">Reset All</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+const ADMIN_PASSCODE = 'johnson1960';
+const MAX_DISPLAY = 3;
+const FB_REF_KEY = 'kjohnsonMessages';
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','★','˚','·','⊕','◦','✶'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── Firebase ── */
+const firebaseConfig = {
+
+  apiKey: "AIzaSyC_x0sja_M6f0UK3113FNipqKJX0-IuPF0",
+
+  authDomain: "kjohnson-carebot.firebaseapp.com",
+
+  projectId: "kjohnson-carebot",
+
+  storageBucket: "kjohnson-carebot.firebasestorage.app",
+
+  messagingSenderId: "440958818253",
+
+  appId: "1:440958818253:web:7437696261ea470e911684",
+
+  measurementId: "G-4L0956LZR5"
+
+};
+let app,database,messagesRef,onlineRef,useFirebase=true;
+let currentUser=localStorage.getItem('kjUser')||'';
+let userColor=localStorage.getItem('kjColor')||genColor();
+
+function genColor(){
+  const c=['#ff85b3','#ff2d6b','#ab47bc','#ff9800','#40c8ff','#c4005a'];
+  const v=c[Math.floor(Math.random()*c.length)];localStorage.setItem('kjColor',v);return v;
+}
+
+try{
+  app=firebase.initializeApp(firebaseConfig);
+  database=firebase.database();
+  messagesRef=database.ref(FB_REF_KEY);
+  onlineRef=database.ref('kjOnline');
+  if(currentUser)trackPresence();
+
+  let initialDone=false;
+  messagesRef.orderByKey().limitToLast(MAX_DISPLAY).once('value',snapshot=>{
+    const area=document.getElementById('outputArea');
+    area.innerHTML='';
+    const items=[];
+    snapshot.forEach(c=>{items.push({key:c.key,val:c.val()});});
+    if(!items.length){area.innerHTML=emptyHTML();}
+    else{items.reverse().forEach(({key,val})=>renderPair(val,key,false));}
+    initialDone=true;
+    const lastKey=items.length?items[items.length-1].key:null;
+    const nq=lastKey?messagesRef.orderByKey().startAfter(lastKey):messagesRef.orderByKey().limitToLast(1);
+    nq.on('child_added',snap=>{
+      if(!initialDone)return;
+      const msg=snap.val();const key=snap.key;
+      const area=document.getElementById('outputArea');
+      const emp=area.querySelector('.cb-empty');if(emp)emp.remove();
+      const pairs=area.querySelectorAll('.cb-pair');
+      if(pairs.length>=MAX_DISPLAY)pairs[pairs.length-1].remove();
+      renderPair(msg,key,true);
+    });
+  });
+
+  onlineRef.on('value',snapshot=>{
+    const count=Object.keys(snapshot.val()||{}).length;
+    document.getElementById('onlineCount').innerHTML=`<span class="cb-pip"></span>${count} online`;
+  });
+}catch(e){useFirebase=false;document.getElementById('onlineCount').textContent='Offline';}
+
+function trackPresence(){
+  if(!onlineRef||!currentUser)return;
+  const r=onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_'));
+  r.set({name:currentUser,timestamp:firebase.database.ServerValue.TIMESTAMP});
+  r.onDisconnect().remove();
+}
+document.getElementById('userName').addEventListener('change',function(){
+  currentUser=this.value.trim();localStorage.setItem('kjUser',currentUser);
+  if(currentUser&&useFirebase)trackPresence();
+});
+
+function emptyHTML(){return '<div class="cb-empty"><h3>✦ Answers appear here</h3><p>Type a question above and tap Ask</p></div>';}
+
+/* ── Response Bank ── */
+const responses=[
+  {
+    text:"NASA Technical Note D-233, published in September 1960, is titled 'Determination of Azimuth Angle at Burnout for Placing a Satellite Over a Selected Earth Position.' The authors are T. H. Skopinski and Katherine G. Johnson. The paper establishes the mathematical method for calculating the exact angle a rocket must achieve at the moment its engines cut off — burnout — in order to place a satellite precisely over any chosen location on Earth after a selected number of orbits.",
+    source:"NASA TN D-233 — Skopinski & Johnson (1960), title page and summary",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"THE PAPER SEQUENCE",
+    moves:[
+      "1. BURNOUT ANGLE — one arm shoots upward at a precise diagonal — this is the azimuth angle at burnout",
+      "2. ORBIT ARC — the arm sweeps in a slow arc overhead — the satellite completes three orbits",
+      "3. EARTH POINT — arm drops and points forward to a specific spot — landing over a selected Earth position",
+      "4. AUTHOR STAMP — mime signing a document with full authority — her name is on this paper",
+      "5. FREEZE arm pointing at the sky — call out: 'Katherine Johnson. She calculated where the rocket goes.'"
+    ]
+  },
+  {
+    text:"The paper's summary states that expressions are presented for relating the satellite position in the orbital plane with the projected latitude and longitude on a rotating Earth surface. It accounts for the Earth's oblateness — the fact that the planet bulges at the equator — and includes iterative corrections for both eastward and westward satellite launches. The results were compared against a three-degree-of-freedom computation on an IBM 704 electronic computer. They agreed.",
+    source:"NASA TN D-233 — summary and concluding remarks",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"THE CALCULATION SEQUENCE",
+    moves:[
+      "1. LATITUDE TRACE — one hand traces a horizontal latitude line slowly through the air",
+      "2. LONGITUDE ARC — the other hand traces a vertical longitude line — the two hands form a coordinate grid",
+      "3. EARTH BULGE — both hands shape an oblate spheroid — the planet is wider at the equator",
+      "4. ITERATION — hands repeat the same motion three times, each time more refined — converging on the answer",
+      "5. FREEZE with hands forming the grid — call out: 'She mapped where the satellite would be. Exactly.'"
+    ]
+  },
+  {
+    text:"For Case A — the eastward launch example in the paper — the satellite is launched from a burnout position of 28.50° N, 279.45° E and must pass over 34.00° N, 241.00° E after completing three orbits. Johnson's method placed the satellite within 18.6 nautical miles of the desired position at the specified time. The three-degree-of-freedom IBM 704 computer calculation confirmed the result. This agreement, the paper states, 'is considered good.'",
+    source:"NASA TN D-233 — Example Orbit Calculations, Case A",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"CASE A — EASTWARD LAUNCH",
+    moves:[
+      "1. EASTWARD LAUNCH — body leans east, arm shoots out — launched from 28.5 degrees North",
+      "2. THREE ORBITS — arm circles overhead three times, each orbit a slow deliberate arc",
+      "3. 18.6 MILES — fingers pinch close together — the satellite landed 18.6 nautical miles from target",
+      "4. IBM 704 CONFIRM — mime pressing keys on a large computer — the machine agrees with her hand calculation",
+      "5. FREEZE — call out: 'Considered good. Her math. Their machine. She was right.'"
+    ]
+  },
+  {
+    text:"For Case B — the westward launch — the satellite is launched in the opposite direction and must also reach its target after three orbits. Johnson's method determined the satellite would reach the desired position in 335.608 minutes. The IBM 704 three-degree-of-freedom computation confirmed the satellite's location at that exact time — 52.2 nautical miles west of the target, within acceptable margin. The paper concludes there are 'no apparent limitations as to launch direction.'",
+    source:"NASA TN D-233 — Example Orbit Calculations, Case B",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"CASE B — WESTWARD LAUNCH",
+    moves:[
+      "1. WESTWARD TURN — body pivots to face the opposite direction — retrograde orbit, opposite rotation",
+      "2. 335 MINUTES — mime watching a clock slowly — five and a half hours, three orbits westward",
+      "3. NO LIMITATION — arms open wide — any direction, any target, the method works",
+      "4. RETROGRADE LOCK — arms cross in an X then release — retrograde motion when azimuth exceeds 180 degrees",
+      "5. FREEZE facing west — call out: 'No limitations. East or west. She solved both directions.'"
+    ]
+  },
+  {
+    text:"Katherine Johnson joined the National Advisory Committee for Aeronautics — which became NASA — in 1953, assigned to the all-Black West Area Computing unit. These women were called 'computers' — their job was to perform calculations by hand that engineers needed. Johnson quickly distinguished herself by her mathematical ability and her willingness to ask questions and push into meetings where she was not expected to be.",
+    source:"Katherine Johnson biography — NASA; Hidden Figures historical record",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"THE WEST AREA COMPUTERS",
+    moves:[
+      "1. COMPUTER AT WORK — both hands move across an invisible calculation sheet, rapid and precise",
+      "2. THE ROOM — step forward into a space — this briefing room was not supposed to include her",
+      "3. THE QUESTION — one hand raises confidently — she asked the questions no one expected her to ask",
+      "4. PUSH THROUGH — body presses forward through an invisible resistance — she kept going",
+      "5. FREEZE in the room — call out: 'She walked into every room they said she could not enter.'"
+    ]
+  },
+  {
+    text:"When John Glenn was about to fly Friendship 7 — the first American orbital spaceflight — in 1962, electronic computers had calculated his trajectory. Glenn did not trust the machines. He asked NASA to have Katherine Johnson verify the numbers by hand. She did. Only then, with her confirmation, did Glenn agree to fly. Her hand calculations stood between an astronaut and the risk of not coming home.",
+    source:"Katherine Johnson biography — NASA; Hidden Figures historical record",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"JOHN GLENN SEQUENCE",
+    moves:[
+      "1. COMPUTER OUTPUT — arms print out an invisible result — the electronic computer has calculated the trajectory",
+      "2. GLENN REFUSES — arms cross firmly — not until Katherine checks it",
+      "3. JOHNSON VERIFIES — head down, hands moving precisely — going through every number by hand",
+      "4. CONFIRMATION — one slow nod, one arm rises — the numbers match. It is safe to fly.",
+      "5. FREEZE — call out: 'Get the girl to check the numbers. Then he was ready to go.'"
+    ]
+  },
+  {
+    text:"The paper's introduction explains that in recovering an artificial Earth satellite it is necessary to bring the satellite over a preselected point from which reentry is to be initiated. The azimuth angle — measured clockwise from North — is what determines the trajectory of the entire mission. Johnson developed iterative equations that could converge on the correct azimuth angle from any burnout position, for any target position, in only a few steps.",
+    source:"NASA TN D-233 — Introduction",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"AZIMUTH ANGLE SEQUENCE",
+    moves:[
+      "1. NORTH LOCK — body faces due north, arms at sides — azimuth is measured clockwise from North",
+      "2. CLOCKWISE SWEEP — one arm sweeps clockwise — 90 degrees, 180, 270, back to North",
+      "3. BURNOUT POINT — arm shoots upward at the azimuth angle — this is the moment the engines cut off",
+      "4. ITERATE — the arm adjusts slightly, then again, converging — a few iterations reach the answer",
+      "5. FREEZE arm locked at the burnout angle — call out: 'The azimuth angle. She found it. Every time.'"
+    ]
+  },
+  {
+    text:"The paper accounts for the Earth's oblateness — the planet is not a perfect sphere but bulges at the equator. This causes the satellite's orbital plane to rotate and its perigee point to shift over time. Johnson's method incorporates these incremental corrections into the iteration procedure, updating the target position to compensate. Without this correction, the satellite would miss its mark. With it, the calculation converges on the correct answer.",
+    source:"NASA TN D-233 — Appendix A: Incremental Changes from Desired Positions",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"THE OBLATE EARTH SEQUENCE",
+    moves:[
+      "1. PERFECT SPHERE — arms form a circle — but the Earth is not this shape",
+      "2. OBLATE BULGE — hands press outward at the equator — the planet is wider than it is tall",
+      "3. ORBITAL DRIFT — one arm slowly rotates its orbit arc — the plane is shifting, the perigee is moving",
+      "4. CORRECTION APPLY — both hands adjust slightly — compensate for the bulge, update the target",
+      "5. FREEZE with corrected aim — call out: 'The Earth is not perfect. She accounted for every imperfection.'"
+    ]
+  },
+  {
+    text:"NASA TN D-233 was the first research report published by NASA that carried Katherine Johnson's name. Before this, she had contributed to numerous calculations without receiving authorship credit. She had to specifically request to be listed as an author. Being named on a technical paper was not automatic for the human computers — it required asking, and it required someone to agree. Skopinski, her supervisor, agreed.",
+    source:"Katherine Johnson biography — NASA; Hidden Figures historical record",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"HER NAME ON THE PAPER",
+    moves:[
+      "1. INVISIBLE WORK — hands move through calculations — all the work, no name attached",
+      "2. THE ASK — one arm reaches forward, requesting — she asked to be listed as author",
+      "3. THE AGREEMENT — a slow nod — Skopinski said yes",
+      "4. NAME WRITE — mime writing K-A-T-H-E-R-I-N-E carefully in the air, then G. J-O-H-N-S-O-N",
+      "5. FREEZE with the name written — call out: 'She had to ask. He said yes. Her name is on the paper.'"
+    ]
+  },
+  {
+    text:"In 2015, President Obama awarded Katherine Johnson the Presidential Medal of Freedom. In 2016, the book Hidden Figures was published and the film followed. NASA named a facility after her: the Katherine G. Johnson Computational Research Facility at Langley. She died in 2020 at 101 years old. The paper she co-authored in 1960 — with her name second — had been enabling spaceflight for sixty years before most people learned her name.",
+    source:"Katherine Johnson biography — NASA; Presidential Medal of Freedom citation",
+    link:"https://ntrs.nasa.gov/api/citations/19980227091/downloads/19980227091.pdf",
+    theme:"SIXTY YEARS LATER SEQUENCE",
+    moves:[
+      "1. SIXTY YEARS — count slowly upward — 1960, 1970, 1980, 1990, 2000, 2010 — six decades of spaceflight",
+      "2. MEDAL RECEIVE — both hands come forward and accept something precious, bring it to the chest",
+      "3. FACILITY NAME — mime placing a name on a building, slow and deliberate — Katherine G. Johnson",
+      "4. 101 YEARS — arms rise slowly overhead — she lived to see herself recognized",
+      "5. FREEZE arms raised — call out: 'Sixty years. Her math held. Then the world learned her name.'"
+    ]
+  }
+];
+
+let recentlyShown=[];
+function getResponse(){
+  let avail=responses.filter((_,i)=>!recentlyShown.includes(i));
+  if(avail.length<4){recentlyShown=[];avail=responses;}
+  const ri=Math.floor(Math.random()*avail.length);
+  const sel=avail[ri];const ai=responses.indexOf(sel);
+  recentlyShown.push(ai);if(recentlyShown.length>7)recentlyShown.shift();
+  return sel;
+}
+
+function generateMovement(resp){
+  const theme=resp.theme||'TRAJECTORY SEQUENCE';
+  const moves=resp.moves||[
+    "1. BURNOUT ANGLE — arm shoots upward at a precise diagonal — the azimuth angle at burnout",
+    "2. ORBIT ARC — arm sweeps overhead in a slow arc — three orbits completed",
+    "3. EARTH POINT — arm drops to point at a specific spot — the selected position on Earth",
+    "4. CALCULATION — hands move rapidly through invisible numbers — her hand calculation",
+    "5. FREEZE — call out: 'Katherine Johnson. She sent us to space.'"
+  ];
+  return `HIP HOP SEQUENCE: ${theme}\nHONORING: Katherine G. Johnson\n\n${moves.join('\n')}\n\nENERGY: Precise, orbital, powerful. Every move is a calculation. Every freeze is a trajectory confirmed.`;
+}
+
+/* ── Ask ── */
+function askQuestion(){
+  const q=document.getElementById('userQuestion').value.trim();
+  const name=document.getElementById('userName').value.trim();
+  if(!name){alert('Please enter your name first!');document.getElementById('userName').focus();return;}
+  if(!q){alert('Please type a question!');return;}
+  const resp=getResponse();
+  const mv=generateMovement(resp);
+  const payload={
+    question:q,answerText:resp.text,answerSource:resp.source,
+    answerLink:resp.link,movement:mv,userName:name,
+    userColor:userColor,timestamp:firebase.database.ServerValue.TIMESTAMP
+  };
+  if(useFirebase&&messagesRef){
+    messagesRef.push(payload).catch(()=>localDisplay(q,resp,mv,name));
+  } else {
+    localDisplay(q,resp,mv,name);
+  }
+  document.getElementById('userQuestion').value='';
+}
+
+let localMessages=[];
+function localDisplay(q,resp,mv,name){
+  const area=document.getElementById('outputArea');
+  localMessages.unshift({question:q,answerText:resp.text,answerSource:resp.source,answerLink:resp.link,movement:mv,userName:name,userColor:userColor});
+  if(localMessages.length>MAX_DISPLAY)localMessages=localMessages.slice(0,MAX_DISPLAY);
+  area.innerHTML='';
+  localMessages.forEach((msg,i)=>renderPair(msg,null,i===0));
+}
+
+/* ── Chime ── */
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playChime(){
+  try{
+    const ctx=getAudioCtx();
+    [[329.63,0],[415.30,0.18],[493.88,0.36]].forEach(([freq,delay])=>{
+      const osc=ctx.createOscillator();const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=freq;
+      const t=ctx.currentTime+delay;
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.35,t+0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+      osc.start(t);osc.stop(t+0.72);
+    });
+  }catch(e){}
+}
+
+/* ── Render ── */
+function renderPair(msg,key,playAudio=false){
+  const area=document.getElementById('outputArea');
+  const el=document.createElement('div');
+  el.className='cb-pair';
+  if(key)el.id='pair-'+key;
+  el.innerHTML=`
+    <div class="cb-meta">
+      <strong style="color:${escH(msg.userColor||'#ff85b3')}">${escH(msg.userName||'Anon')}</strong>
+      <span>asked:</span>
+    </div>
+    <div class="cb-qbubble">❓ ${escH(msg.question)}</div>
+    <div class="cb-pcard">
+      <div class="cb-phead"><span class="cb-plabel">🚀 From the Technical Record</span></div>
+      <div class="cb-pbody">
+        <div class="cb-ptext">${escH(msg.answerText)}</div>
+        <div class="cb-psrc">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
+      </div>
+    </div>
+    <div class="cb-mcard">
+      <div class="cb-mhead"><span class="cb-mlabel">🎭 Movement Instructions</span></div>
+      <div class="cb-mbody"><div class="cb-mtext">${escH(msg.movement)}</div></div>
+      <div class="cb-spkrow">
+        <button class="cb-btn purple" style="font-size:11px;padding:7px 13px;" onclick="speakText(this)">🔊 Read Aloud</button>
+        <button class="cb-btn soft" style="font-size:11px;padding:7px 13px;" onclick="stopSpeech()">⏹ Stop</button>
+      </div>
+    </div>`;
+  area.insertBefore(el,area.firstChild);
+  if(playAudio){playChime();setTimeout(()=>speakMovement(msg.movement),950);}
+}
+
+/* ── Speech (female, English) ── */
+function getFemaleVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  const enVoices=voices.filter(v=>v.lang==='en-US'||v.lang==='en_US'||v.lang.startsWith('en-US'));
+  const allEn=voices.filter(v=>v.lang.startsWith('en'));
+  const pool=enVoices.length?enVoices:allEn;
+  const femaleKeywords=['female','woman','zira','samantha','victoria','karen','moira','fiona','ava','allison','susan','sara','tessa','aria','jenny','michelle','emma','elizabeth','julia'];
+  let voice=pool.find(v=>femaleKeywords.some(k=>v.name.toLowerCase().includes(k)));
+  if(!voice)voice=pool[0]||null;
+  return voice;
+}
+function speakMovement(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.88;u.pitch=1.2;
+  const trySpeak=()=>{const v=getFemaleVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);};
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.addEventListener('voiceschanged',trySpeak,{once:true});
+  } else {trySpeak();}
+}
+function speakText(btn){speakMovement(btn.closest('.cb-mcard').querySelector('.cb-mtext').textContent);}
+function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
+function escH(str){const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;}
+document.getElementById('userQuestion').addEventListener('keypress',e=>{if(e.key==='Enter')askQuestion();});
+
+/* ── Admin ── */
+function showAdminModal(){
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';
+  setTimeout(()=>document.getElementById('adminPass').focus(),100);
+}
+function closeAdminModal(){document.getElementById('adminModal').classList.remove('open');}
+function confirmAdminReset(){
+  if(document.getElementById('adminPass').value!==ADMIN_PASSCODE){
+    document.getElementById('adminErr').textContent='Incorrect passcode. Try again.';
+    document.getElementById('adminPass').value='';document.getElementById('adminPass').focus();return;
+  }
+  document.getElementById('outputArea').innerHTML=emptyHTML();
+  if(useFirebase&&messagesRef)messagesRef.remove().catch(()=>{});
+  localMessages=[];recentlyShown=[];closeAdminModal();
+}
+document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
+
+window.addEventListener('beforeunload',()=>{
+  if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
