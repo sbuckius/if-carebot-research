@@ -65,20 +65,7 @@
   .photo-fallback span{font-size:18px;margin-bottom:5px;opacity:.3;}
   .photo-num{position:absolute;bottom:4px;right:7px;font-size:8px;color:rgba(255,140,185,.35);letter-spacing:.08em;}
 
-  /* VIDEO */
-  .cb-video-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;overflow:hidden;position:relative;box-shadow:0 8px 40px rgba(255,45,107,.25);}
-  .cb-video-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;z-index:2;}
-  .cb-video-head{background:linear-gradient(135deg,rgba(140,0,45,.95),rgba(70,0,22,.98));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
-  .cb-video-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .cb-vbtn{font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;color:rgba(255,200,220,.7);background:rgba(255,255,255,.05);border:1px solid rgba(255,140,185,.2);padding:4px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
-  .cb-vbtn:hover{background:rgba(255,45,107,.2);color:#ffb3cf;}
-  .cb-video-slot{padding:14px 16px;}
-  .cb-video-slot p{font-size:11px;color:rgba(255,190,220,.4);margin-bottom:10px;letter-spacing:.04em;}
-  .cb-video-input{width:100%;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:12px;color:#fff5f8;outline:none;transition:border-color .2s;}
-  .cb-video-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
-  .cb-video-input::placeholder{color:rgba(255,190,220,.3);}
-  .cb-video-embed{width:100%;aspect-ratio:16/9;display:none;}
-  .cb-video-embed iframe{width:100%;height:100%;border:none;display:block;}
+
 
   /* INPUT */
   .cb-input-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
@@ -231,24 +218,6 @@
     </div>
   </div>
 
-  <!-- VIDEO -->
-  <div class="cb-video-card" id="videoSection">
-    <div class="cb-video-head">
-      <span class="cb-video-label">✦ Listen First · Oral History Audio</span>
-      <div style="display:flex;gap:7px;">
-        <button class="cb-vbtn" id="watchedBtn" onclick="markWatched()">Done listening</button>
-        <button class="cb-vbtn" id="rewatchBtn" style="display:none" onclick="rewatch()">Listen again ↩</button>
-      </div>
-    </div>
-    <div class="cb-video-slot" id="videoSlot">
-      <p>Paste a link to the Harlow Shapley oral history audio or video</p>
-      <input class="cb-video-input" type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off">
-      <br><br>
-      <button class="cb-btn primary" style="font-size:11px;padding:8px 16px;" onclick="setVideo()">✦ Load</button>
-    </div>
-    <div class="cb-video-embed" id="videoEmbed"></div>
-  </div>
-
   <!-- INPUT -->
   <div class="cb-input-card">
     <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
@@ -321,39 +290,6 @@ setInterval(updateClock,1000);updateClock();
     wrap.appendChild(s);
   }
 })();
-
-/* ── Video ── */
-function setVideo(){
-  const raw=document.getElementById('videoUrl').value.trim();
-  if(!raw)return;
-  let src='';
-  const yt=raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  const vm=raw.match(/vimeo\.com\/(\d+)/);
-  if(yt)src=`https://www.youtube.com/embed/${yt[1]}`;
-  else if(vm)src=`https://player.vimeo.com/video/${vm[1]}`;
-  else{alert('Please paste a YouTube or Vimeo URL.');return;}
-  const embed=document.getElementById('videoEmbed');
-  embed.innerHTML=`<iframe src="${src}" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
-  embed.style.display='block';
-  document.getElementById('videoSlot').style.display='none';
-}
-document.getElementById('videoUrl').addEventListener('keypress',e=>{if(e.key==='Enter')setVideo();});
-
-function markWatched(){
-  document.getElementById('videoSection').style.opacity='.55';
-  document.getElementById('watchedBtn').style.display='none';
-  document.getElementById('rewatchBtn').style.display='block';
-}
-function rewatch(){
-  document.getElementById('videoSection').style.opacity='1';
-  document.getElementById('rewatchBtn').style.display='none';
-  document.getElementById('watchedBtn').style.display='block';
-  const slot=document.getElementById('videoSlot');
-  const embed=document.getElementById('videoEmbed');
-  if(embed.style.display==='block'){
-    const f=embed.querySelector('iframe');if(f){const s=f.src;f.src='';setTimeout(()=>f.src=s,100);}
-  }
-}
 
 /* ── Firebase ── */
 const firebaseConfig = {
@@ -706,7 +642,23 @@ document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key===
 window.addEventListener('beforeunload',()=>{
   if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
   if('speechSynthesis' in window)window.speechSynthesis.cancel();
+  ambientAudio.pause();
 });
+
+/* ── Ambient Audio ── */
+const ambientAudio = new Audio('harlow_shapley_girl_hours.mp3');
+ambientAudio.loop = true;
+ambientAudio.volume = 0.55;
+
+let ambientStarted = false;
+function startAmbient(){
+  if(ambientStarted)return;
+  ambientStarted = true;
+  ambientAudio.play().catch(()=>{});
+}
+['click','touchstart','keydown'].forEach(evt=>
+  document.addEventListener(evt, startAmbient, {once:true})
+);
 </script>
 </body>
 </html>
