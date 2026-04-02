@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ CAREBOT · IBM 29 Card Punch · 1967 ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{min-height:100%;font-family:'Quicksand',sans-serif;font-weight:600;color:#fff5f8;background:#0e0008;-webkit-font-smoothing:antialiased;}
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 75% 55% at 5% 90%,rgba(180,0,60,.38) 0%,transparent 58%),radial-gradient(ellipse 60% 65% at 95% 10%,rgba(120,0,35,.32) 0%,transparent 58%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,30,100,.06) 0%,transparent 65%),linear-gradient(155deg,#160008,#0e0005 50%,#080003);}
+  .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(65px);}
+  .orb-1{width:380px;height:380px;background:#8b0030;opacity:.2;bottom:-80px;left:-70px;animation:drift1 21s ease-in-out infinite;}
+  .orb-2{width:300px;height:300px;background:#c4005a;opacity:.18;top:-60px;right:-60px;animation:drift2 25s ease-in-out infinite;}
+  .orb-3{width:200px;height:200px;background:#ff2d6b;opacity:.1;top:42%;left:55%;animation:drift3 17s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,26px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-28px,-20px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-16px,12px)}66%{transform:translate(12px,-9px)}}
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.6}85%{opacity:.35}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
+  .screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:max(16px,env(safe-area-inset-top)) clamp(12px,4vmin,24px) calc(40px + env(safe-area-inset-bottom));gap:14px;}
+
+  /* TOPBAR */
+  .cb-topbar{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-logo{display:flex;align-items:center;gap:10px;}
+  .cb-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,45,107,.18);border:1.5px solid rgba(255,80,150,.5);display:flex;align-items:center;justify-content:center;font-size:18px;animation:wobble 4s ease-in-out infinite;flex-shrink:0;}
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .cb-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-sub{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-top:1px;}
+  .cb-badges{display:flex;gap:7px;align-items:center;}
+  .cb-badge{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,140,185,.2);color:rgba(255,190,220,.5);letter-spacing:.06em;}
+  .cb-pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:#ff2d6b;margin-right:5px;animation:pip 2s ease-in-out infinite;vertical-align:middle;}
+  @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* CARD BASE */
+  .cb-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;backdrop-filter:blur(18px);box-shadow:0 4px 30px rgba(255,45,107,.2),inset 0 1px 0 rgba(255,140,185,.07);}
+  .cb-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+
+  /* CONTEXT BANNER */
+  .irony-card{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(180,0,40,.92),rgba(100,0,20,.95));border:1.5px solid rgba(255,80,80,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;box-shadow:0 4px 30px rgba(255,0,60,.25);}
+  .irony-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff8080 35%,#ff2020 50%,#ff8080 65%,transparent);box-shadow:0 0 10px #ff8080;border-radius:999px;}
+  .irony-eyebrow{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,160,160,.55);margin-bottom:6px;}
+  .irony-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,3.5vw,17px);color:#ffb3b3;margin-bottom:10px;line-height:1.3;}
+  .irony-text{font-size:12.5px;line-height:1.75;color:rgba(255,210,210,.85);}
+  .irony-text strong{color:#ffcccc;font-weight:700;}
+
+  /* PHOTO GRID */
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .photo-slot{aspect-ratio:4/3;background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.25);border-radius:10px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.65) brightness(.85);}
+  .photo-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;color:rgba(255,190,220,.25);font-size:9px;letter-spacing:.1em;text-align:center;padding:8px;}
+  .photo-fallback span{font-size:18px;margin-bottom:5px;opacity:.3;}
+  .photo-num{position:absolute;bottom:4px;right:7px;font-size:8px;color:rgba(255,140,185,.35);letter-spacing:.08em;}
+
+  /* VIDEO */
+  .cb-video-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;overflow:hidden;position:relative;box-shadow:0 8px 40px rgba(255,45,107,.25);}
+  .cb-video-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;z-index:2;}
+  .cb-video-head{background:linear-gradient(135deg,rgba(140,0,45,.95),rgba(70,0,22,.98));padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .cb-video-label{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .cb-vbtn{font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;color:rgba(255,200,220,.7);background:rgba(255,255,255,.05);border:1px solid rgba(255,140,185,.2);padding:4px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
+  .cb-vbtn:hover{background:rgba(255,45,107,.2);color:#ffb3cf;}
+  .cb-video-embed{width:100%;aspect-ratio:16/9;}
+  .cb-video-embed iframe{width:100%;height:100%;border:none;display:block;}
+  .cb-video-card.watched .cb-video-embed{opacity:.55;}
+
+  /* SOURCE LINK CARD */
+  .pdf-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .pdf-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .pdf-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,190,220,.4);margin-bottom:10px;}
+  .pdf-row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  .pdf-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
+  .pdf-info{flex:1;min-width:180px;}
+  .pdf-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#ffb3cf;margin-bottom:3px;line-height:1.3;}
+  .pdf-meta{font-size:11px;color:rgba(255,190,220,.45);line-height:1.5;}
+  .pdf-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:8px 16px;border-radius:10px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 3px 12px rgba(255,45,107,.3);transition:all .2s;margin-top:10px;white-space:nowrap;}
+  .pdf-link:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,45,107,.5);}
+
+  /* INPUT */
+  .cb-input-card{width:100%;max-width:600px;background:rgba(12,0,7,.92);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+  .cb-input-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 10px #ff85b3;border-radius:999px;}
+  .cb-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .cb-row:last-child{margin-bottom:0;}
+  .cb-input{flex:1;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,140,185,.2);border-radius:12px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;color:#fff5f8;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0;}
+  .cb-input:focus{border-color:#ff85b3;box-shadow:0 0 0 3px rgba(255,133,179,.12);}
+  .cb-input::placeholder{color:rgba(255,190,220,.35);}
+  .cb-name-in{max-width:150px;flex:0 0 150px;}
+  .cb-btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:12px;letter-spacing:.05em;color:#fff5f8;display:inline-flex;align-items:center;gap:5px;padding:10px 18px;border-radius:12px;border:1.5px solid rgba(255,80,150,.5);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .cb-btn.primary{background:linear-gradient(135deg,#ff2d6b,#c4005a,#8b0030);box-shadow:0 4px 18px rgba(255,45,107,.3);}
+  .cb-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,45,107,.5);}
+  .cb-btn.soft{background:rgba(255,255,255,.04);color:rgba(255,190,220,.5);border-color:rgba(255,140,185,.15);font-size:11px;}
+  .cb-btn.soft:hover{background:rgba(255,45,107,.12);color:#ffb3cf;}
+  .cb-btn.purple{background:linear-gradient(135deg,#ab47bc,#6a1b9a);border-color:#ab47bc;}
+  .cb-btn:active{transform:scale(.97);}
+
+  /* MESSAGES */
+  .cb-msgs{width:100%;max-width:600px;display:flex;flex-direction:column;gap:14px;}
+  .cb-empty{text-align:center;padding:44px 20px;color:rgba(255,190,220,.35);}
+  .cb-empty h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:7px;}
+  .cb-empty p{font-size:12px;}
+  .cb-pair{animation:slideUp .35s ease-out;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .cb-meta{font-size:11px;color:rgba(255,190,220,.45);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .cb-meta strong{font-weight:700;}
+  .cb-qbubble{display:inline-block;background:linear-gradient(135deg,#ff2d6b,#c4005a);color:#fff;padding:9px 14px;border-radius:16px 16px 16px 3px;font-size:13px;margin-bottom:12px;max-width:88%;line-height:1.5;box-shadow:0 3px 12px rgba(255,45,107,.3);}
+  .cb-pcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(255,80,150,.4);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+  .cb-phead{background:linear-gradient(135deg,rgba(240,98,146,.8),rgba(194,24,91,.85));padding:9px 14px;display:flex;align-items:center;gap:7px;}
+  .cb-plabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-pbody{padding:14px;}
+  .cb-ptext{font-size:13px;line-height:1.7;color:rgba(255,215,235,.88);}
+  .cb-psrc{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,100,160,.12);font-size:11px;color:rgba(255,190,220,.45);}
+  .cb-psrc a{color:#ff85b3;text-decoration:none;}
+  .cb-psrc a:hover{text-decoration:underline;}
+  .cb-mcard{background:rgba(12,0,7,.9);border:1.5px solid rgba(171,71,188,.45);border-radius:14px;overflow:hidden;}
+  .cb-mhead{background:linear-gradient(135deg,rgba(171,71,188,.8),rgba(106,27,154,.85));padding:9px 14px;}
+  .cb-mlabel{font-family:'Nunito',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+  .cb-mbody{padding:14px;}
+  .cb-mtext{font-family:'Courier New',monospace;font-size:12px;line-height:1.85;color:rgba(220,180,255,.85);white-space:pre-wrap;}
+  .cb-spkrow{padding:8px 14px 12px;display:flex;gap:7px;}
+
+  /* BOTTOM */
+  .cb-bottom{width:100%;max-width:600px;background:linear-gradient(135deg,rgba(140,0,45,.8),rgba(70,0,22,.92));border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:18px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 50px rgba(255,45,107,.45),0 0 90px rgba(200,0,80,.15);}
+  .cb-bottom::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 12px #ff85b3;border-radius:999px;}
+  .cb-btitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#ff85b3);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;}
+  .cb-link{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;color:#fff5f8;background:linear-gradient(135deg,#ff2d6b,#c4005a);padding:12px 24px;border-radius:14px;text-decoration:none;border:1.5px solid #ff2d6b;box-shadow:0 4px 18px rgba(255,45,107,.35);transition:all .2s;}
+  .cb-link:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,45,107,.5);}
+
+  /* MODAL */
+  .cb-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;}
+  .cb-modal.open{display:flex;}
+  .cb-mbox{background:rgba(14,0,8,.97);border:1.5px solid rgba(255,80,150,.5);border-radius:18px;padding:26px 22px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(255,45,107,.4);position:relative;}
+  .cb-mbox::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,#ff85b3 35%,#ff2d6b 50%,#ff85b3 65%,transparent);box-shadow:0 0 8px #ff85b3;border-radius:999px;}
+  .cb-mtitle{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#ffb3cf;margin-bottom:9px;}
+  .cb-mbodytxt{font-size:12px;color:rgba(255,200,220,.65);line-height:1.6;margin-bottom:16px;}
+  .cb-mbtns{display:flex;gap:9px;}
+  .cb-err{font-size:11px;color:#ff2d6b;margin-top:6px;min-height:16px;}
+  .cb-wmark{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,140,185,.12);padding-bottom:8px;}
+
+  @media(max-width:480px){
+    .photo-grid{grid-template-columns:repeat(2,1fr);}
+    .cb-name-in{max-width:100%;flex:1 1 100%;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="screen">
+
+  <!-- TOPBAR -->
+  <div class="cb-topbar">
+    <div class="cb-logo">
+      <div class="cb-icon">🗂️</div>
+      <div>
+        <div class="cb-name">CAREBOT · IBM 29 CARD PUNCH ✦</div>
+        <div class="cb-sub">Karen Diamond · University of Michigan · 1967</div>
+      </div>
+    </div>
+    <div class="cb-badges">
+      <div class="cb-badge" id="onlineCount"><span class="cb-pip"></span>Connecting…</div>
+      <div class="cb-badge" id="sysTime">--:--</div>
+    </div>
+  </div>
+
+  <!-- CONTEXT BANNER -->
+  <div class="irony-card">
+    <div class="irony-eyebrow">✦ Critical Context · Read Before Watching</div>
+    <div class="irony-title">⚠️ Karen Diamond operates the machine for the entire film. She is named once.</div>
+    <div class="irony-text">
+      This 1967 instructional film was produced by the University of Michigan Computing Center to teach students how to use the <strong>IBM 29 Card Punch</strong>. The machine was the primary interface between human programmers and the computer — every line of code, every data entry, every correction required passing through a keypunch operator's hands first. <strong>Professor Geller</strong> narrates the entire 20-minute film. He explains every step. He describes every key. <strong>Karen Diamond</strong> does every single thing he describes. She feeds the cards. She punches the columns. She backspaces. She duplicates. She clears the track. She is on screen for the majority of the film. She is introduced in a single sentence: <em>"Karen Diamond will assist us by operating the card punch."</em> The film is not about Karen Diamond. The film could not exist without Karen Diamond.
+    </div>
+  </div>
+
+  <!-- PHOTO GRID -->
+  <div class="cb-card">
+    <div class="cb-eyebrow">✦ Archive Images · Place files in /images/ folder named ibm29card01.png through ibm29card06.png</div>
+    <div class="photo-grid">
+      <div class="photo-slot">
+        <img src="images/ibm29card01.png" alt="IBM 29 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🗂️</span>ibm29card01.png</div>
+        <span class="photo-num">01</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/ibm29card02.png" alt="IBM 29 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🗂️</span>ibm29card02.png</div>
+        <span class="photo-num">02</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/ibm29card03.png" alt="IBM 29 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🗂️</span>ibm29card03.png</div>
+        <span class="photo-num">03</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/ibm29card04.png" alt="IBM 29 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🗂️</span>ibm29card04.png</div>
+        <span class="photo-num">04</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/ibm29card05.png" alt="IBM 29 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🗂️</span>ibm29card05.png</div>
+        <span class="photo-num">05</span>
+      </div>
+      <div class="photo-slot">
+        <img src="images/ibm29card06.png" alt="IBM 29 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="photo-fallback"><span>🗂️</span>ibm29card06.png</div>
+        <span class="photo-num">06</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="cb-video-card" id="videoSection">
+    <div class="cb-video-head">
+      <span class="cb-video-label">✦ Watch First · Basic Operation of the IBM 29 Card Punch · 1967</span>
+      <div style="display:flex;gap:7px;">
+        <button class="cb-vbtn" id="watchedBtn" onclick="markWatched()">Done watching</button>
+        <button class="cb-vbtn" id="rewatchBtn" style="display:none" onclick="rewatch()">Rewatch ↩</button>
+      </div>
+    </div>
+    <div class="cb-video-embed">
+      <iframe id="videoPlayer"
+        src="https://deepblue.lib.umich.edu/handle/2027.42/79594"
+        allow="autoplay; fullscreen"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <!-- SOURCE LINK -->
+  <div class="pdf-card">
+    <div class="pdf-eyebrow">✦ Primary Source · University of Michigan Deep Blue Archive</div>
+    <div class="pdf-row">
+      <div class="pdf-icon">🎞️</div>
+      <div class="pdf-info">
+        <div class="pdf-title">Basic Operation of the IBM 29 Card Punch</div>
+        <div class="pdf-meta">University of Michigan Computing Center · 1967 · 20 minutes</div>
+        <div class="pdf-meta" style="margin-top:4px;">Featuring Karen Diamond · Narrated by Professor Geller · University of Michigan Deep Blue Digital Repository</div>
+      </div>
+      <a class="pdf-link" href="https://deepblue.lib.umich.edu/handle/2027.42/79594" target="_blank" rel="noopener">✦ View Source</a>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="cb-input-card">
+    <div class="cb-eyebrow">✦ Ask a Question · Everyone Sees the Same Answers · Showing Last 3</div>
+    <div class="cb-row">
+      <input class="cb-input cb-name-in" type="text" id="userName" placeholder="Your name…" value="">
+      <input class="cb-input" type="text" id="userQuestion" placeholder="Ask about the IBM 29 Card Punch…" autocomplete="off">
+      <button class="cb-btn primary" onclick="askQuestion()">✦ Ask</button>
+      <button class="cb-btn soft" onclick="showAdminModal()" title="Admin reset">⚙</button>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="cb-msgs" id="outputArea">
+    <div class="cb-empty">
+      <h3>✦ Answers appear here</h3>
+      <p>Type a question above and tap Ask</p>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="cb-bottom">
+    <div class="cb-btitle">✦ Task Complete · Ready for your next task?</div>
+    <a class="cb-link" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener">✦ Advance to next task</a>
+  </div>
+
+  <div class="cb-wmark">✦ carebot/caretech research system · ibm 29 card punch · 1967 · v1.0 ✦</div>
+</div>
+
+<!-- Admin Modal -->
+<div class="cb-modal" id="adminModal">
+  <div class="cb-mbox">
+    <div class="cb-mtitle">🔒 Admin Reset</div>
+    <div class="cb-mbodytxt">Enter the admin passcode to clear all messages from the display and database.</div>
+    <input class="cb-input" type="password" id="adminPass" placeholder="Enter passcode…" style="width:100%;margin-bottom:6px;">
+    <div class="cb-err" id="adminErr"></div>
+    <div class="cb-mbtns" style="margin-top:10px;">
+      <button class="cb-btn soft" style="flex:1" onclick="closeAdminModal()">Cancel</button>
+      <button class="cb-btn primary" style="flex:1" onclick="confirmAdminReset()">Reset All</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+const ADMIN_PASSCODE = 'karenpunch1967';
+const MAX_DISPLAY = 3;
+const FB_REF_KEY = 'ibm29Messages';
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','▪','˚','·','□','◦','▫'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${315+Math.random()*45},75%,${65+Math.random()*22}%)`;
+    s.style.animationDuration=(7+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*13)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── Video ── */
+function markWatched(){
+  document.getElementById('videoSection').style.opacity='.55';
+  document.getElementById('watchedBtn').style.display='none';
+  document.getElementById('rewatchBtn').style.display='block';
+}
+function rewatch(){
+  document.getElementById('videoSection').style.opacity='1';
+  document.getElementById('rewatchBtn').style.display='none';
+  document.getElementById('watchedBtn').style.display='block';
+  const f=document.getElementById('videoPlayer'),s=f.src;f.src='';setTimeout(()=>f.src=s,100);
+}
+
+/* ── Firebase ── */
+const firebaseConfig = {
+
+  apiKey: "AIzaSyC-QCmUxEiwH1h7hqShVNCLAE_bsGiAdBM",
+
+  authDomain: "ibm29cardpunch-carebot.firebaseapp.com",
+
+  projectId: "ibm29cardpunch-carebot",
+
+  storageBucket: "ibm29cardpunch-carebot.firebasestorage.app",
+
+  messagingSenderId: "835704916784",
+
+  appId: "1:835704916784:web:5ff354bd1aa8f603d7d6f5",
+
+  measurementId: "G-5D3XWSBS7D"
+
+};
+let app,database,messagesRef,onlineRef,useFirebase=true;
+let currentUser=localStorage.getItem('ibm29User')||'';
+let userColor=localStorage.getItem('ibm29Color')||genColor();
+
+function genColor(){
+  const c=['#ff85b3','#ff2d6b','#ab47bc','#ff9800','#40c8ff','#c4005a'];
+  const v=c[Math.floor(Math.random()*c.length)];localStorage.setItem('ibm29Color',v);return v;
+}
+
+try{
+  app=firebase.initializeApp(firebaseConfig);
+  database=firebase.database();
+  messagesRef=database.ref(FB_REF_KEY);
+  onlineRef=database.ref('ibm29Online');
+  if(currentUser)trackPresence();
+
+  let initialDone=false;
+  messagesRef.orderByKey().limitToLast(MAX_DISPLAY).once('value',snapshot=>{
+    const area=document.getElementById('outputArea');
+    area.innerHTML='';
+    const items=[];
+    snapshot.forEach(c=>{items.push({key:c.key,val:c.val()});});
+    if(!items.length){area.innerHTML=emptyHTML();}
+    else{items.reverse().forEach(({key,val})=>renderPair(val,key,false));}
+    initialDone=true;
+    const lastKey=items.length?items[items.length-1].key:null;
+    const nq=lastKey?messagesRef.orderByKey().startAfter(lastKey):messagesRef.orderByKey().limitToLast(1);
+    nq.on('child_added',snap=>{
+      if(!initialDone)return;
+      const msg=snap.val();const key=snap.key;
+      const area=document.getElementById('outputArea');
+      const emp=area.querySelector('.cb-empty');if(emp)emp.remove();
+      const pairs=area.querySelectorAll('.cb-pair');
+      if(pairs.length>=MAX_DISPLAY)pairs[pairs.length-1].remove();
+      renderPair(msg,key,true);
+    });
+  });
+
+  onlineRef.on('value',snapshot=>{
+    const count=Object.keys(snapshot.val()||{}).length;
+    document.getElementById('onlineCount').innerHTML=`<span class="cb-pip"></span>${count} online`;
+  });
+}catch(e){useFirebase=false;document.getElementById('onlineCount').textContent='Offline';}
+
+function trackPresence(){
+  if(!onlineRef||!currentUser)return;
+  const r=onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_'));
+  r.set({name:currentUser,timestamp:firebase.database.ServerValue.TIMESTAMP});
+  r.onDisconnect().remove();
+}
+document.getElementById('userName').addEventListener('change',function(){
+  currentUser=this.value.trim();localStorage.setItem('ibm29User',currentUser);
+  if(currentUser&&useFirebase)trackPresence();
+});
+
+function emptyHTML(){return '<div class="cb-empty"><h3>✦ Answers appear here</h3><p>Type a question above and tap Ask</p></div>';}
+
+/* ── Response Bank ── */
+const responses=[
+  {
+    text:"Professor Geller introduces Karen Diamond in a single sentence: 'Karen Diamond will assist us by operating the card punch.' She then proceeds to operate the card punch for the entire 20-minute film — feeding cards, punching columns, backspacing, duplicating, correcting, and clearing the track. She is the one doing everything the film teaches. The professor describes. Karen does.",
+    source:"Basic Operation of the IBM 29 Card Punch — University of Michigan, 1967, 03:13",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"KAREN DIAMOND SEQUENCE",
+    moves:[
+      "1. ASSIST POSE — step forward quietly, hands ready — introduced as the one who will 'assist'",
+      "2. OPERATE THE MACHINE — both hands settle onto an invisible keyboard, confident and expert",
+      "3. THE PROFESSOR SPEAKS — one hand gestures outward describing — the other keeps working the keys",
+      "4. DOING EVERYTHING — arms move through feed, punch, backspace, duplicate, clear — the whole film",
+      "5. FREEZE at the keyboard — call out: 'Karen Diamond. She operated the card punch. She did everything.'"
+    ]
+  },
+  {
+    text:"The film opens with Professor Geller holding a punched card and explaining: 'Before you can effectively use the computer, you must be able to communicate with it. Here is one way — a punched card.' He describes how the holes encode information for the computer to read, and he warns about the familiar instruction printed on every card: 'Do not spindle, fold, or mutilate.' Any unintentional holes would corrupt the data.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 00:25–01:24",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"DO NOT SPINDLE SEQUENCE",
+    moves:[
+      "1. HOLD THE CARD — both hands hold an invisible punch card flat and level, carefully",
+      "2. THE HOLE — one finger presses through — each hole encodes exactly one piece of information",
+      "3. SPINDLE WARNING — arms cross in a firm X — do NOT spindle, fold, or mutilate",
+      "4. CORRUPT THE DATA — mime crumpling the card, then freeze — a single wrong hole breaks everything",
+      "5. FREEZE holding the card gently — call out: 'Do not spindle, fold, or mutilate. The holes are the data.'"
+    ]
+  },
+  {
+    text:"The IBM 29 Card Punch has 80 columns. One character is punched per column. The column number is printed at the top and bottom of each card. The machine has an indicator — a window — that shows which column is currently at the punching station. The card has a 12 edge (top) and a nine edge (bottom), terms that come from the row numbering system used to encode characters through combinations of punched holes.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 02:02–03:13",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"80 COLUMNS SEQUENCE",
+    moves:[
+      "1. COLUMN COUNT — one finger taps along an invisible row, counting — one, two, three… eighty",
+      "2. ONE CHARACTER — finger punches down once into a single column — one character, one column, always",
+      "3. TWELVE EDGE — hand sweeps across the top of the invisible card — this is the twelve edge",
+      "4. NINE EDGE — hand sweeps across the bottom — this is the nine edge, always placed down in the hopper",
+      "5. FREEZE finger at column indicator — call out: 'Eighty columns. Every column has a character. Every hole matters.'"
+    ]
+  },
+  {
+    text:"The cards travel through the IBM 29 in a U-shaped path. They start in the feed hopper on the right. They move to the punching station in the centre. Then to the reading station. Then to the stacker on the left. The card column indicator — a window at the centre of the machine — shows which of the 80 columns is currently under the punch. This is the only way to know where you are on the card while punching.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 03:34–04:45",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"THE U-SHAPED TRACK",
+    moves:[
+      "1. HOPPER LOAD — both hands lift a stack of cards and place them to the right — feed hopper loaded",
+      "2. PUNCHING STATION — hands move to centre — this is where the holes are made",
+      "3. READING STATION — hands shift left one step — the previous card can now be read and copied",
+      "4. STACKER ARRIVE — hands slide to the far left — the finished card lands here in order",
+      "5. FREEZE tracing the U-path — call out: 'Right to left. Hopper to stacker. Every card travels the U.'"
+    ]
+  },
+  {
+    text:"The keyboard of the IBM 29 has two shift keys — not one like a typewriter. The alphabetic shift key in the lower right is almost never needed, because alphabetic characters are the default. The numeric shift key in the lower left must be held down every time you want to punch a digit or symbol from the upper half of a key. This is the opposite of a typewriter, where numbers are the default.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 07:55–08:58",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"TWO SHIFT KEYS SEQUENCE",
+    moves:[
+      "1. TYPEWRITER COMPARE — fingers mime regular typewriter typing — easy, familiar, shift for capitals",
+      "2. IBM REVERSE — both hands reset — on this machine, letters are default, numbers need the shift",
+      "3. NUMERIC SHIFT HOLD — left hand presses and holds an invisible key in the lower left corner",
+      "4. NUMBER PUNCH — right hand punches a digit while left holds the numeric shift — both hands needed",
+      "5. FREEZE both hands in position — call out: 'Two shift keys. The machine decides what is default.'"
+    ]
+  },
+  {
+    text:"You cannot correct a mistake on a punched card by punching the correct character over the wrong one. Punching a second hole in the same column creates a new combination that the computer will read as a different — probably meaningless — character. You also cannot correct it by erasing the printed character at the top of the column and writing in the right one. The computer reads only the holes. Not the print.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 10:06–11:28",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"YOU CANNOT CORRECT SEQUENCE",
+    moves:[
+      "1. WRONG PUNCH — one finger presses down in the wrong column — the mistake is made",
+      "2. PUNCH OVER — try to punch again in the same column — arms stop mid-motion, that makes it worse",
+      "3. ERASE ATTEMPT — mime erasing the printed character at the top — shake your head — the computer ignores this",
+      "4. HOLES ONLY — both hands frame the invisible card — the computer reads the holes. only the holes.",
+      "5. FREEZE — call out: 'The computer reads only the holes. Not the print. You cannot erase a hole.'"
+    ]
+  },
+  {
+    text:"The correct way to fix a mistake is to use the duplicate key. Push the release key to move the wrong card to the reading station and bring a new blank card into the punching station. Hold the duplicate key to copy all the correct columns from the wrong card onto the new card. When you reach the mistake column, let go of duplicate and punch the correct character. Then duplicate the rest.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 12:18–14:26",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"THE DUPLICATE KEY SEQUENCE",
+    moves:[
+      "1. RELEASE — push the release key, the wrong card moves to the reading station",
+      "2. DUPLICATE HOLD — press and hold the duplicate key — the correct columns copy across automatically",
+      "3. LET GO AT MISTAKE — release duplicate at the mistake column — stop exactly here",
+      "4. PUNCH CORRECT — type the right character in the column where the mistake was",
+      "5. FREEZE mid-duplicate — call out: 'Copy the good columns. Correct the bad one. Duplicate the rest.'"
+    ]
+  },
+  {
+    text:"After you finish punching, you use the clear switch to move any remaining cards through the machine and into the stacker without feeding new cards from the hopper. The clear switch returns to the down position as soon as you let go. Then you remove your punched cards from the stacker, remove the remaining blank cards from the hopper, and put a rubber band around the punched deck to keep the cards in order.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 14:26–18:13",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"CLEAR AND RUBBER BAND SEQUENCE",
+    moves:[
+      "1. CLEAR SWITCH LIFT — toggle the clear switch up — the remaining cards flush through to the stacker",
+      "2. LET GO — release the switch — it springs back down automatically",
+      "3. STACKER REMOVE — lift the completed deck from the stacker with both hands, carefully",
+      "4. RUBBER BAND — stretch an invisible rubber band around the deck — keep them in order",
+      "5. FREEZE holding the deck — call out: 'Always put a rubber band around the front of the punched deck.'"
+    ]
+  },
+  {
+    text:"After punching a deck, the film recommends checking it for mistakes by getting a listing printed. You get a Model 20 control card from the Computing Center window, punch the word LIST starting in column two — column one already has holes in it — put it in front of your deck, and hand it in at the Computing Center window. They produce a printed listing from the deck so you can read and check every column.",
+    source:"Basic Operation of the IBM 29 Card Punch — transcript, 18:13–18:56",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"GET THE LISTING SEQUENCE",
+    moves:[
+      "1. CONTROL CARD COLLECT — mime picking up a card from the Computing Center window",
+      "2. PUNCH LIST — fingers type L-I-S-T starting in column two — column one already has its holes",
+      "3. FRONT OF DECK — place the control card at the front of the punched deck",
+      "4. HAND IT IN — walk to the window, pass the deck through — Karen has done this for hundreds of students",
+      "5. FREEZE — call out: 'Punch LIST in column two. Hand it in. Wait for your listing. Check every column.'"
+    ]
+  },
+  {
+    text:"Keypunch operators — almost always women — were the human interface between programmers and computers throughout the 1950s, 60s, and into the 70s. They translated handwritten code into punched holes, working at machines like the IBM 29 in computing centres at universities, government agencies, and corporations. Their skill, speed, and accuracy determined whether programs ran. They were rarely credited. When computing moved to terminals, the role vanished. The women vanished with it.",
+    source:"Basic Operation of the IBM 29 Card Punch — 1967 context; history of keypunch operators",
+    link:"https://deepblue.lib.umich.edu/handle/2027.42/79594",
+    theme:"THE KEYPUNCH OPERATORS",
+    moves:[
+      "1. HANDWRITTEN CODE — mime reading a programmer's handwritten notes, interpreting each line",
+      "2. TRANSLATE TO KEYS — hands move to the keyboard, translating the handwriting into punches",
+      "3. SPEED AND ACCURACY — fingers move fast and precise — every column correct, every hole in place",
+      "4. INVISIBLE CREDIT — the program runs, the programmer gets the result, the operator is not mentioned",
+      "5. FREEZE hands on the keyboard — call out: 'She made the programs run. The computing center was full of her.'"
+    ]
+  }
+];
+
+let recentlyShown=[];
+function getResponse(){
+  let avail=responses.filter((_,i)=>!recentlyShown.includes(i));
+  if(avail.length<4){recentlyShown=[];avail=responses;}
+  const ri=Math.floor(Math.random()*avail.length);
+  const sel=avail[ri];const ai=responses.indexOf(sel);
+  recentlyShown.push(ai);if(recentlyShown.length>7)recentlyShown.shift();
+  return sel;
+}
+
+function generateMovement(resp){
+  const theme=resp.theme||'CARD PUNCH SEQUENCE';
+  const moves=resp.moves||[
+    "1. FEED THE CARDS — both hands load an invisible stack into the hopper, nine edge down",
+    "2. PUNCH A COLUMN — one finger presses down precisely — one character, one column",
+    "3. COLUMN INDICATOR — eyes check the window — which column are we at?",
+    "4. RELEASE KEY — push release, the card moves to the reading station",
+    "5. FREEZE at the keyboard — call out: 'Karen Diamond operated the card punch.'"
+  ];
+  return `HIP HOP SEQUENCE: ${theme}\nHONORING: Karen Diamond\n\n${moves.join('\n')}\n\nENERGY: Precise, mechanical, rhythmic. Every move is a column. Every freeze is a punched hole.`;
+}
+
+/* ── Ask ── */
+function askQuestion(){
+  const q=document.getElementById('userQuestion').value.trim();
+  const name=document.getElementById('userName').value.trim();
+  if(!name){alert('Please enter your name first!');document.getElementById('userName').focus();return;}
+  if(!q){alert('Please type a question!');return;}
+  const resp=getResponse();
+  const mv=generateMovement(resp);
+  const payload={
+    question:q,answerText:resp.text,answerSource:resp.source,
+    answerLink:resp.link,movement:mv,userName:name,
+    userColor:userColor,timestamp:firebase.database.ServerValue.TIMESTAMP
+  };
+  if(useFirebase&&messagesRef){
+    messagesRef.push(payload).catch(()=>localDisplay(q,resp,mv,name));
+  } else {
+    localDisplay(q,resp,mv,name);
+  }
+  document.getElementById('userQuestion').value='';
+}
+
+let localMessages=[];
+function localDisplay(q,resp,mv,name){
+  const area=document.getElementById('outputArea');
+  localMessages.unshift({question:q,answerText:resp.text,answerSource:resp.source,answerLink:resp.link,movement:mv,userName:name,userColor:userColor});
+  if(localMessages.length>MAX_DISPLAY)localMessages=localMessages.slice(0,MAX_DISPLAY);
+  area.innerHTML='';
+  localMessages.forEach((msg,i)=>renderPair(msg,null,i===0));
+}
+
+/* ── Chime ── */
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playChime(){
+  try{
+    const ctx=getAudioCtx();
+    [[329.63,0],[415.30,0.18],[493.88,0.36]].forEach(([freq,delay])=>{
+      const osc=ctx.createOscillator();const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=freq;
+      const t=ctx.currentTime+delay;
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.35,t+0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+      osc.start(t);osc.stop(t+0.72);
+    });
+  }catch(e){}
+}
+
+/* ── Render ── */
+function renderPair(msg,key,playAudio=false){
+  const area=document.getElementById('outputArea');
+  const el=document.createElement('div');
+  el.className='cb-pair';
+  if(key)el.id='pair-'+key;
+  el.innerHTML=`
+    <div class="cb-meta">
+      <strong style="color:${escH(msg.userColor||'#ff85b3')}">${escH(msg.userName||'Anon')}</strong>
+      <span>asked:</span>
+    </div>
+    <div class="cb-qbubble">❓ ${escH(msg.question)}</div>
+    <div class="cb-pcard">
+      <div class="cb-phead"><span class="cb-plabel">🗂️ From the Transcript</span></div>
+      <div class="cb-pbody">
+        <div class="cb-ptext">${escH(msg.answerText)}</div>
+        <div class="cb-psrc">Source: <a href="${escH(msg.answerLink)}" target="_blank" rel="noopener">${escH(msg.answerSource)}</a></div>
+      </div>
+    </div>
+    <div class="cb-mcard">
+      <div class="cb-mhead"><span class="cb-mlabel">🎭 Movement Instructions</span></div>
+      <div class="cb-mbody"><div class="cb-mtext">${escH(msg.movement)}</div></div>
+      <div class="cb-spkrow">
+        <button class="cb-btn purple" style="font-size:11px;padding:7px 13px;" onclick="speakText(this)">🔊 Read Aloud</button>
+        <button class="cb-btn soft" style="font-size:11px;padding:7px 13px;" onclick="stopSpeech()">⏹ Stop</button>
+      </div>
+    </div>`;
+  area.insertBefore(el,area.firstChild);
+  if(playAudio){playChime();setTimeout(()=>speakMovement(msg.movement),950);}
+}
+
+/* ── Speech (female, English) ── */
+function getFemaleVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  const enVoices=voices.filter(v=>v.lang==='en-US'||v.lang==='en_US'||v.lang.startsWith('en-US'));
+  const allEn=voices.filter(v=>v.lang.startsWith('en'));
+  const pool=enVoices.length?enVoices:allEn;
+  const femaleKeywords=['female','woman','zira','samantha','victoria','karen','moira','fiona','ava','allison','susan','sara','tessa','aria','jenny','michelle','emma','elizabeth','julia'];
+  let voice=pool.find(v=>femaleKeywords.some(k=>v.name.toLowerCase().includes(k)));
+  if(!voice)voice=pool[0]||null;
+  return voice;
+}
+function speakMovement(text){
+  if(!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.88;u.pitch=1.2;
+  const trySpeak=()=>{const v=getFemaleVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);};
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.addEventListener('voiceschanged',trySpeak,{once:true});
+  } else {trySpeak();}
+}
+function speakText(btn){speakMovement(btn.closest('.cb-mcard').querySelector('.cb-mtext').textContent);}
+function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
+function escH(str){const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;}
+document.getElementById('userQuestion').addEventListener('keypress',e=>{if(e.key==='Enter')askQuestion();});
+
+/* ── Admin ── */
+function showAdminModal(){
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';
+  setTimeout(()=>document.getElementById('adminPass').focus(),100);
+}
+function closeAdminModal(){document.getElementById('adminModal').classList.remove('open');}
+function confirmAdminReset(){
+  if(document.getElementById('adminPass').value!==ADMIN_PASSCODE){
+    document.getElementById('adminErr').textContent='Incorrect passcode. Try again.';
+    document.getElementById('adminPass').value='';document.getElementById('adminPass').focus();return;
+  }
+  document.getElementById('outputArea').innerHTML=emptyHTML();
+  if(useFirebase&&messagesRef)messagesRef.remove().catch(()=>{});
+  localMessages=[];recentlyShown=[];closeAdminModal();
+}
+document.getElementById('adminPass').addEventListener('keypress',e=>{if(e.key==='Enter')confirmAdminReset();});
+
+window.addEventListener('beforeunload',()=>{
+  if(onlineRef&&currentUser)onlineRef.child(currentUser.replace(/[.#$[\]]/g,'_')).remove();
+  if('speechSynthesis' in window)window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
