@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InventHER · Human Computer Invention Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0008; --pink: #ff2d6b; --pink-soft: #ff85b3;
+    --rose: #ff6b9d; --lilac: #c97bff; --white: #fff5f8;
+    --muted: rgba(255,190,220,0.45); --border: rgba(255,80,150,0.22);
+    --card-bg: rgba(255,255,255,0.03); --card-border: rgba(255,80,150,0.18);
+  }
+  body { font-family:'Quicksand',sans-serif; font-weight:600; background:var(--bg); color:var(--white); min-height:100vh; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse 60% 50% at 15% 20%,rgba(255,45,107,0.07) 0%,transparent 70%), radial-gradient(ellipse 50% 40% at 85% 80%,rgba(201,123,255,0.07) 0%,transparent 70%); pointer-events:none; z-index:0; }
+
+  .sparkles { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .sparkle { position:absolute; font-size:14px; opacity:0; animation:floatUp var(--dur,8s) var(--delay,0s) ease-in infinite; left:var(--x,50%); }
+  @keyframes floatUp { 0%{opacity:0;transform:translateY(100vh) scale(0.5) rotate(0deg);} 10%{opacity:0.6;} 90%{opacity:0.3;} 100%{opacity:0;transform:translateY(-10vh) scale(1.2) rotate(360deg);} }
+
+  /* TOPBAR */
+  .topbar { position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:18px 24px 14px; border-bottom:1px solid var(--border); background:rgba(14,0,8,0.7); backdrop-filter:blur(12px); }
+  .logo { display:flex; align-items:center; gap:12px; }
+  .logo-icon { width:44px; height:44px; border-radius:14px; background:rgba(255,45,107,0.15); border:1.5px solid rgba(255,80,150,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 0 16px rgba(255,45,107,0.2); }
+  .logo-name { font-family:'Nunito',sans-serif; font-weight:900; font-size:18px; background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:0.04em; line-height:1; }
+  .logo-sub { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+  .top-badges { display:flex; gap:8px; align-items:center; }
+  .badge { font-size:10px; padding:5px 12px; border-radius:999px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--muted); letter-spacing:0.06em; display:flex; align-items:center; gap:5px; }
+  .badge-pip { width:5px; height:5px; border-radius:50%; background:var(--pink); animation:pip 2s ease-in-out infinite; }
+  @keyframes pip { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* HERO */
+  .hero { position:relative; z-index:1; text-align:center; padding:36px 24px 24px; }
+  .hero-eyebrow { font-size:10px; letter-spacing:0.35em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:12px; opacity:0.7; }
+  .hero h1 { font-family:'Nunito',sans-serif; font-weight:900; font-size:clamp(2rem,6vw,3.5rem); line-height:1.05; background:linear-gradient(135deg,#fff5f8 0%,#ffb3cf 40%,#ff2d6b 70%,#c97bff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
+  .hero p { font-size:13px; color:var(--muted); max-width:520px; margin:0 auto; line-height:1.7; }
+
+  /* LAYOUT */
+  .lab { position:relative; z-index:1; display:grid; grid-template-columns:400px 1fr; gap:20px; padding:0 20px 40px; max-width:1200px; margin:0 auto; }
+  @media(max-width:860px){ .lab{ grid-template-columns:1fr; } }
+
+  /* CARD */
+  .card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; overflow:hidden; box-shadow:0 4px 32px rgba(255,45,107,0.06), 0 1px 0 rgba(255,255,255,0.04) inset; position:relative; }
+  .card::before { content:''; position:absolute; top:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,150,200,0.5),transparent); }
+  .card-header { padding:14px 18px; background:rgba(255,45,107,0.06); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .card-header h2 { font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.12em; text-transform:uppercase; background:linear-gradient(90deg,#ffb3cf,#ff2d6b); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .card-dot { width:8px; height:8px; border-radius:50%; background:var(--pink); box-shadow:0 0 8px var(--pink); animation:pip 2s ease-in-out infinite; }
+  .count-badge { margin-left:auto; background:linear-gradient(135deg,rgba(255,45,107,0.3),rgba(201,123,255,0.3)); border:1px solid rgba(255,80,150,0.4); color:var(--pink-soft); font-size:9px; padding:2px 9px; border-radius:999px; font-weight:700; letter-spacing:0.05em; }
+
+  /* SOURCE BROWSER - photos/punchcards/patents */
+  .src-tabs { display:flex; gap:4px; padding:10px 12px 0; flex-wrap:wrap; }
+  .src-tab { padding:6px 12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,80,150,0.15); border-radius:8px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.08em; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+  .src-tab.active { background:linear-gradient(135deg,rgba(255,45,107,0.2),rgba(201,123,255,0.15)); color:var(--pink-soft); border-color:rgba(255,80,150,0.4); }
+
+  .src-browser { max-height:320px; overflow-y:auto; padding:8px 10px 10px; display:flex; flex-direction:column; gap:5px; }
+  .src-browser::-webkit-scrollbar { width:3px; }
+  .src-browser::-webkit-scrollbar-thumb { background:rgba(255,80,150,0.3); border-radius:2px; }
+
+  /* Photo cards */
+  .photo-item { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,80,150,0.1); border-radius:10px; cursor:pointer; transition:all 0.18s; }
+  .photo-item:hover { background:rgba(255,45,107,0.08); border-color:rgba(255,80,150,0.3); }
+  .photo-item.added { opacity:0.4; cursor:default; }
+  .photo-item.added:hover { background:rgba(255,255,255,0.02); border-color:rgba(255,80,150,0.1); }
+  .photo-thumb { width:48px; height:40px; border-radius:6px; background:rgba(255,45,107,0.1); border:1px solid rgba(255,80,150,0.2); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .pi-info { flex:1; min-width:0; }
+  .pi-cat { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:2px; opacity:0.8; }
+  .pi-title { font-size:11px; font-weight:700; color:var(--white); line-height:1.35; }
+  .pi-desc { font-size:10px; color:var(--muted); margin-top:3px; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pi-btn { flex-shrink:0; padding:4px 10px; border-radius:7px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; border:1px solid rgba(255,80,150,0.3); background:rgba(255,45,107,0.08); color:var(--pink-soft); cursor:pointer; transition:all 0.18s; white-space:nowrap; }
+  .pi-btn:hover { background:rgba(255,45,107,0.2); }
+  .pi-btn.done { background:rgba(201,123,255,0.1); border-color:rgba(201,123,255,0.3); color:var(--lilac); cursor:default; }
+
+  /* search */
+  .search-wrap { padding:8px 12px 0; }
+  .search-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,80,150,0.18); border-radius:10px; padding:7px 12px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:12px; color:var(--white); }
+  .search-input::placeholder { color:rgba(255,180,210,0.3); }
+  .search-input:focus { outline:none; border-color:rgba(255,45,107,0.5); }
+
+  /* ADDED SECTION */
+  .added-section { border-top:1px solid var(--border); }
+  .added-header { padding:8px 14px; display:flex; align-items:center; gap:8px; }
+  .added-header span { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink-soft); opacity:0.7; }
+  .added-list { max-height:180px; overflow-y:auto; padding:0 10px 10px; display:flex; flex-direction:column; gap:5px; }
+  .added-list::-webkit-scrollbar { width:3px; }
+  .added-list::-webkit-scrollbar-thumb { background:rgba(255,80,150,0.3); border-radius:2px; }
+  .a-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,80,150,0.15); border-left:3px solid var(--pink); border-radius:10px; padding:8px 30px 8px 10px; position:relative; animation:slideIn 0.3s ease; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+  .a-cat { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:2px; }
+  .a-title { font-size:11px; font-weight:700; color:var(--white); line-height:1.3; }
+  .a-remove { position:absolute; top:7px; right:8px; background:none; border:none; color:rgba(255,150,200,0.35); cursor:pointer; font-size:15px; line-height:1; transition:color 0.2s; }
+  .a-remove:hover { color:var(--pink); }
+  .empty-state { text-align:center; padding:24px 20px; color:var(--muted); font-size:12px; line-height:1.8; }
+  .empty-icon { font-size:26px; margin-bottom:8px; }
+  .stats-bar { display:flex; gap:14px; align-items:center; padding:8px 16px; background:rgba(255,45,107,0.05); border-top:1px solid var(--border); font-size:10px; color:var(--muted); letter-spacing:0.06em; }
+  .stat-num { color:var(--pink-soft); font-weight:700; margin-right:3px; }
+
+  /* STUDIO */
+  .studio { display:flex; flex-direction:column; gap:18px; }
+  .mode-tabs { display:flex; gap:4px; margin:16px 16px 0; background:rgba(255,255,255,0.03); padding:4px; border-radius:12px; border:1px solid var(--border); }
+  .tab { flex:1; padding:9px 8px; background:none; border:none; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.08em; cursor:pointer; color:var(--muted); border-radius:9px; transition:all 0.2s; }
+  .tab.active { background:linear-gradient(135deg,rgba(255,45,107,0.25),rgba(201,123,255,0.2)); color:var(--pink-soft); border:1px solid rgba(255,80,150,0.3); }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; padding:10px 16px 0; }
+  .chip { padding:5px 12px; background:rgba(201,123,255,0.08); border:1px solid rgba(201,123,255,0.25); border-radius:999px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:11px; color:var(--lilac); cursor:pointer; transition:all 0.2s; }
+  .chip:hover { background:rgba(201,123,255,0.2); border-color:rgba(201,123,255,0.5); color:#e0b8ff; }
+  .field-block { padding:12px 16px 0; }
+  .field-label { display:block; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:7px; opacity:0.8; }
+  textarea, input[type="text"] { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,80,150,0.2); border-radius:12px; padding:11px 14px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:13px; color:var(--white); resize:vertical; line-height:1.5; transition:border-color 0.2s,box-shadow 0.2s; }
+  textarea::placeholder, input::placeholder { color:rgba(255,180,210,0.3); }
+  textarea:focus, input:focus { outline:none; border-color:rgba(255,45,107,0.6); box-shadow:0 0 0 3px rgba(255,45,107,0.1); background:rgba(255,255,255,0.06); }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; border:none; border-radius:12px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s; letter-spacing:0.04em; }
+  .btn-primary { background:linear-gradient(135deg,#ff2d6b,#c97bff); color:white; width:100%; box-shadow:0 4px 20px rgba(255,45,107,0.3); }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(255,45,107,0.45); }
+  .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+  .add-row { padding:14px 16px 16px; }
+
+  /* OUTPUT */
+  .output-body { padding:24px; min-height:380px; }
+  .welcome { text-align:center; padding:50px 20px; }
+  .welcome-icon { font-size:44px; margin-bottom:16px; }
+  .welcome h3 { font-family:'Nunito',sans-serif; font-weight:800; font-size:1.3rem; background:linear-gradient(90deg,#ffb3cf,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
+  .welcome p { font-size:12px; color:var(--muted); line-height:1.8; max-width:300px; margin:0 auto; }
+  .thinking { display:flex; align-items:center; gap:16px; padding:50px 0; justify-content:center; }
+  .thinking-dots { display:flex; gap:7px; }
+  .thinking-dots span { width:9px; height:9px; border-radius:50%; animation:bounce 1.2s ease-in-out infinite; }
+  .thinking-dots span:nth-child(1){ background:var(--pink); }
+  .thinking-dots span:nth-child(2){ background:var(--rose); animation-delay:0.2s; }
+  .thinking-dots span:nth-child(3){ background:var(--lilac); animation-delay:0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-9px);opacity:1} }
+  .thinking-text { font-size:12px; color:var(--muted); font-style:italic; }
+  .result { animation:fadeUp 0.4s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .result-title { font-family:'Nunito',sans-serif; font-weight:900; font-size:1.6rem; background:linear-gradient(135deg,#fff5f8,#ff85b3,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:6px; line-height:1.15; }
+  .result-inspired { font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border); opacity:0.8; }
+  .result-concept { font-size:14px; font-weight:700; color:var(--white); margin-bottom:20px; line-height:1.6; }
+  .result-body { font-size:13px; color:rgba(255,240,248,0.75); line-height:1.85; }
+  .result-body h3 { font-family:'Nunito',sans-serif; font-weight:800; font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--pink-soft); margin:20px 0 8px; opacity:0.8; }
+  .result-body p { margin-bottom:10px; }
+  .result-body ul { padding-left:18px; margin-bottom:12px; }
+  .result-body li { margin-bottom:5px; }
+  .action-row { display:flex; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border); align-items:center; flex-wrap:wrap; }
+  .btn-sm { padding:8px 16px; border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; cursor:pointer; border:1px solid rgba(255,80,150,0.25); background:rgba(255,45,107,0.07); color:var(--pink-soft); transition:all 0.2s; }
+  .btn-sm:hover { background:rgba(255,45,107,0.15); }
+  .ts { margin-left:auto; font-size:10px; color:rgba(255,180,210,0.3); }
+  .err { background:rgba(255,45,107,0.08); border:1px solid rgba(255,45,107,0.3); border-left:3px solid var(--pink); padding:12px 14px; border-radius:10px; font-size:12px; color:#ff85b3; margin-top:10px; line-height:1.6; }
+
+  /* SKETCH */
+  .sketch-section { margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+  .sketch-label { font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--pink-soft); opacity:0.7; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .sketch-wrap { background:rgba(255,255,255,0.02); border:1px solid rgba(255,80,150,0.15); border-radius:14px; padding:16px; overflow:hidden; }
+  .sketch-wrap svg { width:100%; height:auto; display:block; }
+  .sketch-thinking { display:flex; align-items:center; gap:12px; padding:20px; }
+  .sketch-thinking-text { font-size:11px; color:var(--muted); font-style:italic; }
+  .sketch-btn { padding:8px 16px; border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; cursor:pointer; border:1px solid rgba(201,123,255,0.3); background:rgba(201,123,255,0.08); color:var(--lilac); transition:all 0.2s; }
+  .sketch-btn:hover { background:rgba(201,123,255,0.18); }
+  .sketch-section .thinking-dots span { width:7px; height:7px; border-radius:50%; animation:bounce 1.2s ease-in-out infinite; }
+  .sketch-section .thinking-dots span:nth-child(1){ background:var(--lilac); }
+  .sketch-section .thinking-dots span:nth-child(2){ background:var(--pink-soft); animation-delay:0.2s; }
+  .sketch-section .thinking-dots span:nth-child(3){ background:var(--lilac); animation-delay:0.4s; }
+
+  /* INSPIRE BANNER */
+  .inspire-banner { position:relative; z-index:1; margin:0 20px 20px; padding:16px 20px; background:rgba(255,45,107,0.07); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+  .inspire-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,150,200,0.5),transparent); }
+  .inspire-text { font-size:12px; color:var(--muted); line-height:1.7; }
+  .inspire-text strong { color:var(--pink-soft); }
+
+  /* ADVANCE */
+  .advance-wrap { position:relative; z-index:1; margin:0 20px 40px; text-align:center; }
+  .advance-card { display:inline-block; background:linear-gradient(135deg,rgba(255,45,107,0.12),rgba(201,123,255,0.12)); border:1.5px solid rgba(255,80,150,0.35); border-radius:20px; padding:24px 36px; position:relative; overflow:hidden; box-shadow:0 4px 32px rgba(255,45,107,0.1); }
+  .advance-card::before { content:''; position:absolute; top:0; left:8%; right:8%; height:1.5px; background:linear-gradient(90deg,transparent,rgba(255,133,179,0.6) 35%,rgba(255,45,107,0.8) 50%,rgba(255,133,179,0.6) 65%,transparent); box-shadow:0 0 12px rgba(255,45,107,0.3); }
+  .advance-eyebrow { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; font-weight:700; }
+  .advance-title { font-family:'Nunito',sans-serif; font-weight:900; font-size:16px; background:linear-gradient(90deg,#ffb3cf,#ff2d6b 55%,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:16px; }
+  .btn-advance { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; letter-spacing:0.05em; color:white; text-decoration:none; background:linear-gradient(135deg,#ff2d6b,#c97bff); border:none; border-radius:14px; padding:14px 32px; box-shadow:0 4px 22px rgba(255,45,107,0.4),inset 0 1px 0 rgba(255,255,255,0.1); transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1); cursor:pointer; position:relative; overflow:hidden; }
+  .btn-advance::before { content:''; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent 55%); pointer-events:none; }
+  .btn-advance:hover { transform:translateY(-3px) scale(1.04); box-shadow:0 10px 36px rgba(255,45,107,0.55); }
+</style>
+</head>
+<body>
+
+<div class="sparkles" id="sparkles"></div>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">👩‍💻</div>
+    <div>
+      <div class="logo-name">InventHER</div>
+      <div class="logo-sub">Human Computer Invention Lab</div>
+    </div>
+  </div>
+  <div class="top-badges">
+    <div class="badge"><span class="badge-pip"></span>AI Active</div>
+    <div class="badge" id="topBadge">0 Sources Selected</div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">✦ Inspired by the Human Computers ✦</div>
+  <h1>Invent from<br>Hidden History</h1>
+  <p>Select photographs of human computers, IBM punch card records, and patents by women inventors — then describe your idea and generate a new invention drawn from their genius.</p>
+</div>
+
+<div class="lab">
+
+  <!-- LEFT: Source Browser -->
+  <aside>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot"></div>
+        <h2>Source Library</h2>
+        <div class="count-badge" id="countBadge">0 selected</div>
+      </div>
+
+      <div class="search-wrap">
+        <input class="search-input" type="text" id="searchBox" placeholder="🔍 Search sources, names, years…" oninput="window.filterSources()">
+      </div>
+
+      <div class="src-tabs" id="srcTabs"></div>
+      <div class="src-browser" id="srcBrowser"></div>
+
+      <div class="added-section" id="addedSection" style="display:none;">
+        <div class="added-header">
+          <div class="card-dot" style="animation:none;opacity:0.6;"></div>
+          <span>Added to Invention Library</span>
+        </div>
+        <div class="added-list" id="addedList"></div>
+        <div class="stats-bar">
+          <span><span class="stat-num" id="statCount">0</span> sources</span>
+          <span><span class="stat-num" id="statWords">0</span> words indexed</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Studio -->
+  <main class="studio">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--lilac);box-shadow:0 0 8px var(--lilac);"></div>
+        <h2>Invention Studio</h2>
+      </div>
+
+      <div class="mode-tabs">
+        <button class="tab active" onclick="window.setMode(this,'invent')">✦ New Invention</button>
+        <button class="tab" onclick="window.setMode(this,'combine')">⊕ Combine Ideas</button>
+        <button class="tab" onclick="window.setMode(this,'improve')">↑ Improve On</button>
+      </div>
+
+      <div class="chips">
+        <button class="chip" onclick="window.useChip(this)">data processing</button>
+        <button class="chip" onclick="window.useChip(this)">star classification</button>
+        <button class="chip" onclick="window.useChip(this)">punch card systems</button>
+        <button class="chip" onclick="window.useChip(this)">calculation tools</button>
+        <button class="chip" onclick="window.useChip(this)">pattern recognition</button>
+        <button class="chip" onclick="window.useChip(this)">collective intelligence</button>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" id="modeLabel">Describe a problem to solve or domain to invent in</label>
+        <textarea id="userPrompt" rows="3" placeholder="e.g. Design a new system for classifying and organizing large datasets…"></textarea>
+      </div>
+
+      <div class="add-row">
+        <button class="btn btn-primary" onclick="window.generate()" id="genBtn">⚗ Generate Invention</button>
+        <div id="genErr" style="display:none;" class="err"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--pink-soft);box-shadow:0 0 8px rgba(255,133,179,0.6);animation:none;"></div>
+        <h2>Invention Output</h2>
+      </div>
+      <div class="output-body" id="outputArea">
+        <div class="welcome">
+          <div class="welcome-icon">🖥️</div>
+          <h3>Ready to invent</h3>
+          <p>Select photographs, punch card records, and patents from the library, then describe a problem — the AI will generate a new invention inspired by the human computers.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="inspire-banner">
+  <div class="inspire-text">
+    <strong>✦ Honoring the human computers:</strong> Williamina Fleming · Annie Jump Cannon · Henrietta Leavitt · Antonia Maury · Florence Cushman · Ida Woods · Cecilia Payne · Margaret Harwood · Edith Clarke · the IBM keypunch operators · and all the women whose labor built modern computing
+  </div>
+</div>
+
+<div class="advance-wrap">
+  <div class="advance-card">
+    <div class="advance-eyebrow">✦ carebot research system</div>
+    <div class="advance-title">Ready for your next task?</div>
+    <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">
+      ✦ Advance to next HIT
+    </a>
+  </div>
+</div>
+
+<script type="module">
+
+const PROXY = 'https://us-central1-invention-maker-women.cloudfunctions.net/anthropicProxy';
+
+async function callAI(payload) {
+  const res = await fetch(PROXY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('API error ' + res.status);
+  const data = await res.json();
+  return data.content?.find(b => b.type === 'text')?.text || '';
+}
+
+// ── SPARKLES ──
+const SPARKS=['✦','✧','⚙','✿','◆','◇','✶','▪'];
+const sc=document.getElementById('sparkles');
+for(let i=0;i<18;i++){
+  const s=document.createElement('div'); s.className='sparkle';
+  s.textContent=SPARKS[i%SPARKS.length];
+  s.style.setProperty('--x',Math.random()*100+'%');
+  s.style.setProperty('--dur',(7+Math.random()*8)+'s');
+  s.style.setProperty('--delay',(Math.random()*10)+'s');
+  s.style.color=`hsl(${320+Math.random()*60},80%,${65+Math.random()*20}%)`;
+  sc.appendChild(s);
+}
+
+// ── SOURCE DATA ──
+const SOURCES = [
+
+  // PHOTOGRAPHS — Harvard Observatory Human Computers
+  { cat:'Photos', id:'photo-draper-1891', icon:'📷', title:'Observatory Women Computers, 1891', year:1891,
+    content:`Photograph of women computers at Harvard College Observatory, 1891, with Mrs. Henry Draper (Mary Anna Palmer Draper). The women are seated and standing in the long computing room on the south side of the second floor. Identifiable women include Antonia Maury, Williamina Fleming, possibly Mabel C. Stevens, and probably Florence Cushman. These women analyzed stellar photographs and computed data. Mrs. Draper funded much of the work through the Draper Catalog project, an ambitious astrophotography classification effort.` },
+
+  { cat:'Photos', id:'photo-pickering-1891', icon:'📷', title:'Computers with Pickering, 1891', year:1891,
+    content:`Photograph of Harvard Observatory women computers with director Edward Pickering, 1891. The women worked in the computing room cataloging and analyzing thousands of stellar photographic plates. The image shows women crowded together for the photograph — in reality they worked across three to five rooms with approximately fifteen women at this time. Identifiable: possibly Mabel Stevens, Antonia Maury, possibly Eve Leland, Williamina Fleming, probably Florence Cushman.` },
+
+  { cat:'Photos', id:'photo-brick-1898', icon:'📷', title:'Women Computers, Brick Building, 1898', year:1898,
+    content:`Photograph dated March 1898 showing women computers working in the new brick building constructed in 1892 to address space issues at Harvard Observatory. Williamina Fleming is standing. Immediately in front of her are Eve Leland and Ida Woods. These women performed the painstaking work of classifying stellar spectra from glass photographic plates — work that would form the basis of the Henry Draper Catalogue and establish the modern classification system for stars still used today.` },
+
+  { cat:'Photos', id:'photo-group-1911', icon:'📷', title:'Observatory Group Portrait, 1911', year:1911,
+    content:`Group portrait of Harvard Observatory women computers, circa 1911. Includes Margaret Harwood (first woman appointed director of an independent observatory), Mollie O'Reilly, Edith Gill (computer since 1889), Annie Jump Cannon (classifying stellar spectra for the Henry Draper Catalogue), Evelyn Leland (computer 1889–1925), Florence Cushman (computer since 1888), Marion Whyte, Grace Brooks, Arville Walker, Alta Carpenter, Mabel Gill (computer since 1892), and Ida Woods (who would receive the first AAVSO nova medal in 1920). Annie Jump Cannon alone classified over 350,000 stars in her career.` },
+
+  { cat:'Photos', id:'photo-paperdoll-1918', icon:'📷', title:'Paper Doll Panorama, 1918', year:1918,
+    content:`Panoramic photograph of Harvard Observatory women computers in a "paper doll" pose, holding hands in a line, circa 1918. Left to right: Ida Woods, Eva Leland, Florence Cushman, Grace Brooks, Mary H. Vann, Henrietta Leavitt, Mollie O'Reilly, Mabel Gill, Alta Carpenter, Annie Jump Cannon, Dorothy Block, Arville Walker. Henrietta Leavitt's work on Cepheid variable stars in this era provided the first reliable method for measuring cosmic distances, enabling Edwin Hubble to later determine the size and expansion of the universe.` },
+
+  { cat:'Photos', id:'photo-asweware-1925', icon:'📷', title:'"As We Were" — Observatory, 1925', year:1925,
+    content:`Photograph titled "As We Were," 1925, showing the end of the era of women computers and beginning of the era of women scientists at Harvard. Back row: Margaret Harwood, Cecilia Payne, Arville Walker, Edith Gill. Middle row: Lillian Hodgdon, Annie Cannon, Evelyn Leland, Ida Woods, Mabel Gill, Florence Cushman. Bottom row: Agnes Hoovens, Mary Howe, Harvia Wilson, Margaret Walton (Mayall), Antonia Maury. Cecilia Payne's 1925 PhD thesis proved that stars are made primarily of hydrogen and helium — a discovery initially rejected by male astronomers but later recognized as one of the most important in 20th century astronomy.` },
+
+  { cat:'Photos', id:'photo-fleming-plates', icon:'📷', title:'Williamina Fleming at Plate Stacks', year:1902,
+    content:`Photograph of Williamina Fleming at Harvard College Observatory plate stacks, circa 1902, in the new plate stacks of the brick building addition built that year. Fleming was hired as a maid by Observatory director Edward Pickering and he discovered her remarkable abilities, eventually promoting her to curator of astronomical photographs. She developed her own stellar classification system and discovered 10 novae, 52 nebulae, and hundreds of variable stars. She supervised the work of the other women computers and was one of the first women to hold an official corporation appointment at Harvard University.` },
+
+  { cat:'Photos', id:'photo-two-women-1891', icon:'📷', title:'Two Women Computing, 1891', year:1891,
+    content:`Photograph of two women computers working at Harvard Observatory, 1891. One is believed to be Williamina Fleming, seated on the right. The women are working in the computing room with stellar photographic plates and logbooks. The work involved examining glass plates under magnifying loupes, measuring the position and brightness of stars, and recording precise numerical data by hand — the kind of meticulous, repetitive, expert analytical work for which the women computers were underpaid and largely uncredited during their lifetimes.` },
+
+  // IBM PUNCH CARD OPERATORS
+  { cat:'Punch Cards', id:'punch-ibm29-operation', icon:'🗂', title:'IBM 29 Card Punch Operation, 1967', year:1967,
+    content:`Documentation of IBM 29 Card Punch machine operation, 1967. The keypunch operator sits at the machine and types data using a keyboard with 64 keys. Data is encoded by punching holes in precise column positions of an 80-column card — one character per column, using a combination of the 12-edge (top), 9-edge (bottom), and numeric rows. The machine uses a hopper (input), punching station, reading station, and stacker (output). There are two shift keys that work in reverse of typewriter logic. The operator cannot correct a mistake — the card must be discarded and repunched. The duplicate key allows the machine to automatically copy data from one card to the next. Keypunch work was considered clerical or secretarial — "women's work" — so most keypunch operators were women, often working in large pools processing payroll, census, scientific, and business data.` },
+
+  { cat:'Punch Cards', id:'punch-women-labor', icon:'🗂', title:'Keypunch Operators — Women\'s Labor', year:1965,
+    content:`Historical documentation of keypunch operator labor, 1960s. Punching data into cards was considered clerical or secretarial work — which in the 1950s and 1960s was considered "women's work." So most keypunch operators were women. They worked in large pools called keypunch departments, often in basements of corporations, government agencies, universities, and NASA facilities. The work required extreme precision, speed, and concentration — operators were expected to punch 8,000 to 12,000 keystrokes per hour with near-zero error rates. Despite the critical nature of their work — no punch card, no computation — keypunch operators were among the lowest paid workers in computing. Their labor was the invisible foundation of mainframe computing, scientific data processing, and the space program.` },
+
+  { cat:'Punch Cards', id:'punch-nasa-computers', icon:'🗂', title:'NASA Human Computers & Punch Cards', year:1960,
+    content:`Documentation of human computer work at NASA Langley Research Center, 1940s–1960s. Women human computers, including the Black women mathematicians of the West Area Computing Unit (Katherine Johnson, Dorothy Vaughan, Mary Jackson, Christine Darden), processed calculations for wind tunnel tests, flight trajectories, and orbital mechanics. Their work was performed first by hand, then with mechanical calculators, then with IBM punch card machines. Dorothy Vaughan taught herself and her team FORTRAN so they could operate the new IBM 7090 mainframe — making herself and her team indispensable as programming specialists in the transition from human to electronic computation.` },
+
+  { cat:'Punch Cards', id:'punch-harlow-shapley', icon:'🗂', title:'Harlow Shapley Interview — Kilo Girls, 1940', year:1940,
+    content:`Reference to the "Kilo Girls" interview with Harlow Shapley, 1940, in which the Harvard Observatory director discusses the women computers' work. Shapley used the term "kilo girl" as a unit of computational labor — one kilo girl being the amount of computation a woman computer could perform in 1,000 hours of work. This dehumanizing unit of measurement reflects the way women's intellectual and computational labor was systematically reduced to a commodity, even as it powered the most significant astronomical discoveries of the 20th century. The women computed stellar distances, classified spectra, and discovered novae — work that earned the observatory and its male directors international recognition and prizes.` },
+
+  // PATENTS
+  { cat:'Patents', id:'US1552113A', icon:'📜', title:'Edith Clarke — Calculator, 1925', year:1925,
+    content:`US Patent 1552113 — Edith Clarke's graphical calculator for solving equations involving electrical circuits. The Clarke calculator uses a graphical scale slide-rule format to rapidly compute hyperbolic functions and circuit parameters, dramatically reducing calculation time for electrical engineers. Clarke was the first professionally employed female electrical engineer in the US and the first woman to deliver a paper before the American Institute of Electrical Engineers. Her calculator made complex power transmission calculations that previously took hours computable in minutes.` },
+
+  { cat:'Patents', id:'US2973141A', icon:'📜', title:'Evelyn Berezin — Electronic Calculator, 1961', year:1961,
+    content:`US Patent 2973141 — Evelyn Berezin's control means with record sensing for an electronic calculator. The invention enables automatic input from punch cards or punched tape, allowing the electronic calculator to read pre-recorded data and perform sequential computations automatically. Berezin later designed the first computerized airline reservation system and the first word processor. She founded Redactron Corporation in 1969 and was one of the few women CEOs of a technology company in that era.` },
+
+  { cat:'Patents', id:'US258518A', icon:'📜', title:'Mary E. Winter — Adding Machine, 1882', year:1882,
+    content:`US Patent 258518 — Adding machine by Mary E. Winter and Cushman W. Crary. A mechanical device for performing arithmetic calculations with a mechanism for carrying and accumulating numerical values through interlocking digit wheels and a manual input lever mechanism. Enables rapid addition of multiple-digit numbers with a compact mechanical register.` },
+
+  { cat:'Patents', id:'US745167A', icon:'📜', title:'Emily C. Duncan — Calculator, 1903', year:1903,
+    content:`US Patent 745167 — Calculator by Emily C. Duncan. A mechanical calculator device using a series of numbered wheels and levers to perform addition and subtraction with a carry mechanism for multi-digit calculations. Duncan also filed an improved version (US749851) the following year with enhanced carry mechanism, rotating disc inputs, and a display register.` },
+
+  { cat:'Patents', id:'US640348A', icon:'📜', title:'Margaret A. Wise — Computing Attachment, 1900', year:1900,
+    content:`US Patent 640348 — Computing attachment for scale-beams by Margaret A. Wise. A computing device that attaches to standard weighing scales and uses a sliding computation table to instantly convert weight readings into monetary or unit values, reducing the need for manual arithmetic. An early example of embedding computation into physical measurement instruments.` },
+
+  { cat:'Patents', id:'USD164150S', icon:'📜', title:'Sarah Ann Ayres — Tax Computer, 1951', year:1951,
+    content:`US Design Patent 164150 — Tax computation device by Sarah Ann Ayres. A specialized calculation chart and sliding reference scale optimized for rapidly computing tax obligations based on income tables. Represents a class of paper computing tools that enabled clerical workers — predominantly women — to perform complex tax and financial calculations without formal mathematics training.` },
+
+  { cat:'Patents', id:'US310450A', icon:'📜', title:'Hertha Ayrton — Dividing Instrument, 1885', year:1885,
+    content:`US Patent 310450 — Draftsman's dividing instrument by Hertha Ayrton (Phoebe Sarah Marks). A precision instrument for dividing lines into equal parts for technical drawing and drafting, using a sliding scale and vernier mechanism. Hertha Ayrton was the first woman elected to the Institution of Electrical Engineers and was nominated for Fellowship of the Royal Society, though women were not yet eligible.` },
+
+  { cat:'Patents', id:'US1728491A', icon:'📜', title:'Elizabeth Janneson — Number-Learning Device, 1929', year:1929,
+    content:`US Patent 1728491 — Number-learning device by Elizabeth Janneson. An educational device for teaching arithmetic to children using moveable numbered tiles on a grid for physical manipulation during addition and subtraction exercises. Reflects a long tradition of women inventors creating tools to make mathematical computation more accessible.` },
+];
+
+const CATS = ['All', 'Photos', 'Punch Cards', 'Patents'];
+const added = [];
+let currentCat = 'All';
+let searchQuery = '';
+let mode = 'invent';
+let lastInventionText = '';
+
+// Build tabs
+const tabsEl = document.getElementById('srcTabs');
+CATS.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'src-tab' + (c==='All'?' active':'');
+  btn.textContent = c;
+  btn.onclick = () => {
+    document.querySelectorAll('.src-tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = c;
+    renderBrowser();
+  };
+  tabsEl.appendChild(btn);
+});
+
+function filterSources() {
+  searchQuery = document.getElementById('searchBox').value.toLowerCase();
+  renderBrowser();
+}
+
+function renderBrowser() {
+  const browser = document.getElementById('srcBrowser');
+  let filtered = SOURCES.filter(p => {
+    const matchCat = currentCat === 'All' || p.cat === currentCat;
+    const matchSearch = !searchQuery ||
+      p.title.toLowerCase().includes(searchQuery) ||
+      p.year.toString().includes(searchQuery) ||
+      p.content.toLowerCase().includes(searchQuery);
+    return matchCat && matchSearch;
+  });
+  if (filtered.length === 0) {
+    browser.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div>No sources match your search.</div>';
+    return;
+  }
+  browser.innerHTML = filtered.map(p => {
+    const isAdded = added.some(a=>a.id===p.id);
+    return `<div class="photo-item${isAdded?' added':''}">
+      <div class="photo-thumb">${p.icon}</div>
+      <div class="pi-info">
+        <div class="pi-cat">${p.cat} · ${p.year}</div>
+        <div class="pi-title">${esc(p.title)}</div>
+        <div class="pi-desc">${esc(p.content.substring(0,90))}…</div>
+      </div>
+      <button class="pi-btn${isAdded?' done':''}" onclick="${isAdded?'':'window.addSource(\''+p.id+'\')'}">${isAdded?'✓':'+ Add'}</button>
+    </div>`;
+  }).join('');
+}
+
+function addSource(id) {
+  const p = SOURCES.find(x=>x.id===id);
+  if (!p || added.some(a=>a.id===id)) return;
+  added.push(p);
+  updateCounts();
+  renderBrowser();
+  renderAdded();
+}
+
+function removeAdded(id) {
+  const i = added.findIndex(a=>a.id===id);
+  if (i>=0) added.splice(i,1);
+  updateCounts();
+  renderBrowser();
+  renderAdded();
+}
+
+function renderAdded() {
+  const section = document.getElementById('addedSection');
+  const list = document.getElementById('addedList');
+  if (added.length === 0) { section.style.display='none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = added.map(p=>`
+    <div class="a-card">
+      <button class="a-remove" onclick="window.removeAdded('${p.id}')">×</button>
+      <div class="a-cat">${p.icon} ${p.cat} · ${p.year}</div>
+      <div class="a-title">${esc(p.title)}</div>
+    </div>`).join('');
+  const words = added.reduce((s,p)=>s+p.content.split(/\s+/).length,0);
+  document.getElementById('statCount').textContent = added.length;
+  document.getElementById('statWords').textContent = words.toLocaleString();
+}
+
+function updateCounts() {
+  const n = added.length;
+  document.getElementById('countBadge').textContent = n + ' selected';
+  document.getElementById('topBadge').textContent = n + ' Source'+(n!==1?'s':'')+' Selected';
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function setMode(btn, m){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); mode=m;
+  const L={invent:'Describe a problem to solve or domain to invent in',combine:'Describe two or more concepts to combine',improve:'Describe an existing technology to radically improve'};
+  document.getElementById('modeLabel').textContent=L[m];
+}
+
+function useChip(btn){
+  const cur=document.getElementById('userPrompt').value.trim();
+  document.getElementById('userPrompt').value=cur?cur+', '+btn.textContent:btn.textContent;
+  document.getElementById('userPrompt').focus();
+}
+
+function buildSys(){
+  let s=`You are InventHER, an AI invention engine drawing on the history of women human computers, IBM punch card operators, and women inventors. Generate detailed, visionary new invention concepts inspired by the methods, tools, and labor documented in the source library.
+
+The human computers at Harvard Observatory (1880s–1940s) classified hundreds of thousands of stars by hand, developing systematic pattern recognition, collaborative data processing, and precision measurement techniques. IBM keypunch operators (1950s–1960s) encoded the world's data one column at a time with speed, accuracy, and zero tolerance for error. Women inventors filed patents for calculating machines, computing devices, and measurement tools that their male counterparts often took credit for.
+
+Draw on this history to generate inventions that honor and extend their methods.
+
+Format EXACTLY as:
+**INVENTION NAME:** [bold memorable name]
+**INSPIRED BY:** [specific women, photographs, or patents this builds upon]
+**ONE-LINE CONCEPT:** [one sentence]
+
+**OVERVIEW**
+[2-3 paragraphs]
+
+**CORE TECHNICAL PRINCIPLES**
+[3-5 bullet points drawing directly on the source library]
+
+**KEY INNOVATIONS OVER PRIOR ART**
+[3-4 bullet points]
+
+**APPLICATIONS**
+[3-5 use cases]
+
+**NEXT STEPS FOR DEVELOPMENT**
+[2-3 concrete steps]`;
+
+  if(added.length>0){
+    s+=`\n\n=== SELECTED SOURCE LIBRARY (${added.length} sources) ===\n`;
+    added.forEach((p,i)=>{
+      s+=`\n[SOURCE ${i+1}] Category: ${p.cat}\nTitle: ${p.title} (${p.year})\nContent: ${p.content}\n`;
+    });
+  }
+  return s;
+}
+
+function buildUser(input){
+  const M={
+    invent:`Generate a completely new invention in the domain of: ${input}`,
+    combine:`Generate a new invention combining these concepts: ${input}`,
+    improve:`Generate a dramatically improved version of: ${input}`
+  };
+  return M[mode]+(added.length>0?'\n\nDraw directly on the specific sources in the library — reference the women, their methods, and their tools by name.':'\n\nNo sources selected yet — draw on your general knowledge of women human computers and women inventors in STEM.');
+}
+
+async function generate(){
+  const input=document.getElementById('userPrompt').value.trim();
+  const genErr=document.getElementById('genErr');
+  const btn=document.getElementById('genBtn');
+  const out=document.getElementById('outputArea');
+  genErr.style.display='none';
+  if(!input){genErr.textContent='Please describe what you want to invent.';genErr.style.display='block';return;}
+  btn.disabled=true; btn.textContent='⏳ Inventing…';
+  out.innerHTML=`<div class="thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-text">Drawing on ${added.length} source${added.length!==1?'s':''}… synthesizing new invention…</div></div>`;
+  try{
+    const text = await callAI({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      system:buildSys(),
+      messages:[{role:'user',content:buildUser(input)}]
+    });
+    lastInventionText = text;
+    showResult(text);
+    generateSketch(text);
+  }catch(e){
+    out.innerHTML='';
+    genErr.textContent='Error: '+e.message; genErr.style.display='block';
+  }
+  btn.disabled=false; btn.textContent='⚗ Generate Invention';
+}
+
+function showResult(text){
+  const out=document.getElementById('outputArea');
+  const tM=text.match(/\*\*INVENTION NAME:\*\*\s*(.+)/);
+  const iM=text.match(/\*\*INSPIRED BY:\*\*\s*(.+)/);
+  const cM=text.match(/\*\*ONE-LINE CONCEPT:\*\*\s*(.+)/);
+  const title=tM?tM[1].trim():'New Invention';
+  const insp=iM?iM[1].trim():'';
+  const conc=cM?cM[1].trim():'';
+  let body=text.replace(/\*\*INVENTION NAME:\*\*.+/,'').replace(/\*\*INSPIRED BY:\*\*.+/,'').replace(/\*\*ONE-LINE CONCEPT:\*\*.+/,'').trim();
+  body=body.replace(/\*\*(.+?)\*\*/g,'<h3>$1</h3>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>.*<\/li>\n?)+/gs,m=>'<ul>'+m+'</ul>').replace(/\n\n+/g,'</p><p>').replace(/^(?!<)(.+)$/gm,'<p>$1</p>');
+  const ts=new Date().toLocaleTimeString();
+  out.innerHTML=`<div class="result">
+    <div class="result-title">${esc(title)}</div>
+    ${insp?`<div class="result-inspired">✦ Inspired by ${esc(insp)}</div>`:''}
+    ${conc?`<div class="result-concept">${esc(conc)}</div>`:''}
+    <div class="result-body">${body}</div>
+    <div class="action-row">
+      <button class="btn-sm" onclick="window.copyRes(event)">⎘ Copy</button>
+      <button class="btn-sm" onclick="window.generate()">↺ Regenerate</button>
+      <button class="sketch-btn" id="resketchBtn" onclick="window.generateSketch(lastInventionText)" style="display:none;">✏ Re-sketch</button>
+      <span class="ts">Generated ${ts}</span>
+    </div>
+    <div class="sketch-section" id="sketchSection">
+      <div class="sketch-label">✏ Patent Sketch</div>
+      <div class="sketch-wrap" id="sketchWrap">
+        <div class="sketch-thinking">
+          <div class="thinking-dots"><span></span><span></span><span></span></div>
+          <div class="sketch-thinking-text">Drafting invention sketch…</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function generateSketch(inventionText){
+  const wrap = document.getElementById('sketchWrap');
+  if(!wrap) return;
+  wrap.innerHTML = `<div class="sketch-thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="sketch-thinking-text">Drafting patent sketch…</div></div>`;
+  const sketchPrompt = `You are a patent sketch artist. Based on this invention description, create a detailed SVG patent-style technical drawing.
+
+INVENTION:
+${inventionText}
+
+Create an SVG technical sketch in the style of a hand-drawn patent illustration. Requirements:
+- viewBox="0 0 600 420"
+- Dark background: fill the background rect with #0e0008
+- Use ONLY these colors for drawing: stroke="#ff85b3" (main lines), stroke="#c97bff" (labels/callouts), stroke="#ff2d6b" (accent/highlight lines), fill="none" for all shapes
+- Draw the invention as a technical schematic with labeled parts (use <text> elements in fill="#ff85b3" font-family="monospace" font-size="11")
+- Include callout lines with part labels (like real patent drawings: "A", "B", "C" or short descriptive labels)
+- Use dashed lines for internal/hidden components: stroke-dasharray="4 3"
+- Show the invention from a 3/4 perspective or front view with cross-section details where relevant
+- Include a title at the bottom in fill="#c97bff" font-size="13" font-family="monospace"
+- Make it look like a hand-sketched technical drawing with slightly imperfect lines
+- Add dimension lines or arrows where appropriate
+- Include at least 6-8 labeled components
+- Minimum 30 SVG elements to make it detailed and rich
+
+Return ONLY the raw SVG code starting with <svg and ending with </svg>. No explanation, no markdown, no code fences.`;
+
+  try{
+    const svg = await callAI({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      messages:[{role:'user', content: sketchPrompt}]
+    });
+    let cleanSvg = svg.replace(/```svg\n?/gi,'').replace(/```\n?/g,'').trim();
+    if(cleanSvg.startsWith('<svg')){
+      wrap.innerHTML = cleanSvg;
+      const resketch = document.getElementById('resketchBtn');
+      if(resketch) resketch.style.display='inline-flex';
+    } else {
+      wrap.innerHTML = `<div style="padding:16px;font-size:11px;color:rgba(255,180,210,0.4);text-align:center;">Sketch unavailable — try regenerating.</div>`;
+    }
+  }catch(e){
+    wrap.innerHTML = `<div style="padding:16px;font-size:11px;color:rgba(255,180,210,0.4);text-align:center;">Sketch error: ${e.message}</div>`;
+  }
+}
+
+function copyRes(e){
+  const t=document.querySelector('.result')?.innerText||'';
+  navigator.clipboard.writeText(t).then(()=>{e.target.textContent='✓ Copied!';setTimeout(()=>e.target.textContent='⎘ Copy',2000);});
+}
+
+// ── EXPOSE TO WINDOW ──
+window.addSource      = addSource;
+window.removeAdded    = removeAdded;
+window.filterSources  = filterSources;
+window.setMode        = setMode;
+window.useChip        = useChip;
+window.generate       = generate;
+window.generateSketch = generateSketch;
+window.copyRes        = copyRes;
+
+// Init
+renderBrowser();
+</script>
+</body>
+</html>
