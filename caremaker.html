@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareMaker · Women, Work & AI Invention Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0008; --pink: #ff2d6b; --pink-soft: #ff85b3;
+    --rose: #ff6b9d; --lilac: #c97bff; --white: #fff5f8;
+    --muted: rgba(255,190,220,0.45); --border: rgba(255,80,150,0.22);
+    --card-bg: rgba(255,255,255,0.03); --card-border: rgba(255,80,150,0.18);
+  }
+  body { font-family:'Quicksand',sans-serif; font-weight:600; background:var(--bg); color:var(--white); min-height:100vh; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 60% 50% at 15% 20%,rgba(255,45,107,0.07) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 85% 80%,rgba(201,123,255,0.07) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  .sparkles { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .sparkle { position:absolute; font-size:14px; opacity:0; animation:floatUp var(--dur,8s) var(--delay,0s) ease-in infinite; left:var(--x,50%); }
+  @keyframes floatUp { 0%{opacity:0;transform:translateY(100vh) scale(0.5) rotate(0deg);} 10%{opacity:0.6;} 90%{opacity:0.3;} 100%{opacity:0;transform:translateY(-10vh) scale(1.2) rotate(360deg);} }
+
+  /* TOPBAR */
+  .topbar { position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:18px 24px 14px; border-bottom:1px solid var(--border); background:rgba(14,0,8,0.7); backdrop-filter:blur(12px); }
+  .logo { display:flex; align-items:center; gap:12px; }
+  .logo-icon { width:44px; height:44px; border-radius:14px; background:rgba(255,45,107,0.15); border:1.5px solid rgba(255,80,150,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 0 16px rgba(255,45,107,0.2); }
+  .logo-name { font-family:'Nunito',sans-serif; font-weight:900; font-size:18px; background:linear-gradient(90deg,#ffb3cf,#ff2d6b,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:0.04em; line-height:1; }
+  .logo-sub { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+  .top-badges { display:flex; gap:8px; align-items:center; }
+  .badge { font-size:10px; padding:5px 12px; border-radius:999px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--muted); letter-spacing:0.06em; display:flex; align-items:center; gap:5px; }
+  .badge-pip { width:5px; height:5px; border-radius:50%; background:var(--pink); animation:pip 2s ease-in-out infinite; }
+  @keyframes pip { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* HERO */
+  .hero { position:relative; z-index:1; text-align:center; padding:36px 24px 24px; }
+  .hero-eyebrow { font-size:10px; letter-spacing:0.35em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:12px; opacity:0.7; }
+  .hero h1 { font-family:'Nunito',sans-serif; font-weight:900; font-size:clamp(2rem,6vw,3.5rem); line-height:1.05; background:linear-gradient(135deg,#fff5f8 0%,#ffb3cf 40%,#ff2d6b 70%,#c97bff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
+  .hero p { font-size:13px; color:var(--muted); max-width:520px; margin:0 auto; line-height:1.7; }
+
+  /* LAYOUT */
+  .lab { position:relative; z-index:1; display:grid; grid-template-columns:400px 1fr; gap:20px; padding:0 20px 40px; max-width:1200px; margin:0 auto; }
+  @media(max-width:860px){ .lab{ grid-template-columns:1fr; } }
+
+  /* CARD */
+  .card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; overflow:hidden; box-shadow:0 4px 32px rgba(255,45,107,0.06),0 1px 0 rgba(255,255,255,0.04) inset; position:relative; }
+  .card::before { content:''; position:absolute; top:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,150,200,0.5),transparent); }
+  .card-header { padding:14px 18px; background:rgba(255,45,107,0.06); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .card-header h2 { font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.12em; text-transform:uppercase; background:linear-gradient(90deg,#ffb3cf,#ff2d6b); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .card-dot { width:8px; height:8px; border-radius:50%; background:var(--pink); box-shadow:0 0 8px var(--pink); animation:pip 2s ease-in-out infinite; }
+  .count-badge { margin-left:auto; background:linear-gradient(135deg,rgba(255,45,107,0.3),rgba(201,123,255,0.3)); border:1px solid rgba(255,80,150,0.4); color:var(--pink-soft); font-size:9px; padding:2px 9px; border-radius:999px; font-weight:700; letter-spacing:0.05em; }
+
+  /* SOURCE TABS */
+  .src-tabs { display:flex; gap:4px; padding:10px 12px 0; flex-wrap:wrap; }
+  .src-tab { padding:6px 12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,80,150,0.15); border-radius:8px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.08em; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+  .src-tab.active { background:linear-gradient(135deg,rgba(255,45,107,0.2),rgba(201,123,255,0.15)); color:var(--pink-soft); border-color:rgba(255,80,150,0.4); }
+  .search-wrap { padding:8px 12px 0; }
+  .search-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,80,150,0.18); border-radius:10px; padding:7px 12px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:12px; color:var(--white); }
+  .search-input::placeholder { color:rgba(255,180,210,0.3); }
+  .search-input:focus { outline:none; border-color:rgba(255,45,107,0.5); }
+
+  /* SOURCE BROWSER */
+  .src-browser { max-height:320px; overflow-y:auto; padding:8px 10px 10px; display:flex; flex-direction:column; gap:5px; }
+  .src-browser::-webkit-scrollbar { width:3px; }
+  .src-browser::-webkit-scrollbar-thumb { background:rgba(255,80,150,0.3); border-radius:2px; }
+  .src-item { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,80,150,0.1); border-radius:10px; cursor:pointer; transition:all 0.18s; }
+  .src-item:hover { background:rgba(255,45,107,0.08); border-color:rgba(255,80,150,0.3); }
+  .src-item.added { opacity:0.4; cursor:default; }
+  .src-item.added:hover { background:rgba(255,255,255,0.02); border-color:rgba(255,80,150,0.1); }
+  .src-thumb { width:48px; height:40px; border-radius:6px; background:rgba(255,45,107,0.1); border:1px solid rgba(255,80,150,0.2); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; overflow:hidden; }
+  .src-thumb img { width:100%; height:100%; object-fit:cover; border-radius:5px; }
+  .si-info { flex:1; min-width:0; }
+  .si-cat { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:2px; opacity:0.8; }
+  .si-title { font-size:11px; font-weight:700; color:var(--white); line-height:1.35; }
+  .si-desc { font-size:10px; color:var(--muted); margin-top:3px; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .si-btn { flex-shrink:0; padding:4px 10px; border-radius:7px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:10px; border:1px solid rgba(255,80,150,0.3); background:rgba(255,45,107,0.08); color:var(--pink-soft); cursor:pointer; transition:all 0.18s; white-space:nowrap; }
+  .si-btn:hover { background:rgba(255,45,107,0.2); }
+  .si-btn.done { background:rgba(201,123,255,0.1); border-color:rgba(201,123,255,0.3); color:var(--lilac); cursor:default; }
+
+  /* ARTICLE ITEMS get a special link style */
+  .article-link { font-size:9px; color:var(--lilac); opacity:0.7; margin-top:3px; text-decoration:none; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .article-link:hover { opacity:1; }
+
+  /* ADDED SECTION */
+  .added-section { border-top:1px solid var(--border); }
+  .added-header { padding:8px 14px; display:flex; align-items:center; gap:8px; }
+  .added-header span { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink-soft); opacity:0.7; }
+  .added-list { max-height:180px; overflow-y:auto; padding:0 10px 10px; display:flex; flex-direction:column; gap:5px; }
+  .added-list::-webkit-scrollbar { width:3px; }
+  .added-list::-webkit-scrollbar-thumb { background:rgba(255,80,150,0.3); border-radius:2px; }
+  .a-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,80,150,0.15); border-left:3px solid var(--pink); border-radius:10px; padding:8px 30px 8px 10px; position:relative; animation:slideIn 0.3s ease; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+  .a-cat { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:2px; }
+  .a-title { font-size:11px; font-weight:700; color:var(--white); line-height:1.3; }
+  .a-remove { position:absolute; top:7px; right:8px; background:none; border:none; color:rgba(255,150,200,0.35); cursor:pointer; font-size:15px; line-height:1; transition:color 0.2s; }
+  .a-remove:hover { color:var(--pink); }
+  .empty-state { text-align:center; padding:24px 20px; color:var(--muted); font-size:12px; line-height:1.8; }
+  .empty-icon { font-size:26px; margin-bottom:8px; }
+  .stats-bar { display:flex; gap:14px; align-items:center; padding:8px 16px; background:rgba(255,45,107,0.05); border-top:1px solid var(--border); font-size:10px; color:var(--muted); letter-spacing:0.06em; }
+  .stat-num { color:var(--pink-soft); font-weight:700; margin-right:3px; }
+
+  /* STUDIO */
+  .studio { display:flex; flex-direction:column; gap:18px; }
+  .mode-tabs { display:flex; gap:4px; margin:16px 16px 0; background:rgba(255,255,255,0.03); padding:4px; border-radius:12px; border:1px solid var(--border); }
+  .tab { flex:1; padding:9px 8px; background:none; border:none; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.08em; cursor:pointer; color:var(--muted); border-radius:9px; transition:all 0.2s; }
+  .tab.active { background:linear-gradient(135deg,rgba(255,45,107,0.25),rgba(201,123,255,0.2)); color:var(--pink-soft); border:1px solid rgba(255,80,150,0.3); }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; padding:10px 16px 0; }
+  .chip { padding:5px 12px; background:rgba(201,123,255,0.08); border:1px solid rgba(201,123,255,0.25); border-radius:999px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:11px; color:var(--lilac); cursor:pointer; transition:all 0.2s; }
+  .chip:hover { background:rgba(201,123,255,0.2); border-color:rgba(201,123,255,0.5); color:#e0b8ff; }
+  .field-block { padding:12px 16px 0; }
+  .field-label { display:block; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:7px; opacity:0.8; }
+  textarea { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,80,150,0.2); border-radius:12px; padding:11px 14px; font-family:'Quicksand',sans-serif; font-weight:600; font-size:13px; color:var(--white); resize:vertical; line-height:1.5; transition:border-color 0.2s,box-shadow 0.2s; }
+  textarea::placeholder { color:rgba(255,180,210,0.3); }
+  textarea:focus { outline:none; border-color:rgba(255,45,107,0.6); box-shadow:0 0 0 3px rgba(255,45,107,0.1); background:rgba(255,255,255,0.06); }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; border:none; border-radius:12px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s; letter-spacing:0.04em; }
+  .btn-primary { background:linear-gradient(135deg,#ff2d6b,#c97bff); color:white; width:100%; box-shadow:0 4px 20px rgba(255,45,107,0.3); }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(255,45,107,0.45); }
+  .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+  .add-row { padding:14px 16px 16px; }
+
+  /* OUTPUT */
+  .output-body { padding:24px; min-height:380px; }
+  .welcome { text-align:center; padding:50px 20px; }
+  .welcome-icon { font-size:44px; margin-bottom:16px; }
+  .welcome h3 { font-family:'Nunito',sans-serif; font-weight:800; font-size:1.3rem; background:linear-gradient(90deg,#ffb3cf,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
+  .welcome p { font-size:12px; color:var(--muted); line-height:1.8; max-width:300px; margin:0 auto; }
+  .thinking { display:flex; align-items:center; gap:16px; padding:50px 0; justify-content:center; }
+  .thinking-dots { display:flex; gap:7px; }
+  .thinking-dots span { width:9px; height:9px; border-radius:50%; animation:bounce 1.2s ease-in-out infinite; }
+  .thinking-dots span:nth-child(1){ background:var(--pink); }
+  .thinking-dots span:nth-child(2){ background:var(--rose); animation-delay:0.2s; }
+  .thinking-dots span:nth-child(3){ background:var(--lilac); animation-delay:0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-9px);opacity:1} }
+  .thinking-text { font-size:12px; color:var(--muted); font-style:italic; }
+  .result { animation:fadeUp 0.4s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .result-title { font-family:'Nunito',sans-serif; font-weight:900; font-size:1.6rem; background:linear-gradient(135deg,#fff5f8,#ff85b3,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:6px; line-height:1.15; }
+  .result-inspired { font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--pink-soft); margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border); opacity:0.8; }
+  .result-concept { font-size:14px; font-weight:700; color:var(--white); margin-bottom:20px; line-height:1.6; }
+  .result-body { font-size:13px; color:rgba(255,240,248,0.75); line-height:1.85; }
+  .result-body h3 { font-family:'Nunito',sans-serif; font-weight:800; font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--pink-soft); margin:20px 0 8px; opacity:0.8; }
+  .result-body p { margin-bottom:10px; }
+  .result-body ul { padding-left:18px; margin-bottom:12px; }
+  .result-body li { margin-bottom:5px; }
+  .action-row { display:flex; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border); align-items:center; flex-wrap:wrap; }
+  .btn-sm { padding:8px 16px; border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; cursor:pointer; border:1px solid rgba(255,80,150,0.25); background:rgba(255,45,107,0.07); color:var(--pink-soft); transition:all 0.2s; }
+  .btn-sm:hover { background:rgba(255,45,107,0.15); }
+  .ts { margin-left:auto; font-size:10px; color:rgba(255,180,210,0.3); }
+  .err { background:rgba(255,45,107,0.08); border:1px solid rgba(255,45,107,0.3); border-left:3px solid var(--pink); padding:12px 14px; border-radius:10px; font-size:12px; color:#ff85b3; margin-top:10px; line-height:1.6; }
+
+  /* SKETCH */
+  .sketch-section { margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+  .sketch-label { font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--pink-soft); opacity:0.7; margin-bottom:12px; }
+  .sketch-wrap { background:rgba(255,255,255,0.02); border:1px solid rgba(255,80,150,0.15); border-radius:14px; padding:16px; overflow:hidden; }
+  .sketch-wrap svg { width:100%; height:auto; display:block; }
+  .sketch-thinking { display:flex; align-items:center; gap:12px; padding:20px; }
+  .sketch-thinking-text { font-size:11px; color:var(--muted); font-style:italic; }
+  .sketch-btn { padding:8px 16px; border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:11px; cursor:pointer; border:1px solid rgba(201,123,255,0.3); background:rgba(201,123,255,0.08); color:var(--lilac); transition:all 0.2s; }
+  .sketch-btn:hover { background:rgba(201,123,255,0.18); }
+  .sketch-section .thinking-dots span { width:7px; height:7px; border-radius:50%; animation:bounce 1.2s ease-in-out infinite; }
+  .sketch-section .thinking-dots span:nth-child(1){ background:var(--lilac); }
+  .sketch-section .thinking-dots span:nth-child(2){ background:var(--pink-soft); animation-delay:0.2s; }
+  .sketch-section .thinking-dots span:nth-child(3){ background:var(--lilac); animation-delay:0.4s; }
+
+  /* BANNER */
+  .inspire-banner { position:relative; z-index:1; margin:0 20px 20px; padding:16px 20px; background:rgba(255,45,107,0.07); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+  .inspire-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,150,200,0.5),transparent); }
+  .inspire-text { font-size:12px; color:var(--muted); line-height:1.7; }
+  .inspire-text strong { color:var(--pink-soft); }
+
+  /* ADVANCE */
+  .advance-wrap { position:relative; z-index:1; margin:0 20px 40px; text-align:center; }
+  .advance-card { display:inline-block; background:linear-gradient(135deg,rgba(255,45,107,0.12),rgba(201,123,255,0.12)); border:1.5px solid rgba(255,80,150,0.35); border-radius:20px; padding:24px 36px; position:relative; overflow:hidden; box-shadow:0 4px 32px rgba(255,45,107,0.1); }
+  .advance-card::before { content:''; position:absolute; top:0; left:8%; right:8%; height:1.5px; background:linear-gradient(90deg,transparent,rgba(255,133,179,0.6) 35%,rgba(255,45,107,0.8) 50%,rgba(255,133,179,0.6) 65%,transparent); }
+  .advance-eyebrow { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; font-weight:700; }
+  .advance-title { font-family:'Nunito',sans-serif; font-weight:900; font-size:16px; background:linear-gradient(90deg,#ffb3cf,#ff2d6b 55%,#c97bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:16px; }
+  .btn-advance { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; color:white; text-decoration:none; background:linear-gradient(135deg,#ff2d6b,#c97bff); border:none; border-radius:14px; padding:14px 32px; box-shadow:0 4px 22px rgba(255,45,107,0.4); transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1); }
+  .btn-advance:hover { transform:translateY(-3px) scale(1.04); box-shadow:0 10px 36px rgba(255,45,107,0.55); }
+</style>
+</head>
+<body>
+
+<div class="sparkles" id="sparkles"></div>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">⚙️</div>
+    <div>
+      <div class="logo-name">CareMaker</div>
+      <div class="logo-sub">Women, Work & AI Invention Lab</div>
+    </div>
+  </div>
+  <div class="top-badges">
+    <div class="badge"><span class="badge-pip"></span>AI Active</div>
+    <div class="badge" id="topBadge">0 Sources Selected</div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">✦ Women · Work · Machines · AI ✦</div>
+  <h1>Make from What<br>They Made Invisible</h1>
+  <p>Draw on Library of Congress photographs of women working with machines, current research on AI's impact on women's work, and patents by women inventors — then generate a new invention that responds to this history.</p>
+</div>
+
+<div class="lab">
+  <aside>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot"></div>
+        <h2>Source Library</h2>
+        <div class="count-badge" id="countBadge">0 selected</div>
+      </div>
+      <div class="search-wrap">
+        <input class="search-input" type="text" id="searchBox" placeholder="🔍 Search sources, topics, years…" oninput="window.filterSources()">
+      </div>
+      <div class="src-tabs" id="srcTabs"></div>
+      <div class="src-browser" id="srcBrowser"></div>
+      <div class="added-section" id="addedSection" style="display:none;">
+        <div class="added-header">
+          <div class="card-dot" style="animation:none;opacity:0.6;"></div>
+          <span>Added to Invention Library</span>
+        </div>
+        <div class="added-list" id="addedList"></div>
+        <div class="stats-bar">
+          <span><span class="stat-num" id="statCount">0</span> sources</span>
+          <span><span class="stat-num" id="statWords">0</span> words indexed</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="studio">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--lilac);box-shadow:0 0 8px var(--lilac);"></div>
+        <h2>Invention Studio</h2>
+      </div>
+      <div class="mode-tabs">
+        <button class="tab active" onclick="window.setMode(this,'invent')">✦ New Invention</button>
+        <button class="tab" onclick="window.setMode(this,'combine')">⊕ Combine Ideas</button>
+        <button class="tab" onclick="window.setMode(this,'improve')">↑ Improve On</button>
+      </div>
+      <div class="chips">
+        <button class="chip" onclick="window.useChip(this)">care work technology</button>
+        <button class="chip" onclick="window.useChip(this)">wage equity tools</button>
+        <button class="chip" onclick="window.useChip(this)">AI reskilling</button>
+        <button class="chip" onclick="window.useChip(this)">workplace safety</button>
+        <button class="chip" onclick="window.useChip(this)">data bias detection</button>
+        <button class="chip" onclick="window.useChip(this)">collective labor systems</button>
+      </div>
+      <div class="field-block">
+        <label class="field-label" id="modeLabel">Describe a problem to solve or domain to invent in</label>
+        <textarea id="userPrompt" rows="3" placeholder="e.g. Design a tool that protects women's jobs from AI automation…"></textarea>
+      </div>
+      <div class="add-row">
+        <button class="btn btn-primary" onclick="window.generate()" id="genBtn">⚗ Generate Invention</button>
+        <div id="genErr" style="display:none;" class="err"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot" style="background:var(--pink-soft);box-shadow:0 0 8px rgba(255,133,179,0.6);animation:none;"></div>
+        <h2>Invention Output</h2>
+      </div>
+      <div class="output-body" id="outputArea">
+        <div class="welcome">
+          <div class="welcome-icon">🔧</div>
+          <h3>Ready to make</h3>
+          <p>Select photographs, articles, and patents from the library, then describe a problem — the AI will generate a new invention that responds to the history of women and work.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="inspire-banner">
+  <div class="inspire-text">
+    <strong>✦ Key finding:</strong> Of 6.1 million workers whose jobs are most likely to be disrupted by AI and least likely to adapt, 86% are women. Women's jobs are 3× more likely to be automated. Women adopt AI at a rate 25% lower than men. Yet women are the ones who built computing — as human computers, keypunch operators, and inventors.
+  </div>
+</div>
+
+<div class="advance-wrap">
+  <div class="advance-card">
+    <div class="advance-eyebrow">✦ carebot research system</div>
+    <div class="advance-title">Ready for your next task?</div>
+    <a class="btn-advance" href="https://sbuckius.github.io/if-carebot-research/hit.html" target="_blank" rel="noopener noreferrer">✦ Advance to next HIT</a>
+  </div>
+</div>
+
+<script type="module">
+
+const PROXY = 'https://us-central1-invention-maker-women.cloudfunctions.net/anthropicProxy';
+
+async function callAI(payload) {
+  const res = await fetch(PROXY, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+  if (!res.ok) throw new Error('API error ' + res.status);
+  const data = await res.json();
+  return data.content?.find(b=>b.type==='text')?.text || '';
+}
+
+// SPARKLES
+const SPARKS=['✦','✧','⚙','✿','◆','◇','✶','▪'];
+const sc=document.getElementById('sparkles');
+for(let i=0;i<18;i++){
+  const s=document.createElement('div'); s.className='sparkle';
+  s.textContent=SPARKS[i%SPARKS.length];
+  s.style.setProperty('--x',Math.random()*100+'%');
+  s.style.setProperty('--dur',(7+Math.random()*8)+'s');
+  s.style.setProperty('--delay',(Math.random()*10)+'s');
+  s.style.color=`hsl(${320+Math.random()*60},80%,${65+Math.random()*20}%)`;
+  sc.appendChild(s);
+}
+
+const CATS = ['All', 'LOC Photos', 'AI & Women', 'Computer', 'Typewriter', 'Loom', 'Sewing', 'Textile', 'Clothing'];
+
+const SOURCES = [
+
+  // LIBRARY OF CONGRESS PHOTOGRAPHS
+  { cat:'LOC Photos', id:'loc-seamstress', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/ds/04400/04496_150px.jpg', title:'Woman at Sewing Machine — Daguerreotype, c.1850s', year:1850, url:'https://www.loc.gov/resource/ds.04496', content:'Daguerreotype portrait of a woman working at a sewing machine, circa 1850s. Published as "Seamstress" in Eyes of the Nation: A Visual History of the United States. Workers, proud of their skills and professions, spent nearly one day\'s wage for their photographic portrait. The sewing machine was one of the first machines operated primarily by women in industrial settings, transforming domestic and factory textile production. Library of Congress Daguerreotypes Collection, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-computing-treasury', icon:'📷', img:'', title:'Women Computing at Treasury Department, c.1920', year:1920, url:'https://loc.gov/photos?fa=partof%3Anational+photo+company+collection%7Csubject%3Awomen%7Csubject%3Aemployment', content:'Photograph showing employees, primarily female, working at machines in the Computing Division of the Treasury Department, Washington D.C., circa 1920. Women operated mechanical computing machines, adding machines, and tabulating devices as part of large-scale government data processing operations. This work was classified as clerical — considered appropriate for women — despite requiring high mathematical skill and precision. National Photo Company Collection, Library of Congress.' },
+
+  { cat:'LOC Photos', id:'loc-check-signing', icon:'📷', img:'', title:'Women Using Check-Signing Machine, War Risk Bureau, c.1920', year:1920, url:'https://loc.gov/photos?fa=partof%3Anational+photo+company+collection%7Csubject%3Awomen%7Csubject%3Aemployment', content:'Two women using a check-signing machine which signs checks issued by the War Risk Bureau, Washington D.C., circa 1920. This photograph is part of a series documenting women operating specialized machines in government offices during and after World War I. As men went to war, women took over complex machine operation in banks, bureaus, and government agencies — work they were often required to vacate when men returned. National Photo Company Collection, Library of Congress.' },
+
+  { cat:'LOC Photos', id:'loc-engraving-trimming', icon:'📷', img:'', title:'Women in Bureau of Engraving Trimming Room, 1909', year:1909, url:'https://loc.gov/photos?fa=partof%3Anational+photo+company+collection%7Csubject%3Awomen%7Csubject%3Aemployment', content:'Photograph showing women at their workstations in a Bureau of Engraving and Printing trimming room, 1909, Washington D.C. Women used pneumatic compressed-air operated trimming machines to cut printed currency. The Bureau of Engraving and Printing employed hundreds of women in precision machine operations from the 1860s onward. This photo documents the normalized presence of women as skilled machine operators in government industrial settings, a history largely absent from official accounts of American manufacturing. National Photo Company Collection, Library of Congress.' },
+
+  { cat:'LOC Photos', id:'loc-currency-sizing', icon:'📷', img:'', title:'Woman Operating Currency Sizing Machine, Bureau of Engraving, 1909', year:1909, url:'https://loc.gov/photos?fa=partof%3Anational+photo+company+collection%7Csubject%3Awomen%7Csubject%3Aemployment', content:'Photograph of a woman at her workstation operating a machine for sizing and drying money at the Bureau of Engraving and Printing, 1909. This "New Method" machine was operated by a woman worker in one of the Bureau\'s primary production roles. Women were assigned to precision machine operation in the Bureau of Engraving throughout the early twentieth century. Their labor — operating, maintaining, and monitoring complex industrial machinery — was essential to producing the nation\'s currency. National Photo Company Collection, Library of Congress.' },
+
+  { cat:'LOC Photos', id:'loc-addressograph', icon:'📷', img:'', title:'Women Operating Addressograph Machine, Washington D.C., c.1920', year:1920, url:'https://loc.gov/photos?fa=partof%3Anational+photo+company+collection%7Csubject%3Awomen%7Csubject%3Aemployment', content:'Three young women at work in an unidentified Washington D.C. office, circa 1920. The woman at left is operating an Addressograph — an early automated addressing machine that used embossed metal plates to print addresses onto envelopes and documents at high speed. The Addressograph was an early predecessor to database-driven mailing systems. Women were the primary operators of Addressograph machines in offices, performing what was called "machine work" — skilled, rhythmic, precision labor classified as clerical to justify lower wages. National Photo Company Collection, Library of Congress.' },
+
+  { cat:'LOC Photos', id:'loc-card-index', icon:'📷', img:'', title:'Women at Card Index Files, National Woman\'s Party, c.1920', year:1920, url:'https://loc.gov/photos?fa=partof%3Anational+photo+company+collection%7Csubject%3Awomen%7Csubject%3Aemployment', content:'Three women working at card index files at the headquarters of the National Woman\'s Party in Washington D.C., circa 1920. Card index systems were the primary database technology of the early twentieth century — physical, human-maintained information retrieval systems. Women were the primary operators of card index systems in offices, libraries, hospitals, and government agencies. Their systematic, meticulous maintenance of card files was the foundation of institutional knowledge management. This work directly prefigured the keypunch operator and data entry roles of the computer era. National Photo Company Collection, Library of Congress.' },
+
+  { cat:'LOC Photos', id:'loc-aircraft-vega', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsac/1a34000/1a34400/1a34456_150px.jpg', title:'Woman Aircraft Worker Checking Electrical Assemblies, Vega Aircraft, Burbank CA, 1942', year:1942, url:'https://www.loc.gov/resource/fsac.1a34456/', content:'Color photograph of a woman aircraft worker at the Vega Aircraft Corporation in Burbank, California, shown checking electrical assemblies during World War II. This image is from the Farm Security Administration / Office of War Information Collection and is free to use. During WWII, women operated precision machinery, performed electrical assembly, and conducted quality control inspections in defense industries — roles they were largely displaced from when men returned. Their wartime machine expertise directly contradicted the idea that women were unsuited to technical work. Library of Congress FSA/OWI Collection, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-spinner-nc', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/nclc/04700/04708_150px.jpg', title:'Spinner at Rhodes Mfg. Co., Lincolnton NC, 1908', year:1908, url:'https://www.loc.gov/free-to-use/flickrcommons/', content:'Photograph of a young woman spinner at Rhodes Manufacturing Company, Lincolnton, North Carolina, 1908. Child labor photograph by Lewis Hine for the National Child Labor Committee. Textile mills employed large numbers of women and girls as spinners, weavers, and machine tenders. Spinning required constant attention to thread tension, breakage detection, and machine adjustment — skilled sensory labor dismissed as unskilled because it was performed by women and children. The dexterity and pattern-recognition skills of textile workers formed the experiential foundation from which mechanical and later computational pattern-processing systems were developed. Library of Congress NCLC Collection, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-woman-drill', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsac/1a35000/1a35300/1a35371_150px.jpg', title:'Woman Operating Hand Drill, Vultee-Nashville "Vengeance" Dive Bomber, Tennessee, 1943', year:1943, url:'https://www.loc.gov/resource/fsac.1a35371/', content:'Color photograph of a woman operating a hand drill at Vultee-Nashville, Tennessee, working on a "Vengeance" dive bomber, 1943. FSA/OWI Collection. No known restrictions on publication. Women industrial workers performed precision drilling, riveting, and assembly during WWII in roles requiring technical skill, physical strength, and machine precision. The mass displacement of women from these roles after 1945 is one of the most documented examples of structural gender exclusion from technical work in American history. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-locomotive-wipers', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsac/1a34000/1a34800/1a34804_150px.jpg', title:'Women Wipers Cleaning Locomotive, Chicago & North Western Railroad, Clinton Iowa, WWII', year:1943, url:'https://www.loc.gov/pictures/item/2017878361/', content:'Color photograph of Mrs. Marcella Hart and Mrs. Viola Sievers, women wipers of the Chicago and North Western Railroad, cleaning one of the giant "H" class locomotives in Clinton, Iowa, during World War II. FSA/OWI Collection. No known restrictions on publication. Women took over heavy industrial machine maintenance roles during the war — physically demanding, skilled technical labor that directly contradicted ideas about women\'s unsuitability for industrial work. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-switchboard', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/ds/04900/04925_150px.jpg', title:'Women Working at U.S. Capitol Switchboard, Washington D.C.', year:1920, url:'https://www.loc.gov/pictures/item/2013651433/', content:'Photograph of women working at the U.S. Capitol telephone switchboard, Washington D.C. Women were the primary operators of telephone switchboards from the 1880s onward — a role requiring rapid pattern recognition, precise manual coordination, and simultaneous management of multiple communication streams. Telephone operating was one of the first machine-mediated information processing jobs performed predominantly by women, directly prefiguring modern data processing and network routing. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-sewing-manzanar', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/ppprs/00100/00149_150px.jpg', title:'Sumiko Shigematsu, Foreman of Sewing Machine Girls, Manzanar Relocation Center, 1943', year:1943, url:'https://www.loc.gov/pictures/item/2002695109/', content:'Photograph by Ansel Adams of Sumiko Shigematsu, foreman of power sewing machine girls, at the Manzanar War Relocation Center, California, 1943. No known restrictions on publication. Japanese American women incarcerated at Manzanar operated industrial sewing machines. Shigematsu\'s role as foreman documents women\'s technical leadership in machine operation even under conditions of forced incarceration — connecting the history of women\'s machine labor with the intersection of gender, race, and state power. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-sewing-wwii', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsa/8e07000/8e07500/8e07559_150px.jpg', title:'Cynthia Stitches Basic Seams — WWII Home Sewing, 1942', year:1942, url:'https://www.loc.gov/pictures/item/2017877152/', content:'Photograph of Cynthia stitching basic seams before fitting, demonstrating simplified sewing during WWII. While no new sewing machines were being manufactured (factories had converted to war production), the War Production Board assured repair parts for home dressmakers. Many women formed community machine pools. This documents the complex ecosystem of women\'s machine labor, repair knowledge, and community sharing that sustained domestic textile production during wartime. Library of Congress FSA Collection, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-warping-paterson', icon:'📷', img:'', title:'Woman with Spools in Warping Department, Paterson NJ, 1994', year:1994, url:'https://www.loc.gov/free-to-use/work-in-america/', content:'Photograph of a woman with spools of thread in the warping department, Paterson, New Jersey, 1994. Photo by Martha Cooper for the American Folklife Center\'s Working in Paterson project. This image documents women\'s continued presence in textile machine operation into the late twentieth century. The warping process — aligning hundreds of parallel threads onto a beam for loom feeding — requires precise spatial reasoning and careful pattern monitoring. Paterson was once the "Silk City" of America, its mills run primarily on women\'s labor. Library of Congress American Folklife Center Collection, free to use.' },
+
+  { cat:'LOC Photos', id:'loc-winding-paterson', icon:'📷', img:'', title:'Jelina Cubic at Winding Operation, Paterson NJ, 1994', year:1994, url:'https://www.loc.gov/free-to-use/work-in-america/', content:'Photograph of Jelina Cubic at work at the winding operation in Paterson, New Jersey, 1994. Photo by Martha Cooper for the American Folklife Center\'s Working in Paterson project. Winding is the process of transferring yarn from one package form to another, removing defects, and preparing thread for weaving. Women have operated winding machines in textile factories since the industrial revolution. The precision, speed, and defect-detection skills required in winding work are directly analogous to quality control algorithms in modern automated systems — skills developed and refined by generations of women machine operators. Library of Congress American Folklife Center Collection, free to use.' },
+
+  // AI & WOMEN ARTICLES
+  { cat:'AI & Women', id:'art-fortune-twotier', icon:'📰', title:'AI Gender Gap: Risk of Two-Tier Economy — Fortune, 2026', year:2026, url:'https://fortune.com/2026/03/21/ai-gender-gap-two-tier-economy-adoption-inequality/', content:'Fortune magazine, March 2026. Of the 6.1 million workers whose jobs are most likely to be disrupted by AI and least likely to adapt, 86% are women, according to a Brookings Institution analysis. These are roles like administrative assistants, receptionists, office and legal clerks — positions often held by older women. Men in highly AI-exposed jobs are likely to change jobs; women are most likely to completely exit the labor market rather than find new employment. The jobs women hold are three times more likely to be automated by AI. Despite this, women are using AI at a rate 25% lower than men. Women are underrepresented in AI leadership and development. Expert Mara Bolis advocates for "fierce ambivalence" — using AI to empower while holding creators to the highest standards of safety, efficiency, and equity.' },
+
+  { cat:'AI & Women', id:'art-wef-genderparity', icon:'📰', title:'AI Changing Path to Gender Parity? — World Economic Forum, 2026', year:2026, url:'https://www.weforum.org/stories/2026/03/ai-gender-parity-womens-history-month-jobs/', content:'World Economic Forum, March 2026. 68.8% of the global gender gap is now closed — the fastest improvement since before the pandemic — but at the current pace, it will still take 123 years to reach parity. Women make up 41% of the global workforce but only 29% of top leadership roles. Women\'s representation in tech roles in Europe has fallen from 22% in 2023 to 19% in 2026, with many tech layoffs hitting roles disproportionately held by women. Among approximately 6 million US workers who would find it hardest to recover from AI-related job loss, 86% are women, concentrated in clerical and administrative roles. AI will not automatically close or widen gender gaps — it will magnify the choices leaders make.' },
+
+  { cat:'AI & Women', id:'art-hbs-avoiding', icon:'📰', title:'Women Are Avoiding AI — Harvard Business School, 2025', year:2025, url:'https://www.library.hbs.edu/working-knowledge/women-are-avoiding-using-artificial-intelligence-can-that-hurt-their-careers', content:'Harvard Business School Working Knowledge, February 2025. Women are adopting generative AI technology at a significantly lower rate than men. Across 18 studies involving more than 140,000 college students, the share of women adopting AI tools was 10 to 40 percent smaller than the share of men — a 25% gap on average. Women question whether it is ethical to use the tools and fear being judged harshly for relying on them. A 2024 Federal Reserve Bank of New York survey found that half of men used generative AI in the previous 12 months, compared to about a third of women. If the AI gender gap persists: women may struggle to advance in their careers; businesses may lose potential growth; and AI could miss out on input from women, causing systems to reinforce gender stereotypes.' },
+
+  { cat:'AI & Women', id:'art-ssir-paradox', icon:'📰', title:'The AI Gender Gap Paradox — Stanford Social Innovation Review, 2025', year:2025, url:'https://ssir.org/articles/entry/ai-gender-gap-paradox', content:'Stanford Social Innovation Review, October 2025. A study showed that generative AI chatbots advised women to ask for significantly lower salaries than men with identical profiles. Women are more concerned than men about how AI handles data, in part because women experience higher rates of tech-facilitated abuse and harassment. Most major AI systems require a specific opt-out to protect user data from being used for training. The Artificial Intelligence Civil Rights Act seeks to protect consumers by requiring independent audits, algorithmic impact assessments, transparency reports, and human-appeal rights for individuals affected by automated decisions. Creating rules to prevent corporate abuse and embedding equity into AI governance are essential to ensuring AI expands opportunity rather than deepens inequality.' },
+
+  { cat:'AI & Women', id:'art-stimson-glassceil', icon:'📰', title:'The Glass Ceiling Goes Digital — Stimson Center, 2025', year:2025, url:'https://www.stimson.org/2025/the-glass-ceiling-goes-digital-how-ai-may-write-women-out-of-work/', content:'Stimson Center, October 2025. AI is projected to increase US GDP growth to almost 3% in the next 10 years, but that growth may come at the expense of women workers. Women who do not use AI tools are likely to be left behind. Women are less likely than men to use AI at work, deploy AI with less frequency, and worry more about ethical issues and perception. In a Brookings study, large language models (LLMs) were asked to identify suitable candidates for a given role. The models exhibited systematic gender bias in candidate selection. Harvard Business School found three major consequences of an AI gender gap: women will not advance in careers, businesses will lose revenue, and women\'s influence over the development of AI will be diminished. The global economy loses more than $7 trillion annually due to gender inequality in the workforce.' },
+
+  { cat:'AI & Women', id:'art-wef-stem', icon:'📰', title:'Can AI Fix the Gender Gap in STEM? — WEF, 2025', year:2025, url:'https://www.weforum.org/stories/2025/03/ai-stem-women-gender-gap/', content:'World Economic Forum, March 2025. AI risks widening the STEM gender gap rather than reducing it. Women\'s share of the STEM workforce is only 28% — compared to 47% among non-STEM workers. Women make up more than a third of STEM graduates but only 12% of STEM executives. While only 23.5% of those who listed AI engineering skills in their profiles were women in 2018, their share had risen to 29.4% in 2025. 40% of global talent named AI as a top-three skilling priority — men (44%) more than women (36%). The scarcity of AI talent may entice employers to expand their talent pool by including groups previously overlooked, like women. Rapid progress of generative AI could be a turning point for gender equity in STEM.' },
+
+  { cat:'AI & Women', id:'art-gzero-un', icon:'📰', title:'Gender Gap in AI Job Displacement — GZERO/UN, 2026', year:2026, url:'https://www.gzeromedia.com/global-stage/commission-on-the-status-of-women/gender-gap-in-ai-job-displacement', content:'GZERO Media, March 2026. Speaking at the United Nations, Sarah Steinberg highlighted the disproportionate impact of AI on women. One in three women works in a job "likely to be disrupted or significantly changed by AI compared to one in four men globally." Women account for only a third of those building AI skills, creating a skills gap that limits access to emerging jobs. Without inclusive workforce strategies, economies risk leaving half the population behind. "If we\'re leaving behind half the population, we\'re not going to realize the economic growth and job creation potential of AI transformation." AI Divide panel at UN headquarters, Commission on the Status of Women.' },
+
+  { cat:'AI & Women', id:'art-imd-paygap', icon:'📰', title:'How AI Is Widening the Gender Pay Gap — IMD, 2026', year:2026, url:'https://www.imd.org/ibyimd/artificial-intelligence/how-ai-and-emerging-tech-are-widening-the-gender-pay-gap/', content:'IMD Business School, March 2026. AI skills can boost career prospects, but there is a clear gender divide in access to training and opportunity to develop skills. This fuels the gender pay gap that sees women earning around 20% less than men. The tech sector is systematically excluding half of the potential talent pool at a time when the industry remains short on skilled professionals. Women in tech may have had more exposure to these tools and are more comfortable using them. The gender pay gap in tech is not about women\'s choices or capabilities — it\'s about how opportunities are structured. The problem is largely caused by how managers structure access to training and opportunity, and so the solution is also within managers\' control.' },
+
+  { cat:'AI & Women', id:'art-sheai-stats', icon:'📰', title:'Women in AI: Numbers Behind the Gender Gap — SheAI, 2026', year:2026, url:'https://www.sheai.co/blog/women-in-ai-key-statistics', content:'SheAI, January 2026. The AI Literacy Institute synthesized several 2023–2025 studies reporting that 37% of women vs 50% of men had used GenAI in the past year — a 25% gender gap. The roles most vulnerable to automation are customer service, admin, and data entry — roles where women often dominate. The tech sector saw more than 244,000 layoffs in 2025. The proportion of US women adopting GenAI has tripled over the past year, outpacing men\'s 2.2x growth rate. 77% of female founders currently leverage AI for their businesses. According to the Female Innovation Index 2025, 1,196 European female-founded startups raised €5.76 billion through 1,305 deals in 2024, representing 12% of total VC capital raised. Women in China\'s rapidly digitizing workplace are adopting AI faster than men and reporting lower anxiety.' },
+
+  { cat:'AI & Women', id:'art-indiana-gap', icon:'📰', title:'Advancing Women & Technology — Indiana University, 2025', year:2025, url:'https://womenandtech.indiana.edu/about/news/2025/mind-the-gap.html', content:'Indiana University Center of Excellence for Women & Technology, November 2025. Less than 30% of the AI workforce is female, dropping to 15% at leadership levels. Women are disproportionately judged as incompetent for using GenAI at work: female-identifying engineers who used AI for code generation were rated almost 9% less competent than male counterparts, even when evaluators looked at identical outputs. Voice assistants including Alexa, Siri, Google Assistant, and Cortana — which together account for 92% of the smartphone assistant market — have historically been designed with female-sounding voices, encoding a gender dynamic that positions AI assistance as inherently feminine. When women are not involved in designing AI systems, these systems continue to perpetuate bias.' },
+
+  { cat:'AI & Women', id:'art-cnbc-paygap', icon:'📰', title:'Gender Pay Gap Widened Two Years in a Row — CNBC, 2025', year:2025, url:'https://www.cnbc.com/2025/09/11/for-the-first-time-in-over-60-years-the-gender-pay-gap-widened-2-years-in-a-row.html', content:'CNBC, September 2025. For the first time in over 60 years, the gender pay gap widened two years in a row. This reversal of decades of gradual progress coincides with the rapid rollout of generative AI tools and AI-driven restructuring across industries. Economists note that the widening gap is concentrated in sectors with high AI adoption, where women have lower access to AI upskilling opportunities and are more likely to be in roles being automated away rather than augmented. The widening pay gap is the measurable early signal of what Brookings researchers have called the AI gender crisis: women are losing ground just as the technological transformation that will define the next decade is accelerating.' },
+
+  { cat:'AI & Women', id:'art-fastco-culture', icon:'📰', title:'AI Changing Work Culture & Gender Gap — Fast Company, 2025', year:2025, url:'https://www.fastcompany.com/91517087/ai-changing-work-culture-gender-gap', content:'Fast Company article on how AI is changing work culture and the gender gap. As AI reshapes organizational structures and job requirements, the cultural dimensions of how work is valued, assigned, and compensated are shifting in ways that disproportionately affect women. The integration of AI tools into the workplace is not gender-neutral: men are more likely to be positioned as AI users and innovators, while women are more likely to be positioned as the subjects of AI-driven efficiency and automation. The article examines how workplace cultures that emerged around AI adoption are reproducing rather than disrupting existing gender hierarchies.' },
+
+  { cat:'AI & Women', id:'art-fastco-payhold', icon:'📰', title:'It\'s Not Just the Pay Gap — Fast Company, 2025', year:2025, url:'https://www.fastcompany.com/91519881/its-not-just-the-pay-gap-this-is-also-holding-back-working-women', content:'Fast Company article on the multiple structural barriers holding back working women beyond the pay gap. In addition to pay inequality, women face concentrated disadvantages in access to AI training, promotion into AI-adjacent roles, visibility in AI-forward projects, and inclusion in the informal networks through which AI skills and opportunities circulate in organizations. The article argues that addressing the AI gender gap requires intervening at every level of the employment relationship — not just pay, but access to tools, assignment to projects, recognition of contributions, and inclusion in the design of AI systems that will shape the future of work.' },
+
+  { cat:'AI & Women', id:'art-fastco-genderai', icon:'📰', title:'Gender Purpose AI — Fast Company, 2025', year:2025, url:'https://www.fastcompany.com/91497946/agi-isnt-the-holy-grail-for-women-in-ai-its-gender-purpose-ai-and-its-already-here-women-ai-technoogy-leaders', content:'Fast Company article arguing that for women in AI, the priority is not artificial general intelligence but "gender purpose AI" — AI systems designed with explicit attention to gender equity in their development, deployment, and outcomes. Women AI technology leaders argue that AI built without gender-conscious design will embed and amplify existing inequalities. Gender purpose AI means designing systems that actively work to close pay gaps, reduce hiring bias, support care work, and include women as designers rather than just users. The article profiles women leaders building AI for gender equity rather than waiting for the industry to address gender as an afterthought.' },
+
+  { cat:'LOC Photos', id:'loc-spinner-hine', icon:'📷', img:'https://cdn.loc.gov/service/pnp/nclc/01300/01345_150px.jpg', title:'Lalar Blanton, Spinner, Rhodes Mfg. Co., Lincolnton NC — Lewis Hine, 1908', year:1908, url:'https://www.loc.gov/resource/nclc.01345/', content:'Photograph by Lewis Hine of Lalar Blanton, a 10-year-old spinner at Rhodes Manufacturing Company, Lincolnton, North Carolina, 1908. National Child Labor Committee Collection. No known restrictions on publication. Hine\'s caption reads: "A moments glimpse of the outer world. Said she was 10 years old. Been working over a year." Young women and girls like Lalar were the primary labor force of the American textile industry. The precision, speed, and sensory attention required of spinners — monitoring thread tension, detecting breaks, maintaining machine rhythm — represents a form of human-machine intelligence that was entirely dismissed as unskilled because it was performed by women and girls. Library of Congress NCLC Collection, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-lathe-fortworth', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsac/1a34000/1a34900/1a34951_150px.jpg', title:'Lathe Operator Machining Parts for Transport Planes, Consolidated Aircraft, Fort Worth TX, 1942', year:1942, url:'https://www.loc.gov/item/2017878313/', content:'Color photograph by Howard Hollem of a woman lathe operator machining parts for transport planes at the Consolidated Aircraft Corporation plant, Fort Worth, Texas, October 1942. FSA/OWI Collection. No known restrictions on publication. Women operated precision metal lathes, milling machines, and drill presses in defense manufacturing plants — roles requiring technical skill, spatial reasoning, and careful machine calibration. The competence women demonstrated in precision machining during WWII was used to argue both for and against their continued employment — and ultimately they were largely displaced after 1945. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-orange-packing', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsac/1a34000/1a34700/1a34771_150px.jpg', title:'Woman Operating Crate-Top Machine, Orange Packing Plant, Redlands CA, 1943', year:1943, url:'https://www.loc.gov/item/2017878154/', content:'Color photograph by Jack Delano of a woman operating a machine for putting tops on crates at a co-op orange packing plant, Redlands, California, March 1943. FSA/OWI Collection. No known restrictions on publication. Agricultural processing plants relied heavily on women machine operators throughout the twentieth century — seasonal, piecework labor that combined machine operation with physical endurance. Women\'s work in food processing and agricultural manufacturing was classified as unskilled despite requiring significant machine coordination and production speed. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-women-bomber-douglas', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsac/1a35000/1a35100/1a35154_150px.jpg', title:'Women Workers at Douglas Aircraft Company, Long Beach CA, 1942', year:1942, url:'https://www.loc.gov/item/2017878300/', content:'Color photograph of women workers at the Douglas Aircraft Company plant in Long Beach, California, 1942. FSA/OWI Collection. No known restrictions on publication. Douglas Aircraft employed tens of thousands of women during WWII in assembly, inspection, and machining roles. Women installed fixtures, assemblies, and components to aircraft fuselage sections — work requiring spatial reasoning, precision measurement, and coordinated team labor. The visibility of women\'s competence in aircraft manufacturing directly challenged assumptions about gender and technical capability, yet these workers were systematically replaced after the war ended. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  { cat:'LOC Photos', id:'loc-women-industrial-1942', icon:'📷', img:'https://tile.loc.gov/storage-services/service/pnp/fsac/1a35000/1a35600/1a35606_150px.jpg', title:'Women Industrial Workers, WWII Defense Industry, 1942', year:1942, url:'https://www.loc.gov/item/2017878606/', content:'Color photograph of women industrial workers in a WWII defense industry plant, 1942. FSA/OWI Collection. No known restrictions on publication. This image is part of the Farm Security Administration / Office of War Information documentation of wartime industrial labor. The FSA/OWI photographs systematically documented women\'s entry into previously male-dominated industrial roles, creating a visual record that both celebrated and ultimately obscured the structural conditions that made this labor possible — and that would force women out again when men returned. Library of Congress, Prints & Photographs Division, public domain.' },
+
+  // COMPUTER PATENTS
+  { cat:'Computer', id:'US258518A', icon:'📜', title:'Mary E. Winter — Adding-Machine, 1882', year:1882, content:'An adding machine device for performing arithmetic calculations, with a mechanism for carrying and accumulating numerical values through interlocking digit wheels and a manual input lever mechanism.' },
+  { cat:'Computer', id:'US310450A', icon:'📜', title:'Hertha Ayrton — Draftsman\'s Dividing-Instrument, 1885', year:1885, content:'A precision instrument for dividing lines into equal parts for technical drawing. Hertha Ayrton was the first woman elected to the Institution of Electrical Engineers.' },
+  { cat:'Computer', id:'US640348A', icon:'📜', title:'Margaret A. Wise — Computing Attachment for Scale-Beams, 1900', year:1900, content:'A computing attachment for scale-beams that uses a sliding computation table to instantly convert weight readings into monetary or unit values.' },
+  { cat:'Computer', id:'US745167A', icon:'📜', title:'Emily C. Duncan — Calculator, 1903', year:1903, content:'A mechanical calculator using numbered wheels and levers to perform addition and subtraction with a carry mechanism for multi-digit calculations.' },
+  { cat:'Computer', id:'US749851A', icon:'📜', title:'Emily C. Duncan — Calculator (improved), 1904', year:1904, content:'An improved mechanical calculator with enhanced carry mechanism, rotating disc inputs, and a display register for accumulated results.' },
+  { cat:'Computer', id:'US1097891A', icon:'📜', title:'Elizabeth C. Swinnerton — Novelty Device, 1914', year:1914, content:'A novelty computation device for educational use enabling learners to perform arithmetic through physical manipulation using sliding panels with number grids.' },
+  { cat:'Computer', id:'US1552113A', icon:'📜', title:'Edith Clarke — Calculator, 1925', year:1925, content:'A graphical calculator for solving electrical circuit equations. Clarke was the first professionally employed female electrical engineer in the US.' },
+  { cat:'Computer', id:'US1728491A', icon:'📜', title:'Elizabeth Janneson — Number-Learning Device, 1929', year:1929, content:'An educational device for teaching arithmetic using moveable numbered tiles on a grid for physical manipulation.' },
+  { cat:'Computer', id:'USD164150S', icon:'📜', title:'Sarah Ann Ayres — Tax Computer, 1951', year:1951, content:'A tax computation device with a specialized calculation chart and sliding reference scale for rapidly computing tax obligations.' },
+  { cat:'Computer', id:'US2973141A', icon:'📜', title:'Evelyn Berezin — Electronic Calculator, 1961', year:1961, content:'An electronic calculator incorporating record sensing from punch cards or tape. Berezin later designed the first computerized airline reservation system and the first word processor.' },
+
+  // TYPEWRITER PATENTS
+  { cat:'Typewriter', id:'US825335A', icon:'📜', title:'Edna Mcarthur — Type-writing Machine, 1906', year:1906, content:'An improved typewriting machine with enhanced key action and ribbon mechanism.' },
+  { cat:'Typewriter', id:'US1166487A', icon:'📜', title:'Emma Sherwood — Typewriting apparatus, 1916', year:1916, content:'A typewriting apparatus with improved paper guide and tabulation mechanism.' },
+  { cat:'Typewriter', id:'US498129A', icon:'📜', title:'Lizzie J. Magie — Scale for Hammond Type-writers, 1893', year:1893, content:'A measuring scale attachment for Hammond typewriters for margin setting and column alignment.' },
+  { cat:'Typewriter', id:'US2660502A', icon:'📜', title:'Mary M. Smith — Typewriter, 1953', year:1953, content:'An improved typewriter with modified key mechanism for reduced operator fatigue.' },
+  { cat:'Typewriter', id:'US2897944A', icon:'📜', title:'Beulah Louise Henry — Typewriter, 1959', year:1959, content:'A typewriter allowing simultaneous production of several copies without carbon paper. "Lady Edison" filed over 49 patents in her lifetime.' },
+  { cat:'Typewriter', id:'US3159264A', icon:'📜', title:'Beulah Louise Henry — Keyboard assembly, 1964', year:1964, content:'An improved modular keyboard assembly for typewriters.' },
+  { cat:'Typewriter', id:'US3341861A', icon:'📜', title:'Beulah M. Robbins — Typewriter-related device, 1967', year:1967, content:'A typewriter accessory for improved document handling and automated margin control.' },
+
+  // LOOM PATENTS
+  { cat:'Loom', id:'US829474A', icon:'📜', title:'Mary P. C. Hooper — Loom, 1906', year:1906, content:'A loom with an improved heddle mechanism for faster thread separation and complex weave patterns.' },
+  { cat:'Loom', id:'US951935A', icon:'📜', title:'Anna M. Boydston & Carrie A. Cowden — Loom, 1910', year:1910, content:'A hand loom with improved shed-opening mechanism and adjustable warp tension controls.' },
+  { cat:'Loom', id:'USD52697S', icon:'📜', title:'Elna M. de Neergaard — Loom-Frame, 1918', year:1918, content:'A design patent for a loom frame with folding elements for compact storage.' },
+  { cat:'Loom', id:'US1332165A', icon:'📜', title:'Elna M. de Neergaard — Loom, 1920', year:1920, content:'An improved loom with novel heddle frame suspension system for rapid pattern changes.' },
+  { cat:'Loom', id:'US1532848A', icon:'📜', title:'Josephine Marie Weil — Loom for Hand Weaving, 1925', year:1925, content:'A hand weaving loom with improved warp beam tensioning for ease of use in home studios.' },
+
+  // SEWING MACHINE PATENTS
+  { cat:'Sewing', id:'US141987A', icon:'📜', title:'Helen A. Blanchard — Improvement in Sewing-Machines, 1873', year:1873, content:'An improvement to sewing machine stitch-forming mechanism. Blanchard held 28 patents.' },
+  { cat:'Sewing', id:'US252992A', icon:'📜', title:'Helen A. Blanchard — Hollow Needle, 1882', year:1882, content:'A hollow sewing machine needle that carries thread through the hollow shaft, enabling new stitch types.' },
+  { cat:'Sewing', id:'US500556A', icon:'📜', title:'Helen A. Blanchard — Sewing-Needle, 1893', year:1893, content:'An improved sewing needle with reinforced shank and optimized eye geometry for high-speed stitching.' },
+  { cat:'Sewing', id:'US612011A', icon:'📜', title:'Helen A. Blanchard — Improvements in Sewing-Machines, 1898', year:1898, content:'Comprehensive improvements including novel feed dog mechanism, improved tension regulator, and bobbin winding system.' },
+  { cat:'Sewing', id:'US659999A', icon:'📜', title:'Helen A. Blanchard — Sewing-Machine Needle, 1900', year:1900, content:'An improved sewing needle with optimized tip geometry for high-speed industrial stitching.' },
+  { cat:'Sewing', id:'US666578A', icon:'📜', title:'Harriet Ruth Tracy — Sewing-Machine, 1901', year:1901, content:'A sewing machine with automatic thread cutter and chain stitch mechanism.' },
+  { cat:'Sewing', id:'US683900A', icon:'📜', title:'Helen A. Blanchard — Hat-Sewing Machine, 1901', year:1901, content:'A specialized sewing machine for hat manufacture with rotary head for curved brims.' },
+  { cat:'Sewing', id:'US683901A', icon:'📜', title:'Helen A. Blanchard — Overseaming Sewing-Machine, 1901', year:1901, content:'A specialized overseaming machine for finishing fabric edges to prevent fraying.' },
+  { cat:'Sewing', id:'US684176A', icon:'📜', title:'Helen A. Blanchard — Hat-Sewing Machine, 1901', year:1901, content:'A second hat-sewing machine patent with improvements for stitching brim edges and crown seams.' },
+  { cat:'Sewing', id:'US683902A', icon:'📜', title:'Helen A. Blanchard — Seam for Sewed Articles, 1901', year:1901, content:'A novel seam construction method producing a flat, durable seam for hat manufacture and garment assembly.' },
+  { cat:'Sewing', id:'US829830A', icon:'📜', title:'Sarah Lambert Bailey — Work Attachment for Sewing-Machines, 1906', year:1906, content:'A sewing machine work attachment for guiding pleats, tucks, and decorative stitching.' },
+  { cat:'Sewing', id:'US837620A', icon:'📜', title:'Margaret Graaf — Thread-Cutting Mechanism, 1906', year:1906, content:'An automatic thread-cutting mechanism using a cam-driven blade to sever both threads.' },
+  { cat:'Sewing', id:'US887586A', icon:'📜', title:'Ida J. Calhoun — Guide for Sewing-Machines, 1908', year:1908, content:'A sewing machine guide for maintaining consistent seam allowances using an adjustable fence.' },
+  { cat:'Sewing', id:'US921720A', icon:'📜', title:'Lillian C. Mattell — Tension-Device for Sewing-Machines, 1909', year:1909, content:'An improved thread tension device that automatically compensates for different thread weights.' },
+  { cat:'Sewing', id:'US1012856A', icon:'📜', title:'Mary E. Irving — Combined Table and Work-Box, 1911', year:1911, content:'A combined sewing table and work-box integrating compartmentalized storage with a sewing work surface.' },
+  { cat:'Sewing', id:'US1022185A', icon:'📜', title:'Ethel Mary Elsden — Spool-Holder for Sewing-Machines, 1912', year:1912, content:'An improved spool-holder accommodating multiple thread spool sizes with spring-tensioned spindle.' },
+  { cat:'Sewing', id:'US1089816A', icon:'📜', title:'Helen A. Blanchard — Method of Selvage-Sewing, 1914', year:1914, content:'A patented method for sewing along the selvage edge of woven fabrics.' },
+  { cat:'Sewing', id:'US1091672A', icon:'📜', title:'Mary Magdalene Lamy — Cord and Rope-Making Device, 1914', year:1914, content:'A device for making cords and ropes from thread or yarn using a rotary twisting mechanism.' },
+  { cat:'Sewing', id:'US1222503A', icon:'📜', title:'Margaret Elizabeth Beedle Williams — Sewing-Machine Cabinet, 1917', year:1917, content:'A combined sewing machine cabinet and lap-board for a compact ergonomic workstation.' },
+  { cat:'Sewing', id:'US1368820A', icon:'📜', title:'Unknown — Bobbin-Unwinding Attachment, 1921', year:1921, content:'A bobbin-unwinding attachment controlling thread release using a tensioning mechanism.' },
+
+  // TEXTILE PATENTS
+  { cat:'Textile', id:'USD18001S', icon:'📜', title:'Elizabeth A. Fenner — Design for Textile Fabric, 1888', year:1888, content:'Ornamental textile fabric design with repeating geometric pattern for upholstery and decorative applications.' },
+  { cat:'Textile', id:'USD21525S', icon:'📜', title:'Annie G. Thyng — Design for Textile Fabric, 1892', year:1892, content:'Textile fabric design with floral and vine repeating pattern for decorative fabric production.' },
+  { cat:'Textile', id:'USD21998S', icon:'📜', title:'Annie G. Thyng — Design for Textile Fabric, 1892', year:1892, content:'Second textile fabric design by Annie G. Thyng with variant repeating pattern.' },
+  { cat:'Textile', id:'USD22554S', icon:'📜', title:'Ellen Whitcomb — Design for Textile Fabric, 1893', year:1893, content:'Ornamental textile design with symmetrical woven pattern and interlaced geometric elements.' },
+  { cat:'Textile', id:'USD31457S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1899', year:1899, content:'Textile fabric design by Helen P. Johnstone, a prolific designer filing numerous fabric patents.' },
+  { cat:'Textile', id:'USD37613S', icon:'📜', title:'Emma W. Doughty — Design for Textile Fabric, 1905', year:1905, content:'Textile design with dimensional optical effect through systematic variation in weave density.' },
+  { cat:'Textile', id:'USD37614S', icon:'📜', title:'Emma W. Doughty — Design for Textile Fabric, 1905', year:1905, content:'Second textile design by Emma W. Doughty with complementary repeating pattern.' },
+  { cat:'Textile', id:'USD37615S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1905', year:1905, content:'Textile design by prolific designer Sophia L. Crownfield, one of over a dozen fabric patents.' },
+  { cat:'Textile', id:'USD37616S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1905', year:1905, content:'Variant geometric repeat textile design by Sophia L. Crownfield.' },
+  { cat:'Textile', id:'USD37618S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1905', year:1905, content:'Textile design with interlocking geometric forms in a systematic pattern family.' },
+  { cat:'Textile', id:'USD37620S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1905', year:1905, content:'Refined geometric repeat textile design engineered for efficient loom production.' },
+  { cat:'Textile', id:'USD37621S', icon:'📜', title:'Harriet W. Fowler — Design for Textile Fabric, 1905', year:1905, content:'Decorative repeating pattern textile design for commercial fabric production.' },
+  { cat:'Textile', id:'USD37622S', icon:'📜', title:'Harriet W. Fowler — Design for Textile Fabric, 1905', year:1905, content:'Second textile design patent by Harriet W. Fowler with complementary pattern.' },
+  { cat:'Textile', id:'USD37628S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1905', year:1905, content:'Refined repeating ornamental pattern for commercial fabric by Helen P. Johnstone.' },
+  { cat:'Textile', id:'USD37629S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1905', year:1905, content:'Systematic geometric repeat textile design for power loom production.' },
+  { cat:'Textile', id:'USD37630S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1905', year:1905, content:'Variant geometric motif textile design with different density and scale of repeat.' },
+  { cat:'Textile', id:'USD37631S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1905', year:1905, content:'Fourth 1905 textile design patent by Helen P. Johnstone completing a coordinated pattern family.' },
+  { cat:'Textile', id:'USD38062S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1906', year:1906, content:'1906 textile design continuing Crownfield\'s prolific output with new geometric repeat.' },
+  { cat:'Textile', id:'USD38064S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1906', year:1906, content:'Structured repeat textile design filed in 1906 by Sophia L. Crownfield.' },
+  { cat:'Textile', id:'USD38085S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1906', year:1906, content:'Refined geometric repeat textile design with increased complexity.' },
+  { cat:'Textile', id:'USD38099S', icon:'📜', title:'Emma W. Doughty — Design for Textile Fabric, 1906', year:1906, content:'Evolved repeating motif building on Doughty\'s 1905 textile designs.' },
+  { cat:'Textile', id:'USD38119S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1906', year:1906, content:'1906 textile design extending Johnstone\'s commercial output into a second year.' },
+  { cat:'Textile', id:'USD38121S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1906', year:1906, content:'Second 1906 textile design by Johnstone as a complementary repeat pattern.' },
+  { cat:'Textile', id:'USD38592S', icon:'📜', title:'Harriet W. Fowler — Design for Textile Fabric, 1907', year:1907, content:'1907 textile design by Harriet W. Fowler in commercial fabric pattern design.' },
+  { cat:'Textile', id:'USD38702S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1907', year:1907, content:'1907 textile design demonstrating Johnstone\'s three consecutive years of active patent filing.' },
+  { cat:'Textile', id:'USD38703S', icon:'📜', title:'Helen P. Johnstone — Design for Textile Fabric, 1907', year:1907, content:'Second 1907 textile design by Johnstone as coordinated pattern.' },
+  { cat:'Textile', id:'USD38864S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1907', year:1907, content:'1907 Crownfield design continuing three-year sustained output.' },
+  { cat:'Textile', id:'USD38865S', icon:'📜', title:'Sophia L. Crownfield — Design for Textile Fabric, 1907', year:1907, content:'Companion 1907 textile design completing a coordinated pattern pair.' },
+  { cat:'Textile', id:'USD38876S', icon:'📜', title:'Ada M. Rapp — Design for Textile Fabric, 1907', year:1907, content:'Decorative repeating pattern textile design by Ada M. Rapp.' },
+  { cat:'Textile', id:'USD38908S', icon:'📜', title:'Elizabeth L. Mosenthal — Design for Textile Fabric, 1907', year:1907, content:'Distinctive repeating ornamental pattern textile design.' },
+  { cat:'Textile', id:'USD38909S', icon:'📜', title:'Anna Olsson — Design for Textile Fabric, 1907', year:1907, content:'Repeating geometric pattern textile design by Anna Olsson, 1907.' },
+  { cat:'Textile', id:'USD40782S', icon:'📜', title:'Anna Olsson — Design for Textile Fabric, 1910', year:1910, content:'1910 textile design continuing Olsson\'s commercial practice.' },
+  { cat:'Textile', id:'USD60790S', icon:'📜', title:'Clara Katz — Design for Textile Fabric, 1922', year:1922, content:'Post-WWI decorative arts textile design by Clara Katz.' },
+  { cat:'Textile', id:'USD71532S', icon:'📜', title:'Eleanor M. Sarton — Design for Textile Fabric, 1926', year:1926, content:'Art Deco-influenced geometric pattern textile design.' },
+  { cat:'Textile', id:'USD86782S', icon:'📜', title:'Edna F. Leonhardt — Textile Fabric for Upholstery, 1932', year:1932, content:'Durable repeating pattern upholstery textile design.' },
+  { cat:'Textile', id:'USD86784S', icon:'📜', title:'Edna F. Leonhardt — Textile Fabric for Upholstery, 1932', year:1932, content:'Second 1932 coordinated upholstery textile design.' },
+  { cat:'Textile', id:'USD86787S', icon:'📜', title:'Edna F. Leonhardt — Textile Fabric for Upholstery, 1932', year:1932, content:'Third coordinated upholstery textile design.' },
+  { cat:'Textile', id:'USD86789S', icon:'📜', title:'Edna F. Leonhardt — Textile Fabric for Upholstery, 1932', year:1932, content:'Fourth 1932 upholstery textile design completing a substantial coordinated collection.' },
+  { cat:'Textile', id:'USD88338S', icon:'📜', title:'Irene A. Weitz — Textile Fabric, 1932', year:1932, content:'Modernist geometric pattern with bold line elements.' },
+  { cat:'Textile', id:'USD88339S', icon:'📜', title:'Irene A. Weitz — Textile Fabric, 1932', year:1932, content:'Second 1932 coordinated textile design by Irene A. Weitz.' },
+  { cat:'Textile', id:'USD110853S', icon:'📜', title:'Edith M. Swanson — Textile Fabric, 1938', year:1938, content:'Flowing repeating pattern with curved organic elements in geometric framework.' },
+  { cat:'Textile', id:'USD111090S', icon:'📜', title:'Dorothy S. Smith — Textile Fabric, 1938', year:1938, content:'1938 decorative textile design reflecting late 1930s sensibilities.' },
+  { cat:'Textile', id:'USD118760S', icon:'📜', title:'Ruth Schmidt — Textile Fabric, 1940', year:1940, content:'1940 textile design with structured geometric motifs.' },
+  { cat:'Textile', id:'USD130798S', icon:'📜', title:'Ida Jolles — Needlepoint Tapestry Fabric, 1941', year:1941, content:'Needlepoint tapestry fabric design with grid-based structure for counted-thread needlework.' },
+  { cat:'Textile', id:'USD131261S', icon:'📜', title:'Ida Jolles — Needlepoint Tapestry Fabric, 1942', year:1942, content:'Second needlepoint tapestry design continuing counted-thread needlework specialization.' },
+
+  // CLOTHING PATENTS
+  { cat:'Clothing', id:'US149280A', icon:'📜', title:'Frederika M. McDonald — Skirt-Protector, 1874', year:1874, content:'Improved skirt-protecting device with cord and pulley system for elevating skirt hems.' },
+  { cat:'Clothing', id:'US282646A', icon:'📜', title:'Margaret E. Knight — Skirt-Protector, 1883', year:1883, content:'Skirt protector by Margaret Knight and Harriet MacFarland. Knight, "the female Edison," held over 87 patents.' },
+  { cat:'Clothing', id:'US318038A', icon:'📜', title:'Annie E. Sawyer — Skirt-Protector, 1885', year:1885, content:'Improved mechanism for lifting and holding skirt hems clear of wet or muddy surfaces.' },
+  { cat:'Clothing', id:'US473653A', icon:'📜', title:'Sarah Boone — Ironing-Board, 1892', year:1892, content:'Improved ironing board for women\'s garment sleeves and bodies. Sarah Boone was one of the first African American women to receive a U.S. patent.' },
+  { cat:'Clothing', id:'US540756A', icon:'📜', title:'Mary Matilda Odell — Infants\' Bib, 1895', year:1895, content:'Improved infant\'s bib with novel fastening mechanism and improved coverage.' },
+  { cat:'Clothing', id:'US555428A', icon:'📜', title:'Alice Louisa Bygrave — Cycling-Skirt, 1896', year:1896, content:'Cycling skirt converting from walking to cycling configuration, gathering fabric from bicycle wheels.' },
+  { cat:'Clothing', id:'US610988A', icon:'📜', title:'Ellen M. Hoey — Skirt for Cycling, 1898', year:1898, content:'Women\'s cycling skirt with safety features to prevent fabric entanglement in bicycle mechanisms.' },
+  { cat:'Clothing', id:'US637524A', icon:'📜', title:'Carrie P. Parker — Garment-Fastener, 1899', year:1899, content:'Interlocking garment fastener easier to operate single-handedly with flat secure closure.' },
+  { cat:'Clothing', id:'US644606A', icon:'📜', title:'Laura H. Johnson — Garment, 1900', year:1900, content:'Garment with innovative seam and dart arrangement enabling body-conforming fit without assistance.' },
+  { cat:'Clothing', id:'US971680A', icon:'📜', title:'Mabel Marie Kline — Catamenial Skirt-Protector, 1910', year:1910, content:'Catamenial skirt-protector for menstrual protection of women\'s clothing with improved attachment system.' },
+  { cat:'Clothing', id:'US1115674A', icon:'📜', title:'Mary Phelps Jacob — Brassiere, 1914', year:1914, content:'First modern brassiere patent in the United States, replacing the rigid corset. Jacob sold the patent to Warner Brothers for $1,500.' },
+  { cat:'Clothing', id:'US1137452A', icon:'📜', title:'Anna E. Bienstock — Dress-Shield Protector, 1915', year:1915, content:'Dress-shield protector for underarm area with absorbent inner layer and waterproof outer layer.' },
+  { cat:'Clothing', id:'US1223854A', icon:'📜', title:'Harriet Cutler — Nurse\'s Cap, 1917', year:1917, content:'Nurse\'s cap with improved construction maintaining shape and position during active nursing work.' },
+  { cat:'Clothing', id:'US1348754A', icon:'📜', title:'Ethel Shrader — Dress-Shield Supporter, 1920', year:1920, content:'Dress-shield supporter holding shields in position within garments without sewing.' },
+  { cat:'Clothing', id:'US1364276A', icon:'📜', title:'Sallie C. Hannaford — Dress-Skirt Shield, 1921', year:1921, content:'Dress-skirt shield protecting the lower skirt from soiling and wear.' },
+  { cat:'Clothing', id:'US1475018A', icon:'📜', title:'Alma Marie Lassen — Dress Shield, 1923', year:1923, content:'Improved dress shield with enhanced absorbency and layered material fastening system.' },
+  { cat:'Clothing', id:'US2113469A', icon:'📜', title:'Eleanor W. Standley — Dress Shield, 1938', year:1938, content:'1938 dress shield with improved synthetic fabric materials for better performance and laundering.' },
+];
+
+const added = [];
+let currentCat = 'All';
+let searchQuery = '';
+let mode = 'invent';
+let lastInventionText = '';
+
+// Build tabs
+const tabsEl = document.getElementById('srcTabs');
+CATS.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'src-tab' + (c==='All'?' active':'');
+  btn.textContent = c;
+  btn.onclick = () => {
+    document.querySelectorAll('.src-tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = c;
+    renderBrowser();
+  };
+  tabsEl.appendChild(btn);
+});
+
+function filterSources() {
+  searchQuery = document.getElementById('searchBox').value.toLowerCase();
+  renderBrowser();
+}
+
+function renderBrowser() {
+  const browser = document.getElementById('srcBrowser');
+  let filtered = SOURCES.filter(p => {
+    const matchCat = currentCat === 'All' || p.cat === currentCat;
+    const matchSearch = !searchQuery || p.title.toLowerCase().includes(searchQuery) || p.year.toString().includes(searchQuery) || p.content.toLowerCase().includes(searchQuery);
+    return matchCat && matchSearch;
+  });
+  if (filtered.length === 0) {
+    browser.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div>No sources match.</div>';
+    return;
+  }
+  browser.innerHTML = filtered.map(p => {
+    const isAdded = added.some(a=>a.id===p.id);
+    const thumbHtml = p.img
+      ? `<div class="src-thumb"><img src="${p.img}" alt="" onerror="this.parentElement.textContent='${p.icon}'"></div>`
+      : `<div class="src-thumb">${p.icon}</div>`;
+    const linkHtml = p.url && p.cat === 'AI & Women'
+      ? `<a class="article-link" href="${p.url}" target="_blank" rel="noopener">↗ Read article</a>`
+      : p.url && p.cat === 'LOC Photos'
+      ? `<a class="article-link" href="${p.url}" target="_blank" rel="noopener">↗ View at Library of Congress</a>`
+      : '';
+    return `<div class="src-item${isAdded?' added':''}">
+      ${thumbHtml}
+      <div class="si-info">
+        <div class="si-cat">${p.cat} · ${p.year}</div>
+        <div class="si-title">${esc(p.title)}</div>
+        <div class="si-desc">${esc(p.content.substring(0,90))}…</div>
+        ${linkHtml}
+      </div>
+      <button class="si-btn${isAdded?' done':''}" onclick="${isAdded?'':'window.addSource(\''+p.id+'\')'}">${isAdded?'✓':'+ Add'}</button>
+    </div>`;
+  }).join('');
+}
+
+function addSource(id) {
+  const p = SOURCES.find(x=>x.id===id);
+  if (!p || added.some(a=>a.id===id)) return;
+  added.push(p);
+  updateCounts(); renderBrowser(); renderAdded();
+}
+
+function removeAdded(id) {
+  const i = added.findIndex(a=>a.id===id);
+  if (i>=0) added.splice(i,1);
+  updateCounts(); renderBrowser(); renderAdded();
+}
+
+function renderAdded() {
+  const section = document.getElementById('addedSection');
+  const list = document.getElementById('addedList');
+  if (added.length === 0) { section.style.display='none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = added.map(p=>`
+    <div class="a-card">
+      <button class="a-remove" onclick="window.removeAdded('${p.id}')">×</button>
+      <div class="a-cat">${p.icon} ${p.cat} · ${p.year}</div>
+      <div class="a-title">${esc(p.title)}</div>
+    </div>`).join('');
+  const words = added.reduce((s,p)=>s+p.content.split(/\s+/).length,0);
+  document.getElementById('statCount').textContent = added.length;
+  document.getElementById('statWords').textContent = words.toLocaleString();
+}
+
+function updateCounts() {
+  const n = added.length;
+  document.getElementById('countBadge').textContent = n + ' selected';
+  document.getElementById('topBadge').textContent = n + ' Source'+(n!==1?'s':'')+' Selected';
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function setMode(btn,m){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); mode=m;
+  const L={invent:'Describe a problem to solve or domain to invent in',combine:'Describe two or more concepts to combine',improve:'Describe an existing technology to radically improve'};
+  document.getElementById('modeLabel').textContent=L[m];
+}
+
+function useChip(btn){
+  const cur=document.getElementById('userPrompt').value.trim();
+  document.getElementById('userPrompt').value=cur?cur+', '+btn.textContent:btn.textContent;
+  document.getElementById('userPrompt').focus();
+}
+
+function buildSys(){
+  let s=`You are CareMaker, an AI invention engine that draws on the history of women working with machines, current research on AI's disproportionate impact on women's work, and patents by women inventors. Generate detailed, visionary new invention concepts that directly respond to this history and these injustices.
+
+Key context you should draw on:
+- Of 6.1 million workers whose jobs are most likely to be disrupted by AI, 86% are women
+- Women's jobs are 3x more likely to be automated by AI than men's jobs
+- Women adopt AI at a rate 25% lower than men, partly due to ethical concerns and fear of judgment
+- Women were the original human computers, keypunch operators, and machine operators — their labor built computing
+- Women have filed patents for calculating machines, computing devices, looms, and sewing machines throughout history
+- Library of Congress photographs document women operating machines in government offices, factories, and textile mills since the 1850s
+- The gender pay gap has widened for two years in a row for the first time in 60 years
+
+Generate inventions that honor this history and address these present inequities. Draw explicitly on the sources selected.
+
+Format EXACTLY as:
+**INVENTION NAME:** [bold memorable name]
+**INSPIRED BY:** [specific sources, women, photographs, or articles this builds upon]
+**ONE-LINE CONCEPT:** [one sentence]
+
+**OVERVIEW**
+[2-3 paragraphs]
+
+**CORE TECHNICAL PRINCIPLES**
+[3-5 bullet points drawing directly on the source library]
+
+**KEY INNOVATIONS OVER PRIOR ART**
+[3-4 bullet points]
+
+**APPLICATIONS**
+[3-5 use cases]
+
+**NEXT STEPS FOR DEVELOPMENT**
+[2-3 concrete steps]`;
+
+  if(added.length>0){
+    s+=`\n\n=== SELECTED SOURCE LIBRARY (${added.length} sources) ===\n`;
+    added.forEach((p,i)=>{
+      s+=`\n[SOURCE ${i+1}] Category: ${p.cat}\nTitle: ${p.title} (${p.year})\nContent: ${p.content}\n`;
+    });
+  }
+  return s;
+}
+
+function buildUser(input){
+  const M={
+    invent:`Generate a completely new invention in the domain of: ${input}`,
+    combine:`Generate a new invention combining these concepts: ${input}`,
+    improve:`Generate a dramatically improved version of: ${input}`
+  };
+  return M[mode]+(added.length>0?'\n\nDraw directly on the specific sources in the library — reference the women, their work, their machines, and the research findings by name.':'\n\nNo sources selected yet — draw on your general knowledge of women\'s labor history and AI\'s gendered impacts.');
+}
+
+async function generate(){
+  const input=document.getElementById('userPrompt').value.trim();
+  const genErr=document.getElementById('genErr');
+  const btn=document.getElementById('genBtn');
+  const out=document.getElementById('outputArea');
+  genErr.style.display='none';
+  if(!input){genErr.textContent='Please describe what you want to invent.';genErr.style.display='block';return;}
+  btn.disabled=true; btn.textContent='⏳ Making…';
+  out.innerHTML=`<div class="thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-text">Drawing on ${added.length} source${added.length!==1?'s':''}… making something new…</div></div>`;
+  try{
+    const text = await callAI({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:buildSys(), messages:[{role:'user',content:buildUser(input)}] });
+    lastInventionText = text;
+    showResult(text);
+    generateSketch(text);
+  }catch(e){
+    out.innerHTML='';
+    genErr.textContent='Error: '+e.message; genErr.style.display='block';
+  }
+  btn.disabled=false; btn.textContent='⚗ Generate Invention';
+}
+
+function showResult(text){
+  const out=document.getElementById('outputArea');
+  const tM=text.match(/\*\*INVENTION NAME:\*\*\s*(.+)/);
+  const iM=text.match(/\*\*INSPIRED BY:\*\*\s*(.+)/);
+  const cM=text.match(/\*\*ONE-LINE CONCEPT:\*\*\s*(.+)/);
+  const title=tM?tM[1].trim():'New Invention';
+  const insp=iM?iM[1].trim():'';
+  const conc=cM?cM[1].trim():'';
+  let body=text.replace(/\*\*INVENTION NAME:\*\*.+/,'').replace(/\*\*INSPIRED BY:\*\*.+/,'').replace(/\*\*ONE-LINE CONCEPT:\*\*.+/,'').trim();
+  body=body.replace(/\*\*(.+?)\*\*/g,'<h3>$1</h3>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>.*<\/li>\n?)+/gs,m=>'<ul>'+m+'</ul>').replace(/\n\n+/g,'</p><p>').replace(/^(?!<)(.+)$/gm,'<p>$1</p>');
+  const ts=new Date().toLocaleTimeString();
+  out.innerHTML=`<div class="result">
+    <div class="result-title">${esc(title)}</div>
+    ${insp?`<div class="result-inspired">✦ Inspired by ${esc(insp)}</div>`:''}
+    ${conc?`<div class="result-concept">${esc(conc)}</div>`:''}
+    <div class="result-body">${body}</div>
+    <div class="action-row">
+      <button class="btn-sm" onclick="window.copyRes(event)">⎘ Copy</button>
+      <button class="btn-sm" onclick="window.generate()">↺ Regenerate</button>
+      <button class="sketch-btn" id="resketchBtn" onclick="window.generateSketch(lastInventionText)" style="display:none;">✏ Re-sketch</button>
+      <span class="ts">Generated ${ts}</span>
+    </div>
+    <div class="sketch-section" id="sketchSection">
+      <div class="sketch-label">✏ Invention Sketch</div>
+      <div class="sketch-wrap" id="sketchWrap">
+        <div class="sketch-thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="sketch-thinking-text">Drafting sketch…</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function generateSketch(inventionText){
+  const wrap=document.getElementById('sketchWrap');
+  if(!wrap) return;
+  wrap.innerHTML=`<div class="sketch-thinking"><div class="thinking-dots"><span></span><span></span><span></span></div><div class="sketch-thinking-text">Drafting invention sketch…</div></div>`;
+  const sketchPrompt=`You are a patent sketch artist. Based on this invention description, create a detailed SVG patent-style technical drawing.
+
+INVENTION:
+${inventionText}
+
+Create an SVG technical sketch in the style of a hand-drawn patent illustration. Requirements:
+- viewBox="0 0 600 420"
+- Dark background: fill the background rect with #0e0008
+- Use ONLY these colors: stroke="#ff85b3" (main lines), stroke="#c97bff" (labels/callouts), stroke="#ff2d6b" (accent lines), fill="none" for shapes
+- Draw as a technical schematic with labeled parts using <text> elements in fill="#ff85b3" font-family="monospace" font-size="11"
+- Include callout lines with part labels (A, B, C or short descriptive labels)
+- Use dashed lines for internal components: stroke-dasharray="4 3"
+- Include a title at the bottom in fill="#c97bff" font-size="13" font-family="monospace"
+- At least 6-8 labeled components, minimum 30 SVG elements
+
+Return ONLY raw SVG starting with <svg and ending with </svg>. No explanation, no markdown, no code fences.`;
+
+  try{
+    const svg=await callAI({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:sketchPrompt}] });
+    let clean=svg.replace(/```svg\n?/gi,'').replace(/```\n?/g,'').trim();
+    if(clean.startsWith('<svg')){
+      wrap.innerHTML=clean;
+      const r=document.getElementById('resketchBtn');
+      if(r) r.style.display='inline-flex';
+    } else {
+      wrap.innerHTML=`<div style="padding:16px;font-size:11px;color:rgba(255,180,210,0.4);text-align:center;">Sketch unavailable — try regenerating.</div>`;
+    }
+  }catch(e){
+    wrap.innerHTML=`<div style="padding:16px;font-size:11px;color:rgba(255,180,210,0.4);text-align:center;">Sketch error: ${e.message}</div>`;
+  }
+}
+
+function copyRes(e){
+  const t=document.querySelector('.result')?.innerText||'';
+  navigator.clipboard.writeText(t).then(()=>{e.target.textContent='✓ Copied!';setTimeout(()=>e.target.textContent='⎘ Copy',2000);});
+}
+
+// EXPOSE TO WINDOW
+window.addSource=addSource; window.removeAdded=removeAdded; window.filterSources=filterSources;
+window.setMode=setMode; window.useChip=useChip; window.generate=generate;
+window.generateSketch=generateSketch; window.copyRes=copyRes;
+
+renderBrowser();
+</script>
+</body>
+</html>
