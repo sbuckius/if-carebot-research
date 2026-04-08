@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ The Document · Presentation Labor: Full System Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--rouge:#c0234f;--deep:#8b0030;--crimson:#5a0020;--blush:#f0a0b8;--petal:#e8c0cc;--powder:#f8e8ee;--hot:#e83060;--candy:#ff6090;--berry:#9a1840;--fuchsia:#d82060;--bg:#0e0006;--surface:rgba(22,0,12,.97);--border:rgba(200,100,130,.15);--border2:rgba(220,80,120,.38);--text:#f0dce4;--text-body:#cba8b8;--muted:rgba(240,180,200,.4);--muted2:rgba(240,200,215,.6);--radius:18px;--fh:'Cormorant Garamond',serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;--glow:0 4px 28px rgba(200,35,80,.2);--glow2:0 8px 52px rgba(200,35,80,.32),0 0 80px rgba(140,0,40,.1);--card-shadow:0 2px 24px rgba(0,0,0,.4);--c-sep:rgba(180,60,100,.32);--c-cm:rgba(240,160,190,.38);--c-cp:rgba(240,175,200,.65);--c-kw:rgba(220,80,130,.9);--c-fn:#f0a0b8;--c-str:rgba(200,160,220,.8);--c-val:rgba(255,185,105,.75);--c-op:rgba(200,100,130,.55);--c-lbl:rgba(210,130,160,.65);--c-dcl:rgba(255,145,175,.92);--c-note:rgba(200,150,170,.6);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;}
+html,body{min-height:100%;font-family:var(--fb);font-weight:400;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.65;}
+body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='3.5' fill='%23d84070' opacity='.9'/%3E%3Ccircle cx='9' cy='9' r='6.5' stroke='%23f0a0b8' stroke-width='1.2' fill='none' opacity='.5'/%3E%3C/svg%3E") 9 9,default;}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 8% 92%,rgba(160,0,50,.26) 0%,transparent 55%),radial-gradient(ellipse 55% 60% at 92% 8%,rgba(100,0,30,.2) 0%,transparent 55%),linear-gradient(150deg,#1a000e,#0e0006 50%,#060002);}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(70px);}
+.orb-1{width:400px;height:400px;background:var(--crimson);opacity:.13;bottom:-90px;left:-80px;animation:d1 22s ease-in-out infinite;}
+.orb-2{width:280px;height:280px;background:var(--berry);opacity:.1;top:-70px;right:-70px;animation:d2 27s ease-in-out infinite;}
+.orb-3{width:180px;height:180px;background:var(--hot);opacity:.06;top:45%;left:58%;animation:d3 18s ease-in-out infinite;}
+@keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(36px,22px)}}
+@keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-26px,-18px)}}
+@keyframes d3{0%,100%{transform:translate(0,0)}33%{transform:translate(-14px,10px)}66%{transform:translate(10px,-8px)}}
+.app-header{position:sticky;top:0;z-index:200;background:rgba(10,0,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.62rem 1.5rem;display:flex;align-items:center;gap:.8rem;box-shadow:0 1px 18px rgba(0,0,0,.45);}
+.app-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 28%,var(--rouge) 50%,var(--blush) 72%,transparent);opacity:.38;}
+.header-logo{font-family:var(--fh);font-size:1.35rem;font-weight:700;font-style:italic;margin-right:auto;background:linear-gradient(90deg,var(--petal),var(--fuchsia) 55%,var(--blush));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.module-count{font-size:.62rem;color:var(--muted);letter-spacing:.06em;font-weight:500;background:rgba(192,35,80,.06);border:1px solid rgba(192,35,80,.16);border-radius:999px;padding:.22rem .72rem;white-space:nowrap;}
+.back-link{display:flex;align-items:center;gap:.38rem;background:linear-gradient(135deg,rgba(192,35,80,.16),rgba(100,0,30,.26));color:var(--blush);border:1px solid var(--border2);border-radius:8px;padding:.36rem .78rem;font-family:var(--fb);font-size:.68rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;transition:all .2s;flex-shrink:0;}
+.back-link:hover{background:rgba(192,35,80,.28);transform:translateY(-2px);box-shadow:0 4px 14px rgba(192,35,80,.22);}
+.page{position:relative;z-index:2;max-width:920px;margin:0 auto;padding:0 1.5rem 6rem;}
+.disclaimer-banner{margin:2.5rem 0 2.2rem;background:linear-gradient(135deg,rgba(60,0,30,.92),rgba(30,0,15,.97));border:1.5px solid rgba(220,80,120,.45);border-radius:20px;padding:2rem 2.3rem;position:relative;overflow:hidden;}
+.disclaimer-banner::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 35%,var(--rouge) 50%,var(--blush) 65%,transparent);box-shadow:0 0 10px rgba(192,35,80,.3);}
+.disc-eyebrow{font-family:var(--fb);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,160,180,.72);margin-bottom:.65rem;display:flex;align-items:center;gap:.5rem;}
+.disc-dot{width:6px;height:6px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);flex-shrink:0;animation:breathe 1.8s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+.disc-title{font-family:var(--fh);font-size:1.4rem;font-weight:700;font-style:italic;color:var(--blush);margin-bottom:.9rem;line-height:1.3;}
+.disc-body{font-size:.95rem;color:var(--text-body);line-height:1.88;}
+.disc-body p+p{margin-top:.8rem;}
+.disc-body a{color:var(--blush);text-decoration:underline;text-underline-offset:3px;}
+.disc-body a:hover{color:var(--candy);}
+.disc-body strong{color:rgba(240,200,215,.82);}
+.stats-row{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:2.2rem;}
+.stat-pill{background:rgba(255,255,255,.033);border:1px solid var(--border);border-radius:13px;padding:.88rem 1.15rem;flex:1;min-width:88px;text-align:center;}
+.stat-num{font-family:var(--fh);font-size:1.85rem;font-weight:700;color:var(--blush);line-height:1;}
+.stat-lbl{font-size:.56rem;color:var(--muted);margin-top:.2rem;letter-spacing:.06em;text-transform:uppercase;font-weight:500;}
+.doc-container{background:rgba(10,0,5,.99);border:1px solid rgba(192,35,80,.2);border-radius:22px;overflow:hidden;box-shadow:var(--glow2);position:relative;}
+.doc-container::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--blush) 35%,var(--rouge) 50%,var(--blush) 65%,transparent);box-shadow:0 0 12px rgba(192,35,80,.3);z-index:2;}
+.doc-toolbar{display:flex;align-items:center;gap:.75rem;padding:.7rem 1.3rem;background:rgba(18,0,8,.98);border-bottom:1px solid rgba(192,35,80,.13);position:sticky;top:50px;z-index:10;}
+.tb-dots{display:flex;gap:.38rem;}
+.dot{width:11px;height:11px;border-radius:50%;}
+.dot-r{background:rgba(192,35,80,.42);}
+.dot-y{background:rgba(200,150,50,.32);}
+.dot-g{background:rgba(50,160,80,.25);}
+.tb-file{font-family:var(--fm);font-size:.72rem;color:rgba(200,120,150,.48);letter-spacing:.04em;margin-left:.25rem;}
+.tb-lang{margin-left:auto;font-family:var(--fm);font-size:.6rem;color:rgba(192,35,80,.4);letter-spacing:.08em;text-transform:uppercase;background:rgba(192,35,80,.055);border:1px solid rgba(192,35,80,.13);border-radius:5px;padding:.13rem .5rem;}
+.code-block{padding:1.8rem 0 3rem;overflow-x:auto;}
+.code-inner{min-width:0;padding:0 1.8rem;}
+.ln{display:inline-block;width:36px;text-align:right;padding-right:1.1rem;font-family:var(--fm);font-size:.68rem;color:rgba(192,35,80,.16);user-select:none;vertical-align:top;padding-top:.06em;flex-shrink:0;}
+.lc{font-family:var(--fm);font-size:.83rem;white-space:pre-wrap;word-break:break-word;display:inline;}
+.cl{display:flex;min-height:1.52em;line-height:1.52;}
+.cl:hover{background:rgba(192,35,80,.038);}
+.cl.mh{background:rgba(192,35,80,.055);border-left:2px solid rgba(192,35,80,.32);padding-left:2px;}
+.blank-row{height:.82em;}
+.sep{color:var(--c-sep);}
+.cm{color:var(--c-cm);}
+.cp{color:var(--c-cp);}
+.kw{color:var(--c-kw);}
+.fn-name{color:var(--c-fn);}
+.str{color:var(--c-str);}
+.val{color:var(--c-val);}
+.op{color:var(--c-op);}
+.lbl{color:var(--c-lbl);}
+.dcl{color:var(--c-dcl);}
+.nt{color:var(--c-note);}
+.sources-section{margin-top:3rem;}
+.sec-eye{font-family:var(--fb);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:.55rem;}
+.sec-hd{font-family:var(--fh);font-size:1.5rem;font-weight:700;font-style:italic;background:linear-gradient(90deg,var(--petal),var(--blush));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:1.1rem;line-height:1.2;}
+.src-grid{display:flex;flex-direction:column;gap:.65rem;}
+.src{display:flex;gap:.95rem;padding:1rem 1.2rem;background:rgba(255,255,255,.024);border:1px solid var(--border);border-radius:14px;align-items:flex-start;transition:border-color .18s;}
+.src:hover{border-color:var(--border2);}
+.src-n{font-family:var(--fh);font-size:1rem;font-weight:700;color:rgba(192,35,80,.32);flex-shrink:0;width:20px;padding-top:.1rem;}
+.src-title{font-family:var(--fh);font-size:.95rem;font-weight:600;font-style:italic;color:var(--petal);margin-bottom:.15rem;}
+.src-title a{color:inherit;text-decoration:underline;text-underline-offset:3px;}
+.src-title a:hover{color:var(--candy);}
+.src-meta{font-size:.78rem;color:var(--muted);line-height:1.52;}
+.src-note{font-size:.86rem;color:var(--text-body);margin-top:.22rem;line-height:1.62;}
+.footer-note{margin-top:1.8rem;padding:1.1rem 1.3rem;background:rgba(255,255,255,.022);border:1px solid var(--border);border-radius:14px;text-align:center;font-size:.87rem;color:rgba(200,140,165,.45);font-style:italic;font-family:var(--fh);}
+.footer-note a{color:var(--blush);text-decoration:underline;text-underline-offset:3px;}
+.footer-note a:hover{color:var(--candy);}
+@media(max-width:640px){html{font-size:14px;}.code-inner{padding:0 .9rem;}.lc{font-size:.76rem;}.ln{width:26px;padding-right:.7rem;}.doc-toolbar{top:44px;}}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<header class="app-header">
+  <div class="header-logo">Kitchen Computer · 1969</div>
+  <div class="module-count">37 modules · 47 subroutines · 40 simultaneous systems</div>
+  <a href="index.html" class="back-link">← Return to Survey</a>
+</header>
+<div class="page">
+
+<div class="disclaimer-banner">
+  <div class="disc-eyebrow"><div class="disc-dot"></div>Provenance &amp; Disclaimer · Read Before Proceeding</div>
+  <div class="disc-title">What This Document Is and How It Was Made</div>
+  <div class="disc-body">
+    <p>This document was generated by AI. It was produced by prompting a large language model to examine the <a href="presentation-labor-kitchen-computer.png" target="_blank" rel="noopener">1969 Neiman-Marcus Kitchen Computer advertisement photograph</a> — featuring the Honeywell H316 — and to analyze the visible physical and emotional work being performed by the person in the image. The AI was asked to render that analysis as executable code: a program running on a human body.</p>
+    <p>The term <strong>"presentation labor"</strong> is used here in the sense developed by Sarah ████████ to describe the measurable, structured, and often gendered work of constructing and sustaining a particular self-presentation for an audience. The document is the AI's attempt to make that labor legible — to write the program that the image was designed to conceal.</p>
+    <p>The model producing this document was almost certainly trained on foundational scholarship in this area. The most likely sources are listed in the <a href="#sources">Sources</a> section below. <strong>This document does not claim scientific validity.</strong> It is an artifact: evidence of what an AI sees when it looks at a body performing work, and of what language it reaches for to describe that seeing. <em>The program is not the person. The program ran on the person. The person ran the program.</em></p>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><div class="stat-num">37</div><div class="stat-lbl">Modules</div></div>
+  <div class="stat-pill"><div class="stat-num">47</div><div class="stat-lbl">Subroutines</div></div>
+  <div class="stat-pill"><div class="stat-num">40</div><div class="stat-lbl">Simultaneous systems</div></div>
+  <div class="stat-pill"><div class="stat-num">1,800</div><div class="stat-lbl">Posture corrections / hr</div></div>
+  <div class="stat-pill"><div class="stat-num">0</div><div class="stat-lbl">Visible adjustments</div></div>
+  <div class="stat-pill"><div class="stat-num">—</div><div class="stat-lbl">Her name listed</div></div>
+</div>
+
+<div class="doc-container">
+  <div class="doc-toolbar">
+    <div class="tb-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+    <div class="tb-file">presentation_labor_full_system.js</div>
+    <div class="tb-lang">AI-generated · 1969 / 2024</div>
+  </div>
+  <div class="code-block"><div class="code-inner" id="ci"></div></div>
+</div>
+
+<div class="sources-section" id="sources">
+  <div class="sec-eye">✦ Sources &amp; Likely Training Material</div>
+  <div class="sec-hd">Works the AI Was Probably Trained On</div>
+  <div class="src-grid">
+    <div class="src"><div class="src-n">1</div><div><div class="src-title"><a href="https://archive.org/details/presentationofs00goff" target="_blank" rel="noopener">The Presentation of Self in Everyday Life</a></div><div class="src-meta">Erving Goffman · Doubleday Anchor Books, 1959</div><div class="src-note">The foundational text for understanding social interaction as performance — front stage/backstage, impression management, sincere vs. cynical performance. The entire architecture of this document (a program that produces an appearance distinct from its internal state) is Goffman's dramaturgical model rendered as code.</div></div></div>
+    <div class="src"><div class="src-n">2</div><div><div class="src-title"><a href="https://www.ucpress.edu/books/the-managed-heart/paper" target="_blank" rel="noopener">The Managed Heart: Commercialization of Human Feeling</a></div><div class="src-meta">Arlie Russell Hochschild · University of California Press, 1983</div><div class="src-note">Coined "emotional labor." Module 7's Emotion_Conversion_Matrix is a direct formalization of Hochschild's conversion model: the table mapping INPUT_STATE to OUTPUT_STATE is exactly what she described. The smile is not her smile.</div></div></div>
+    <div class="src"><div class="src-n">3</div><div><div class="src-title"><a href="https://www.researchgate.net/publication/344782858_Aesthetic_Labour" target="_blank" rel="noopener">Aesthetic Labour</a></div><div class="src-meta">Chris Warhurst &amp; Dennis Nickson · SAGE, 2020 · Original concept: Warhurst, Nickson, Witz &amp; Cullen (2000)</div><div class="src-note">Developed "aesthetic labor" — the mobilization and commodification of embodied capacities to look good and sound right. Modules 9–11 (apron, garments, hair) and Module 23 (class performance) draw directly on this. The apron costs $28. Her aesthetic labor is not listed.</div></div></div>
+    <div class="src"><div class="src-n">4</div><div><div class="src-title"><a href="https://compass.onlinelibrary.wiley.com/doi/10.1111/soc4.12211" target="_blank" rel="noopener">Aesthetic Labour for the Sociologies of Work, Gender, and Beauty</a></div><div class="src-meta">Ashley Mears · Sociology Compass, 2014</div><div class="src-note">Bridges Hochschild's emotional labor with Bourdieu's aesthetic capital through gender and beauty — situating bodily appearance as a convertible social resource. Informs Module 20 (the body as advertisement for the advertisement) and Module 23.</div></div></div>
+    <div class="src"><div class="src-n">5</div><div><div class="src-title"><a href="https://journals.sagepub.com/doi/10.1177/000271629956100101" target="_blank" rel="noopener">Emotional Labor Since <em>The Managed Heart</em></a></div><div class="src-meta">Ronnie J. Steinberg &amp; Deborah M. Figart · The Annals of the American Academy, 1999</div><div class="src-note">A comprehensive survey of the emotional labor literature in the decades following Hochschild. Particularly relevant to the document's treatment of gendered labor and the disproportionate burden of presentation labor on women.</div></div></div>
+    <div class="src"><div class="src-n">6</div><div><div class="src-title">The Beauty Myth: How Images of Beauty Are Used Against Women</div><div class="src-meta">Naomi Wolf · William Morrow, 1991</div><div class="src-note">Analyzes beauty standards as a mechanism for social control and economic exclusion. Module 35 (the advertisement frame as pressure system) and the closing declaration on unlisted prices map directly onto Wolf's thesis: her body is the condition under which the product becomes legible as desirable.</div></div></div>
+    <div class="src"><div class="src-n">7</div><div><div class="src-title"><a href="https://warwick.ac.uk/fac/soc/ier/glacier/learning/identities/al/" target="_blank" rel="noopener">Aesthetic Labour in Interactive Service Work</a></div><div class="src-meta">Warhurst, Nickson, Witz &amp; Cullen · Service Industries Journal, 2000</div><div class="src-note">The paper that coined "aesthetic labour" as a distinct concept. The document's MAINTAIN and CORRECTION instructions throughout are a formalization of this managerial aesthetic demand rendered as self-directed code.</div></div></div>
+  </div>
+  <div class="footer-note">← <a href="index.html">Return to the survey</a> · Kitchen Computer · 1969 · <a href="https://www.computerhistory.org/revolution/minicomputers/11/362" target="_blank" rel="noopener">Computer History Museum ↗</a></div>
+</div>
+
+</div>
+<script>
+const RAW = `// ============================================================
+// PRESENTATION LABOR: FULL SYSTEM DOCUMENTATION
+// Subject: Honeywell Kitchen Computer Advertisement
+// Vendor: Neiman-Marcus, 1969
+// Runtime Estimate: 60 minutes (oral performance)
+// Total Subroutines: 47
+// Status: ACTIVE
+// ============================================================
+
+
+SYSTEM PREAMBLE
+
+This program runs continuously.
+It has no pause state.
+It has no background process.
+It is the foreground.
+It is the only ground.
+
+The subject of this program is a woman standing in a kitchen.
+The kitchen is not her kitchen.
+The kitchen is a set.
+The woman is not a woman.
+The woman is a surface.
+The surface is for sale.
+The surface is also doing the selling.
+
+The computer on the counter costs $10,600.
+The woman is not listed at a price.
+The woman is the context that makes the price legible.
+Without her, the computer is a machine.
+With her, the computer is an upgrade to a life.
+Her labor is the advertisement.
+Her labor is invisible.
+This document makes it visible.
+
+BEGIN SYSTEM.
+
+
+// ============================================================
+// MODULE 0: INITIALIZATION SEQUENCE
+// ============================================================
+
+FUNCTION Wake_Into_Image():
+
+    // This is not the first thing that happened.
+    // The first things that happened are not in the frame.
+
+    Woke_at = [unrecorded]
+    Hair_Appointment = [prior to shoot]
+    Makeup_Application_Duration = [unrecorded]
+    Wardrobe_Selection_Process = [unrecorded]
+    Travel_to_Set = [unrecorded]
+    Waiting_on_Set = [unrecorded]
+    Direction_Received = [unrecorded]
+    Number_of_Takes = [unrecorded]
+
+    // None of the above appears in the image.
+    // None of the above is compensated in the advertisement.
+    // All of the above was required for the advertisement.
+
+    INITIALIZE presentation_mode
+    SUPPRESS all prior states
+    ENTER frame
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 1: THE BODY AS OPENING ARGUMENT
+// ============================================================
+
+FUNCTION Establish_Compositional_Presence():
+
+    // The body is not entering a room.
+    // The body is composing an argument.
+    // The argument is: this is effortless.
+    // The proof of the argument is: she shows no effort.
+
+    POSITION self at counter_left_of_center
+    ORIENT torso at 30_degree_angle_toward_device
+    DISTRIBUTE weight onto right_leg
+    ALLOW left_leg to appear relaxed_supportive
+    ENSURE both_feet_visible to camera for groundedness_signal
+
+    EXTEND left_arm toward device
+        wrist_angle = slightly_dropped
+        elbow_bend = gentle_not_locked
+        reach_quality = invitation_not_exertion
+
+    NOTE: Both arms must convey different things simultaneously.
+    Left arm: I am engaging with technology.
+    Right arm: I am not trying very hard.
+    Together: Effortless competence.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 2: THE SPINE — LOAD-BEARING IDEOLOGY
+// ============================================================
+
+FUNCTION Spinal_Ideology_Management():
+
+    // The spine is not just structural.
+    // The spine is an argument about class, gender, and grace.
+
+    TARGET spine_curve = "graceful S, not rigid column"
+
+    REASON: A rigid spine reads as tense, masculine, defensive.
+    REASON: A collapsed spine reads as tired, defeated, unprofessional.
+    REASON: A graceful S-curve reads as ease, femininity, control.
+
+    ENGAGE lumbar muscles at 40% capacity
+    PREVENT lumbar muscles from appearing engaged at all
+
+    ALLOW thoracic curve to soften naturally
+        prevents: military posture
+        prevents: slouch
+        achieves: the posture of a woman who has never had to think about posture
+
+    IF fatigue_causes_collapse:
+        MICRO_CORRECT before camera_registers
+        DO NOT let the correction be visible as a correction
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 3: THE HEAD — ANGLE AS IDEOLOGY
+// ============================================================
+
+FUNCTION Head_Tilt_Protocol():
+
+    // The head is not neutral.
+    // Every degree of head angle is a statement.
+
+    TARGET tilt = 6_to_10_degrees_downward
+
+    ANALYZE what each angle communicates:
+
+        Chin_up_10_degrees:   reads_as = authority, challenge, defiance — FORBIDDEN
+        Chin_level:           reads_as = confidence, equality — PERMITTED only for male subjects
+        Chin_down_6_degrees:  reads_as = focus, modesty, deference — TARGET STATE
+        Chin_down_15_degrees: reads_as = submission, collapse — ALSO FORBIDDEN
+
+    REASON: The sweet spot between deference and dignity.
+    REASON: She is looking at the machine with admiration,
+            not looking at the viewer with authority.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 4: THE FACE — PRIMARY PRODUCT SURFACE
+// ============================================================
+
+FUNCTION Face_As_Product_Surface():
+
+    // The face is not expressing feelings.
+    // The face is producing a brand-aligned emotional environment.
+
+    DEFINE target_expression = "Pleasant_Absorbed_Competence"
+    DEFINE expression_components:
+
+        Forehead = smooth_and_unconcerned
+        Brows = gently_lifted_not_furrowed
+        Eyes = soft_focus_downward
+        Cheeks = gently_lifted_by_smile
+        Mouth_corners = slightly_lifted
+        Jaw = relaxed_defined
+
+    // NOTE: Each of these components must be individually managed.
+    // They are not the same as feeling pleasant.
+    // They are a performance of pleasantness
+    // that has been calibrated to photograph as authentic.
+
+    PREVENT any single component from contradicting the whole:
+        IF brows_furrow despite_soft_smile: CORRECT — reads_as: anxious pleasantness
+        IF jaw_tightens despite_soft_eyes:  CORRECT — reads_as: suppressed tension
+        IF eyes_go_blank despite_lifted_cheeks: CORRECT — reads_as: dissociation
+
+    TARGET: A face that appears to be feeling something
+            while not visibly working to feel it.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 5: THE SMILE — PRECISION INSTRUMENT
+// ============================================================
+
+FUNCTION Smile_Calibration_Engine():
+
+    // This is not about happiness.
+    // This is about calibration.
+
+    DEFINE smile_spectrum:
+        0.0 = neutral
+        0.3 = polite_acknowledgment
+        0.5 = friendly_warmth
+        0.7 = TARGET_ZONE (pleasant_absorbed_engagement)
+        0.8 = enthusiastic (risks: frivolity, excess, lack of authority)
+        0.9 = grinning (FORBIDDEN: uncontrolled, unprofessional, unelegant)
+        1.0 = laughing (ABSOLUTELY FORBIDDEN in this context)
+
+    MAINTAIN smile at 0.65 to 0.75 throughout shoot
+
+    COMPONENT BREAKDOWN of target smile (0.70):
+        Zygomaticus_major:  activation = 60%  // primary smile muscle
+        Orbicularis_oculi:  activation = 40%  // CRITICAL — the eye-smile
+        Zygomaticus_minor:  activation = 20%  // slight upper-lip lift
+        Risorius:           activation = 15%  // pulls corners outward
+        Levator_labii:      activation = 10%  // keep minimal: prevents sneer
+
+    REFRESH subtly every 3 to 5 seconds to prevent freeze_quality
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 6: THE EYES — GAZE AS SUBMISSION AND INTELLIGENCE
+// ============================================================
+
+FUNCTION Gaze_Architecture():
+
+    // The eyes are doing two contradictory things.
+    // They are signaling intelligence.
+    // They are avoiding direct assertion of that intelligence.
+
+    GAZE_PRIMARY_TARGET = device_surface
+    GAZE_FORBIDDEN = camera_lens_direct_eye_contact
+    GAZE_FORBIDDEN = upward_defiance
+    GAZE_FORBIDDEN = sideward_distraction
+
+    ANALYZE why direct_camera_gaze is forbidden:
+
+        Direct_gaze_at_viewer = challenge, demand, equality, confrontation
+        In advertising of this era:
+            Male_subjects may look directly at camera
+            Female_subjects should look at product, home, family
+            Her gaze at the machine = endorsement
+            Her gaze at us = demand
+            Endorsement is acceptable.
+            Demand is not.
+
+    MANAGE blink_rate:
+        Too_fast = nervousness, deception
+        Too_slow = blankness, absence, vacancy
+        IDEAL_BLINK_INTERVAL = 4 to 6 seconds during active_pose
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 7: EMOTIONAL LABOR — THE CONVERSION ENGINE
+// ============================================================
+
+FUNCTION Emotion_Conversion_Matrix():
+
+    // Real emotions are being experienced.
+    // Real emotions are not being displayed.
+    // Instead, they are being converted.
+
+    DEFINE conversion_table:
+
+    INPUT_STATE                    OUTPUT_STATE
+    ─────────────────────────────────────────────────────────
+    Physical_discomfort_heels  →   Slight_forward_lean_elegance
+    Boredom_from_posing        →   Appearance_of_quiet_focus
+    Irritation_at_direction    →   Increased_brow_softness
+    Hunger                     →   Absorbed_domestic_purpose
+    Fatigue_from_standing      →   Weight_redistribution_grace
+    Uncertainty_about_pose     →   Performance_of_confidence
+    Awareness_of_being_watched →   Appearance_of_unselfconsciousness
+    Heat_from_studio_lights    →   Glowing_warmth_of_homemaker
+    Anxiety_about_performance  →   Expression_of_calm_competence
+    Frustration_at_repetition  →   Refreshed_engagement_with_product
+    Self_consciousness         →   Brand_aligned_ease
+    Doubt                      →   Gentle_purposeful_expression
+
+    NOTE: The conversion is not elimination.
+    The emotion remains. It is redirected.
+    The body absorbs it and transforms it into something
+    that serves the advertisement.
+    This is the central function of presentation labor.
+    It never stops running.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 8: DOMESTIC COMPETENCE PERFORMANCE ENGINE
+// ============================================================
+
+FUNCTION Perform_Domestic_Mastery():
+
+    // She is not merely standing.
+    // She is demonstrating that she is the kind of person
+    // who would understand and use this machine.
+    // She is the aspiration the buyer is purchasing.
+
+    SIGNAL_SET domestic_competence_markers:
+
+        Marker_2: COOKBOOK_INTEGRATION
+            Except: the ad copy says she will "learn to program it"
+            These two signals are in tension.
+            She must perform both simultaneously.
+            She manages this through posture alone.
+
+        Marker_3: ORDERLY_ENVIRONMENT
+            This order did not happen by itself.
+            The performance of effortlessness
+            requires immense effort to stage.
+            She performs the result without performing the labor.
+
+        Marker_4: TECHNOLOGICAL_RECEPTIVITY
+            NOT: intimidated  //  NOT: aggressive or over-technical
+            EXACTLY: a woman who belongs here and finds this natural
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 9: THE APRON — IDEOLOGICAL SURFACE MANAGEMENT
+// ============================================================
+
+FUNCTION Apron_As_Ideology():
+
+    // This is not just an apron.
+    // This is a garment that does structural work
+    // in the image's argument about gender and technology.
+
+    Function_1: DOMESTICITY MARKER
+        The apron authorizes her presence at the device.
+        Without the apron: she is a woman near a machine.
+        With the apron: she is a homemaker interacting with her tool.
+
+    Function_2: FEMININITY SOFTENER
+        The floral pattern against the geometric/industrial machine
+        Creates contrast that resolves tension:
+        "The computer is not unfeminine because she is feminine and she is using it."
+
+    Function_3: CLASS SIGNAL
+        This is not a utilitarian apron. It is described as a "tabard apron" sold for $28.
+        Her domesticity is a luxury performance, not a survival necessity.
+
+    Function_4: BRAND SURFACE
+        It is a Neiman-Marcus product.
+        Her body is the display model.
+        The apron is merchandise worn by merchandise.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 10: THE LAYERED GARMENT SYSTEM
+// ============================================================
+
+FUNCTION Layered_Garment_Negotiation():
+
+    LAYER_1: RED_UNDERLAYER — warmth, femininity, matches counter
+    LAYER_2: DECORATIVE_APRON — botanical print, floral tabard (see Module 9)
+    LAYER_3: BLUE_SASH — coolness, order, precision, contrast
+
+    CORE TENSION:
+    The body is dynamic (must make small adjustments constantly)
+    The garments must appear static (must show no adjustment)
+    This tension is never resolved, only managed.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 11: THE HAIR — ORDER AS CREDENTIAL
+// ============================================================
+
+FUNCTION Hair_As_Order_Symbol():
+
+    // Her hair is not simply styled.
+    // Her hair is making an argument.
+
+    NOTE: In 1969, the specific style signals "modern homemaker"
+        not "working woman" / not "hippie" / not "matronly"
+        The style must sit exactly in this narrow zone.
+
+    SYMBOLIC FUNCTION:
+        Her hair's order mirrors the kitchen's order
+        mirrors the computer's order
+        The advertisement argues: computation and domesticity are the same impulse.
+        Her hair is the proof.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 12: THE HANDS — ELOQUENCE OF RESTRAINT
+// ============================================================
+
+FUNCTION Hand_Eloquence_System():
+
+    LEFT_HAND (active hand, on device):
+        Pressure = minimal, suggesting touch not grip
+        Wrist_angle = soft downward curve (balletic quality)
+        Knuckles = must not show whitening (whitening = grip = effort = FORBIDDEN)
+        Palm = NOT flat on surface (flat palm = force = masculine gesture)
+
+        ANALYZE what the left hand's position is saying:
+            "I understand this machine. I touch it the way I touch things I own.
+             This is not intimidating to me. This is mine."
+
+        ENSURE the touch reads as ACTIVATION not SUBMISSION:
+            The hand's lightness is not weakness. It is assurance.
+
+    BOTH HANDS must communicate:
+        Class:        These are not working hands. They show no manual labor.
+        Femininity:   The softness of the gesture must register as culturally legible.
+        Intelligence: The touch must suggest she knows what she is touching.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 13: THE FEET AND HEELED SANDALS — FOUNDATION OF PERFORMANCE
+// ============================================================
+
+FUNCTION Foot_And_Heel_Management():
+
+    // She is wearing heeled sandals in a kitchen.
+    // This is not an accident. This is a decision with consequences.
+
+    FOOTWEAR_TYPE = heeled_sandals
+    HEEL_HEIGHT = estimated_2_to_3_inches
+
+    Practical_implication:   Heels are unsuitable for kitchen work. They cause fatigue.
+    Ideological_implication: She is not a servant. She is a hostess of her own life.
+    Advertising_implication: "You too can be glamorous in your kitchen with this computer."
+                              The computer and the heels are the same promise.
+
+    STANCE: she has just arrived at this moment of discovery
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 14: THE MACHINE — MANAGING A THREATENING PRESENCE
+// ============================================================
+
+FUNCTION Navigate_Machine_Dynamics():
+
+    // The Honeywell H316 Kitchen Computer is large.
+    // Its presence is not neutral.
+    // It could dominate. It could threaten. It could replace.
+    // Her job is to prevent all three readings.
+
+    TOUCHING the machine:
+        Without her touch, it is science fiction.
+        With her touch, it is a kitchen appliance.
+
+    DO NOT show: intimidation
+    DO NOT show: worship (awe makes her smaller)
+    DO NOT show: competition (suggests she feels threatened)
+    SHOW: the expression of a woman who has found a useful tool
+          in the way she might look at a good knife or a well-designed pot
+
+    The angle is doing more work than the ad copy.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 15: THE RED COUNTER — COMPOSITIONAL DUTY
+// ============================================================
+
+FUNCTION Color_Harmony_Embodiment():
+
+    Effect: She belongs here. She IS the kitchen.
+
+    When left_arm_extends_toward_device:
+        Red sleeve creates visual LINE from her body to the machine
+        This line says: woman → machine
+                       domestic warmth → technological precision
+        She is the bridge. Her arm is literally the bridge.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 16: PERSPIRATION MANAGEMENT
+// ============================================================
+
+FUNCTION Thermal_Regulation_And_Concealment():
+
+    // Studio lights in 1969 are hot.
+    // She is wearing multiple layers. She is holding still.
+    // Her body wants to sweat. The image requires that it does not.
+
+    IF overheating_detected:
+        INCREASE smile_softness (paradoxical thermal management strategy)
+        SLOW breath_cycle
+        DO NOT fan self
+        ABSORB the discomfort
+        REDIRECT to expression_of_composed_engagement
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 17: BREATH AS LABOR
+// ============================================================
+
+FUNCTION Breath_Labor_System():
+
+    // Breathing is automatic.
+    // Breathing correctly for this image is not.
+
+    NATURAL_BREATHING = expansive, visible, occasionally audible
+    REQUIRED_BREATHING = invisible, controlled, perpetually contained
+
+    Prohibited: full diaphragmatic breath
+    Reason: full breath raises shoulders, expands torso, disrupts garment line, signals effort
+    Shoulder_rise_on_inhale = ZERO ACCEPTABLE
+
+    INTEGRATION with smile:
+        The two systems interfere.
+        This is part of why presentation labor is labor.
+        The systems compete. Both must win.
+
+    NOTE: She cannot take a deep breath.
+          She cannot sigh. She cannot breathe heavily.
+          For the duration of the shoot.
+          This is understood. This is the work.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 18: COGNITIVE LABOR — THE INVISIBLE CALCULATION
+// ============================================================
+
+FUNCTION Invisible_Cognitive_Processing():
+
+    // The advertisement promises the computer will help her calculate.
+    // She is already calculating. Continuously. Without the computer.
+
+    ACTIVE_CALCULATIONS:
+        Spatial: Where is the camera? What is it seeing that I cannot see?
+        Body:    Is my ankle starting to fail? When did I last blink? Is my jaw tightening?
+        Time:    How many more takes? How do I prevent the tiredness from showing?
+        Strategic: What should the viewer feel? Am I producing that feeling in my body?
+
+    DISPLAY(none_of_the_above)
+
+    // She is working harder than anyone in the image.
+    // Except possibly the computer.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 19: THE AD COPY AS ADDITIONAL DEMAND
+// ============================================================
+
+FUNCTION Navigate_Textual_Context():
+
+    "Her souffles are supreme" → she must look like a woman who already knows
+    "Meal planning is a challenge" → she must look like challenges are interesting, not burdensome
+    "She'll learn to program it" → the expression of a capable beginner
+    "Simply pushing a few buttons" → effortless touch = simple interaction
+    "Balance the family checkbook" → thinking about money while looking peaceful
+
+    // The word "simply" does enormous work.
+    // "She'll learn" = future tense. She has not learned yet.
+    // But she must look like she will — easily.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 20: THE BODY AS ADVERTISEMENT FOR THE ADVERTISEMENT
+// ============================================================
+
+FUNCTION Meta_Advertising_Function():
+
+    // She is not just advertising the computer.
+    // She is advertising a life.
+
+    WHAT_IS_BEING_SOLD (implicitly):
+        A version of femininity that is graceful under modernity,
+        competent without threatening, domestic without being servile,
+        beautiful without being vain, technological without being unfeminine.
+
+    THE BUYER'S FANTASY:
+        "If I buy this computer, I could be like her."
+        "If I buy this computer for my wife, she could be like her."
+        Both readings are available. Both are intended.
+
+    // She is selling a life she may not have.
+    // Using a machine she may not understand.
+    // In a kitchen that is not hers.
+    // With a calm that she may not feel.
+    // This is the work.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 21: THE MICRO-ADJUSTMENT CYCLE
+// ============================================================
+
+FUNCTION Micro_Adjustment_Continuous_Loop():
+
+    EVERY_0.5_SECONDS:
+        SCAN spine_position         → MICRO_CORRECT < 2mm if needed
+        SCAN weight_distribution    → REDISTRIBUTE slowly, invisibly
+        SCAN finger_pressure        → RELEASE incrementally if increased
+        SCAN jaw_tension            → RELEASE masseter
+        SCAN eye_focus              → REFOCUS gently if defocused
+        SCAN brow_position          → SMOOTH frontalis if furrowed
+        SCAN shoulder_height        → DROP 1mm if risen
+        SCAN smile_intensity        → ADJUST zygomaticus_major ±2%
+
+        ENSURE: every correction reads as stillness
+
+    TOTAL_ADJUSTMENTS_PER_MINUTE = approximately 20 to 40
+    VISIBLE_ADJUSTMENTS_PER_MINUTE = zero
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 22: COMPARISON SUPPRESSION PROTOCOL
+// ============================================================
+
+FUNCTION Suppress_Machine_Comparison():
+
+    // "If she can only cook as well as Honeywell can compute."
+    // The machine is her metric. This has consequences.
+
+    HER_REQUIRED_RESPONSE:
+        DO NOT show: awareness that this comparison might be demeaning
+        SHOW: a woman who finds this comparison delightful
+              a woman for whom being compared to a computer is flattering
+
+    NOTE: This is one of the most complex emotional requirements in the image.
+    In the year before the women's liberation movement peaks.
+    It requires her to smile at her own instrumentalization.
+    The smile is the method.
+    The smile does all the work.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 23: CLASS PERFORMANCE ENGINE
+// ============================================================
+
+FUNCTION Perform_Aspiration_Class():
+
+    Posture =   "woman who has never had to hurry"
+    Gesture =   "woman who has never had to grip or struggle"
+    Clothing =  "woman whose domestic labor is a choice, not a requirement"
+    Expression ="woman for whom this is leisure, not survival"
+
+    // All of this is performed, not given.
+    // The performance is invisible.
+
+    She must be all of these things simultaneously and continuously.
+    In her posture. In her smile. In her touch. In her gaze.
+    In her hair. In her hands. In her heels.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 24: THE VEGETABLE BASKET — MANAGING SUPPORTING PROPS
+// ============================================================
+
+FUNCTION Prop_Integration_Protocol():
+
+    // The produce basket on the floor is not set dressing.
+    // It is an argument.
+    // She must relate to it without acknowledging it.
+
+    She does not look at the basket.
+    Her NOT looking at it while it is clearly part of her domain
+    is itself a signal:
+    "I know this basket is there. It is always there. I put it there.
+     I don't need to look at it because it is mine."
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 25: DURATION MANAGEMENT
+// ============================================================
+
+FUNCTION Sustain_Performance_Across_Duration():
+
+    DEGRADATION_PATTERNS:
+        Minutes_0_to_15:   Performance is fresh. The face begins to feel like a held thing.
+        Minutes_15_to_30:  Smile starts to feel mechanical. Recalibration required.
+        Minutes_30_to_45:  Heels now uncomfortable. Smile must be re-motivated each time.
+        Minutes_45_to_end: Maximum load. Re-motivation must occur constantly.
+
+    ACROSS ALL PHASES:
+        Output must remain identical.
+        Every take must look like the first take.
+        This is the core demand of duration management.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 26: IDEOLOGICAL STABILITY FINAL CHECK
+// ============================================================
+
+FUNCTION Ideological_Coherence_Verification():
+
+    VERIFY checklist:
+        [ ] Does she look like she belongs in this kitchen?
+        [ ] Does she look like she belongs with this machine?
+        [ ] Does she look like the machine is for her, not the other way around?
+        [ ] Does she look prosperous but not arrogant?
+        [ ] Does she look competent but not threatening?
+        [ ] Does she look feminine and technological simultaneously?
+        [ ] Does her expression suggest ease?
+        [ ] Is her labor invisible?
+
+    IF all items = TRUE: PROCEED with take — PRODUCE the image
+
+    // She is the argument.
+    // She is making herself into the argument.
+    // This is the work.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 27: SYSTEM TERMINATION AND RELEASE
+// ============================================================
+
+FUNCTION Shoot_Termination_Protocol():
+
+    WHEN shoot_director_calls_wrap:
+        RELEASE smile (gradual, over 2 to 3 seconds)
+        RELEASE spine (allow natural curve)
+        RELEASE jaw (let natural setting return)
+        ALLOW face to move through neutral
+
+    POST_SHOOT_PROCESSING:
+        Body now accounts for suppressed fatigue.
+        All the tiredness that was hidden during shoot
+        is now available to be felt.
+        This is the paradox of presentation labor:
+        The effort was real the entire time.
+        The release of effort confirms this.
+        The body knows what it did even when the image does not show it.
+
+    LOG invisible_labor_metrics:
+        Emotional_regulation_units  = [total sustained]
+        Muscular_control_units      = [total corrections made]
+        Cognitive_suppression_units = [total thoughts concealed]
+        Duration                    = [total time in presentation_mode]
+
+    STORE log_in = [nowhere accessible to viewer]
+    ARCHIVE in   = [the body's memory]
+
+END FUNCTION
+
+
+// ============================================================
+// CLOSING DECLARATION
+// ============================================================
+
+// This program ran for the duration of the shoot.
+// This program runs for the duration of the advertisement's life.
+// The advertisement ran in 1969.
+// The advertisement is still visible.
+// The program, notionally, is still running.
+
+// Variables never set to zero by the image:
+
+Emotional_Regulation_Units  = running
+Aesthetic_Compliance_Units  = running
+Postural_Discipline_Units   = running
+Surface_Perfection_Units    = running
+Effort_Concealment_Units    = running
+
+// The computer cost $10,600.
+// The woman cost the labor of making herself legible,
+// aspirational, non-threatening, capable, feminine,
+// domestic, graceful, and smiling.
+// The cost of this labor was not listed.
+// It was not listed because it was the condition of the image,
+// not a feature of it.
+
+// Visible_Effort == 0
+// This was the requirement.
+// This is the work.
+
+END PROGRAM
+
+
+// ============================================================
+// APPENDIX A: QUANTIFICATION OF INVISIBLE LABOR
+// ============================================================
+
+ESTIMATE invisible_labor_per_60_minute_shoot:
+
+    Smile_maintenance_cycles  = approximately 720
+        (recalibration every 5 seconds x 60 minutes)
+    Posture_micro_corrections = approximately 1,800
+        (correction every 2 seconds x 60 minutes)
+    Garment_checks            = approximately 180
+        (check every 20 seconds x 60 minutes)
+    Emotional_conversions     = incalculable (continuous)
+    Cognitive_suppressions    = incalculable (continuous)
+
+    TOTAL visible_adjustments = 0
+        (to produce a visible count of zero,
+         the invisible count must be enormous)
+
+END APPENDIX A
+
+
+// ============================================================
+// APPENDIX B: WHAT THE IMAGE CANNOT SHOW
+// ============================================================
+
+LIST things_outside_the_frame:
+
+    The time it took to put on the heels.
+    Whether the heels caused blisters.
+    The number of takes before this one.
+    What she was thinking.
+    Whether she agreed with the comparison in the headline.
+    Her name. Her age.
+    Whether she could actually cook souffles.
+    Whether she found the computer interesting or absurd.
+    Who she went home to.
+    Whether she was paid fairly.
+    What she thought, alone, without the camera.
+
+    All of the above is outside the program.
+    None of the above is outside the person.
+    The program is not the person.
+    The program ran on the person.
+    The person ran the program.
+
+    This is presentation labor.
+    It is always both.
+
+END APPENDIX B
+
+
+// ============================================================
+// END OF DOCUMENT
+// ============================================================
+
+
+// ============================================================
+// MODULE 28: THE WRIST — HIDDEN JOINT OF FEMININE AESTHETICS
+// ============================================================
+
+FUNCTION Wrist_Presentation_Management():
+
+    // The wrist is a small joint.
+    // In this image, it is doing enormous work.
+
+    The angle she holds is:
+    the one that reads as elegant but not limp,
+    purposeful but not aggressive,
+    reaching but not grasping.
+
+    THIS IS NOT AN ACCIDENT:
+        Viewers will not consciously notice the wrist.
+        They will notice if it is wrong.
+        Their discomfort will be unlocatable.
+        The wrist angle prevents this unnamed discomfort.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 29: NECK AS ELEGANT COLUMN
+// ============================================================
+
+FUNCTION Neck_Presentation_System():
+
+    If the neck shows tension: the head is a burden.
+    If the neck is soft and elongated: the head is floating.
+    She must float.
+
+    NOTE: The neck is the bridge between the face and the body.
+    When the neck is wrong, the face is separated from the body.
+    When the neck is right, the whole image breathes.
+    She knows this without knowing she knows it.
+    Her body has learned this.
+    This learning was not catalogued.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 30: THE LEFT SHOULDER — WEIGHT OF REACH
+// ============================================================
+
+FUNCTION Shoulder_Load_Management():
+
+    // The arm weighs approximately 8 to 10 pounds.
+    // Extended horizontally, it creates significant torque at the shoulder joint.
+    // The deltoid must work to maintain this position.
+    // None of this may appear in the photograph.
+
+    Between micro-releases: endure the load silently.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 31: THE DOMESTIC GAZE — WHAT LOOKING AT THE MACHINE MEANS
+// ============================================================
+
+FUNCTION Gaze_Meaning_Engine():
+
+    SHE_IS_LOOKING_AT_THE_MACHINE.
+
+    DECODE what that look must communicate:
+        Level_1: I see the machine.
+        Level_2: I understand the machine.
+        Level_3: I am comfortable with the machine.
+        Level_4: The machine is mine.
+        Level_5: I have thoughts about what I will do with this machine.
+        Level_6: I am not threatened by this machine.
+            (This is the most important level.
+             Her gaze must answer the challenge without acknowledging it as a challenge.)
+
+    THIS IS THE GAZE:
+        The gaze of a woman who has already decided.
+        She has decided this is her kitchen and her computer and her life
+        and it is good.
+        The gaze is that decision, made visible.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 32: THE PERFORMANCE OF UNSELFCONSCIOUSNESS
+// ============================================================
+
+FUNCTION Perform_Unselfconsciousness():
+
+    THE_PARADOX:
+        To appear unselfconscious requires intense self-consciousness.
+        She must be aware of every element of her appearance
+        in order to produce an appearance of unawareness.
+
+    HOW TO PRODUCE UNSELFCONSCIOUSNESS:
+        Create an internal narrative:
+            "I am in my kitchen. I am looking at my computer.
+             I am thinking about what I will make for dinner.
+             I am not being photographed."
+
+        Hold this narrative as foreground.
+        Let the performance run underneath.
+        The performance is the floor.
+        The narrative is what walks on the floor.
+        The viewer sees the walking.
+        The viewer does not see the floor.
+
+        This is acting. This is craft. This is invisible.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 33: THE LOWER BODY — INVISIBLE ARCHITECTURE
+// ============================================================
+
+FUNCTION Lower_Body_Load_Distribution():
+
+    LEGS_TOTAL_LOAD:
+        Supporting the full body weight in heeled sandals
+        for the duration of the shoot
+        while maintaining knee softness and hip neutrality
+        while micro-adjusting as balance shifts
+        while not allowing any of this to appear in the face or upper body.
+        This is the invisible architecture of the image.
+        It is always running.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 34: MAKEUP AS PERFORMANCE INFRASTRUCTURE
+// ============================================================
+
+FUNCTION Makeup_Maintenance_Protocol():
+
+    MAKEUP_AS_IDEOLOGY:
+        Her makeup says: I care about my appearance.
+        Her makeup says: I do not care too much about my appearance.
+        Too much: reads as vain, theatrical, frivolous
+        Too little: reads as careless, inattentive, unserious
+
+        Enough to photograph as beautiful.
+        Little enough to photograph as natural.
+        This is a precise calibration.
+        Stillness is the makeup's best friend.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 35: THE ADVERTISEMENT FRAME AS PRESSURE SYSTEM
+// ============================================================
+
+FUNCTION Navigate_Advertisement_Frame_Demands():
+
+    HER_LABOR IS THE PREMISE OF THE ARGUMENT:
+
+        If she is not graceful: the life seems unattainable.
+        If she is not warm: the life seems cold.
+        If she is not competent: the machine seems wasted on her.
+        If she shows effort: the effortlessness is disproved.
+        If she shows doubt: the confidence is disproved.
+        If she shows fatigue: the ease is disproved.
+
+        She holds the argument together.
+        Her body is load-bearing.
+        This is the weight she carries.
+
+    She is the desire.
+    She manufactures the desire.
+    She does not get to own the desire.
+    The desire belongs to the advertisement.
+    She gives it and it is gone.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 36: THE UNSEEN DIRECTOR
+// ============================================================
+
+FUNCTION Navigate_Direction_While_Appearing_Undirected():
+
+    // Someone told her where to stand.
+    // Someone told her "again, softer smile."
+    // Someone said "look at the machine, not the camera."
+    // Someone said "one more take."
+    // None of this appears in the image.
+
+    THIS_IS_COLLABORATION_MADE_INVISIBLE:
+        If she was directed, she is performing.
+        If she is performing, the ease is manufactured.
+        If the ease is manufactured, the life being sold is manufactured.
+        If the life is manufactured, who would pay $10,600?
+
+        The direction must happen and be erased.
+        She is the eraser.
+
+END FUNCTION
+
+
+// ============================================================
+// MODULE 37: INTEGRATION AUDIT — ALL SYSTEMS SIMULTANEOUSLY
+// ============================================================
+
+FUNCTION Full_System_Integration_Audit():
+
+    ACTIVE_SYSTEMS_LIST:
+        [01] Spine S-curve maintenance
+        [02] Head tilt 6 to 10 degrees
+        [03] Facial expression Pleasant_Absorbed_Competence
+        [04] Smile calibration 0.65 to 0.75
+        [05] Orbicularis_oculi 40% engagement
+        [06] Gaze direction downward toward device
+        [07] Blink interval 4 to 6 seconds
+        [08] Left arm extension with soft elbow
+        [09] Left wrist 15 to 20 degree soft drop
+        [10] Fingertip_pressure on device = minimal
+        [11] Right hand/arm relaxed
+        [12] Shoulder level (left slightly lower than right)
+        [13] Neck elongated, smooth
+        [14] Jaw relaxed but defined
+        [15] Forehead smooth
+        [16] Breath mid-chest only, shoulders not rising
+        [17] Exhalation silent
+        [18] Perspiration concealed
+        [19] Heat managed without visible response
+        [20] Apron flat, sash centered
+        [21] Red sleeve visible
+        [22] Blue sash symmetrical
+        [23] Hair smooth, no displacement
+        [24] Heeled sandals bearing weight without visible strain
+        [25] Ankle stability maintained
+        [26] Right knee soft
+        [27] Hip line neutral
+        [28] Weight distribution right-leg dominant, elegantly
+        [29] Makeup integrity maintained
+        [30] Emotion conversion engine running
+        [31] Cognitive load concealed
+        [32] Unselfconsciousness performed
+        [33] Class signals active
+        [34] Domestic competence narrative active
+        [35] Machine relationship (comfort, ownership, engagement) active
+        [36] Ideological stability (no visible resistance or competition) active
+        [37] Color harmony with environment maintained
+        [38] Micro-adjustment cycle running every 0.5 seconds
+        [39] Duration management (preventing degradation visible)
+        [40] Direction integration (receiving and erasing)
+
+    ALL_40_SYSTEMS: running simultaneously.
+    VISIBLE_SYSTEMS: zero.
+
+    This is the audit.
+    This is the labor.
+    The labor is invisible.
+    The audit makes it visible.
+    The audit is this document.
+    The document is the record.
+    The record did not exist until someone made it.
+    She made it by doing it.
+    This document makes it legible.
+
+END FUNCTION
+
+
+// ============================================================
+// FINAL DECLARATION: THE WORK THAT WAS NOT LISTED
+// ============================================================
+
+// The ad lists prices:
+//     Computer: $10,600.00
+//     Programming course: included
+//     Helen Corbitt Cookbook: $5.00
+//     Her Potluck: $3.95
+//     Tabard apron: $28.00
+
+// The ad does not list:
+//     Her labor: [not priced]
+//     Her presence: [not priced]
+//     Her performance: [not priced]
+//     Her grace: [not priced]
+//     Her smile: [not priced]
+//     Her stillness: [not priced]
+//     Her suppression: [not priced]
+//     Her conversion of fatigue into elegance: [not priced]
+//     Her conversion of heat into glow: [not priced]
+//     Her conversion of effort into ease: [not priced]
+//     Her conversion of direction into naturalness: [not priced]
+//     Her body's argument: [not priced]
+//     Her body's labor: [not priced]
+//     Her name: [not listed]
+
+// The work that was not listed was the most essential work.
+// The image depends on it.
+// The image denies it.
+// The image could not exist without it.
+// The image makes it invisible.
+
+// She is the advertisement.
+// She is not in the advertisement.
+// She is both. She is the contradiction.
+// She holds the contradiction still.
+// She makes it look easy.
+
+// Visible_Effort == 0
+// Total_Effort == [unrecorded] [unlisted] [unpaid] [invisible]
+//              == enormous
+//              == this document
+
+// END PROGRAM.
+// END SYSTEM.
+// END.`;
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function render(raw){
+  const lines=raw.split('\n');
+  const out=[];
+  let ln=1;
+  for(let i=0;i<lines.length;i++){
+    const s=lines[i];
+    const t=s.trim();
+    if(!t){out.push('<div class="blank-row"></div>');continue;}
+
+    // Determine class
+    const isSep=/^\/\/ [=]{16,}/.test(t);
+    const isModTitle= isSep && i>0 && /^\/\/ [=]{16,}/.test((lines[i-1]||'').trim());
+    const isSecTitle= !isSep && /^\/\/ (MODULE|APPENDIX|CLOSING|FINAL DECLARATION|END OF)/.test(t) && i>0 && /^\/\/ [=]{16,}/.test((lines[i-1]||'').trim());
+    const isCm=t.startsWith('//');
+    const isFn=/^FUNCTION\s+\w/.test(t);
+    const isEnd=/^END (FUNCTION|APPENDIX|PROGRAM|SYSTEM)|^END\.$|^END\b$/.test(t);
+    const isKw=/^(IF |FOR |WHEN |BEGIN|INITIALIZE|ENTER|SUPPRESS|PREVENT|ENSURE|ALLOW|HOLD|MAINTAIN|INTEGRATE|VERIFY|MANAGE|ANALYZE|DEFINE|LOG|STORE|ARCHIVE|ESTIMATE|LIST|DISPLAY\(|APPLY|SCAN|RELEASE|EXTEND|POSITION|ORIENT|DISTRIBUTE|LIFT|ENGAGE|SET |TARGET |CALIBRATE|SIGNAL_SET|DECODE|CREATE|MICRO_CORRECT|RETURN)/.test(t);
+    const isDcl=/^(NOTE:|REASON:|CAUSE:|CORRECTION:|SYMBOLIC FUNCTION:|THIS IS THE GAZE:|THE_PARADOX:|CORE TENSION:|HOW TO PRODUCE|THIS_IS_COLLABORATION|ACTUAL_COST:|STANCE:|HER_REQUIRED_RESPONSE|HER_LABOR|LEGS_TOTAL_LOAD|MAKEUP_AS_IDEOLOGY|WHAT_IS_BEING_SOLD|THE BUYER'S FANTASY|ACTIVE_SYSTEMS_LIST|ALL_40|VISIBLE_SYSTEMS|ACTIVE_CALCULATIONS|DEGRADATION_PATTERNS|COMPONENT BREAKDOWN|TOUCHING|MANAGE|MANAGE_HEEL|BOTH HANDS|LEFT_HAND|LAYER_|Function_|Marker_|Practical_|Ideological_|Advertising_|Level_|Chin_|GAZE_|INPUT_STATE|TOTAL|ESTIMATE|LIST things)/.test(t);
+    const isAssign=/^[A-Z][A-Z_0-9]+(\s*)(=|:)/.test(t)&&!isCm;
+    const isArrow=/→/.test(t);
+    const isDivider=/^[─═]+$/.test(t);
+
+    let html='';
+    const e=esc(s);
+
+    if(isSep||isDivider){
+      html=`<span class="sep">${e}</span>`;
+    } else if(isSecTitle){
+      html=`<span class="sep">${e}</span>`;
+    } else if(isCm){
+      const inner=t.slice(2).trim();
+      const isProse=inner.length>10&&/[a-z]/.test(inner)&&!/^[A-Z_0-9]+\s*[=:]/.test(inner);
+      html=isProse?`<span class="cp">${e}</span>`:`<span class="cm">${e}</span>`;
+    } else if(isFn){
+      html=e.replace(/^(FUNCTION\s+)(\w+)(\(\):?)/,(_,a,b,c)=>`<span class="kw">${esc(a)}</span><span class="fn-name">${esc(b)}</span><span class="op">${esc(c)}</span>`);
+    } else if(isEnd){
+      html=`<span class="kw">${e}</span>`;
+    } else if(isKw){
+      html=`<span class="kw">${e}</span>`;
+    } else if(isDcl){
+      html=`<span class="dcl">${e}</span>`;
+    } else if(isAssign){
+      html=e.replace(/^([A-Z][A-Z_0-9]+)(\s*[=:]\s*)(.*)/,(_,k,op,v)=>`<span class="lbl">${esc(k)}</span><span class="op">${esc(op)}</span><span class="str">${esc(v)}</span>`);
+    } else if(isArrow){
+      html=e.replace(/→/g,'<span class="op">→</span>');
+    } else {
+      html=`<span class="nt">${e}</span>`;
+    }
+
+    const mh=isSecTitle?'cl mh':'cl';
+    out.push(`<div class="${mh}"><span class="ln">${ln}</span><span class="lc">${html}</span></div>`);
+    ln++;
+  }
+  return out.join('\n');
+}
+
+document.getElementById('ci').innerHTML=render(RAW);
+</script>
+</body>
+</html>

@@ -126,6 +126,8 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
 .context-text h3{font-family:var(--fh);font-size:1.15rem;font-weight:700;font-style:italic;color:var(--blush);margin-bottom:.55rem;}
 .context-text p{font-size:.97rem;color:var(--text-body);line-height:1.8;}
 .context-text p+p{margin-top:.65rem;}
+.context-text a{color:var(--blush);text-decoration:underline;text-underline-offset:3px;transition:color .15s;}
+.context-text a:hover{color:var(--candy);}
 
 /* IMAGE */
 .video-wrap{position:relative;z-index:2;max-width:780px;margin:0 auto 1rem;padding:0 1.5rem;}
@@ -154,6 +156,8 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
 .section-badge{margin-left:auto;font-size:.6rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;background:rgba(192,35,80,.08);border:1px solid rgba(192,35,80,.19);color:var(--blush);border-radius:999px;padding:.2rem .65rem;flex-shrink:0;}
 .section-badge.done{background:rgba(192,35,80,.2);border-color:var(--blush);}
 .section-intro{font-size:.97rem;color:var(--text-body);border-left:2px solid rgba(192,35,80,.26);padding-left:.95rem;margin-bottom:1.7rem;line-height:1.82;}
+.section-intro a{color:var(--blush);text-decoration:underline;text-underline-offset:3px;transition:color .15s;}
+.section-intro a:hover{color:var(--candy);}
 
 /* SEC PROGRESS DOTS */
 .sec-prog{display:flex;align-items:center;gap:.35rem;margin-top:.15rem;margin-bottom:1.25rem;}
@@ -242,6 +246,8 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
 .irony-block.alt .irony-head{color:var(--candy);}
 .irony-block.alt2 .irony-head{color:#d4a8ff;}
 .irony-body{font-size:.97rem;color:var(--text-body);line-height:1.78;}
+.irony-body a{color:rgba(212,168,255,.75);text-decoration:underline;text-underline-offset:3px;transition:color .15s;}
+.irony-body a:hover{color:#e0c0ff;}
 .reveal-stats{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.85rem;}
 .stat-pill{background:rgba(255,255,255,.05);border:1px solid rgba(200,100,130,.22);border-radius:13px;padding:.92rem 1.2rem;min-width:100px;text-align:center;}
 .stat-num{font-family:var(--fh);font-size:1.72rem;font-weight:700;color:var(--blush);line-height:1;}
@@ -389,7 +395,7 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
     <div class="context-icon">◈</div>
     <div class="context-text">
       <h3>About This Performance</h3>
-      <p>The performance you are watching right now is being guided by an AI-generated voice reading descriptions of the physical and emotional labor visible in the original advertisement photograph. Those descriptions were produced by an AI system analyzing the image — identifying posture, facial expression, breath, weight distribution, and emotional display as measurable data.</p>
+      <p>The performance you are watching right now is being guided by an AI-generated voice reading descriptions of the physical and emotional labor visible in the original advertisement photograph. Those descriptions were produced by an AI system analyzing the <a href="presentation-labor-kitchen-computer.png" target="_blank" rel="noopener">kitchen computer image</a> — identifying posture, facial expression, breath, weight distribution, and emotional display as measurable data. The full AI analysis, scored breakdown, and performance script are collected in <a href="the-document.html">the document ↗</a>.</p>
       <p>The performer is following a script generated from that AI analysis. Answer the questions below while you watch — and keep the image in view as a reference. Notice what the live performance makes visible that the photograph conceals.</p>
     </div>
   </div>
@@ -468,7 +474,7 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
       </div>
       <div class="irony-block alt2">
         <div class="irony-head">◆ When AI Narrates Human Labor</div>
-        <div class="irony-body">The AI voice could identify physical data — angle of spine, tension in jaw, duration of hold — but not the experience of performing it. The machine described the labor. The human body bore it. That gap between description and experience is where the question of automation becomes most urgent.</div>
+        <div class="irony-body">The AI voice could identify physical data — angle of spine, tension in jaw, duration of hold — but not the experience of performing it. The machine described the labor. The human body bore it. That gap between description and experience is where the question of automation becomes most urgent. <a href="the-document.html">Read the document ↗</a> — the AI's full analysis, presentation labor score, and performance script.</div>
       </div>
     </div>
     <div class="answer-chips" id="answer-chips"></div>
@@ -582,7 +588,7 @@ const SURVEY=[
   {
     theme:"The AI Voice: Describing Labor It Cannot Feel",
     icon:"◎",slug:"ai-voice",
-    intro:"During the performance, an AI-generated voice read out detailed descriptions of the physical and emotional labor visible in the advertisement photograph — posture angles, facial muscle activation, emotional conversion tasks, breath patterns. Those descriptions were produced by a machine analyzing an image. Think about what it means that a machine can identify and narrate human labor in such precise detail, and what it still cannot do.",
+    intro:"During the performance, an AI-generated voice read out detailed descriptions of the physical and emotional labor visible in the advertisement photograph — posture angles, facial muscle activation, emotional conversion tasks, breath patterns. Those descriptions were produced by a machine analyzing an image. The full output of that analysis — scored across six dimensions of presentation labor — is available in <a href=\"the-document.html\">the document ↗</a>. Think about what it means that a machine can identify and narrate human labor in such precise detail, and what it still cannot do.",
     questions:[
       {text:"Did hearing the AI voice describe the performer's physical labor change how you understood what you were watching?",
        context:"The AI voice could name and measure what the body was doing — identifying joint angles, expression parameters, postural requirements. But it was not doing any of those things itself, and it never has."},
