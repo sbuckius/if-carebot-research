@@ -386,7 +386,7 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   <div class="hero-eyebrow">✦ Visible Labor · Performance &amp; Advertisement Analysis</div>
   <h1 class="hero-title">"If only she can cook<br>as well as Honeywell<br>can compute"</h1>
   <div class="hero-quote">"The computer cost $10,600. The apron cost $28. Her name was not listed."</div>
-  <p class="hero-sub">A live performance is happening in the room with you right now — a reenactment of this 1969 Neiman-Marcus advertisement, accompanied by an AI-generated voice. Answer the questions below as you watch. The advertisement image is below for reference.</p>
+  <p class="hero-sub">A live performance is happening in the room with you right now — a reenactment of this 1969 Neiman-Marcus advertisement, guided by an AI-generated voice. Answer the questions below as you watch. The advertisement image is below for reference.</p>
 </div>
 
 <!-- CONTEXT BANNER -->
@@ -397,6 +397,7 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
       <h3>About This Performance</h3>
       <p>The performance you are watching right now is being accompanied by an AI-generated voice reading descriptions of the physical and emotional labor visible in the original advertisement photograph. Those descriptions were produced by an AI system analyzing the <a href="presentation-labor-kitchen-computer.png" target="_blank" rel="noopener">kitchen computer image</a> — identifying posture, facial expression, breath, weight distribution, and emotional display as measurable data. The full AI analysis, scored breakdown, and performance script are collected in <a href="the-document.html">the document ↗</a>.</p>
       <p>Answer the questions below while you watch — and keep the image in view as a reference. Notice what the live performance makes visible that the photograph conceals.</p>
+      <p>This work is made by an artist committed to questioning who technology is built for, whose labor it depends on, and what it would mean to build it instead around care — for bodies, for workers, for the people history has made invisible inside the frame and for the world.</p>
     </div>
   </div>
 </div>
@@ -477,6 +478,10 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
         <div class="irony-body">The AI voice could identify physical data — angle of spine, tension in jaw, duration of hold — but not the experience of performing it. The machine described the labor. The human body bore it. That gap between description and experience is where the question of automation becomes most urgent. <a href="the-document.html">Read the document ↗</a> — the AI's full analysis, presentation labor score, and performance script.</div>
       </div>
     </div>
+      <div class="irony-block" style="border-left-color:#e8c87a;">
+        <div class="irony-head" style="color:#e8c87a;">✦ About This Work</div>
+        <div class="irony-body">This performance was created by an artist who believes technology is not neutral — that every system reflects the people who build it, the assumptions they carry, and the voices they include or exclude. The same computational infrastructure that produced this advertisement in 1969 was built overwhelmingly by people who did not look like the woman in the image — and the AI systems that analyzed and narrated her labor today were built by many of the same kinds of people, with many of the same blind spots.<br><br>This work is part of a broader commitment: to make visible the diversity of bodies, experiences, and forms of knowledge that technology has historically erased; to resist the story that progress is inevitable, neutral, and directionless; and to ask instead — progress toward what, and for whom? The alternative this work proposes is not less technology, but technology oriented around care: careful of whose labor it depends on, careful of whose knowledge it draws from, careful of what it makes invisible in the act of making things visible.</div>
+      </div>
     <div class="answer-chips" id="answer-chips"></div>
   </div>
 </div>
@@ -529,6 +534,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   generateAvatar();
   const i=document.getElementById('uname');
   if(i)i.addEventListener('keydown',e=>{if(e.key==='Enter')enterApp();});
+  // If returning from the-document.html via #survey hash, skip login
+  if(window.location.hash==='#survey'){
+    username=sessionStorage.getItem('kc_username')||currentAvatar||'Anonymous';
+    document.getElementById('u-name').textContent=username;
+    document.getElementById('u-init').textContent=username[0].toUpperCase();
+    document.getElementById('user-badge').style.display='flex';
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    if(fbReady)initSurvey();else window.addEventListener('firebase-ready',()=>initSurvey());
+  }
 });
 
 let db,fsSetDoc,fsDoc,fsOnSnapshot,fsWriteBatch,fsGetDocs,fsCollection;
@@ -542,6 +557,7 @@ function sk(n){return n.replace(/[^a-zA-Z0-9_-]/g,'_').substring(0,40);}
 function enterApp(){
   const custom=document.getElementById('uname').value.trim();
   username=custom||currentAvatar||'Anonymous';
+  sessionStorage.setItem('kc_username', username);
   document.getElementById('u-name').textContent=username;
   document.getElementById('u-init').textContent=username[0].toUpperCase();
   document.getElementById('user-badge').style.display='flex';
@@ -650,7 +666,32 @@ const SURVEY=[
       {text:"Should we be more concerned about AI generating images of human labor than about AI automating human labor itself?",
        context:"If AI replaces a factory worker, the worker loses their job and we know it. If AI generates images of workers, the labor becomes invisible in a new way — not done at all, but represented as though it were."},
       {text:"Has today's experience — the image, the performance, the AI voice — changed how you think about the relationship between human work and the systems that describe, represent, or replace it?",
-       context:"This is an open question. There is no correct answer. You are watching a machine describe what a human body does, and a human body do what the machine described. What are you noticing? What is shifting?"}
+       context:"This is an open question. There is no correct answer. You are watching a machine describe what a human body does, and a human body do what the machine described. What are you noticing? What is shifting?"},
+      {text:"The Kitchen Computer promised to save the woman time in the kitchen. Does AI save you time?",
+       context:"The performer who made this piece used AI to help write it — because she is genuinely strapped for time, and the tool made something possible that wouldn't have been otherwise. But the cost of access to these tools is rising, and the moment she can no longer afford them, or the moment the company changes its terms, that reliance becomes a vulnerability. The 1969 advertisement made the same promise: this machine will give you time back. The computer never sold. The promise was not the point. The promise was the product. Whether AI is actually saving anyone time — or simply redistributing where the time goes, and who pays for it — is a question worth sitting with."}
+    ]
+  },
+  {
+    theme:"Who Builds Technology, and What It Builds Into Us",
+    icon:"✦",slug:"technology-care",
+    intro:"Technology is not a force of nature. It is made by people — specific people, with specific backgrounds, blind spots, and assumptions — and it carries those people's choices into the world invisibly, as though they were facts. This final module asks you to think about who has historically been present and absent in the rooms where technology is made, what that absence has cost, and what a different kind of technology — one oriented around care rather than efficiency — might look like.",
+    questions:[
+      {text:"Does knowing that the people who built the computational systems underlying today's performance were overwhelmingly not from the communities those systems most affect change how you think about those systems?",
+       context:"The teams that built the early internet, the first personal computers, and the large AI models that exist today have been — and remain — demographically narrow. This is not a peripheral fact about technology. It shapes what gets built, what gets optimized, what gets ignored, and whose discomfort becomes someone else's edge case."},
+      {text:"The Honeywell Kitchen Computer never sold a single unit. Not one. Does that surprise you — and does it suggest something about what happens when a technology is designed for people who were never involved in designing it?",
+       context:"The Kitchen Computer was conceived, engineered, and marketed almost entirely without input from the people it was supposedly built for. The women it addressed were present in the advertisement as a surface — aspirational, decorative, useful for selling — but absent from the room where the product was designed. This is not unusual. It remains one of the most common failure modes in technology: building for a user you have imagined rather than listened to. The apron, priced at $28, outsold the $10,600 computer. The apron was useful. The computer was a mirror."},
+      {text:"The Honeywell H316 was sold to the US Navy, to research institutions, and to corporations. The exact same machine, placed next to a woman in an apron, became a kitchen appliance. Did the technology change — or only the assumptions about who was using it and what for?",
+       context:"This is one of the most revealing moves in the advertisement: nothing about the computer itself was modified or simplified for domestic use. It was the same industrial machine, the same price, the same hardware. What changed was the frame — the apron, the kitchen, the woman, the recipe metaphor in the ad copy. The technology did not become domestic. It was made to appear domestic by placing a particular kind of body next to it. That framing told viewers: this is what women do with computers. It told them nothing about what computers could actually do. This assumption — that technology in women's hands becomes a household tool, while the same technology in men's hands remains serious infrastructure — did not begin or end with this advertisement."},
+      {text:"Is the idea that technological progress is inevitable — that it moves in one direction, at its own speed, for everyone's benefit equally — something you believed before today? Do you still?",
+       context:"The story of inevitable progress is itself a technology: it makes particular choices look like natural forces, particular beneficiaries look like universal ones, and particular losses look like the necessary cost of moving forward. The 1969 Kitchen Computer is a product of that story. So is the AI system that narrated today's performance."},
+      {text:"Can a technology be designed around care — careful of whose labor it depends on, careful of whose knowledge it draws from, careful of what it makes invisible — rather than around efficiency, speed, or scale?",
+       context:"Efficiency and care are not opposites, but they optimize for different things. A system designed for efficiency asks: how do we do more with less? A system designed for care asks: who bears the cost of how we do this, and are we paying attention to that? The woman in this advertisement is evidence of what happens when the answer to the second question is: no one looked."},
+      {text:"Should the diversity of the people who build a technology be considered part of that technology's specification — a design requirement, not an afterthought?",
+       context:"A bridge designed only by people who have never feared for their safety in public looks different from one designed by people who have. A kitchen computer designed without asking who actually does kitchen labor looks like the one in this advertisement. The composition of the room where something is built is not separate from what gets built."},
+      {text:"Does today's performance suggest that care — attention to bodies, to labor, to what is made invisible — is itself a form of technological practice?",
+       context:"The performance you watched today was an act of care: paying close attention to a body that an advertisement was designed to make you not look at too carefully. It named effort that the image suppressed. It reintroduced time into what had been frozen. If that kind of attention — slow, embodied, attuned to what is hidden — could be built into the systems we make, what would those systems do differently?"},
+      {text:"This survey was made with AI. The themes, ideas, and creative direction came from a human. The questions, the contextual text, and much of the language were written by an AI trained on the work of scholars — Goffman, Hochschild, Warhurst, and others — who almost certainly did not consent to their writing being used this way. A survey about uncredited labor was built using uncredited labor. Does knowing that change how you experienced it — and do you feel conflicted about that?",
+       context:"Automation doesn\'t only replace physical labor. It also writes, argues, frames, and asks. The AI that produced this survey learned from decades of feminist scholarship on emotional labor, aesthetic labor, and the presentation of self — work produced by researchers who were not asked, compensated, or credited for their contribution to this particular use. The same critique this survey makes about the woman in the advertisement — her labor is the condition of the image, invisible and unlisted — applies, at least partially, to the scholars whose thinking made this survey possible. That loop is not accidental. It is not comfortable. You are allowed to sit with both things at once."}
     ]
   }
 ];
@@ -661,8 +702,43 @@ SURVEY.forEach((_,ti)=>{votes[ti]={};myVotes[ti]={};SURVEY[ti].questions.forEach
 function answeredCount(){return SURVEY.reduce((a,_,ti)=>a+SURVEY[ti].questions.filter((_,qi)=>myVotes[ti][qi]).length,0);}
 
 function initSurvey(){
-  isDemo=!db;buildSections();subscribeAll();
+  isDemo=!db;buildSections();restoreSavedVotes();subscribeAll();
   document.getElementById('hdr-prog').textContent=`0 / ${totalQ}`;
+}
+
+function restoreSavedVotes(){
+  const saved=sessionStorage.getItem('kc_votes');
+  if(!saved)return;
+  let stored;
+  try{stored=JSON.parse(saved);}catch(e){return;}
+  // stored keys are strings; replay each saved vote into UI silently
+  SURVEY.forEach((_,ti)=>{
+    if(!stored[ti])return;
+    SURVEY[ti].questions.forEach((_,qi)=>{
+      const choice=stored[ti][qi];
+      if(!choice)return;
+      myVotes[ti][qi]=choice;
+      // mark button voted
+      ['yes','no','neutral'].forEach(c=>{
+        const map={yes:`vby-${ti}-${qi}`,no:`vbn-${ti}-${qi}`,neutral:`vbne-${ti}-${qi}`};
+        const btn=document.getElementById(map[c]);
+        if(btn){btn.classList.remove('voted');if(c===choice)btn.classList.add('voted');}
+      });
+      // mark card and dot answered
+      const card=document.getElementById(`qc-${ti}-${qi}`);if(card)card.classList.add('answered');
+      const dot=document.getElementById(`dot-${ti}-${qi}`);if(dot)dot.classList.add('done');
+    });
+    // update badge
+    const secDone=SURVEY[ti].questions.filter((_,q)=>myVotes[ti][q]).length;
+    const badge=document.getElementById(`badge-${ti}`);
+    if(badge){badge.textContent=`${secDone} / ${SURVEY[ti].questions.length}`;if(secDone===SURVEY[ti].questions.length)badge.classList.add('done');}
+  });
+  updateProgress();
+  // if survey was complete when they left, rebuild results and reveal
+  if(answeredCount()>=totalQ){
+    buildResultsPanel();buildReveal();
+    document.getElementById('reveal-section').classList.add('show');
+  }
 }
 
 function subscribeAll(){
@@ -740,6 +816,7 @@ async function castVote(ti,qi,choice){
   if(badge){badge.textContent=`${secDone} / ${SURVEY[ti].questions.length}`;if(secDone===SURVEY[ti].questions.length)badge.classList.add('done');}
   updateBar(ti,qi);updateProgress();checkComplete();
   if(document.getElementById('results-section').classList.contains('show'))refreshAllCharts();
+  sessionStorage.setItem('kc_votes', JSON.stringify(myVotes));
   if(isDemo){showToast('Demo mode — add Firebase config to enable live sync');return;}
   try{await fsSetDoc(fsDoc(db,'kc_responses',`t${ti}_q${qi}`),{[`users.${sk(username)}`]:choice,yes:v.yes,no:v.no,neutral:v.neutral},{merge:true});}catch(e){console.error(e);}
 }
@@ -956,6 +1033,7 @@ async function confirmReset(){
     }catch(e){console.error(e);showToast('⚠ Error: '+e.message);btn.textContent='Reset All Data';btn.disabled=false;return;}
   }
   SURVEY.forEach((_,ti)=>{myVotes[ti]={};SURVEY[ti].questions.forEach((_,qi)=>{votes[ti][qi]={yes:0,no:0,neutral:0};});});
+  sessionStorage.removeItem('kc_votes');
   Object.values(liveCharts).forEach(c=>{try{c.destroy();}catch(e){}});liveCharts={};
   document.getElementById('results-section').classList.remove('show');
   document.getElementById('reveal-section').classList.remove('show');
