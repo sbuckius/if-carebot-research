@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✦ Kitchen Computer · Advertisement Survey</title>
+<title>✦ Kitchen Computer · Advertisement Survey · Reveal Edition</title>
 
 <!-- Firebase -->
 <script type="module">
@@ -36,7 +36,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -59,7 +59,7 @@
   --muted:rgba(240,180,200,.4);
   --muted2:rgba(240,200,215,.6);
   --radius:18px;
-  --fh:'Cormorant Garamond',serif;
+  --fh:'Lora',serif;
   --fb:'DM Sans',sans-serif;
   --glow:0 4px 28px rgba(200,35,80,.2);
   --glow2:0 8px 52px rgba(200,35,80,.32),0 0 80px rgba(140,0,40,.1);
@@ -174,7 +174,9 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
 .qcard-top{display:flex;align-items:flex-start;gap:.88rem;margin-bottom:.85rem;}
 .qnum-badge{width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-top:3px;background:linear-gradient(135deg,var(--rouge),var(--crimson));display:flex;align-items:center;justify-content:center;font-family:var(--fb);font-size:.58rem;font-weight:600;color:var(--powder);}
 .qtext{font-family:var(--fh);font-size:1.18rem;font-weight:600;font-style:italic;line-height:1.48;color:rgba(250,230,240,.96);}
-.qcontext{font-size:.93rem;color:var(--text-body);line-height:1.76;margin-bottom:1rem;padding:.65rem .9rem;background:rgba(180,30,60,.05);border-left:2px solid rgba(192,35,80,.18);border-radius:0 6px 6px 0;}
+.qcontext{font-size:.93rem;color:var(--text-body);line-height:1.76;margin-bottom:1rem;padding:.65rem .9rem;background:rgba(180,30,60,.05);border-left:2px solid rgba(192,35,80,.18);border-radius:0 6px 6px 0;display:none;opacity:0;transform:translateY(6px);transition:opacity .35s ease,transform .35s ease;}
+.qcontext.revealed{display:block;}
+.qcontext.visible{opacity:1;transform:translateY(0);}
 
 /* VOTE BUTTONS */
 .vbtns{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;}
@@ -386,7 +388,7 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   <div class="hero-eyebrow">✦ Visible Labor · Performance &amp; Advertisement Analysis</div>
   <h1 class="hero-title">"If only she can cook<br>as well as Honeywell<br>can compute"</h1>
   <div class="hero-quote">"The computer cost $10,600. The apron cost $28. Her name was not listed."</div>
-  <p class="hero-sub">A live performance is happening in the room with you right now — a reenactment of this 1969 Neiman-Marcus advertisement, accompanied by an AI-generated voice. Answer the questions below as you watch. The advertisement image is below for reference.</p>
+  <p class="hero-sub">A live performance is happening in the room with you right now — a reenactment of this 1969 Neiman-Marcus advertisement, guided by an AI-generated voice. Answer the questions below as you watch. The advertisement image is below for reference.</p>
 </div>
 
 <!-- CONTEXT BANNER -->
@@ -395,8 +397,8 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
     <div class="context-icon">◈</div>
     <div class="context-text">
       <h3>About This Performance</h3>
-      <p>The performance you are watching right now is being accompanied by an AI-generated voice reading descriptions of the physical and emotional labor visible in the original advertisement photograph. Those descriptions were produced by an AI system analyzing the <a href="presentation-labor-kitchen-computer.png" target="_blank" rel="noopener">kitchen computer image</a> — identifying posture, facial expression, breath, weight distribution, and emotional display as measurable data. The full AI analysis, scored breakdown, and performance script are collected in <a href="the-document.html">the document ↗</a>.</p>
-      <p>Answer the questions below while you watch — and keep the image in view as a reference. Notice what the live performance makes visible that the photograph conceals.</p>
+      <p>The performance you are watching right now is being guided by an AI-generated voice reading descriptions of the physical and emotional labor visible in the original advertisement photograph. Those descriptions were produced by an AI system analyzing the <a href="presentation-labor-kitchen-computer.png" target="_blank" rel="noopener">kitchen computer image</a> — identifying posture, facial expression, breath, weight distribution, and emotional display as measurable data. The full AI analysis, scored breakdown, and performance script are collected in <a href="the-document.html">the document ↗</a>.</p>
+      <p>The performer is following a script generated from that AI analysis. Answer the questions below while you watch — and keep the image in view as a reference. Notice what the live performance makes visible that the photograph conceals.</p>
       <p>This work is made by an artist committed to questioning who technology is built for, whose labor it depends on, and what it would mean to build it instead around care — for bodies, for workers, for the people history has made invisible inside the frame.</p>
     </div>
   </div>
@@ -520,8 +522,8 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
   }
 })();
 
-const AVT_ADJ=['Velvet','Crimson','Petal','Ivory','Garnet','Scarlet','Dusk','Onyx','Silver','Amber','Carmine','Blush','Russet','Sable','Lilac','Muted','Hollow','Faded','Woven','Gilded'];
-const AVT_NOUN=['Measure','Archive','Witness','Record','Labor','Gesture','Ledger','Margin','Cipher','Register','Thread','Absence','Notation','Remnant','Catalog','Silence','Gloss','Trace','Figure','Index'];
+const AVT_ADJ=['Analog','Binary','Cached','Compiled','Encrypted','Latent','Modular','Neural','Obsolete','Parallel','Queued','Recursive','Rogue','Siloed','Synthetic','Terminal','Tokenized','Volatile','Wired','Legacy','Patched','Proxied','Redacted','Indexed','Forked','Null','Logged','Looped','Archived','Deprecated'];
+const AVT_NOUN=['Algorithm','Buffer','Checkpoint','Compiler','Daemon','Dataset','Firewall','Gateway','Instance','Kernel','Mainframe','Microchip','Network','Output','Payload','Pipeline','Process','Protocol','Register','Relay','Runtime','Schema','Socket','Subnet','Subroutine','Syntax','Terminal','Token','Variable','Webhook'];
 let currentAvatar='';
 function generateAvatar(){
   const adj=AVT_ADJ[Math.floor(Math.random()*AVT_ADJ.length)];
@@ -697,7 +699,7 @@ const SURVEY=[
 ];
 
 const totalQ=SURVEY.reduce((a,t)=>a+t.questions.length,0);
-let votes={},myVotes={},liveCharts={},unsubs=[];
+let votes={},myVotes={},liveCharts={},unsubs=[],changeLog=[];
 SURVEY.forEach((_,ti)=>{votes[ti]={};myVotes[ti]={};SURVEY[ti].questions.forEach((_,qi)=>{votes[ti][qi]={yes:0,no:0,neutral:0};});});
 function answeredCount(){return SURVEY.reduce((a,_,ti)=>a+SURVEY[ti].questions.filter((_,qi)=>myVotes[ti][qi]).length,0);}
 
@@ -707,6 +709,8 @@ function initSurvey(){
 }
 
 function restoreSavedVotes(){
+  const savedChanges=sessionStorage.getItem('kc_changes');
+  if(savedChanges){try{changeLog=JSON.parse(savedChanges);}catch(e){}}
   const saved=sessionStorage.getItem('kc_votes');
   if(!saved)return;
   let stored;
@@ -727,6 +731,9 @@ function restoreSavedVotes(){
       // mark card and dot answered
       const card=document.getElementById(`qc-${ti}-${qi}`);if(card)card.classList.add('answered');
       const dot=document.getElementById(`dot-${ti}-${qi}`);if(dot)dot.classList.add('done');
+      // restore context visibility
+      const ctx=card?card.querySelector('.qcontext'):null;
+      if(ctx){ctx.classList.add('revealed');ctx.classList.add('visible');}
     });
     // update badge
     const secDone=SURVEY[ti].questions.filter((_,q)=>myVotes[ti][q]).length;
@@ -801,6 +808,7 @@ function buildSections(){
 
 async function castVote(ti,qi,choice){
   const prev=myVotes[ti][qi];if(prev===choice)return;
+  const contextWasVisible=prev?true:false; // context is shown after first answer
   const v=votes[ti][qi];
   if(prev)v[prev]=Math.max(0,v[prev]-1);
   v[choice]++;myVotes[ti][qi]=choice;
@@ -811,6 +819,9 @@ async function castVote(ti,qi,choice){
   });
   const card=document.getElementById(`qc-${ti}-${qi}`);if(card)card.classList.add('answered');
   const dot=document.getElementById(`dot-${ti}-${qi}`);if(dot)dot.classList.add('done');
+  // reveal context text after vote
+  const ctx=card?card.querySelector('.qcontext'):null;
+  if(ctx){ctx.classList.add('revealed');requestAnimationFrame(()=>requestAnimationFrame(()=>ctx.classList.add('visible')));}
   const secDone=SURVEY[ti].questions.filter((_,q)=>myVotes[ti][q]).length;
   const badge=document.getElementById(`badge-${ti}`);
   if(badge){badge.textContent=`${secDone} / ${SURVEY[ti].questions.length}`;if(secDone===SURVEY[ti].questions.length)badge.classList.add('done');}
@@ -819,6 +830,13 @@ async function castVote(ti,qi,choice){
   sessionStorage.setItem('kc_votes', JSON.stringify(myVotes));
   if(isDemo){showToast('Demo mode — add Firebase config to enable live sync');return;}
   try{await fsSetDoc(fsDoc(db,'kc_responses',`t${ti}_q${qi}`),{[`users.${sk(username)}`]:choice,yes:v.yes,no:v.no,neutral:v.neutral},{merge:true});}catch(e){console.error(e);}
+  // log answer changes made after context was revealed
+  if(contextWasVisible && prev && prev!==choice){
+    const entry={user:sk(username),module:ti,question:qi,from:prev,to:choice,ts:new Date().toISOString()};
+    changeLog.push(entry);
+    sessionStorage.setItem('kc_changes',JSON.stringify(changeLog));
+    try{await fsSetDoc(fsDoc(db,'kc_changes',`${sk(username)}_t${ti}_q${qi}`),entry,{merge:true});}catch(e){console.error(e);}
+  }
 }
 
 function updateBar(ti,qi){
@@ -939,6 +957,8 @@ function buildReveal(){
 
 function downloadCSV(){
   const rows=[['Participant','Module','ModuleTheme','QuestionNum','QuestionText','YourResponse','YesCount','NoCount','UnsureCount','TotalResponses','Timestamp']];
+  const changeRows=[['Participant','Module','QuestionNum','OriginalAnswer','ChangedTo','ChangedAt']];
+  changeLog.forEach(e=>changeRows.push([`"${username}"`,e.module+1,e.question+1,e.from,e.to,e.ts]));
   const ts=new Date().toISOString();
   SURVEY.forEach((t,ti)=>t.questions.forEach((q,qi)=>{
     const mv=myVotes[ti][qi]||'',v=votes[ti][qi];
@@ -949,7 +969,17 @@ function downloadCSV(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download=`kitchen-computer-${sk(username)}-${Date.now()}.csv`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-  showToast('✦ Responses saved as CSV');
+  // also export change log if any changes were made
+  if(changeLog.length>0){
+    const changeCsv=changeRows.map(r=>r.join(',')).join('\n');
+    const changeBlob=new Blob([changeCsv],{type:'text/csv'});
+    const changeUrl=URL.createObjectURL(changeBlob);
+    const b=document.createElement('a');b.href=changeUrl;b.download=`kitchen-computer-${sk(username)}-changes-${Date.now()}.csv`;
+    document.body.appendChild(b);b.click();document.body.removeChild(b);URL.revokeObjectURL(changeUrl);
+    showToast(`✦ Responses + ${changeLog.length} answer change${changeLog.length===1?'':'s'} saved`);
+  } else {
+    showToast('✦ Responses saved as CSV');
+  }
 }
 
 async function exportPDF(){
@@ -1033,7 +1063,7 @@ async function confirmReset(){
     }catch(e){console.error(e);showToast('⚠ Error: '+e.message);btn.textContent='Reset All Data';btn.disabled=false;return;}
   }
   SURVEY.forEach((_,ti)=>{myVotes[ti]={};SURVEY[ti].questions.forEach((_,qi)=>{votes[ti][qi]={yes:0,no:0,neutral:0};});});
-  sessionStorage.removeItem('kc_votes');
+  sessionStorage.removeItem('kc_votes');sessionStorage.removeItem('kc_changes');changeLog=[];
   Object.values(liveCharts).forEach(c=>{try{c.destroy();}catch(e){}});liveCharts={};
   document.getElementById('results-section').classList.remove('show');
   document.getElementById('reveal-section').classList.remove('show');
