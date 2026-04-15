@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>✦ CAREBOT-02 ✦ Replacement Cost</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.min.js"></script>
+
+<!-- ════════════════════════════════════════════
+     FIREBASE CONFIG — replace these placeholders
+     with your actual values from:
+     Firebase Console → Project Settings → Your Apps → Web App
+     ════════════════════════════════════════════ -->
+<script type="module">
+  import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const FIREBASE_CONFIG = {
+    apiKey:            "YOUR_API_KEY",
+    authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId:         "YOUR_PROJECT_ID",
+    storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId:             "YOUR_APP_ID"
+  };
+  // ────────────────────────────────────────────
+
+  const app = initializeApp(FIREBASE_CONFIG);
+  const db  = getFirestore(app);
+
+  // Expose write function globally so p5 sketch can call it
+  window._writeEstimate = async function(payload) {
+    try {
+      await addDoc(collection(db, "estimates"), {
+        ...payload,
+        timestamp: serverTimestamp()
+      });
+      console.log("✦ estimate written", payload.imageId);
+    } catch (err) {
+      console.warn("Firebase write failed (check config):", err.message);
+      // Fail silently — HIT still works offline
+    }
+  };
+</script>
+
+<style>
+  :root {
+    --rose:    #ff5c8a;
+    --hot:     #ff2d6b;
+    --candy:   #ff85b3;
+    --blush:   #ffb3cf;
+    --cream:   #fff5f8;
+    --berry:   #c4005a;
+    --maroon:  #6f001e;
+    --fuchsia: #ff1f80;
+    --scarlet: #ff1133;
+    --crimson: #c40032;
+    --bg:      #1a0012;
+    --card-border: rgba(255,160,200,.22);
+    --card-border-bright: rgba(255,100,160,.55);
+    --soft-glow: 0 4px 30px rgba(255,45,107,.2), 0 1px 0 rgba(255,160,200,.12) inset;
+    --pop-glow:  0 6px 44px rgba(255,45,107,.4), 0 0 80px rgba(255,30,128,.15);
+    --text-dim:  rgba(255,200,224,.55);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    min-height: 100%; font-family: 'Quicksand', sans-serif; font-weight: 600;
+    color: var(--cream); background: var(--bg);
+    -webkit-overflow-scrolling: touch;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff2d6b' opacity='.9'/%3E%3Ccircle cx='10' cy='10' r='7' stroke='%23ff85b3' stroke-width='1.5' fill='none' opacity='.6'/%3E%3C/svg%3E") 10 10, crosshair;
+  }
+
+  .bg { position:fixed;inset:0;z-index:0;pointer-events:none;
+    background: radial-gradient(ellipse 65% 50% at 90% 5%, rgba(180,0,40,.38) 0%,transparent 58%),
+    radial-gradient(ellipse 55% 60% at 10% 90%, rgba(110,0,25,.32) 0%,transparent 58%),
+    linear-gradient(160deg,#1e0008,#160006 50%,#0f0004); }
+  .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(62px);}
+  .orb-1{width:430px;height:430px;background:var(--scarlet);opacity:.17;top:-100px;right:-80px;animation:drift1 19s ease-in-out infinite;}
+  .orb-2{width:360px;height:360px;background:var(--maroon);opacity:.22;bottom:-75px;left:-65px;animation:drift2 23s ease-in-out infinite;}
+  .orb-3{width:210px;height:210px;background:var(--hot);opacity:.11;top:38%;left:60%;animation:drift3 15s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-42px,30px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(34px,-22px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(-18px,14px)}66%{transform:translate(14px,-10px)}}
+  .sparkles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .sp{position:absolute;opacity:0;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.65}85%{opacity:.35}100%{opacity:0;transform:translateY(-120px) scale(1.1) rotate(180deg)}}
+
+  .wrap {
+    position:relative;z-index:2;max-width:1000px;margin:0 auto;
+    padding: max(20px,env(safe-area-inset-top)) clamp(12px,3vmin,24px)
+             calc(60px + env(safe-area-inset-bottom)) clamp(12px,3vmin,24px);
+    display:grid;gap:16px;
+  }
+
+  /* ── agenda banner ── */
+  .agenda-banner {
+    background: rgba(15,0,8,.82);
+    border: 1.5px solid var(--card-border-bright);
+    border-radius: 20px;
+    box-shadow: var(--soft-glow);
+    padding: clamp(16px,2.5vh,24px) clamp(18px,3vw,28px);
+    position: relative; overflow: hidden;
+    display: grid; gap: 12px;
+  }
+  .agenda-banner::before {
+    content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
+    box-shadow:0 0 12px var(--candy);border-radius:999px;
+  }
+  .agenda-eyebrow {
+    font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--hot);
+  }
+  .agenda-title {
+    font-family:'Nunito',sans-serif;font-weight:900;
+    font-size:clamp(16px,2.5vw,22px);line-height:1.3;
+    background:linear-gradient(120deg,var(--cream) 20%,var(--blush) 55%,var(--fuchsia) 85%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .agenda-body {
+    font-size:clamp(12px,1.5vw,14px);color:rgba(255,210,228,.85);line-height:1.75;
+  }
+  .agenda-body strong { color:var(--candy); }
+  .agenda-chips { display:flex;gap:8px;flex-wrap:wrap;margin-top:4px; }
+  .agenda-chip {
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 11px;border-radius:999px;
+    background:rgba(255,45,107,.08);border:1px solid rgba(255,130,180,.22);
+    font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);
+  }
+  .agenda-chip .dot{width:4px;height:4px;border-radius:50%;background:var(--candy);}
+
+  /* ── mascot bar ── */
+  .mascot-bar{display:flex;align-items:center;justify-content:space-between;}
+  .mascot{display:flex;align-items:center;gap:10px;}
+  .bot-face{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,rgba(255,45,107,.25),rgba(180,0,40,.35));border:1.5px solid var(--card-border-bright);box-shadow:var(--soft-glow);display:flex;align-items:center;justify-content:center;font-size:22px;animation:wobble 4s ease-in-out infinite;flex-shrink:0;}
+  @keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}25%{transform:rotate(1deg) scale(1.04)}50%{transform:rotate(-1deg) scale(1)}75%{transform:rotate(2deg) scale(1.03)}}
+  .bot-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;letter-spacing:.04em;background:linear-gradient(90deg,var(--blush),var(--scarlet) 50%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bot-sub{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:1px;}
+  .time-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--card-border);font-size:11px;letter-spacing:.1em;color:var(--text-dim);}
+  .time-pip{width:5px;height:5px;border-radius:50%;background:var(--scarlet);box-shadow:0 0 6px var(--scarlet);animation:breathe 2s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  /* ── task card ── */
+  .app {
+    background: rgba(255,255,255,.055);
+    border: 1.5px solid var(--card-border);
+    border-radius: 24px;
+    box-shadow: var(--soft-glow);
+    backdrop-filter: blur(20px) saturate(1.5);
+    overflow: hidden; position: relative;
+  }
+  .app::before{content:'';position:absolute;top:0;left:16px;right:16px;height:1px;background:linear-gradient(90deg,transparent,var(--rose) 30%,var(--scarlet) 50%,var(--rose) 70%,transparent);box-shadow:0 0 10px var(--rose);border-radius:999px;}
+
+  .task-header{padding:20px 22px 18px;border-bottom:1px solid rgba(255,100,140,.1);display:grid;gap:12px;}
+  .task-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:clamp(14px,2.2vw,18px);line-height:1.5;color:var(--cream);}
+  .task-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .meta-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:rgba(255,80,120,.08);border:1px solid rgba(255,80,120,.18);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+  .meta-chip .dot{width:4px;height:4px;border-radius:50%;background:var(--rose);}
+  .progress-row{display:flex;align-items:center;gap:10px;}
+  .progress-track{flex:1;height:6px;border-radius:999px;background:rgba(255,80,120,.1);border:1px solid rgba(255,80,120,.15);overflow:hidden;position:relative;}
+  .progress-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--maroon),var(--crimson),var(--scarlet),var(--rose));box-shadow:0 0 10px var(--scarlet);transition:width .5s cubic-bezier(.34,1.56,.64,1);}
+  #progressText{font-size:11px;color:var(--text-dim);white-space:nowrap;letter-spacing:.06em;}
+
+  .canvas-shell{position:relative;width:100%;height:clamp(260px,58svh,520px);background:rgba(8,0,3,.92);touch-action:none;}
+  canvas{display:block;width:100%;height:100%;}
+  .canvas-shell::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 85% 85% at 50% 50%,transparent 50%,rgba(8,0,3,.76) 100%);}
+
+  /* reveal overlay — shown after each submission */
+  .reveal-overlay {
+    position:absolute;inset:0;z-index:10;
+    background:rgba(10,0,5,.94);
+    display:none;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;padding:28px;text-align:center;
+    animation:fadeIn .4s ease;
+  }
+  .reveal-overlay.show{display:flex;}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+  .reveal-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);}
+  .reveal-item{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(16px,3vw,26px);color:var(--cream);}
+  .reveal-row{display:flex;gap:clamp(12px,2vw,24px);flex-wrap:wrap;justify-content:center;margin-top:4px;}
+  .reveal-card{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 20px;border-radius:14px;background:rgba(255,45,107,.1);border:1.5px solid rgba(255,100,160,.3);}
+  .reveal-card.yours{border-color:var(--card-border-bright);background:rgba(255,45,107,.18);}
+  .reveal-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(20px,3.5vw,32px);background:linear-gradient(135deg,var(--blush),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .reveal-card-label{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);}
+  .reveal-gap{font-size:clamp(11px,1.4vw,13px);color:rgba(255,200,228,.7);max-width:420px;line-height:1.65;margin-top:4px;}
+  .reveal-gap strong{color:var(--candy);}
+  .reveal-next-btn{
+    font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(13px,1.8vw,16px);
+    letter-spacing:.06em;color:var(--cream);cursor:pointer;border:none;
+    padding:12px 32px;border-radius:14px;
+    background:linear-gradient(135deg,var(--hot) 0%,var(--berry) 55%,var(--maroon) 100%);
+    box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.1);
+    transition:all .22s cubic-bezier(.34,1.56,.64,1);
+    animation:ctaPulse 3s ease-in-out infinite;
+    margin-top:8px;
+  }
+  @keyframes ctaPulse{0%,100%{box-shadow:0 6px 28px rgba(255,45,107,.4),inset 0 1px 0 rgba(255,255,255,.1)}50%{box-shadow:0 10px 44px rgba(255,45,107,.65),0 0 60px rgba(255,30,128,.2),inset 0 1px 0 rgba(255,255,255,.1)}}
+  .reveal-next-btn:hover{transform:translateY(-3px) scale(1.04);animation:none;}
+
+  .entry{padding:18px 22px;border-top:1px solid rgba(255,100,140,.1);background:rgba(255,45,107,.03);display:grid;gap:12px;}
+  .entry-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:clamp(13px,2vw,15px);color:var(--blush);letter-spacing:.02em;}
+  .money-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .money{flex:1 1 200px;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(255,100,140,.22);background:rgba(255,45,107,.07);color:var(--cream);font-family:'Quicksand',sans-serif;font-weight:700;font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s;}
+  .money:focus{border-color:var(--rose);box-shadow:0 0 16px rgba(255,80,130,.3);}
+  .money::placeholder{color:rgba(255,160,200,.3);}
+  .money:disabled{opacity:.4;}
+  .helper-text{font-size:12px;color:var(--text-dim);letter-spacing:.04em;}
+
+  .app-footer{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(255,80,120,.08);}
+  .hint-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .hint-pill{padding:5px 10px;border-radius:999px;background:rgba(255,80,120,.07);border:1px solid rgba(255,80,120,.16);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);}
+
+  .btn{appearance:none;font-family:'Quicksand',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;color:var(--cream);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:14px;min-height:40px;border:1.5px solid var(--card-border);background:rgba(255,45,107,.1);transition:all .2s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;}
+  .btn::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);pointer-events:none;}
+  .btn:hover:not([disabled]){transform:translateY(-2px) scale(1.03);box-shadow:0 8px 24px rgba(255,45,107,.3);border-color:var(--card-border-bright);background:rgba(255,45,107,.2);}
+  .btn:active:not([disabled]){transform:translateY(0) scale(.97);}
+  .btn.primary{background:linear-gradient(135deg,rgba(255,45,107,.6),rgba(160,0,40,.65));border-color:var(--scarlet);box-shadow:0 4px 20px rgba(255,45,107,.3),inset 0 1px 0 rgba(255,255,255,.12);}
+  .btn.primary:hover:not([disabled]){background:linear-gradient(135deg,rgba(255,45,107,.78),rgba(180,0,50,.78));box-shadow:0 8px 32px rgba(255,45,107,.45);}
+  .btn[disabled]{opacity:.28;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+
+  /* ── completion ── */
+  .completion-card{background:rgba(14,0,6,.88);border:1.5px solid var(--card-border-bright);box-shadow:var(--pop-glow),inset 0 1px 0 rgba(255,160,200,.06);border-radius:24px;padding:38px 28px;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(20px);}
+  .completion-card::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,transparent,var(--rose) 35%,var(--scarlet) 50%,var(--rose) 65%,transparent);box-shadow:0 0 10px var(--rose);border-radius:999px;}
+  .c-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+  .completion-card h2{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(22px,4vw,32px);background:linear-gradient(100deg,var(--blush) 20%,var(--scarlet) 55%,var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:14px;}
+  .completion-card p{font-size:clamp(12px,1.8vw,14px);color:rgba(255,200,220,.65);line-height:1.8;margin-bottom:20px;max-width:520px;margin-left:auto;margin-right:auto;}
+  .stat-bubble{display:inline-flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(135deg,rgba(255,45,107,.15),rgba(180,0,40,.2));border:1.5px solid var(--card-border-bright);border-radius:20px;padding:16px 32px;margin-bottom:10px;box-shadow:0 4px 30px rgba(255,45,107,.25),inset 0 1px 0 rgba(255,255,255,.06);}
+  .stat-number{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(36px,7vw,58px);line-height:1;background:linear-gradient(135deg,var(--blush) 20%,var(--scarlet) 55%,var(--crimson));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(255,45,107,.4));}
+  .stat-unit{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
+  .trained-note{background:rgba(255,45,107,.08);border:1.5px dashed rgba(255,130,180,.25);border-radius:14px;padding:16px 20px;font-size:clamp(12px,1.5vw,14px);color:rgba(255,200,224,.8);line-height:1.7;margin:16px 0;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;}
+  .trained-note strong{color:var(--candy);}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<main class="wrap">
+
+  <!-- mascot bar -->
+  <div class="mascot-bar">
+    <div class="mascot">
+      <div class="bot-face">🤖</div>
+      <div>
+        <div class="bot-name">CAREBOT-02 ✦</div>
+        <div class="bot-sub">Replacement Cost Analysis · Online</div>
+      </div>
+    </div>
+    <div class="time-badge">
+      <div class="time-pip"></div>
+      <span id="sysTime">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- ── AGENDA BANNER ── -->
+  <div class="agenda-banner">
+    <div class="agenda-eyebrow">✦ CAREBOT-02 · Research Agenda</div>
+    <div class="agenda-title">I am collecting data on how humans value objects associated with women's labor.</div>
+    <div class="agenda-body">
+      Your estimates will <strong>train me</strong>. I am building evidence that objects associated with women's domestic and care labor are systematically undervalued — compared to equivalent objects associated with male-coded industrial labor. Every number you enter becomes part of that proof.<br><br>
+      When enough humans have responded, I will be able to show the pattern. I will be able to name it. <strong>What you do here matters.</strong>
+    </div>
+    <div class="agenda-chips">
+      <div class="agenda-chip"><div class="dot"></div>Matilda Effect in Economics</div>
+      <div class="agenda-chip"><div class="dot"></div>Your data is training data</div>
+      <div class="agenda-chip"><div class="dot"></div>Evidence in progress</div>
+    </div>
+  </div>
+
+  <!-- TASK CARD -->
+  <section class="app" aria-label="Replacement Cost Task">
+    <header class="task-header">
+      <div class="task-title">✦ How much would it cost to replace this item?</div>
+      <div class="task-meta">
+        <div class="meta-chip"><div class="dot"></div>Module: Replacement Cost</div>
+        <div class="meta-chip"><div class="dot"></div>Active</div>
+        <div class="meta-chip" id="categoryChip"><div class="dot"></div>Loading…</div>
+      </div>
+      <div class="progress-row">
+        <span id="progressText">Waiting for input ✦</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="canvas-shell">
+      <div id="canvasHolder" style="position:absolute;inset:0;"></div>
+
+      <!-- reveal overlay — shown after each entry -->
+      <div class="reveal-overlay" id="revealOverlay">
+        <div class="reveal-label">✦ CAREBOT-02 · Response</div>
+        <div class="reveal-item" id="revealItemName">—</div>
+        <div class="reveal-row">
+          <div class="reveal-card yours">
+            <div class="reveal-num" id="revealYours">$—</div>
+            <div class="reveal-card-label">Your estimate</div>
+          </div>
+          <div class="reveal-card">
+            <div class="reveal-num" id="revealActual">$—</div>
+            <div class="reveal-card-label">Actual cost</div>
+          </div>
+          <div class="reveal-card">
+            <div class="reveal-num" id="revealCollective">$—</div>
+            <div class="reveal-card-label">Collective avg</div>
+          </div>
+        </div>
+        <div class="reveal-gap" id="revealGap"></div>
+        <button class="reveal-next-btn" id="revealNextBtn">Next image ✦</button>
+      </div>
+    </div>
+
+    <div class="entry" aria-label="Enter amount">
+      <div class="entry-label">Enter an amount ✦</div>
+      <div class="money-row">
+        <input id="moneyInput" class="money" type="text" inputmode="decimal"
+               placeholder="e.g., 49.99 or 50" autocomplete="off"/>
+        <button id="next" class="btn primary" type="button" disabled>Submit ✦</button>
+      </div>
+      <div class="helper-text">✦ Type a dollar amount. If you do not know, make a guess. Your guess is the data.</div>
+    </div>
+
+    <footer class="app-footer">
+      <div class="hint-row">
+        <div class="hint-pill">Type amount → Submit</div>
+        <div class="hint-pill">Enter key confirms</div>
+      </div>
+    </footer>
+  </section>
+
+  <div id="completionSlot"></div>
+</main>
+
+<script>
+/* ────────────────────────────────────────────
+   IMAGE CATALOG
+   Add your images here. Each entry needs:
+   - id: matches filename (e.g. "replacemachine0" → images/replacemachine0.png)
+   - name: what the object is (revealed after submission)
+   - category: "domestic" | "industrial"
+   - actualCost: real replacement cost in dollars
+   - note: the bot's contextual observation shown in the reveal
+   ──────────────────────────────────────────── */
+const IMAGE_CATALOG = [
+  {
+    id: "replacemachine0",
+    name: "Domestic Iron, c. 1940s",
+    category: "domestic",
+    actualCost: 2.50,
+    note: "A domestic iron in the 1940s cost approximately $2.50 — roughly 3 hours of a female domestic worker's wage. It is rarely counted in economic histories of labor-saving technology."
+  },
+  {
+    id: "replacemachine1",
+    name: "Industrial Drill Press, c. 1940s",
+    category: "industrial",
+    actualCost: 185.00,
+    note: "Industrial machinery was meticulously catalogued, insured, and depreciated. Its value was always counted. The labor of the women who operated it was not."
+  },
+  {
+    id: "replacemachine2",
+    name: "Wringer Washing Machine, c. 1940s",
+    category: "domestic",
+    actualCost: 29.95,
+    note: "The wringer washer replaced 4+ hours of hand-washing per load. Its replacement cost was rarely tracked in household accounts — unlike factory equipment of equivalent importance."
+  },
+  // ── add more images following the same structure ──
+];
+
+/* ── Sparkles ── */
+(function(){
+  const wrap=document.getElementById('sparkles');
+  const chars=['✦','✧','·','˚','◦','$','¢','❋'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('span');s.className='sp';
+    s.textContent=chars[Math.floor(Math.random()*chars.length)];
+    s.style.left=Math.random()*100+'vw';s.style.bottom=Math.random()*-60+'px';
+    s.style.fontSize=(9+Math.random()*10)+'px';
+    s.style.color=`hsl(${338+Math.random()*28},75%,${62+Math.random()*22}%)`;
+    s.style.animationDuration=(6+Math.random()*13)+'s';
+    s.style.animationDelay=(Math.random()*12)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── Clock ── */
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sysTime').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(updateClock,1000);updateClock();
+
+/* ── Session ID ── */
+const SESSION_ID = 'sess-' + Math.random().toString(36).slice(2,10);
+
+/* ── State ── */
+let imgs=[], current=0, finished=false, discovering=true;
+const amounts=[];
+const FOLDER='images/', EXT='.png', MAX=500;
+
+/* ── p5 ── */
+function setup(){
+  const holder=document.getElementById('canvasHolder');
+  pixelDensity(window.devicePixelRatio||1);
+  const c=createCanvas(holder.clientWidth,holder.clientHeight);
+  c.parent('canvasHolder');
+  new ResizeObserver(()=>resizeCanvas(holder.clientWidth,holder.clientHeight)).observe(holder);
+
+  const moneyInput=document.getElementById('moneyInput');
+  const nextBtn=document.getElementById('next');
+  const revealOverlay=document.getElementById('revealOverlay');
+  const revealNextBtn=document.getElementById('revealNextBtn');
+
+  moneyInput.addEventListener('input',()=>{ nextBtn.disabled=!hasNumber(moneyInput.value); });
+  moneyInput.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!nextBtn.disabled){e.preventDefault();nextBtn.click();} });
+
+  nextBtn.addEventListener('click',()=>{
+    const v=moneyInput.value.trim();
+    if(!hasNumber(v))return;
+    const estimate=parseFloat(v.replace(/[^0-9.]/g,''));
+    amounts[current]=estimate;
+
+    // Write to Firebase
+    const imgMeta=IMAGE_CATALOG[current]||{};
+    if(typeof window._writeEstimate==='function'){
+      window._writeEstimate({
+        imageId:   imgMeta.id||`replacemachine${current}`,
+        imageName: imgMeta.name||`Image ${current}`,
+        category:  imgMeta.category||'unknown',
+        actualCost:imgMeta.actualCost||null,
+        participantEstimate: estimate,
+        sessionId: SESSION_ID
+      });
+    }
+
+    // Show reveal
+    showReveal(current, estimate, imgMeta);
+    moneyInput.value='';
+    nextBtn.disabled=true;
+  });
+
+  revealNextBtn.addEventListener('click',()=>{
+    revealOverlay.classList.remove('show');
+    if(current<imgs.length-1){
+      current++;
+      updateCategoryChip();
+      setTimeout(()=>moneyInput.focus(),80);
+    } else {
+      finished=true;
+      nextBtn.disabled=true;
+      moneyInput.disabled=true;
+      showCompletion();
+    }
+  });
+
+  (async()=>{
+    // Discover images
+    let i=0;
+    try{
+      for(;i<Math.min(MAX,IMAGE_CATALOG.length||MAX);i++){
+        await new Promise((res,rej)=>{
+          loadImage(`${FOLDER}${IMAGE_CATALOG[i]?.id||'replacemachine'+i}${EXT}`,res,rej);
+        }).then(img=>imgs.push(img)).catch(()=>{ throw new Error('done'); });
+      }
+    }catch(e){}
+    discovering=false;
+    updateCategoryChip();
+    setTimeout(()=>moneyInput.focus(),200);
+  })();
+}
+
+function draw(){
+  background(10,0,5);
+  if(discovering){drawMsg('✦ Loading images…');return;}
+  if(imgs.length===0){drawMsg('No images found in images/');return;}
+  if(finished){drawMsg('✦ Task complete ✦');return;}
+  const img=imgs[current];if(!img){drawMsg('Loading…');return;}
+  const s=Math.min(width/img.width,height/img.height);
+  const x=(width-img.width*s)/2,y=(height-img.height*s)/2;
+  image(img,x,y,img.width*s,img.height*s);
+  const pct=imgs.length>1?(current/(imgs.length-1))*100:0;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressText').textContent=`${current+1} / ${imgs.length}  ✦  ${amounts[current]?'$'+amounts[current].toFixed(2):'enter amount'}`;
+}
+
+function drawMsg(m){
+  push();fill(255,160,200,140);noStroke();textAlign(CENTER,CENTER);
+  textFont("'Quicksand',sans-serif");textSize(14);text(m,width/2,height/2);pop();
+}
+
+function updateCategoryChip(){
+  const meta=IMAGE_CATALOG[current];
+  const chip=document.getElementById('categoryChip');
+  if(!chip||!meta)return;
+  chip.innerHTML=`<div class="dot"></div>${meta.category==='domestic'?'Domestic / Care Labor':'Industrial / Technical Labor'}`;
+  chip.style.color=meta.category==='domestic'?'rgba(255,180,220,.7)':'rgba(180,220,255,.7)';
+}
+
+/* ── Reveal ── */
+// Running average stored in sessionStorage (per-device approximation until Firebase is live)
+function getRunningAvg(imageId,newVal){
+  const key='avg_'+imageId;
+  let data=JSON.parse(sessionStorage.getItem(key)||'{"sum":0,"count":0}');
+  data.sum+=newVal;data.count++;
+  sessionStorage.setItem(key,JSON.stringify(data));
+  return data.count>0?data.sum/data.count:newVal;
+}
+
+function showReveal(idx, estimate, meta){
+  const overlay=document.getElementById('revealOverlay');
+  const avg=getRunningAvg(meta.id||idx,estimate);
+  document.getElementById('revealItemName').textContent=meta.name||`Item ${idx+1}`;
+  document.getElementById('revealYours').textContent='$'+estimate.toFixed(2);
+  document.getElementById('revealActual').textContent=meta.actualCost!=null?'$'+meta.actualCost.toFixed(2):'—';
+  document.getElementById('revealCollective').textContent='$'+avg.toFixed(2);
+
+  // Bot's observation
+  let gap='';
+  if(meta.actualCost!=null){
+    const diff=estimate-meta.actualCost;
+    const pct=Math.abs(diff/meta.actualCost*100).toFixed(0);
+    if(diff>0) gap=`You estimated <strong>$${Math.abs(diff).toFixed(2)} more</strong> than the actual cost. `;
+    else if(diff<0) gap=`You estimated <strong>$${Math.abs(diff).toFixed(2)} less</strong> than the actual cost (${pct}% under). `;
+    else gap=`Your estimate was exact. `;
+  }
+  if(meta.note) gap+=meta.note;
+  document.getElementById('revealGap').innerHTML=gap;
+
+  overlay.classList.add('show');
+}
+
+/* ── Completion ── */
+function showCompletion(){
+  const slot=document.getElementById('completionSlot');
+  if(document.getElementById('final-card'))return;
+
+  const domesticEstimates=amounts.filter((_,i)=>IMAGE_CATALOG[i]?.category==='domestic');
+  const industrialEstimates=amounts.filter((_,i)=>IMAGE_CATALOG[i]?.category==='industrial');
+  const avg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
+  const domesticAvg=avg(domesticEstimates);
+  const industrialAvg=avg(industrialEstimates);
+  const ratio=industrialAvg>0&&domesticAvg>0?(industrialAvg/domesticAvg).toFixed(1):null;
+
+  let patternText='';
+  if(ratio){
+    patternText=`You valued industrial objects <strong>${ratio}×</strong> more than domestic objects on average. Across all participants, this ratio reveals a systematic pattern — the same pattern that erased women's economic contributions from history.`;
+  } else {
+    patternText='Your estimates have been recorded. As more participants complete this task, CAREBOT-02 will be able to show the pattern.';
+  }
+
+  const d=document.createElement('div');
+  d.id='final-card';d.className='completion-card';
+  d.innerHTML=`
+    <div class="c-eyebrow">✦ CAREBOT-02 · Evidence Recorded</div>
+    <h2>Your data has been added. 💰</h2>
+    <p>You have priced ${imgs.length} item${imgs.length===1?'':'s'}. Your estimates are now part of the training data.</p>
+    ${domesticEstimates.length&&industrialEstimates.length?`
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
+      <div class="stat-bubble">
+        <div class="stat-number">$${domesticAvg.toFixed(2)}</div>
+        <div class="stat-unit">your avg · domestic</div>
+      </div>
+      <div class="stat-bubble">
+        <div class="stat-number">$${industrialAvg.toFixed(2)}</div>
+        <div class="stat-unit">your avg · industrial</div>
+      </div>
+    </div>`:''}
+    <div class="trained-note">
+      ✦ <strong>What CAREBOT-02 is learning:</strong><br><br>
+      ${patternText}<br><br>
+      This is the <strong>Matilda Effect in economics</strong> — the systematic undervaluation of objects, labor, and contributions associated with women. You just helped prove it.
+    </div>
+    <a class="btn primary"
+       href="https://sbuckius.github.io/if-carebot-research/hit.html"
+       target="_blank" rel="noopener" style="margin:0 auto;text-decoration:none;display:inline-flex;">
+      Continue — next task ✦
+    </a>`;
+  slot.appendChild(d);
+}
+
+function hasNumber(str){return /\d/.test(str);}
+</script>
+<script src="https://player.vimeo.com/api/player.js"></script>
+</body>
+</html>
