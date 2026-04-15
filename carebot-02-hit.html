@@ -17,25 +17,16 @@
   import { getFirestore, collection, addDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-
-  apiKey: "AIzaSyCZFDU-WlSmHqjXTs1Ox0nf9xeJU_xbaX0",
-
-  authDomain: "collaborativemashup.firebaseapp.com",
-
-  databaseURL: "https://collaborativemashup-default-rtdb.firebaseio.com",
-
-  projectId: "collaborativemashup",
-
-  storageBucket: "collaborativemashup.firebasestorage.app",
-
-  messagingSenderId: "562437984610",
-
-  appId: "1:562437984610:web:9f3711c26e097bc8ef9c3b",
-
-  measurementId: "G-EY9FKD6RQ2"
-
-};
+  const FIREBASE_CONFIG = {
+    apiKey:            "AIzaSyCZFDU-WlSmHqjXTs1Ox0nf9xeJU_xbaX0",
+    authDomain:        "collaborativemashup.firebaseapp.com",
+    databaseURL:       "https://collaborativemashup-default-rtdb.firebaseio.com",
+    projectId:         "collaborativemashup",
+    storageBucket:     "collaborativemashup.firebasestorage.app",
+    messagingSenderId: "562437984610",
+    appId:             "1:562437984610:web:9f3711c26e097bc8ef9c3b",
+    measurementId:     "G-EY9FKD6RQ2"
+  };
   // ────────────────────────────────────────────
 
   const app = initializeApp(FIREBASE_CONFIG);
