@@ -403,7 +403,10 @@ const SESSION_ID = 'sess-' + Math.random().toString(36).slice(2,10);
 /* ── State ── */
 let imgs=[], current=0, finished=false, discovering=true;
 const amounts=[];
-const FOLDER='images/', EXT='.png', MAX=500;
+const FOLDER      = 'images/';   // folder containing your images
+const FILE_PREFIX = 'replacemachine'; // filename prefix  e.g. replacemachine0.png
+const EXT         = '.png';
+const MAX         = 500;          // safety ceiling — stops after this many
 
 /* ── p5 ── */
 function setup(){
@@ -431,7 +434,7 @@ function setup(){
     const imgMeta=IMAGE_CATALOG[current]||{};
     if(typeof window._writeEstimate==='function'){
       window._writeEstimate({
-        imageId:   imgMeta.id||`replacemachine${current}`,
+        imageId:   imgMeta.id||`${FILE_PREFIX}${current}`,
         imageName: imgMeta.name||`Image ${current}`,
         category:  imgMeta.category||'unknown',
         actualCost:imgMeta.actualCost||null,
@@ -461,15 +464,18 @@ function setup(){
   });
 
   (async()=>{
-    // Discover images
+    // Discover images by trying filenames sequentially until one fails.
+    // Works regardless of how many images are in the folder.
     let i=0;
-    try{
-      for(;i<Math.min(MAX,IMAGE_CATALOG.length||MAX);i++){
-        await new Promise((res,rej)=>{
-          loadImage(`${FOLDER}${IMAGE_CATALOG[i]?.id||'replacemachine'+i}${EXT}`,res,rej);
-        }).then(img=>imgs.push(img)).catch(()=>{ throw new Error('done'); });
-      }
-    }catch(e){}
+    while(i<MAX){
+      const path=`${FOLDER}${FILE_PREFIX}${i}${EXT}`;
+      const img=await new Promise(res=>{
+        loadImage(path, img=>res(img), ()=>res(null));
+      });
+      if(!img) break;   // first missing file = end of sequence
+      imgs.push(img);
+      i++;
+    }
     discovering=false;
     updateCategoryChip();
     setTimeout(()=>moneyInput.focus(),200);

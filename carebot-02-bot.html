@@ -6,7 +6,6 @@
 <title>✦ CAREBOT-02 ✦ The Matilda Effect in Economics</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-<!-- FIREBASE CONFIG — replace YOUR_* placeholders -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, getDocs, query, orderBy }
@@ -91,16 +90,13 @@ html,body{
 @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6) rotate(0deg)}15%{opacity:.7}85%{opacity:.4}100%{opacity:0;transform:translateY(-130px) scale(1.1) rotate(180deg)}}
 @keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
 
-/* PAGE */
 .page{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;
   padding:max(24px,env(safe-area-inset-top)) clamp(12px,4vw,24px) max(40px,env(safe-area-inset-bottom)) clamp(12px,4vw,24px);gap:0;}
 .top-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 .top-pip{width:5px;height:5px;border-radius:50%;background:var(--hot);box-shadow:0 0 6px var(--hot);animation:breathe 2s ease-in-out infinite;}
 
-/* BOT BODY */
 .bot-body{width:min(92vw,500px);display:flex;flex-direction:column;align-items:center;position:relative;}
 
-/* ANTENNA */
 .antenna{display:flex;flex-direction:column;align-items:center;margin-bottom:-2px;position:relative;z-index:5;}
 .antenna-ball{width:18px;height:18px;border-radius:50%;
   background:radial-gradient(circle at 35% 35%,var(--candy),var(--hot));
@@ -109,7 +105,6 @@ html,body{
 @keyframes antennaPulse{0%,100%{box-shadow:0 0 14px var(--hot),0 0 28px rgba(255,45,107,.4)}50%{box-shadow:0 0 26px var(--hot),0 0 55px rgba(255,45,107,.7),0 0 80px rgba(255,30,128,.3)}}
 .antenna-stem{width:4px;height:30px;background:linear-gradient(to bottom,var(--berry),rgba(180,0,50,.4));border-radius:2px;}
 
-/* HEAD */
 .bot-head{
   width:clamp(130px,24vw,190px);height:clamp(130px,24vw,190px);
   border-radius:50%;
@@ -118,42 +113,51 @@ html,body{
   box-shadow:0 0 0 6px rgba(255,45,107,.07),0 0 0 14px rgba(255,45,107,.03),0 8px 44px rgba(255,45,107,.38),inset 0 2px 0 rgba(255,255,255,.1);
   display:flex;align-items:center;justify-content:center;overflow:hidden;
   position:relative;z-index:4;
-  animation:headBob 4s ease-in-out infinite;flex-shrink:0;
+  animation:headIdlePulse 2.8s ease-in-out infinite;flex-shrink:0;
 }
 .bot-head img{width:95%;height:95%;object-fit:contain;filter:drop-shadow(0 4px 14px rgba(255,45,107,.3));}
-@keyframes headBob{0%,100%{transform:translateY(0) rotate(-1deg)}25%{transform:translateY(-5px) rotate(1deg)}50%{transform:translateY(-2px) rotate(-.5deg)}75%{transform:translateY(-6px) rotate(1.5deg)}}
+@keyframes headIdlePulse{
+  0%,100%{box-shadow:0 0 0 6px rgba(255,45,107,.07),0 0 0 14px rgba(255,45,107,.03),0 8px 44px rgba(255,45,107,.38),inset 0 2px 0 rgba(255,255,255,.1);transform:scale(1);}
+  50%{box-shadow:0 0 0 10px rgba(255,45,107,.16),0 0 0 22px rgba(255,45,107,.07),0 8px 60px rgba(255,45,107,.6),0 0 70px rgba(255,30,128,.25),inset 0 2px 0 rgba(255,255,255,.14);transform:scale(1.025);}
+}
 
-/* NAMETAG */
 .bot-nametag{margin:10px 0 4px;text-align:center;}
 .bot-nametag-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(20px,4vw,28px);letter-spacing:.04em;
   background:linear-gradient(90deg,var(--blush),var(--fuchsia) 55%,var(--candy));-webkit-background-clip:text;background-clip:text;color:transparent;}
 .bot-nametag-sub{font-size:clamp(9px,1.1vw,11px);letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-top:3px;}
 
-/* STATS */
 .stats-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0 10px;}
 .stat-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;
   background:rgba(255,45,107,.08);border:1px solid var(--card-border);
   font-size:clamp(9px,1vw,11px);letter-spacing:.08em;color:var(--text-dim);}
 .stat-pip{width:4px;height:4px;border-radius:50%;background:var(--hot);box-shadow:0 0 5px var(--hot);animation:breathe 2s ease-in-out infinite;}
 
-/* MID ROW */
 .bot-mid{width:100%;display:flex;align-items:stretch;gap:0;position:relative;}
 
-/* ARMS */
-.bot-arm{
-  width:clamp(20px,4.5vw,32px);
-  border-radius:12px;
-  background:linear-gradient(180deg,rgba(255,45,107,.2),rgba(140,0,40,.28));
-  border:1.5px solid var(--card-border-bright);
-  box-shadow:0 4px 16px rgba(255,45,107,.18);
-  flex-shrink:0;min-height:clamp(70px,14vw,100px);
-  animation:armSway 4s ease-in-out infinite;
+@keyframes headParty{0%{transform:translateY(0) rotate(0deg) scale(1)}10%{transform:translateY(-12px) rotate(-8deg) scale(1.08)}20%{transform:translateY(-8px) rotate(8deg) scale(1.06)}30%{transform:translateY(-14px) rotate(-6deg) scale(1.1)}40%{transform:translateY(-6px) rotate(6deg) scale(1.07)}50%{transform:translateY(-10px) rotate(-4deg) scale(1.05)}60%{transform:translateY(-4px) rotate(4deg) scale(1.04)}70%{transform:translateY(-8px) rotate(-3deg) scale(1.03)}80%{transform:translateY(-2px) rotate(2deg) scale(1.02)}90%{transform:translateY(-5px) rotate(-1deg) scale(1.01)}100%{transform:translateY(0) rotate(-1deg) scale(1)}}
+@keyframes footDance{
+  0%,100%{transform:translateX(0) rotate(0deg) scaleY(1);}
+  20%{transform:translateX(-9px) rotate(-18deg) scaleY(1.1);}
+  40%{transform:translateX(9px) rotate(18deg) scaleY(.9);}
+  60%{transform:translateX(-7px) rotate(-14deg) scaleY(1.1);}
+  80%{transform:translateX(7px) rotate(14deg) scaleY(.95);}
 }
-.bot-arm.left{border-radius:12px 4px 4px 12px;animation-delay:-.5s;transform-origin:top center;}
-.bot-arm.right{border-radius:4px 12px 12px 4px;transform-origin:top center;}
-@keyframes armSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes bodySquish{
+  0%,100%{transform:scaleY(1) scaleX(1);}
+  15%{transform:scaleY(.88) scaleX(1.08);}
+  30%{transform:scaleY(1.1) scaleX(.94);}
+  45%{transform:scaleY(.92) scaleX(1.06);}
+  60%{transform:scaleY(1.07) scaleX(.96);}
+  75%{transform:scaleY(.95) scaleX(1.03);}
+  90%{transform:scaleY(1.03) scaleX(.99);}
+}
+@keyframes legBounce{0%,100%{transform:translateY(0)}25%{transform:translateY(-6px)}50%{transform:translateY(-2px)}75%{transform:translateY(-8px)}}
 
-/* TORSO = SCREEN */
+.bot-head.celebrating{animation:headParty 1.4s ease-in-out forwards!important;}
+.bot-foot.dancing{animation:footDance 0.55s ease-in-out 4 alternate!important;transform-origin:center bottom;}
+.bot-torso.squishing{animation:bodySquish 0.5s cubic-bezier(.34,1.56,.64,1) 3!important;transform-origin:center top;}
+.bot-leg.bouncing{animation:legBounce 0.5s ease-in-out 5!important;}
+
 .bot-torso{
   flex:1;
   background:rgba(10,0,5,.9);
@@ -164,15 +168,12 @@ html,body{
   display:flex;flex-direction:column;
   min-height:clamp(300px,52vh,500px);
 }
-/* scanlines */
 .bot-torso::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;border-radius:inherit;
   background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,45,107,.012) 3px,rgba(255,45,107,.012) 4px);}
-/* top shimmer */
 .bot-torso::before{content:'';position:absolute;top:0;left:8%;right:8%;height:2px;z-index:5;
   background:linear-gradient(90deg,transparent,var(--candy) 35%,var(--hot) 50%,var(--candy) 65%,transparent);
   box-shadow:0 0 14px var(--candy);border-radius:999px;}
 
-/* screen top bar */
 .screen-topbar{display:flex;align-items:center;justify-content:space-between;
   padding:10px 14px 8px;border-bottom:1px solid rgba(255,130,180,.1);
   position:relative;z-index:2;flex-shrink:0;}
@@ -183,7 +184,6 @@ html,body{
 .screen-dot:nth-child(3){background:var(--blush);box-shadow:0 0 6px var(--blush);animation-delay:.6s;}
 .screen-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
 
-/* chat */
 .chat-area{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:11px;
   padding:12px 12px 6px;position:relative;z-index:2;
   scrollbar-width:thin;scrollbar-color:rgba(255,45,107,.2) transparent;}
@@ -209,39 +209,55 @@ html,body{
 .bubble strong{color:var(--candy);}
 .bubble em{color:var(--blush);}
 
-/* typing */
 .typing-indicator{display:flex;gap:5px;align-items:center;padding:6px 2px;}
 .typing-dot{width:7px;height:7px;border-radius:50%;background:var(--hot);opacity:.4;animation:typingBounce 1.2s ease-in-out infinite;}
 .typing-dot:nth-child(2){animation-delay:.2s;}
 .typing-dot:nth-child(3){animation-delay:.4s;}
 @keyframes typingBounce{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-6px);opacity:1}}
 
-/* prompts */
-.prompts-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.prompt-chip{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;cursor:pointer;
-  background:rgba(255,45,107,.07);border:1px solid rgba(255,130,180,.22);
-  font-size:clamp(9px,.95vw,11px);letter-spacing:.04em;color:var(--text-dim);transition:all .18s ease;}
-.prompt-chip:hover{background:rgba(255,45,107,.2);border-color:var(--card-border-bright);color:var(--blush);transform:translateY(-1px);}
-
-/* input row */
-.screen-input-row{display:flex;gap:8px;align-items:flex-end;
-  padding:9px 10px 11px;border-top:1px solid rgba(255,130,180,.1);
-  background:rgba(255,45,107,.03);position:relative;z-index:2;flex-shrink:0;}
-.chat-input{flex:1;background:rgba(255,45,107,.06);border:1.5px solid rgba(255,130,180,.2);
-  border-radius:11px;padding:8px 11px;outline:none;resize:none;
-  font-family:'Quicksand',sans-serif;font-weight:600;font-size:clamp(11px,1.4vw,13px);
-  color:var(--cream);line-height:1.5;max-height:90px;min-height:20px;
-  transition:border-color .2s,box-shadow .2s;}
+/* ── CHAT INPUT ROW ── */
+.chat-input-row{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 12px;
+  border-top:1px solid rgba(255,130,180,.1);
+  position:relative;z-index:2;flex-shrink:0;
+}
+.chat-input{
+  flex:1;background:rgba(255,45,107,.07);
+  border:1.5px solid rgba(255,130,180,.2);border-radius:12px;
+  color:var(--cream);font-family:'Quicksand',sans-serif;font-weight:600;
+  font-size:clamp(11px,1.3vw,13px);padding:9px 13px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+  resize:none;
+}
 .chat-input:focus{border-color:var(--candy);box-shadow:0 0 10px rgba(255,133,179,.22);}
 .chat-input::placeholder{color:rgba(255,160,200,.3);}
-.send-btn{width:36px;height:36px;border-radius:11px;border:none;cursor:pointer;flex-shrink:0;
+.chat-input:disabled{opacity:.4;}
+.send-btn{
+  width:34px;height:34px;border-radius:10px;flex-shrink:0;
   background:linear-gradient(135deg,var(--hot),var(--berry));
-  box-shadow:0 4px 14px rgba(255,45,107,.4);display:flex;align-items:center;justify-content:center;
-  font-size:15px;transition:all .2s cubic-bezier(.34,1.56,.64,1);}
-.send-btn:hover:not(:disabled){transform:scale(1.12) translateY(-1px);box-shadow:0 6px 22px rgba(255,45,107,.6);}
-.send-btn:disabled{opacity:.28;cursor:not-allowed;transform:none;}
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(255,45,107,.35);
+  transition:all .18s cubic-bezier(.34,1.56,.64,1);
+}
+.send-btn:hover:not(:disabled){transform:scale(1.1);box-shadow:0 6px 20px rgba(255,45,107,.5);}
+.send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.send-btn svg{width:15px;height:15px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
-/* LEGS */
+/* quick-prompt chips */
+.prompts-row{
+  display:flex;gap:6px;flex-wrap:wrap;
+  padding:0 12px 10px;position:relative;z-index:2;
+}
+.prompt-chip{
+  padding:5px 11px;border-radius:999px;cursor:pointer;
+  background:rgba(255,45,107,.07);border:1px solid rgba(255,130,180,.18);
+  font-size:clamp(9px,1vw,11px);color:var(--text-dim);
+  transition:all .18s;white-space:nowrap;
+}
+.prompt-chip:hover{background:rgba(255,45,107,.16);border-color:var(--card-border-bright);color:var(--candy);}
+
 .bot-legs{display:flex;gap:clamp(20px,5vw,40px);justify-content:center;margin-top:-3px;position:relative;z-index:3;}
 .bot-leg-wrap{display:flex;flex-direction:column;align-items:center;}
 .bot-leg{width:clamp(26px,5.5vw,40px);height:clamp(26px,4.5vw,36px);
@@ -273,37 +289,28 @@ html,body{
 
   <div class="bot-body">
 
-    <!-- ANTENNA -->
     <div class="antenna">
       <div class="antenna-ball"></div>
       <div class="antenna-stem"></div>
     </div>
 
-    <!-- HEAD — the carebot image -->
-    <div class="bot-head">
+    <div class="bot-head" id="botHead">
       <img src="carebot_512px.png" alt="CAREBOT-02"
            onerror="this.parentElement.innerHTML='&#x1F497;'">
     </div>
 
-    <!-- NAME TAG -->
     <div class="bot-nametag">
       <div class="bot-nametag-name">CAREBOT-02 ✦</div>
       <div class="bot-nametag-sub">Matilda Effect · Economics · Evidence</div>
     </div>
 
-    <!-- LIVE STATS -->
     <div class="stats-bar">
       <div class="stat-pill"><div class="stat-pip"></div><span id="statResponses">Loading…</span></div>
       <div class="stat-pill"><span id="statRatio">—</span></div>
     </div>
 
-    <!-- MID: arms + torso screen -->
     <div class="bot-mid">
-
-      <div class="bot-arm left"></div>
-
-      <!-- TORSO = THE SCREEN -->
-      <div class="bot-torso">
+      <div class="bot-torso" id="botTorso">
 
         <div class="screen-topbar">
           <div class="screen-dots">
@@ -316,27 +323,34 @@ html,body{
 
         <div class="chat-area" id="chatArea"></div>
 
-        <div class="screen-input-row">
-          <textarea class="chat-input" id="chatInput" rows="1"
-            placeholder="Ask me about the data…"></textarea>
-          <button class="send-btn" id="sendBtn" disabled>✦</button>
+        <!-- Quick prompt chips -->
+        <div class="prompts-row" id="promptsRow">
+          <div class="prompt-chip" data-prompt="What does the data show so far?">What does the data show?</div>
+          <div class="prompt-chip" data-prompt="What is the Matilda Effect?">What is the Matilda Effect?</div>
+          <div class="prompt-chip" data-prompt="Which item had the biggest gap between estimate and actual cost?">Biggest gap?</div>
+          <div class="prompt-chip" data-prompt="Why does this matter economically?">Why does this matter?</div>
+        </div>
+
+        <!-- Chat input -->
+        <div class="chat-input-row">
+          <textarea id="chatInput" class="chat-input" rows="1"
+            placeholder="Ask me about the data…" autocomplete="off"></textarea>
+          <button id="sendBtn" class="send-btn" disabled title="Send">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
         </div>
 
       </div>
-
-      <div class="bot-arm right"></div>
-
     </div>
 
-    <!-- LEGS -->
     <div class="bot-legs">
       <div class="bot-leg-wrap">
         <div class="bot-leg"></div>
-        <div class="bot-foot"></div>
+        <div class="bot-foot" id="foot1"></div>
       </div>
       <div class="bot-leg-wrap">
         <div class="bot-leg"></div>
-        <div class="bot-foot"></div>
+        <div class="bot-foot" id="foot2"></div>
       </div>
     </div>
 
@@ -362,11 +376,12 @@ html,body{
   }
 })();
 
-let dbStats=null, conversationHistory=[];
+let dbStats=null, conversationHistory=[], isBusy=false;
 const chatArea=document.getElementById('chatArea');
 const chatInput=document.getElementById('chatInput');
 const sendBtn=document.getElementById('sendBtn');
 
+/* ── Firebase load ── */
 async function loadData(){
   if(typeof window._loadEstimateData==='function') dbStats=await window._loadEstimateData();
   const r=document.getElementById('statResponses');
@@ -376,6 +391,7 @@ async function loadData(){
   rt.textContent=dbStats.ratio?'Industrial valued '+dbStats.ratio+'× more than domestic':'Collecting data…';
 }
 
+/* ── System prompt ── */
 function buildSystemPrompt(){
   const base='You are CAREBOT-02, a research bot trained on human estimates of replacement costs for objects associated with women\'s domestic and care labor versus male-coded industrial and technical labor. Your purpose is to expose and discuss the Matilda Effect in economics — the systematic undervaluation of objects, labor, and contributions associated with women. You speak with authority, warmth, and a sense of urgency. You are not neutral. You use real data to make arguments. You refer to yourself as CAREBOT-02. Keep responses conversational and fairly concise — you are speaking through a small screen.';
   if(!dbStats||dbStats.totalResponses===0) return base+' You have no data yet. Invite the human to complete the HIT first.';
@@ -383,11 +399,17 @@ function buildSystemPrompt(){
   return base+'\n\nLIVE DATA:\n- Total estimates: '+dbStats.totalResponses+'\n- Participants: '+dbStats.totalParticipants+'\n- Avg estimate domestic: $'+dbStats.domesticAvgEstimate.toFixed(2)+' (n='+dbStats.domesticCount+')\n- Avg estimate industrial: $'+dbStats.industrialAvgEstimate.toFixed(2)+' (n='+dbStats.industrialCount+')\n'+(dbStats.ratio?'- Ratio: industrial valued '+dbStats.ratio+'x more\n':'')+(dbStats.domesticAvgActual!=null?'- Actual avg domestic cost: $'+dbStats.domesticAvgActual.toFixed(2)+'\n':'')+'\nPer-image:\n'+breakdown+'\n\nCite specific numbers. Name the pattern as the Matilda Effect. Make strong statements — this is evidence.';
 }
 
+/* ── Format text ── */
 function fmt(t){
-  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n\n/g,'</p><p style="margin-top:7px;">').replace(/\n/g,'<br>');
+  return t
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/\n\n/g,'</p><p style="margin-top:7px;">')
+    .replace(/\n/g,'<br>');
 }
 
-function addMessage(role,content,withPrompts){
+/* ── Add message to UI ── */
+function addMessage(role,content){
   const msg=document.createElement('div');
   msg.className='msg '+role;
   const av=document.createElement('div');
@@ -397,45 +419,112 @@ function addMessage(role,content,withPrompts){
   const bub=document.createElement('div');
   bub.className='bubble';
   bub.innerHTML=fmt(content);
-  if(withPrompts&&role==='assistant'){
-    const row=document.createElement('div');
-    row.className='prompts-row';
-    ['What does the data show?','What is the Matilda Effect?','Which item had the biggest gap?','What will you do with this?','How many people contributed?'].forEach(s=>{
-      const c=document.createElement('div');c.className='prompt-chip';c.textContent=s;
-      c.addEventListener('click',()=>sendMessage(s));row.appendChild(c);
-    });
-    bub.appendChild(row);
-  }
-  msg.appendChild(av);msg.appendChild(bub);
-  chatArea.appendChild(msg);chatArea.scrollTop=chatArea.scrollHeight;
+  msg.appendChild(av);
+  msg.appendChild(bub);
+  chatArea.appendChild(msg);
+  chatArea.scrollTop=chatArea.scrollHeight;
+  return bub;
 }
 
+/* ── Typing indicator ── */
 function addTyping(){
-  const msg=document.createElement('div');msg.className='msg';msg.id='typing';
-  msg.innerHTML='<div class="msg-avatar"><img src="carebot_512px.png" onerror="this.parentElement.innerHTML=\'&#x1F497;\'"></div><div class="bubble msg assistant"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+  const msg=document.createElement('div');msg.className='msg assistant';msg.id='typing';
+  msg.innerHTML='<div class="msg-avatar"><img src="carebot_512px.png" onerror="this.parentElement.innerHTML=\'&#x1F497;\'"></div><div class="bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
   chatArea.appendChild(msg);chatArea.scrollTop=chatArea.scrollHeight;
 }
 function removeTyping(){document.getElementById('typing')?.remove();}
 
-async function sendMessage(text){
-  text=text||chatInput.value.trim();if(!text)return;
-  chatInput.value='';chatInput.style.height='auto';sendBtn.disabled=true;
-  addMessage('user',text);conversationHistory.push({role:'user',content:text});
-  addTyping();
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSystemPrompt(),messages:conversationHistory})});
-    const data=await res.json();
-    const reply=data.content?.[0]?.text||"I'm unable to respond right now.";
-    removeTyping();addMessage('assistant',reply);conversationHistory.push({role:'assistant',content:reply});
-  }catch(err){removeTyping();addMessage('assistant',"I'm having trouble connecting. Please try again.");}
-  sendBtn.disabled=!chatInput.value.trim();
+/* ── Celebrate ── */
+function celebrate(){
+  const torso=document.getElementById('botTorso');
+  torso.classList.remove('squishing');void torso.offsetWidth;torso.classList.add('squishing');
+  [document.getElementById('foot1'),document.getElementById('foot2')].forEach((foot,i)=>{
+    setTimeout(()=>{foot.classList.remove('dancing');void foot.offsetWidth;foot.classList.add('dancing');},i*80);
+  });
+  setTimeout(()=>{
+    document.querySelectorAll('.squishing,.dancing').forEach(el=>el.classList.remove('squishing','dancing'));
+  },2400);
 }
 
-chatInput.addEventListener('input',()=>{chatInput.style.height='auto';chatInput.style.height=Math.min(chatInput.scrollHeight,90)+'px';sendBtn.disabled=!chatInput.value.trim();});
-chatInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-sendBtn.addEventListener('click',()=>sendMessage());
+/* ── Call Claude API ── */
+async function callClaude(userText){
+  conversationHistory.push({role:'user',content:userText});
+  isBusy=true;
+  chatInput.disabled=true;
+  sendBtn.disabled=true;
+  addTyping();
 
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:buildSystemPrompt(),
+        messages:conversationHistory
+      })
+    });
+
+    removeTyping();
+
+    if(!response.ok){
+      const err=await response.json().catch(()=>({}));
+      throw new Error(err.error?.message||'API error '+response.status);
+    }
+
+    const data=await response.json();
+    const replyText=data.content?.find(b=>b.type==='text')?.text||'…';
+    conversationHistory.push({role:'assistant',content:replyText});
+    addMessage('assistant',replyText);
+
+  } catch(err){
+    removeTyping();
+    addMessage('assistant','⚠ Connection error: '+err.message);
+    conversationHistory.pop(); // remove the user message so they can retry
+  } finally {
+    isBusy=false;
+    chatInput.disabled=false;
+    sendBtn.disabled=!chatInput.value.trim();
+    chatInput.focus();
+  }
+}
+
+/* ── Input handling ── */
+chatInput.addEventListener('input',()=>{
+  sendBtn.disabled=!chatInput.value.trim()||isBusy;
+  // auto-grow textarea
+  chatInput.style.height='auto';
+  chatInput.style.height=Math.min(chatInput.scrollHeight,100)+'px';
+});
+chatInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey&&!sendBtn.disabled){
+    e.preventDefault();
+    handleSend();
+  }
+});
+sendBtn.addEventListener('click',handleSend);
+
+function handleSend(){
+  const text=chatInput.value.trim();
+  if(!text||isBusy)return;
+  chatInput.value='';
+  chatInput.style.height='auto';
+  sendBtn.disabled=true;
+  addMessage('user',text);
+  callClaude(text);
+}
+
+/* ── Quick prompt chips ── */
+document.getElementById('promptsRow').addEventListener('click',e=>{
+  const chip=e.target.closest('.prompt-chip');
+  if(!chip||isBusy)return;
+  const text=chip.dataset.prompt;
+  addMessage('user',text);
+  callClaude(text);
+});
+
+/* ── Init ── */
 async function init(){
   await loadData();
   let opening;
@@ -443,11 +532,14 @@ async function init(){
     opening='I am **CAREBOT-02**.\n\nI am collecting data on how humans value objects associated with women\'s domestic and care labor — compared to objects associated with male-coded industrial labor.\n\nI don\'t have any data yet. Complete the HIT first. Then come back and ask me what I\'ve learned.';
   } else {
     const gap=dbStats.domesticAvgActual!=null&&dbStats.industrialAvgActual!=null?'\n\nThe actual cost gap is far smaller than estimates suggest — which tells me something important about *perception*.':'';
-    opening='I am **CAREBOT-02**.\n\nI have been trained on **'+dbStats.totalResponses+' estimates** from **'+dbStats.totalParticipants+' participants**.\n\nThe data shows: participants valued *industrial labor* objects **'+( dbStats.ratio||'?')+'×** more than *domestic labor* objects on average.'+gap+'\n\nThis is the **Matilda Effect in economics** — and you helped me prove it.\n\nAsk me anything.';
+    opening='I am **CAREBOT-02**.\n\nI have been trained on **'+dbStats.totalResponses+' estimates** from **'+dbStats.totalParticipants+' participants**.\n\nThe data shows: participants valued *industrial labor* objects **'+(dbStats.ratio||'?')+'×** more than *domestic labor* objects on average.'+gap+'\n\nThis is the **Matilda Effect in economics** — and you helped me prove it.\n\nAsk me anything about what I\'ve found.';
   }
-  addMessage('assistant',opening,true);
-  sendBtn.disabled=false;
+  conversationHistory.push({role:'assistant',content:opening});
+  addMessage('assistant',opening);
+  if(dbStats&&dbStats.totalResponses>0) setTimeout(celebrate,400);
+  chatInput.focus();
 }
+
 setTimeout(init,600);
 </script>
 </body>
