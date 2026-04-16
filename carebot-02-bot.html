@@ -455,11 +455,11 @@ async function callClaude(userText){
   addTyping();
 
   try {
-    const response = await fetch('https://carebot-02.sbuckius.workers.dev/',{
+    const response = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-3-5-sonnet-20241022',
+        model:'claude-sonnet-4-20250514',
         max_tokens:1000,
         system:buildSystemPrompt(),
         messages:conversationHistory
@@ -474,6 +474,7 @@ async function callClaude(userText){
     }
 
     const data=await response.json();
+    console.log('API response:', JSON.stringify(data));
     const replyText=data.content?.find(b=>b.type==='text')?.text||'…';
     conversationHistory.push({role:'assistant',content:replyText});
     addMessage('assistant',replyText);
